@@ -10,9 +10,11 @@ Alternativen:
 - Heute dies, morgen das 🎰 Schreib in die Kommentare, was ich sein soll!
 - 1 Tag. 1 Rolle. Du bestimmst die nächste 👇
 
-## Beschreibung Video 1
-(Der Accountname „Alex ist heute:“ steht davor, also beginnt der Text mit der Rolle.)
+## Video 1 – Pick-me-Boy (Posting: heute 21:40)
+Cover: `episodes/01_pick_me_boy/thumbnail.png` (beim Hochladen unter „Cover auswählen“ → „Hochladen“)
 
-ein Pick-me-Boy 🌹 „Ich bin nicht wie die anderen Jungs“ … doch, genau wie alle anderen Pick-me-Boys 😅 Markier einen, der genau so ist 👇 Und was soll Alex morgen sein? Ab in die Kommentare!
+Beschreibung (der Accountname „Alex ist heute:“ steht davor, also beginnt der Text mit der Rolle):
 
-#pickmeboy #pickme #redflags #dating #lovebombing #comedy #fürdich #fyp
+ein Pick-me-Boy 🌹🚩 „Ich bin nicht wie die anderen Jungs“ – Spoiler: doch. Bei welcher Red Flag hast du sofort an jemanden gedacht? 👀 Markier ihn! Und was soll Alex morgen sein? 👇
+
+#pickmeboy #pickme #redflags #redflag #dating #lovebombing #nichtwiedieanderen #comedy #fürdich #fyp
