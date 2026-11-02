@@ -20,7 +20,11 @@ os.makedirs(out, exist_ok=True)
 GEMINI = backend == "gemini"
 MOODS = getattr(script, "MOODS", {})
 
-GEMINI_MODEL = os.environ.get("GEMINI_TTS_MODEL", "gemini-3.8-flash-tts")
+# Modelle in Reihenfolge; ist das Tageskontingent eines Modells aufgebraucht, wird das nächste genutzt.
+GEMINI_MODELS = os.environ.get("GEMINI_TTS_MODEL", "gemini-3.8-flash-tts,gemini-3.1-flash-tts-preview,"
+                               "gemini-2.5-flash-preview-tts,gemini-2.5-pro-preview-tts").split(",")
+_exhausted = set()
+used_models = set()
 VOICE = arg3 or "Puck"
 PROFILE = """# AUDIO PROFILE: Der Erzähler
 Ein junger deutscher TikTok-Storyteller, Mitte zwanzig, charmant, witzig und sehr ausdrucksstark.
@@ -50,19 +54,34 @@ def gemini_tts(text, mood, path):
     body = {"contents": [{"parts": [{"text": PROFILE.format(mood=mood, text=text)}]}],
             "generationConfig": {"responseModalities": ["AUDIO"],
                                  "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": VOICE}}}}}
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
-    for attempt in range(6):
-        req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={
-            "Content-Type": "application/json", "x-goog-api-key": os.environ["GEMINI_API_KEY"]})
-        try:
-            r = json.load(urllib.request.urlopen(req, timeout=180))
-            raw = base64.b64decode(r["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
+    raw = None
+    for model in GEMINI_MODELS:
+        if model in _exhausted:
+            continue
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+        for attempt in range(5):
+            req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={
+                "Content-Type": "application/json", "x-goog-api-key": os.environ["GEMINI_API_KEY"]})
+            try:
+                r = json.load(urllib.request.urlopen(req, timeout=180))
+                raw = base64.b64decode(r["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
+                break
+            except urllib.error.HTTPError as e:
+                msg = e.read().decode(errors="ignore")
+                if e.code == 429 and "per_day" in msg:
+                    print("  Tageslimit erreicht:", model)
+                    _exhausted.add(model)
+                    break
+                print("  retry", attempt, model, text[:30], e.code)
+                time.sleep(2 ** attempt * 3)
+            except (urllib.error.URLError, KeyError, TimeoutError) as e:
+                print("  retry", attempt, model, text[:30], e)
+                time.sleep(2 ** attempt * 3)
+        if raw is not None:
+            used_models.add(model)
             break
-        except (urllib.error.HTTPError, urllib.error.URLError, KeyError, TimeoutError) as e:
-            print("  retry", attempt, text[:30], e)
-            time.sleep(2 ** attempt * 2)
-    else:
-        raise RuntimeError("Gemini TTS fehlgeschlagen: " + text)
+    if raw is None:
+        raise RuntimeError("Gemini TTS fehlgeschlagen (alle Modelle): " + text)
     if raw[:4] == b"RIFF":
         with wave.open(io.BytesIO(raw)) as w:
             sr = w.getframerate()
@@ -113,7 +132,7 @@ if only:
         for i, l in enumerate(s["lines"]):
             res[f"{s['id']}_{i}"] = (l["file"], l["dur"])
     jobs = [j for j in jobs if j[0] in only]
-with ThreadPoolExecutor(6 if GEMINI else 1) as ex:
+with ThreadPoolExecutor(3 if GEMINI else 1) as ex:
     res.update({k: (p, d) for k, p, d in ex.map(run, jobs)})
 
 meta = {"backend": "gemini:" + VOICE if GEMINI else "piper",
@@ -124,4 +143,6 @@ for s in script.SCENES:
         for i, (cap, _) in enumerate(s["lines"])]})
 json.dump(meta, open(os.path.join(ep_dir, "build", "tts.json"), "w"), indent=1, ensure_ascii=False)
 tot = sum(l["dur"] for s in meta["scenes"] for l in s["lines"])
+if GEMINI:
+    print("genutzte Modelle:", ", ".join(sorted(used_models)))
 print("Sprechzeit Szenen: %.1fs  Intro: %.1f+%.1f" % (tot, meta["intro"]["pre"], meta["intro"]["role"]))

@@ -27,3 +27,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 arbeitslos 🛋️📄 Plan: früh aufstehen. Realität: Snooze bis 11:29 😅 Welche der 4 Phasen bist du gerade? 👇 Markier jemanden, der das kennt! Und was soll Alex morgen sein?
 
 #arbeitslos #jobsuche #bewerbung #jobcenter #absage #relatable #comedy #fürdich #fyp
+
+## Video 3 – Choleriker
+Cover: `episodes/03_choleriker/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+Choleriker 😡💢 Von 0 auf 100 wegen … einem Toast. Und 5 Minuten später: „Sorry, war nicht so gemeint 😇“ Welches Anzeichen trifft auf jemanden zu, den du kennst? 👇 Markier ihn! Und was soll Alex morgen sein?
+
+#choleriker #wutanfall #relatable #comedy #alltag #fürdich #fyp
