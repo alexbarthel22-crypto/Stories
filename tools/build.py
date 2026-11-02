@@ -70,7 +70,7 @@ for sc_def, sc_tts in zip(script.SCENES, tts["scenes"]):
     S.start = t
     lt = PRE
     S.starts, S.durs, S.caps = [], [], []
-    for ln in sc_tts["lines"]:
+    for li_, ln in enumerate(sc_tts["lines"]):
         S.starts.append(lt)
         S.durs.append(ln["dur"])
         chunks = chunk_caption(ln["caption"])
@@ -80,7 +80,7 @@ for sc_def, sc_tts in zip(script.SCENES, tts["scenes"]):
         for cn, wt in zip(chunks, weights):
             S.caps.append((acc, cn))
             acc += ln["dur"] * wt / tot
-        lt += ln["dur"] + GAP
+        lt += ln["dur"] + GAP + getattr(script, "PAUSE_AFTER", {}).get((sc_def["id"], li_), 0.0)
     S.dur = lt - GAP + (END_HOLD if sc_def is script.SCENES[-1] else POST)
     S.files = [ln["file"] for ln in sc_tts["lines"]]
     t += S.dur
@@ -181,6 +181,23 @@ def synth_whoosh(dur=0.35, amp=0.07, seed=1):
     return amp * out * env / (np.abs(out).max() + 1e-9)
 
 
+def synth_crickets(dur=2.2, amp=0.12, seed=3):
+    """Grillenzirpen (Running Gag: niemand lacht)."""
+    n = int(dur * SR); tt = np.arange(n) / SR
+    out = np.zeros(n)
+    rnd = np.random.default_rng(seed)
+    t0 = 0.0
+    while t0 < dur - 0.2:
+        for k in range(3):                      # 3 Pulse pro Zirp
+            a = int((t0 + k * 0.045) * SR); b = min(n, a + int(0.03 * SR))
+            seg = tt[a:b] - tt[a]
+            f = 4300 + rnd.uniform(-80, 80)
+            out[a:b] += np.sin(2 * np.pi * f * seg) * np.sin(np.pi * seg / 0.03) ** 2
+        t0 += 0.42 + rnd.uniform(-0.04, 0.04)
+    env = np.minimum(1, np.minimum(tt / 0.2, (dur - tt) / 0.4))
+    return amp * out * env
+
+
 def build_audio(path):
     n = int((TOTAL + 0.5) * SR)
     voice = np.zeros(n)
@@ -209,6 +226,12 @@ def build_audio(path):
         for st, f in zip(S.starts, S.files):
             add(voice, load_wav(f), S.start + st)
             add(fx, synth_pop(rnd.choice([480, 560, 640, 720]), amp=0.08), S.start + st + 0.05)
+    # Zusätzliche Effekte der Folge: script.SFX = [(szenen_id, zeile, anteil, "crickets"), ...]
+    for sid, li, frac, kind in getattr(script, "SFX", []):
+        S = next(s_ for s_ in timeline if s_.id == sid)
+        t0 = S.start + S.starts[li] + frac * S.durs[li]
+        if kind == "crickets":
+            add(fx, synth_crickets(), t0)
     voice /= (np.abs(voice).max() + 1e-9)
     voice *= 0.9
     mix = voice + fx

@@ -1,5 +1,11 @@
-"""Folge 2: Heute ist Alex ... arbeitslos.
+"""Folge 2 (v2): Heute ist Alex ... arbeitslos – das volle Klischee, plus echte Fakten.
 
+Fakten (Stand Nov. 2026, recherchiert):
+- Arbeitslosengeld I: 60 % des pauschalierten Nettoentgelts (67 % mit Kind),
+  unter 50 Jahren max. 12 Monate (bei 24 Monaten Versicherungszeit). Quelle: arbeitsagentur.de
+- Grundsicherungsgeld (seit 1.7.2026, vorher Bürgergeld): Regelsatz Alleinstehende 563 €/Monat
+  (2026 Nullrunde), Unterkunft + Heizung zusätzlich, sofern angemessen. Quellen: bundesregierung.de, bmas.de
+- Nebenjob: Grundfreibetrag 100 €, darüber nur prozentuale Freibeträge.
 Jede Zeile: (Untertitel-Text, TTS-Text oder None).
 """
 
@@ -8,21 +14,19 @@ ROLE_TTS = "arbeitslos."
 ROLE_SAY = "arbeitslos!"
 
 MOODS = {
-    "intro_pre": "geheimnisvoll und spannend, wie vor einer großen Enthüllung, langgezogen",
-    "intro_role": "dramatische Enthüllung, halb mitleidig, halb lachend",
-    "plan": "motiviert und optimistisch, als würde gleich alles klappen",
-    "alarm": "verschlafen und gemütlich, dann immer genervter beim Snooze",
-    "breakfast": "verwirrt-philosophisch, trocken",
-    "jobcenter": "ungläubig und genervt, die Beamtenstimme monoton und bürokratisch",
-    "apply": "sarkastisch über absurde Stellenanzeigen, die Absage übertrieben höflich-kühl vorlesen",
-    "family": "peinlich berührt; Oma neugierig und lieb, Alex nervös stotternd",
-    "linkedin": "übertrieben businessmäßig motiviert, dann trocken die Übersetzung",
-    "night": "flüsternd, dann plötzlich übermotiviert und euphorisch",
-    "phases": "energisch wie ein Countdown, jede Phase mit Nachdruck, die letzte lachend",
+    "intro_pre": "spannend, aber zügig und kurz gesprochen, ohne lange Pause",
+    "intro_role": "kurze, dramatische Enthüllung, halb mitleidig, halb lachend",
+    "plan": "erst mitfühlend, dann amüsiert wie ein Modekommentator, der ein Outfit vorstellt",
+    "money1": "klar und informativ wie ein Erklärvideo, aber locker",
+    "money2": "informativ, die Zahlen deutlich betont, am Ende leicht ironisch",
+    "morning": "verschlafen und gemütlich, trocken-witzig",
+    "jobcenter": "erst sachlich-ernst, dann Alex' Witz übertrieben stolz, dann trocken und peinlich still",
+    "tv": "wie ein dramatischer Fernsehsprecher, übertrieben spannend",
+    "sidejob": "informativ wie ein Fun Fact, dann trocken-lustig",
+    "family": "lieb, neugierig und locker",
     "outro": "freundlich, aufgedreht, direkt an die Zuschauer, auffordernd",
 }
 
-# Rollen, die im Intro durchgeschaltet werden (Text, Emoji, Oberteil, Hintergrund)
 SHUFFLE = [
     ("EIN ASTRONAUT.", "🚀", "#E9EEF5", "#3B6FB6"),
     ("EIN PICK ME BOY.", "🌹", "#EFE2C6", "#EC7FAE"),
@@ -38,51 +42,56 @@ SHUFFLE = [
     ("EIN ROCKSTAR.", "🎸", "#151515", "#5C5C66"),
 ]
 
-# Cover/Thumbnail
-THUMB = dict(l1="ARBEITS", l2="LOS", bg="#5FA9B8", expr="sad", pose="shrug", prop=None,
-             emojis=("📄", "☕", "💤", "📉"))
+THUMB = dict(l1="ARBEITS", l2="LOS", bg="#5FA9B8", expr="smug", pose="idle", prop="beer",
+             emojis=("📺", "💶", "🛋️", "🦗"))
+
+# Running Gag: nach "Ich hab morgen frei!" zirpen Grillen
+SFX = [("jobcenter", 1, 1.0, "crickets"), ("family", 1, 1.0, "crickets")]
 
 SCENES = [
-    dict(id="plan", bg="#5FA9B8", clock=None, title="DER PLAN", lines=[
+    dict(id="plan", bg="#5FA9B8", clock=None, title="JOB WEG", lines=[
         ("Alex hat seinen Job verloren. Firma pleite.", None),
-        ("Aber er hat einen Plan: früh aufstehen, Bewerbungen schreiben, Sport machen.", None),
+        ("Heute das volle Klischee: Muskelshirt, Jogginghose, Bier in der Hand.", None),
     ]),
-    dict(id="alarm", bg="#F2A65A", clock="07:00", title="DER WECKER", lines=[
-        ("Sieben Uhr. Der Wecker klingelt. Alex denkt: Ich hab ja eh Zeit.", None),
-        ("Snooze. Snooze. Snooze.", None),
+    dict(id="money1", bg="#2FA36B", clock=None, title="WAS ER BEKOMMT", lines=[
+        ("Zuerst gibt's Arbeitslosengeld I: 60 Prozent vom letzten Netto.",
+         "Zuerst gibt's Arbeitslosengeld eins: sechzig Prozent vom letzten Netto."),
+        ("Bei 2.000 Euro netto: rund 1.200 Euro. Maximal zwölf Monate.",
+         "Bei zweitausend Euro netto: rund zwölfhundert Euro. Maximal zwölf Monate."),
     ]),
-    dict(id="breakfast", bg="#F2C14E", clock="11:30", title="FRÜHSTÜCK?", lines=[
-        ("Halb zwölf. Frühstück oder Mittagessen? Wer weiß das schon.", None),
+    dict(id="money2", bg="#3E7BDA", clock=None, title="UND DANACH?", dark=True, lines=[
+        ("Danach: Grundsicherungsgeld, früher Bürgergeld. 563 Euro im Monat.",
+         "Danach: Grundsicherungsgeld, früher Bürgergeld. Fünfhundertdreiundsechzig Euro im Monat."),
+        ("Plus angemessene Miete und Heizung. Macht rund 18,50 Euro am Tag.",
+         "Plus angemessene Miete und Heizung. Macht rund achtzehn Euro fünfzig am Tag."),
+    ]),
+    dict(id="morning", bg="#F2C14E", clock="11:30", title="GUTEN MORGEN", lines=[
+        ("Halb zwölf. Frühstück ist gleichzeitig Mittagessen.", None),
     ]),
     dict(id="jobcenter", bg="#8FA3B8", clock="12:30", title="JOBCENTER", lines=[
-        ("Dann sein Termin im Jobcenter. Seine Nummer: 247. Aufgerufen wird gerade: 12.",
-         "Dann sein Termin im Jobcenter. Seine Nummer: zweihundertsiebenundvierzig. Aufgerufen wird gerade: zwölf."),
-        ("Nach drei Stunden: Bitte bringen Sie nächstes Mal alle Unterlagen mit.", None),
+        ("Jobcenter-Termin. Wer ohne wichtigen Grund fehlt, dem kann das Geld gekürzt werden.", None),
+        ("Alex: Ich hab morgen frei!", "Alex sagt stolz: Ich hab morgen frei!"),
+        ("Niemand lacht.", None),
     ]),
-    dict(id="apply", bg="#6C8CE0", clock="15:00", title="BEWERBUNGEN", lines=[
-        ("Nachmittags Bewerbungen. Gesucht: Junior mit zehn Jahren Berufserfahrung.", None),
-        ("Die Antworten: Leider haben wir uns für einen anderen Kandidaten entschieden.", None),
+    dict(id="tv", bg="#E07A5F", clock="14:00", title="FLIESENTISCH-TIME", lines=[
+        ("Ab zwei: Fliesentisch, Chips und RTL.", None),
+        ("Gerichtsshow. Am Ende war's der Nachbar.", None),
     ]),
-    dict(id="family", bg="#E07A5F", clock="18:30", title="FAMILIENESSEN", lines=[
-        ("Beim Familienessen fragt Oma: Und, was machst du gerade beruflich?", None),
-        ("Alex stottert: Ich bin gerade so in einer Findungsphase.", None),
+    dict(id="sidejob", bg="#8E5BE0", clock="16:00", title="NEBENJOB?", dark=True, lines=[
+        ("Fun Fact: Vom Nebenjob darf er die ersten 100 Euro behalten.",
+         "Fun Fact: Vom Nebenjob darf er die ersten hundert Euro behalten."),
+        ("Vom Rest nur ein Teil. Alex rechnet. Und macht ein Nickerchen.", None),
     ]),
-    dict(id="linkedin", bg="#3E7BDA", clock="20:00", title="LINKEDIN", dark=True, lines=[
-        ("Auf LinkedIn postet er: Ich freue mich auf neue Herausforderungen!", None),
-        ("Übersetzt: Bitte stellt mich ein.", None),
-    ]),
-    dict(id="night", bg="#26345E", clock="23:00", title="MITTERNACHTS-MOTIVATION", dark=True, lines=[
-        ("Und um elf Uhr nachts plötzlich: Ab morgen ändere ich alles!", None),
-    ]),
-    dict(id="phases", bg="#D9534F", clock=None, title="DIE 4 PHASEN", lines=[
-        ("Die vier Phasen der Arbeitslosigkeit:", None),
-        ("Urlaubsgefühl.", None),
-        ("Langeweile.", None),
-        ("Panik.", None),
-        ("Und plötzlich backst du Sauerteigbrot.", None),
+    dict(id="family", bg="#E9A23B", clock="18:30", title="FAMILIENESSEN", lines=[
+        ("Oma fragt: Und, was machst du gerade beruflich?", None),
+        ("Alex: Ich hab morgen frei!", "Alex sagt stolz: Ich hab morgen frei!"),
+        ("Wieder lacht niemand.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du noch jemanden, der gerade arbeitslos ist? Markier ihn!", None),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]
+
+# Stille nach dem Gag (für das Grillenzirpen), in Sekunden
+PAUSE_AFTER = {("jobcenter", 1): 1.3, ("family", 1): 1.3}

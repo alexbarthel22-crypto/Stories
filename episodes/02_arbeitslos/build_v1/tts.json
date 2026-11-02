@@ -1,0 +1,164 @@
+{
+ "backend": "gemini:Puck",
+ "intro": {
+  "pre": 1.242125,
+  "role": 1.111125
+ },
+ "scenes": [
+  {
+   "id": "plan",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/plan_0.wav",
+     "dur": 2.144416666666667,
+     "caption": "Alex hat seinen Job verloren. Firma pleite."
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/plan_1.wav",
+     "dur": 3.9750833333333335,
+     "caption": "Aber er hat einen Plan: früh aufstehen, Bewerbungen schreiben, Sport machen."
+    }
+   ]
+  },
+  {
+   "id": "alarm",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/alarm_0.wav",
+     "dur": 4.929625,
+     "caption": "Sieben Uhr. Der Wecker klingelt. Alex denkt: Ich hab ja eh Zeit."
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/alarm_1.wav",
+     "dur": 5.312125,
+     "caption": "Snooze. Snooze. Snooze."
+    }
+   ]
+  },
+  {
+   "id": "breakfast",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/breakfast_0.wav",
+     "dur": 3.1824166666666667,
+     "caption": "Halb zwölf. Frühstück oder Mittagessen? Wer weiß das schon."
+    }
+   ]
+  },
+  {
+   "id": "jobcenter",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/jobcenter_0.wav",
+     "dur": 5.763083333333333,
+     "caption": "Dann sein Termin im Jobcenter. Seine Nummer: 247. Aufgerufen wird gerade: 12."
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/jobcenter_1.wav",
+     "dur": 3.942125,
+     "caption": "Nach drei Stunden: Bitte bringen Sie nächstes Mal alle Unterlagen mit."
+    }
+   ]
+  },
+  {
+   "id": "apply",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/apply_0.wav",
+     "dur": 5.601916666666667,
+     "caption": "Nachmittags Bewerbungen. Gesucht: Junior mit zehn Jahren Berufserfahrung."
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/apply_1.wav",
+     "dur": 4.080333333333333,
+     "caption": "Die Antworten: Leider haben wir uns für einen anderen Kandidaten entschieden."
+    }
+   ]
+  },
+  {
+   "id": "family",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/family_0.wav",
+     "dur": 3.6850833333333335,
+     "caption": "Beim Familienessen fragt Oma: Und, was machst du gerade beruflich?"
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/family_1.wav",
+     "dur": 3.843625,
+     "caption": "Alex stottert: Ich bin gerade so in einer Findungsphase."
+    }
+   ]
+  },
+  {
+   "id": "linkedin",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/linkedin_0.wav",
+     "dur": 5.045041666666667,
+     "caption": "Auf LinkedIn postet er: Ich freue mich auf neue Herausforderungen!"
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/linkedin_1.wav",
+     "dur": 1.7649583333333334,
+     "caption": "Übersetzt: Bitte stellt mich ein."
+    }
+   ]
+  },
+  {
+   "id": "night",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/night_0.wav",
+     "dur": 3.8260833333333335,
+     "caption": "Und um elf Uhr nachts plötzlich: Ab morgen ändere ich alles!"
+    }
+   ]
+  },
+  {
+   "id": "phases",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/phases_0.wav",
+     "dur": 2.364125,
+     "caption": "Die vier Phasen der Arbeitslosigkeit:"
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/phases_1.wav",
+     "dur": 0.865625,
+     "caption": "Urlaubsgefühl."
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/phases_2.wav",
+     "dur": 0.711375,
+     "caption": "Langeweile."
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/phases_3.wav",
+     "dur": 0.4235,
+     "caption": "Panik."
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/phases_4.wav",
+     "dur": 1.8835,
+     "caption": "Und plötzlich backst du Sauerteigbrot."
+    }
+   ]
+  },
+  {
+   "id": "outro",
+   "lines": [
+    {
+     "file": "episodes/02_arbeitslos/build/tts/outro_0.wav",
+     "dur": 2.422041666666667,
+     "caption": "Kennst du noch jemanden, der gerade arbeitslos ist? Markier ihn!"
+    },
+    {
+     "file": "episodes/02_arbeitslos/build/tts/outro_1.wav",
+     "dur": 2.7827916666666668,
+     "caption": "Und was soll Alex morgen sein? Schreib's in die Kommentare."
+    }
+   ]
+  }
+ ]
+}

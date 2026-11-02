@@ -1,0 +1,4 @@
+file '/home/user/Stories/episodes/02_arbeitslos/build/seg_0.mp4'
+file '/home/user/Stories/episodes/02_arbeitslos/build/seg_1.mp4'
+file '/home/user/Stories/episodes/02_arbeitslos/build/seg_2.mp4'
+file '/home/user/Stories/episodes/02_arbeitslos/build/seg_3.mp4'

@@ -539,6 +539,20 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.arc(0, -56, 7, 0, math.pi); src(c, shade(top, 0.82)); c.fill()
         c.set_line_width(0.75); src(c, "#FFFFFF", 0.9)
         c.move_to(-2.8, -51.5); c.line_to(-3.3, -44.5); c.move_to(2.8, -51.5); c.line_to(3.3, -44.5); c.stroke()
+    elif style == "tank":
+        # Feinripp-Muskelshirt: Rippen, tiefe Armausschnitte, runder Halsausschnitt
+        c.set_line_width(0.4); src(c, shade(top, 0.86))
+        for xx in range(-15, 16):
+            c.move_to(xx, -57); c.line_to(xx, -24)
+        c.stroke()
+        for sx in (-1, 1):
+            c.move_to(sx * 17, -58); c.line_to(sx * 9.5, -58)
+            c.curve_to(sx * 9.5, -51, sx * 11.5, -44, sx * 17, -42.5); c.close_path()
+            c.set_source(_grad(c, skin, -58, -42, 1.04, 0.92)); c.fill()
+            c.set_line_width(0.7); src(c, shade(top, 0.7))
+            c.move_to(sx * 9.5, -58); c.curve_to(sx * 9.5, -51, sx * 11.5, -44, sx * 17, -42.5); c.stroke()
+        c.arc(0, -57.5, 6.2, 0, math.pi); c.set_source(_grad(c, skin, -58, -51, 1.0, 0.9)); c.fill()
+        c.set_line_width(0.7); src(c, shade(top, 0.7)); c.arc(0, -57.5, 6.2, 0, math.pi); c.stroke()
     elif style == "suit":
         c.move_to(-4, -57); c.line_to(4, -57); c.line_to(0, -40); c.close_path(); fill(c, "#FFFFFF")
         c.move_to(-1.3, -54); c.line_to(1.3, -54); c.line_to(0.8, -40); c.line_to(0, -38); c.line_to(-0.8, -40); c.close_path()
@@ -562,13 +576,15 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         dx, dy = side * math.sin(a), math.cos(a)
         L = 20.5
         ex_, ey_ = sx + dx * L, sy + dy * L
-        c.set_line_width(8.6); src(c, shade(top, 0.62))
+        sleeve = skin if style == "tank" else top
+        c.set_line_width(8.6 if style != "tank" else 7.8); src(c, shade(sleeve, 0.62 if style != "tank" else 0.72))
         c.move_to(sx, sy); c.line_to(ex_, ey_); c.stroke()
-        c.set_line_width(7.0); c.set_source(_grad(c, top, sy - 4, ey_ + 4, 1.06, 0.88))
+        c.set_line_width(7.0 if style != "tank" else 6.4); c.set_source(_grad(c, sleeve, sy - 4, ey_ + 4, 1.06, 0.9))
         c.move_to(sx, sy); c.line_to(ex_, ey_); c.stroke()
-        # Bündchen
-        c.set_line_width(7.4); src(c, shade(top, 0.82))
-        c.move_to(sx + dx * (L - 0.6), sy + dy * (L - 0.6)); c.line_to(ex_ + dx * 0.4, ey_ + dy * 0.4); c.stroke()
+        if style != "tank":
+            # Bündchen
+            c.set_line_width(7.4); src(c, shade(top, 0.82))
+            c.move_to(sx + dx * (L - 0.6), sy + dy * (L - 0.6)); c.line_to(ex_ + dx * 0.4, ey_ + dy * 0.4); c.stroke()
         hx, hy = sx + dx * (L + 2.6), sy + dy * (L + 2.6)
         c.arc(hx, hy, 3.7, 0, 2 * math.pi)
         _fill_line(c, skin, hy - 4, hy + 4, 0.6, 1.06, 0.92, 0.72)
@@ -789,7 +805,20 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.move_to(11.8, eye_y - 2.2); c.line_to(17.0, eye_y - 3.0); c.stroke()
 
     # Requisite in der rechten Hand
-    if prop:
+    if prop == "beer":
+        hx, hy = hand_pos[1]
+        c.save(); c.translate(hx + 1.5, hy - 2); c.rotate(0.1); c.scale(1.3, 1.3)
+        c.move_to(-2.4, 6); c.line_to(-2.4, -3); c.curve_to(-2.4, -6, -1.1, -7, -1.1, -9)
+        c.line_to(-1.1, -12.5); c.line_to(1.1, -12.5); c.line_to(1.1, -9)
+        c.curve_to(1.1, -7, 2.4, -6, 2.4, -3); c.line_to(2.4, 6); c.close_path()
+        _fill_line(c, "#7A4A12", -12, 6, 0.6, 1.2, 0.85, 0.6)
+        rrect(c, -2.4, -2.5, 4.8, 4.5, 0.6); fill(c, "#F2E2B8")
+        rrect(c, -1.3, -13.6, 2.6, 1.5, 0.4); fill(c, "#D9B23A")
+        c.set_line_width(0.6); src(c, "#FFFFFF", 0.5); c.move_to(-1.6, 4.5); c.line_to(-1.6, -3); c.stroke()
+        c.restore()
+        c.arc(hx, hy, 3.7, 0, 2 * math.pi)
+        _fill_line(c, skin, hy - 4, hy + 4, 0.6, 1.06, 0.92, 0.72)
+    elif prop:
         hx, hy = hand_pos[1]
         if pose == "phone":
             emoji(c, prop, hx + 1, hy - 6, 15, rot=-0.15)
