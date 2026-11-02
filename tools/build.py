@@ -108,6 +108,7 @@ def draw_frame(c, tg):
     S = next((s for s in timeline if s.start <= tg < s.start + s.dur), timeline[-1])
     tl = tg - S.start
     background(c, S.bg, tg, rays=0.06)
+    safe_zone(c)
     ctx = Ctx(S, tl)
     tcol = "#FFFFFF" if S.dark else INK
     if S.clock:

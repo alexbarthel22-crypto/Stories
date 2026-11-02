@@ -37,6 +37,8 @@ def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
     else:
         txt, prop, top, bg = shuffle[k][0], shuffle[k][1], shuffle[k][2], shuffle[k][3]
     background(c, bg, t, rays=0.09, cy=1080, speed=0.25)
+    c.save()
+    safe_zone(c)
 
     # Kopfzeile
     text(c, "Heute ist Alex", W / 2, 112, 44, "#FFFFFF", FONT_BOLD)
@@ -58,10 +60,10 @@ def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
     last_tick = reveal_t if revealed else (ticks[k] if t >= ticks[0] else 0)
     slide = 1 - ease_out_cubic((t - last_tick) / 0.06)
     yb = 330
-    rrect(c, -10, yb - 50, W + 20, 100, 0)
+    rrect(c, -200, yb - 50, W + 400, 100, 0)
     src(c, "#000000", 0.55); c.fill()
     step = 96
-    for j in range(-7, 8):
+    for j in range(-8, 9):
         idx = (sel + j) % len(icons)
         x = W / 2 + (j + slide) * step
         c.arc(x, yb, 36, 0, 2 * math.pi)
@@ -93,6 +95,7 @@ def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
         burst(c, t, reveal_t, ["🌹", "💌", "📖", "🥺", "✨", "🎸", "☕", "💐"], W / 2, 1000, n=18,
               seed=5, dist=620, life=1.6, size=86)
 
+    c.restore()
     # Weißer Blitz vor dem Reveal
     if flash_start <= t < reveal_t + 0.3:
         if t < reveal_t:

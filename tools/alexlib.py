@@ -222,6 +222,18 @@ def background(c, color, t, rays=0.07, cx=W / 2, cy=1050, nrays=18, speed=0.04):
     c.paint()
 
 
+# TikTok-Safe-Zone: Inhalt (ohne Hintergrund) wird auf SAFE_SCALE um SAFE_PIVOT skaliert,
+# damit oben nichts hinter den TikTok-Tabs/der Suchleiste verschwindet.
+SAFE_SCALE, SAFE_PIVOT = 0.9, (W / 2, 1720)
+
+
+def safe_zone(c):
+    px, py = SAFE_PIVOT
+    c.translate(px, py)
+    c.scale(SAFE_SCALE, SAFE_SCALE)
+    c.translate(-px, -py)
+
+
 def fill_rect(c, color):
     src(c, color)
     c.paint()
