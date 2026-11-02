@@ -32,7 +32,7 @@ Ein junger deutscher TikTok-Storyteller, Mitte zwanzig, charmant, witzig und seh
 ### DIRECTOR'S NOTES
 Stil: emotional und lebendig, echte Betonung, kleine Kunstpausen vor Pointen. Zitate von Alex mit verstellter, übertrieben gefühlvoller Stimme. Tempo: zügig wie auf TikTok.
 Stimmung in diesem Satz: {mood}
-Sprache: Deutsch, englische Begriffe englisch aussprechen.
+Sprache: Deutsch, englische Begriffe englisch aussprechen. Der Name „Alex“ ist deutsch: immer mit kurzem, hellem A wie in „Alexander“ aussprechen, niemals englisch („Äliks“).
 Wichtig: Sprich ausschließlich den Text unter TRANSCRIPT, wortwörtlich, nichts hinzufügen oder weglassen.
 
 #### TRANSCRIPT
