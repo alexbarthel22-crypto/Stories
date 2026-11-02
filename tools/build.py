@@ -36,7 +36,7 @@ TICKS = sfx_meta["tick_onsets"]
 FLASH = round(TICKS[-1] + 0.07, 3)        # weißer Blitz nach dem letzten Tick
 REVEAL = 1.57                              # Burst-Einsatz wie im Original
 INTRO_LEN = 3.75
-GAP, PRE, POST, END_HOLD = 0.2, 0.15, 0.32, 1.7
+GAP, PRE, POST, END_HOLD = 0.15, 0.12, 0.28, 1.5
 
 
 # ------------------------------------------------------------------ Zeitachse

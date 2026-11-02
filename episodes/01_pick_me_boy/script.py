@@ -6,7 +6,24 @@ deutsche Stimme englische Wörter richtig ausspricht.
 """
 
 ROLE = "EIN PICK ME BOY."
-ROLE_TTS = "ein Pickmibeu."
+ROLE_TTS = "ein Pickmibeu."   # nur für die lokale Piper-Stimme
+ROLE_SAY = "ein Pick-me-Boy!"   # Gemini spricht Englisch korrekt
+
+# Stimmung je Szene (Regieanweisung für die Gemini-Stimme)
+MOODS = {
+    "intro_pre": "geheimnisvoll und spannend, wie vor einer großen Enthüllung, langgezogen",
+    "intro_role": "triumphierende, laute Enthüllung mit einem Augenzwinkern",
+    "what": "erklärend, amüsiert; das Zitat von Alex übertrieben selbstverliebt",
+    "morning": "spöttisch-dramatisch, das traurige Zitat theatralisch-melancholisch",
+    "train": "verschwörerisch flüsternd-amüsiert, die Pointe trocken",
+    "lunch": "ungläubig, leicht genervt, das Zitat von Alex arrogant",
+    "insta": "sarkastisch; die Kommentare übertrieben schmalzig vorlesen",
+    "date": "romantisch-kitschig aufgebaut, dann trocken und entlarvend; Song-Teil peinlich berührt",
+    "texts": "immer hektischer und überdrehter, dann trocken die Pointe",
+    "reject": "erst mitfühlend, dann schockiert über Alex' Wut, am Ende ernst und klar",
+    "flags": "energisch wie ein Countdown, jede Red Flag mit Nachdruck",
+    "outro": "freundlich, aufgedreht, direkt an die Zuschauer, auffordernd",
+}
 
 # Rollen, die im Intro durchgeschaltet werden (Text, Emoji, Oberteil, Hintergrund)
 SHUFFLE = [
