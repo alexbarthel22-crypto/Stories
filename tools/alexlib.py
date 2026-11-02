@@ -605,6 +605,8 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     ph = (t + blink_seed * 1.37) % 3.7
     if ph < 0.12:
         blink = max(0.08, abs(ph - 0.06) / 0.06)
+    if expr == "sleepy":
+        blink = 0.1
     lx = look * 1.2
     eye_y = hy0 + 1.6
     big = expr == "puppy"
@@ -835,3 +837,63 @@ def sparkle_lines(c, t, t0, cx, cy, n=12, color="#FFFFFF", r0=120, r1=330, d=0.4
         c.line_to(cx + math.cos(a) * rb, cy + math.sin(a) * rb)
     c.stroke()
     c.restore()
+
+
+# ----------------------------------------------------------------- Intro (generisch)
+def draw_intro_generic(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg):
+    """Auswahl-Intro wie im Referenzvideo. cfg: icon, bg, spec, expr, pose, hand_prop,
+    side_emoji, burst (Liste Emojis)."""
+    k = 0
+    for i, tk in enumerate(ticks):
+        if t >= tk:
+            k = i
+    revealed = t >= reveal_t
+    if revealed:
+        bg, top, txt = cfg["bg"], None, role_text
+    else:
+        txt, prop, top, bg = shuffle[k][0], shuffle[k][1], shuffle[k][2], shuffle[k][3]
+    background(c, bg, t, rays=0.09, cy=1080, speed=0.25)
+    c.save()
+    safe_zone(c)
+    text(c, "Heute ist Alex", W / 2, 112, 44, "#FFFFFF", FONT_BOLD)
+    sc = pop(t, reveal_t, 0.4) if revealed else 1.0
+    def ttl():
+        c.save(); c.translate(0, 6)
+        text(c, txt, W / 2, 196, 76, "#000000", FONT_HEAD, alpha=0.25)
+        c.restore()
+        text(c, txt, W / 2, 196, 76, "#FFFFFF", FONT_HEAD)
+    scaled(c, W / 2, 196, sc, ttl)
+    icons = [s_[1] for s_ in shuffle] + [cfg["icon"]]
+    cols = [s_[3] for s_ in shuffle] + [cfg["bg"]]
+    sel = len(shuffle) if revealed else k
+    last_tick = reveal_t if revealed else (ticks[k] if t >= ticks[0] else 0)
+    slide = 1 - ease_out_cubic((t - last_tick) / 0.06)
+    yb = 330
+    rrect(c, -200, yb - 50, W + 400, 100, 0)
+    src(c, "#000000", 0.55); c.fill()
+    for j in range(-8, 9):
+        idx = (sel + j) % len(icons)
+        x = W / 2 + (j + slide) * 96
+        c.arc(x, yb, 36, 0, 2 * math.pi); fill(c, shade(cols[idx], 0.85))
+        c.arc(x, yb, 36, 0, 2 * math.pi); c.set_line_width(3); src(c, "#FFFFFF", 0.35); c.stroke()
+        emoji(c, icons[idx], x, yb, 38)
+    c.arc(W / 2, yb, 44, 0, 2 * math.pi)
+    c.set_line_width(7); src(c, "#F7C948"); c.stroke()
+    if revealed:
+        spec, expr, pose = cfg["spec"], cfg.get("expr", "happy"), cfg.get("pose", "idle")
+        s = 0.9 + 0.1 * ease_out_back((t - reveal_t) / 0.35)
+        scaled(c, W / 2, 1520, s, lambda: person(c, W / 2, 1520, 780, spec, t, expr, pose, cfg.get("hand_prop")))
+        emoji(c, cfg["side_emoji"], 830, 1080 + math.sin(t * 3) * 10, 120, rot=0.25)
+        sparkle_lines(c, t, reveal_t, W / 2, 1000, n=14, r0=260, r1=560, d=0.55)
+        burst(c, t, reveal_t, cfg["burst"], W / 2, 1000, n=18, seed=5, dist=620, life=1.6, size=86)
+    else:
+        spec = alex(top=top, top_style="hoodie", pants="#2F3B52")
+        person(c, W / 2, 1520, 780, spec, t, "happy", "idle")
+        emoji(c, prop, 870 + math.sin(t * 6) * 6, 1150, 110, rot=0.15)
+    c.restore()
+    if flash_start <= t < reveal_t + 0.3:
+        a = clamp((t - flash_start) / 0.04) if t < reveal_t else 1 - ease_out_cubic((t - reveal_t) / 0.3)
+        c.set_source_rgba(1, 1, 1, a)
+        c.paint()
+        if t < reveal_t:
+            emoji(c, cfg["icon"], W / 2, 960, 130, rot=(t - flash_start) * 9)

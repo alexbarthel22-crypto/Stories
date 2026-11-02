@@ -29,6 +29,7 @@ Ein junger deutscher TikTok-Storyteller, Mitte zwanzig, charmant, witzig und seh
 Stil: emotional und lebendig, echte Betonung, kleine Kunstpausen vor Pointen. Zitate von Alex mit verstellter, übertrieben gefühlvoller Stimme. Tempo: zügig wie auf TikTok.
 Stimmung in diesem Satz: {mood}
 Sprache: Deutsch, englische Begriffe englisch aussprechen.
+Wichtig: Sprich ausschließlich den Text unter TRANSCRIPT, wortwörtlich, nichts hinzufügen oder weglassen.
 
 #### TRANSCRIPT
 {text}"""

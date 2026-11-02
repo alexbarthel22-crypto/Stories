@@ -18,3 +18,12 @@ Beschreibung (der Accountname „Alex ist heute:“ steht davor, also beginnt de
 ein Pick-me-Boy 🌹🚩 „Ich bin nicht wie die anderen Jungs“ – Spoiler: doch. Bei welcher Red Flag hast du sofort an jemanden gedacht? 👀 Markier ihn! Und was soll Alex morgen sein? 👇
 
 #pickmeboy #pickme #redflags #redflag #dating #lovebombing #nichtwiedieanderen #comedy #fürdich #fyp
+
+## Video 2 – Arbeitslos
+Cover: `episodes/02_arbeitslos/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+arbeitslos 🛋️📄 Plan: früh aufstehen. Realität: Snooze bis 11:29 😅 Welche der 4 Phasen bist du gerade? 👇 Markier jemanden, der das kennt! Und was soll Alex morgen sein?
+
+#arbeitslos #jobsuche #bewerbung #jobcenter #absage #relatable #comedy #fürdich #fyp

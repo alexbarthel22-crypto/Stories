@@ -1,14 +1,25 @@
 """TikTok-Cover/Thumbnail: Rolle riesig lesbar, Alex im Rollen-Outfit.
-Nutzung: python3 tools/thumbnail.py <ausgabe.png> "PICK ME" "BOY" """
+Nutzung: python3 tools/thumbnail.py <episode-ordner>
+Liest THUMB aus script.py und das Outfit (AL/PM) aus scenes.py, schreibt <episode>/thumbnail.png"""
 import sys, os, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import cairo
 from alexlib import *
 
-out, l1, l2 = sys.argv[1], sys.argv[2], sys.argv[3]
+import importlib.util
+ep = os.path.abspath(sys.argv[1])
+sys.path.insert(0, ep)
+def _load(n):
+    sp = importlib.util.spec_from_file_location(n, os.path.join(ep, n + ".py"))
+    m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m); return m
+script, scenes = _load("script"), _load("scenes")
+TH = getattr(script, "THUMB", dict(l1="PICK ME", l2="BOY", bg="#EC7FAE", expr="smug", pose="hips", prop="🧋",
+                                  emojis=("🚩", "🚩", "🌹", "🥺")))
+SPEC = getattr(scenes, "AL", None) or getattr(scenes, "PM")
+out, l1, l2 = os.path.join(ep, "thumbnail.png"), TH["l1"], TH["l2"]
 surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
 c = cairo.Context(surf)
-background(c, "#EC7FAE", 0.4, rays=0.12, cy=1250, nrays=20)
+background(c, TH["bg"], 0.4, rays=0.12, cy=1250, nrays=20)
 
 def outlined(s, y, size, fill_col, rot=-0.04):
     c.save(); c.translate(W / 2, y); c.rotate(rot)
@@ -32,7 +43,7 @@ text(c, "HEUTE IST ALEX…", W / 2, 355, 62, "#FFFFFF", FONT_HEAD)
 outlined(l1, 560, 250, "#FFFFFF")
 outlined(l2, 790, 250, "#FFE14D")
 # Alex
-for e, x, y, s, r in (("🚩", 150, 1020, 130, -0.3), ("🚩", 930, 1060, 130, 0.3), ("🌹", 190, 1350, 110, -0.2), ("🥺", 900, 1340, 110, 0.2)):
+for e, (x, y, s, r) in zip(TH["emojis"], ((150, 1020, 130, -0.3), (930, 1060, 130, 0.3), (190, 1350, 110, -0.2), (900, 1340, 110, 0.2))):
     emoji(c, e, x, y, s, r)
-person(c, W / 2, 1700, 760, alex(**OUTFIT_PICKME), 0.9, "smug", "hips", "🧋", bob=False)
+person(c, W / 2, 1700, 760, SPEC, 0.9, TH["expr"], TH["pose"], TH["prop"], bob=False)
 surf.write_to_png(out)
