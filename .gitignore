@@ -1,0 +1,4 @@
+episodes/*/build/
+__pycache__/
+*.onnx
+*.onnx.json

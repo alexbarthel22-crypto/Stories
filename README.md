@@ -1,0 +1,32 @@
+# Heute ist Alex … – TikTok-Serie
+
+Deutsche Kurzvideos (9:16, 1080×1920, max. 1:30). Hauptfigur **Alex** schlüpft jeden Tag in eine neue Rolle.
+
+## Folgen
+| # | Thema | Datei | Länge |
+|---|-------|-------|-------|
+| 1 | Pick-me-Boy | `episodes/01_pick_me_boy/01_pick_me_boy.mp4` | 1:21 |
+
+## Alex – fester Look (gilt für alle Folgen)
+Definiert in `tools/alexlib.py` → `ALEX_BASE`. **Nicht ändern**, nur das Outfit wechselt pro Rolle.
+- blonde Tolle mit Seitenscheitel (Locke nach rechts)
+- runde schwarze Brille, Sommersprossen, rosa Wangen
+- heller Hautton
+
+## Aufbau jeder Folge
+1. **Intro (≈3,7 s):** Auswahl-Leiste wie im Referenzvideo: 12 Rollen werden durchgeschaltet,
+   mit den **Original-Tick-Sounds im Original-Rhythmus** (2-2-2-2-3-3-3-4-4-5-6 Frames),
+   dann weißer Blitz und Reveal mit dem **Original-Burst-Sound** (`assets/sfx/`).
+2. Tagesablauf mit Uhrzeiten, Illustration oben, Alex unten, Untertitel-Box.
+3. Outro: Markier-Aufruf + „Was soll Alex morgen sein? Schreib's in die Kommentare.“
+
+## Neue Folge bauen
+```bash
+pip install piper-tts pycairo scipy soundfile numpy
+# Stimme: de_DE-thorsten-high.onnx (+ .json) lokal ablegen
+cp -r episodes/01_pick_me_boy episodes/02_neu   # script.py + scenes.py anpassen
+python3 tools/tts.py episodes/02_neu /pfad/de_DE-thorsten-high.onnx 0.9
+python3 tools/build.py episodes/02_neu --stills 2,10,30   # Vorschau-Bilder
+python3 tools/build.py episodes/02_neu                    # fertiges MP4
+```
+Sound-Effekte neu extrahieren: `python3 tools/extract_sfx.py referenz.wav assets/sfx`
