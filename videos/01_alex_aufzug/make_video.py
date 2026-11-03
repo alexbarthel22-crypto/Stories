@@ -36,198 +36,253 @@ def yb(n):
     return GROUND - n * FH
 
 
-ALEX = Style(150, "#f2c4a0", "#5a3a26", "#f0803c", "#2f3a6b", hair_style="curly", head=0.2, accent="#ffd34d")
-ELISA = Style(250, "#f6d2b8", "#f3c95a", "#9b6fd1", "#3b3b5c", hair_style="long")
-PAUL = Style(258, "#8d5a3b", "#1f1a24", "#e2574c", "#4a6fa5", hair_style="short", glasses=True)
+ALEX = Style(150, "#f1c19c", "#3b2418", "#e8a33a", "#2c3e66", shoes="#ffffff", hair_style="quiff",
+             leg=0.31, torso=0.31, arm=0.30, width=0.17, accent="#2d2a3a", under="#ffffff",
+             shoe_accent="#e2574c")
+ELISA = Style(250, "#f6d2b8", "#e9b949", "#7d5bd0", "#2f3350", hair_style="long", under="#f3eefc", shoes="#2f3350")
+PAUL = Style(258, "#8d5a3b", "#1f1a24", "#d9534a", "#46618f", hair_style="short", glasses=True, beard=True,
+             shoes="#f2f2f2")
 
 
 def sky(variant):
     if variant == "day":
-        stops = [(0, "#5aa7e0"), (0.35, "#9fd2f0"), (0.52, "#ffe2c2"), (0.53, "#4f8fc4"), (1, "#3f73a8")]
+        stops = [(0, "#4f9fe0"), (0.45, "#a9d4f2"), (0.62, "#e8f3fa"), (1, "#e8f3fa")]
     elif variant == "rain":
-        stops = [(0, "#4d5263"), (0.5, "#8b91a0"), (0.53, "#5d6577"), (1, "#4a5163")]
-    else:
-        stops = [(0, "#3a2c78"), (0.22, "#6b4fa6"), (0.40, "#d983b4"), (0.52, "#fbbf78"), (0.53, "#5b4c9e"),
-                 (1, "#463b86")]
+        stops = [(0, "#4b5160"), (0.55, "#8e95a3"), (1, "#9aa1ae")]
+    else:  # blue hour
+        stops = [(0, "#14213d"), (0.25, "#2b3f74"), (0.45, "#6a6aa8"), (0.56, "#f08a5d"), (0.62, "#ffc178"),
+                 (1, "#ffc178")]
     return vgradient(W, H, stops)
+
+
+ANTH, ANTH_L = "#2c2f38", "#454955"
+WOOD, WOOD_D = "#b9804f", "#94603a"
+WHITE, SLAB = "#f3f1ec", "#dcd8d0"
+
+
+def glass_interior(cv, x0, y0, x1, y1, variant, rng):
+    if variant == "day":
+        top, bot = hexc("#cfe2ef"), hexc("#eaf2f8")
+    elif variant == "rain":
+        top, bot = hexc("#9fa8b4"), hexc("#c4cad2")
+    else:
+        top, bot = hexc("#ffd28f"), hexc("#f39b62")
+    steps = 8
+    for i in range(steps):
+        cv.rect(x0, y0 + (y1 - y0) * i / steps, x1, y0 + (y1 - y0) * (i + 1) / steps + 1, fill=mix(top, bot, i / steps))
+    sil = (40, 30, 50, 55) if variant != "day" else (60, 80, 100, 45)
+    # furniture silhouettes: sofa / lamp / plant / shelf
+    k = rng.integers(0, 3)
+    if k == 0:
+        cv.rect(x0 + 40, y1 - 90, x0 + 230, y1 - 20, fill=sil, r=18)
+        cv.line([(x1 - 70, y1 - 20), (x1 - 70, y0 + 80)], sil, 6)
+        cv.pieslice(x1 - 110, y0 + 50, x1 - 30, y0 + 120, 180, 360, fill=sil)
+    elif k == 1:
+        for j in range(3):
+            cv.rect(x0 + 50, y0 + 70 + j * 60, x0 + 200, y0 + 78 + j * 60, fill=sil)
+        cv.rect(x1 - 120, y1 - 70, x1 - 70, y1 - 20, fill=sil, r=6)
+        for a in range(5):
+            cv.circle(x1 - 95 + (a - 2) * 16, y1 - 95 - (a % 2) * 22, 24, fill=sil)
+    else:
+        cv.rect(x0 + 60, y1 - 110, x0 + 210, y1 - 95, fill=sil)
+        cv.rect(x0 + 70, y1 - 95, x0 + 80, y1 - 20, fill=sil)
+        cv.rect(x0 + 190, y1 - 95, x0 + 200, y1 - 20, fill=sil)
+        cv.circle(x0 + 135, y0 + 60, 26, fill=(255, 255, 230, 120) if variant != "day" else sil)
+    # reflection
+    cv.poly([(x0 + 30, y1), (x0 + 120, y0), (x0 + 170, y0), (x0 + 80, y1)], fill=(255, 255, 255, 45))
 
 
 def draw_world(variant):
     img = sky(variant)
     cv = Canvas(img)
-    rng = np.random.default_rng(3)
-    dusk = variant != "day"
-    # sun + clouds
+    rng = np.random.default_rng(5)
+    night = variant == "dusk"
     if variant == "day":
-        cv.circle(3000, 1500, 170, fill=hexc("#fff3c4"))
+        cv.circle(3050, 1300, 150, fill=hexc("#fff7d6"))
     elif variant == "dusk":
-        cv.circle(560, HORIZON - 40, 210, fill=hexc("#ffd98a"))
-    for cx, cy, s in [(500, 900, 1.2), (3050, 1250, 1.0), (700, 2300, 0.8), (2950, 2600, 1.1), (300, 3000, 0.7)]:
-        col = hexc("#ffffff") if variant == "day" else hexc("#f6b5c6") if variant == "dusk" else hexc("#6d7384")
-        for dx, dy, r in [(-110, 10, 70), (-30, -30, 95), (70, -10, 80), (150, 20, 55)]:
-            cv.circle(cx + dx * s, cy + dy * s, r * s, fill=col)
-        cv.rect(cx - 180 * s, cy + 10 * s, cx + 205 * s, cy + 75 * s, fill=col, r=30 * s)
-    # mountains
-    mcol = hexc("#4c3d93") if dusk else hexc("#6f8fbf")
-    if variant == "rain":
-        mcol = hexc("#555b6c")
-    cv.poly([(0, HORIZON), (300, HORIZON - 380), (650, HORIZON - 160), (900, HORIZON)], fill=mcol)
-    cv.poly([(2600, HORIZON), (3100, HORIZON - 520), (3350, HORIZON - 420), (3600, HORIZON - 600), (3600, HORIZON)],
-            fill=mcol)
-    # sea glints
-    for i in range(60):
-        x, y = rng.uniform(0, W), rng.uniform(HORIZON + 40, GROUND - 200)
-        cv.rect(x, y, x + rng.uniform(60, 200), y + 8, fill=(255, 255, 255, 40))
-    # city silhouettes
-    city = hexc("#3b2f74") if dusk else hexc("#5a79a8")
-    city2 = hexc("#4d3f8c") if dusk else hexc("#7a97c2")
-    if variant == "rain":
-        city, city2 = hexc("#4a4f5e"), hexc("#5a6070")
-    for x0, x1, top, c in [(0, 380, 3800, city2), (320, 760, 3300, city), (720, 1100, 4100, city2),
-                           (2760, 3100, 3600, city), (3050, 3450, 3100, city2), (3380, 3600, 3900, city)]:
-        cv.rect(x0, top, x1, GROUND, fill=c)
-        for wy in range(int(top) + 50, GROUND - 60, 90):
-            for wx in range(int(x0) + 40, int(x1) - 40, 70):
-                if rng.random() < 0.55:
-                    lit = hexc("#ffcf6e") if (dusk and rng.random() < 0.6) else mix(c, (255, 255, 255), 0.25)
-                    cv.rect(wx, wy, wx + 34, wy + 46, fill=lit)
+        cv.circle(700, 3700, 230, fill=hexc("#ffe0a0"))
+    # soft flat clouds
+    for cx, cy, s in [(450, 1000, 1.1), (3100, 1700, 0.9), (650, 2500, 0.8), (3000, 2900, 1.0)]:
+        col = (255, 255, 255, 200) if variant == "day" else (255, 214, 190, 90) if night else (110, 116, 130, 230)
+        cv.rect(cx - 220 * s, cy - 30 * s, cx + 220 * s, cy + 30 * s, fill=col, r=30 * s)
+        cv.rect(cx - 120 * s, cy - 75 * s, cx + 90 * s, cy + 10 * s, fill=col, r=45 * s)
 
-    # ---- building
-    cream, cream_d = hexc("#f5efe6"), hexc("#e2d8c8")
-    teal, teal_d = hexc("#2f9c8f"), hexc("#21766c")
-    ink = hexc("#2b2140")
+    # ---- skyline: two layers of modern towers
+    far = hexc("#8fb3d3") if variant == "day" else hexc("#46507e") if night else hexc("#6d7381")
+    near = hexc("#5f86ad") if variant == "day" else hexc("#2a3157") if night else hexc("#545a68")
+    for layer, col, base_top in ((0, far, 3000), (1, near, 3600)):
+        x = -100 + layer * 120
+        while x < W:
+            w = rng.integers(170, 330)
+            top = base_top + rng.integers(-700, 600)
+            if 1050 < x + w and x < 2780:      # keep the area behind our tower clear
+                x += w + 40
+                continue
+            cv.rect(x, top, x + w, GROUND, fill=col)
+            if rng.random() < 0.4:  # stepped crown / antenna
+                cv.rect(x + w * 0.25, top - 90, x + w * 0.75, top, fill=col)
+                cv.rect(x + w * 0.48, top - 230, x + w * 0.52, top - 90, fill=col)
+            wc = mix(col, (255, 255, 255), 0.18) if variant != "dusk" else None
+            for wy in range(int(top) + 40, GROUND - 40, 70 if layer else 90):
+                if night:
+                    for wx in range(int(x) + 25, int(x + w) - 30, 48):
+                        if rng.random() < 0.45:
+                            cv.rect(wx, wy, wx + 26, wy + 34, fill=hexc("#ffd58a") if rng.random() < 0.7 else
+                                    mix(col, (255, 255, 255), 0.2))
+                else:
+                    cv.rect(x + 20, wy, x + w - 20, wy + 10, fill=wc)
+            x += w + rng.integers(20, 90)
+
     top_y = yb(FLOORS) - FH
-    # stairs column wall
-    cv.rect(STAIRS[0], top_y, STAIRS[1], GROUND, fill=cream)
-    # facade dot pattern on stair wall
-    for n in range(FLOORS + 1):
-        for i in range(3):
-            for j in range(3):
-                cv.circle(STAIRS[0] + 190 + i * 32, yb(n) - FH + 80 + j * 32, 10, fill=cream_d)
-    # apartments
-    for n in range(FLOORS + 1):
-        y1, y0 = yb(n), yb(n) - FH
-        if n == 0:
-            cv.rect(APT[0], y0, APT[1], y1, fill=hexc("#f5efe6"))
-            # lobby glass front
-            cv.rect(APT[0] + 40, y0 + 120, APT[1] - 40, y1, fill=hexc("#2f9c8f"))
-            for k in range(6):
-                xx = APT[0] + 40 + k * (APT[1] - APT[0] - 80) / 5
-                cv.rect(xx - 10, y0 + 120, xx + 10, y1, fill=hexc("#d9a441"))
-            cv.rect(APT[0] + 40, y0 + 110, APT[1] - 40, y0 + 130, fill=hexc("#d9a441"))
-            # awning
-            for k in range(12):
-                xx = APT[0] + 20 + k * 76
-                cv.rect(xx, y0 + 20, xx + 76, y0 + 95, fill=hexc("#2f9c8f") if k % 2 == 0 else hexc("#ffffff"))
-                cv.pieslice(xx, y0 + 60, xx + 76, y0 + 130, 0, 180,
-                            fill=hexc("#2f9c8f") if k % 2 == 0 else hexc("#ffffff"))
-            # mailboxes
-            for i in range(4):
-                for j in range(3):
-                    cv.rect(APT[0] + 520 + i * 60, y0 + 190 + j * 46, APT[0] + 570 + i * 60, y0 + 228 + j * 46,
-                            fill=hexc("#e6c36a"))
-            cv.rect(APT[0] + 30, y0 + 150, APT[0] + 120, y0 + 210, fill=hexc("#d9a441"), r=10)
-            cv.text(APT[0] + 75, y0 + 181, "E", 44, ink)
-            continue
-        wall = hexc(PASTELS[n % len(PASTELS)])
-        cv.rect(APT[0], y0, APT[1], y1, fill=wall)
-        # door A (Alex's on floor 12)
-        dcol = hexc(DOORS[n % len(DOORS)]) if n != FLOORS else hexc("#ffcf3f")
-        cv.rect(ALEX_DOOR_X - 55, y1 - 285, ALEX_DOOR_X + 55, y1, fill=mix(dcol, (0, 0, 0), 0.25), r=8)
-        cv.rect(ALEX_DOOR_X - 45, y1 - 275, ALEX_DOOR_X + 45, y1, fill=dcol, r=6)
-        cv.circle(ALEX_DOOR_X + 25, y1 - 140, 8, fill=ink)
-        # window with shutters
-        wx0, wx1 = 2020, 2260
-        cv.rect(wx0, y1 - 300, wx1, y1 - 60, fill=hexc("#ffffff"))
-        cv.rect(wx0 + 14, y1 - 286, wx1 - 14, y1 - 74, fill=mix(hexc("#f29ab0"), hexc("#7e66c9"), 0.3))
-        cv.poly([(wx0 + 14, y1 - 200), (wx0 + 120, y1 - 286), (wx0 + 170, y1 - 286), (wx0 + 14, y1 - 150)],
-                fill=(255, 255, 255, 70))
-        for sx0 in (wx0 - 80, wx1 + 10):
-            cv.rect(sx0, y1 - 300, sx0 + 70, y1 - 60, fill=hexc("#ffffff"))
-            for k in range(9):
-                cv.rect(sx0 + 8, y1 - 290 + k * 26, sx0 + 62, y1 - 280 + k * 26, fill=cream_d)
-        # door B
-        bx = 2470
-        dcol2 = hexc(DOORS[(n + 3) % len(DOORS)])
-        cv.rect(bx - 55, y1 - 285, bx + 55, y1, fill=mix(dcol2, (0, 0, 0), 0.25), r=8)
-        cv.rect(bx - 45, y1 - 275, bx + 45, y1, fill=dcol2, r=6)
-        cv.circle(bx - 25, y1 - 140, 8, fill=ink)
-        # lamp + plants
-        cv.circle(2340, y1 - 330, 14, fill=hexc("#fff3c4"))
-        if n % 3 == 1:
-            cv.rect(2600, y1 - 130, 2660, y1 - 60, fill=hexc("#d9774a"), r=8)
-            for a in range(5):
-                cv.circle(2630 + (a - 2) * 18, y1 - 150 - (a % 2) * 20, 26, fill=hexc("#3e9a5a"))
-        # floor badge
-        cv.rect(APT[0] + 20, y0 + 26, APT[0] + 120, y0 + 92, fill=hexc("#d9a441"), r=12)
-        cv.text(APT[0] + 70, y0 + 60, str(n), 44, ink)
-        # balcony rail
-        cv.rect(APT[0], y1 - 120, APT[1], y1, fill=(255, 255, 255, 55))
-        cv.rect(APT[0], y1 - 128, APT[1], y1 - 112, fill=teal)
-        for k in range(0, APT[1] - APT[0] + 1, 95):
-            cv.rect(APT[0] + k - 5, y1 - 120, APT[0] + k + 5, y1, fill=teal)
-    # stairs: zigzag flights between floors
+    ink = hexc("#22243a")
+    anth, anth_l = hexc(ANTH), hexc(ANTH_L)
+    wood, wood_d = hexc(WOOD), hexc(WOOD_D)
+    white, slab = hexc(WHITE), hexc(SLAB)
+
+    # ---- stair core behind glass
+    cv.rect(STAIRS[0], top_y, STAIRS[1], GROUND, fill=hexc("#e6e3dd"))
     for n in range(FLOORS):
         a = (STAIRS[0] + 20, yb(n))
         m = (STAIRS[1] - 20, yb(n) - FH / 2)
         b = (STAIRS[0] + 20, yb(n + 1))
         for p0, p1 in ((a, m), (m, b)):
-            cv.poly([p0, p1, (p1[0], p1[1] + 28), (p0[0], p0[1] + 28)], fill=cream_d)
-            steps = 9
-            for s in range(steps):
-                f0, f1 = s / steps, (s + 1) / steps
+            cv.poly([p0, p1, (p1[0], p1[1] + 34), (p0[0], p0[1] + 34)], fill=hexc("#c9c5bc"))
+            steps = 10
+            for s_ in range(steps):
+                f0, f1 = s_ / steps, (s_ + 1) / steps
                 x0_, y0_ = p0[0] + (p1[0] - p0[0]) * f0, p0[1] + (p1[1] - p0[1]) * f0
                 x1_, y1_ = p0[0] + (p1[0] - p0[0]) * f1, p0[1] + (p1[1] - p0[1]) * f1
-                cv.line([(x0_, y0_), (x0_, y1_), (x1_, y1_)], hexc("#cfc3b0"), 6, cap=False)
-            cv.line([(p0[0], p0[1] - 95), (p1[0], p1[1] - 95)], teal, 14)
-            for k in range(5):
-                f = (k + 0.5) / 5
-                px, py = p0[0] + (p1[0] - p0[0]) * f, p0[1] + (p1[1] - p0[1]) * f
-                cv.line([(px, py - 95), (px, py)], teal_d, 6, cap=False)
-        cv.rect(m[0] - 40, m[1], m[0] + 25, m[1] + 22, fill=cream_d)
-    # floor slabs
+                cv.line([(x0_, y0_), (x0_, y1_), (x1_, y1_)], hexc("#b4afa5"), 5, cap=False)
+            cv.line([(p0[0], p0[1] - 90), (p1[0], p1[1] - 90)], anth, 8)
+            for k in range(7):
+                ff = (k + 0.5) / 7
+                px, py = p0[0] + (p1[0] - p0[0]) * ff, p0[1] + (p1[1] - p0[1]) * ff
+                cv.line([(px, py - 90), (px, py)], anth_l, 3, cap=False)
+        cv.rect(m[0] - 50, m[1], m[0] + 25, m[1] + 28, fill=hexc("#c9c5bc"))
+    # curtain wall: mullions + reflections
+    for k in range(STAIRS[0], STAIRS[1] + 1, 100):
+        cv.rect(k - 5, top_y, k + 5, GROUND, fill=anth)
+    cv.rect(STAIRS[0], top_y, STAIRS[1], GROUND, fill=(170, 205, 230, 38) if variant != "dusk" else (120, 140, 200, 30))
+    for k in range(14):
+        yy = top_y + k * 380
+        cv.poly([(STAIRS[0], yy + 300), (STAIRS[0] + 120, yy), (STAIRS[0] + 170, yy), (STAIRS[0] + 50, yy + 300)],
+                fill=(255, 255, 255, 40))
+
+    # ---- apartments with exterior walkway
     for n in range(FLOORS + 1):
-        cv.rect(SHAFT[0] - 20, yb(n), APT[1] + 20, yb(n) + 26, fill=cream)
-        cv.rect(SHAFT[0] - 20, yb(n) + 22, APT[1] + 20, yb(n) + 30, fill=cream_d)
-    # shaft frame
-    cv.rect(SHAFT[0], top_y - 260, SHAFT[0] + 22, GROUND, fill=hexc("#ffffff"))
-    cv.rect(SHAFT[1] - 22, top_y - 260, SHAFT[1], GROUND, fill=hexc("#ffffff"))
+        y1, y0 = yb(n), yb(n) - FH
+        if n == 0:
+            cv.rect(APT[0], y0, APT[1], y1, fill=white)
+            glass_interior(cv, APT[0] + 30, y0 + 140, APT[1] - 30, y1, variant, rng)
+            for k in range(7):
+                xx = APT[0] + 30 + k * (APT[1] - APT[0] - 60) / 6
+                cv.rect(xx - 7, y0 + 140, xx + 7, y1, fill=anth)
+            cv.rect(APT[0] + 30, y0 + 132, APT[1] - 30, y0 + 146, fill=anth)
+            cv.rect(APT[0] - 40, y0 + 90, APT[1] + 40, y0 + 122, fill=wood)      # wooden canopy
+            cv.rect(APT[0] - 40, y0 + 118, APT[1] + 40, y0 + 126, fill=wood_d)
+            cv.rect(APT[0] + 40, y0 + 20, APT[0] + 120, y0 + 76, fill=anth, r=8)
+            cv.text(APT[0] + 80, y0 + 49, "E", 40, hexc("#ffffff"))
+            for px in (APT[0] + 360, APT[1] - 120):                           # planters with grasses
+                cv.rect(px - 60, y1 - 70, px + 60, y1, fill=anth_l, r=6)
+                for g in range(9):
+                    cv.line([(px - 40 + g * 10, y1 - 70), (px - 55 + g * 14, y1 - 140 - (g % 3) * 15)],
+                            hexc("#6f9a5a"), 6)
+            continue
+        cv.rect(APT[0], y0, APT[1], y1, fill=white)
+        # wood cladding next to Alex's door
+        cv.rect(APT[0], y0 + 26, APT[0] + 30, y1, fill=wood)
+        # door A (Alex's)
+        dcol = wood if n != FLOORS else hexc("#d9653b")
+        cv.rect(ALEX_DOOR_X - 62, y1 - 300, ALEX_DOOR_X + 62, y1, fill=anth)
+        cv.rect(ALEX_DOOR_X - 52, y1 - 290, ALEX_DOOR_X + 52, y1, fill=dcol)
+        for g in range(4):
+            cv.rect(ALEX_DOOR_X - 40 + g * 26, y1 - 280, ALEX_DOOR_X - 37 + g * 26, y1 - 10, fill=_dk(dcol))
+        cv.rect(ALEX_DOOR_X + 30, y1 - 170, ALEX_DOOR_X + 36, y1 - 110, fill=hexc("#d8dbe0"))
+        # floor plate
+        cv.rect(APT[0] + 50, y0 + 40, APT[0] + 140, y0 + 100, fill=anth, r=10)
+        cv.text(APT[0] + 95, y0 + 71, str(n), 40, hexc("#ffffff"))
+        # big window
+        wx0, wx1 = 1980, 2380
+        cv.rect(wx0 - 10, y0 + 40, wx1 + 10, y1, fill=anth)
+        glass_interior(cv, wx0, y0 + 50, wx1, y1, variant, rng)
+        cv.rect((wx0 + wx1) / 2 - 5, y0 + 50, (wx0 + wx1) / 2 + 5, y1, fill=anth)
+        # door B
+        bx = 2470
+        cv.rect(bx - 62, y1 - 300, bx + 62, y1, fill=anth)
+        cv.rect(bx - 52, y1 - 290, bx + 52, y1, fill=hexc("#5d6270"))
+        cv.rect(bx - 40, y1 - 280, bx + 40, y1 - 160, fill=(200, 220, 235, 120))
+        # wood louvres at the end
+        for k in range(8):
+            cv.rect(2560 + k * 18, y0 + 26, 2570 + k * 18, y1, fill=wood if k % 2 == 0 else wood_d)
+        # ceiling downlights
+        for lx in (1920, 2430):
+            cv.rect(lx - 18, y0 + 26, lx + 18, y0 + 34, fill=hexc("#fff3d0"))
+        # frosted glass balustrade
+        cv.rect(APT[0], y1 - 118, APT[1], y1, fill=(235, 242, 248, 85))
+        cv.rect(APT[0], y1 - 124, APT[1], y1 - 116, fill=anth)
+        for k in range(0, APT[1] - APT[0] + 1, 240):
+            cv.rect(APT[0] + k - 3, y1 - 118, APT[0] + k + 3, y1, fill=anth_l)
+    # ---- slabs
     for n in range(FLOORS + 1):
-        cv.rect(SHAFT[0], yb(n) - 8, SHAFT[1], yb(n) + 8, fill=hexc("#ffffff"))
-    # roof
-    cv.rect(SHAFT[0] - 30, top_y - 20, APT[1] + 30, top_y + 10, fill=cream)
-    cv.rect(STAIRS[0], top_y - 110, APT[1], top_y - 96, fill=teal)
-    for k in range(STAIRS[0], APT[1] + 1, 60):
-        cv.rect(k - 4, top_y - 110, k + 4, top_y - 20, fill=teal)
-    cv.rect(SHAFT[0] - 20, top_y - 300, SHAFT[1] + 20, top_y - 20, fill=cream)   # machine room
+        cv.rect(SHAFT[0] - 20, yb(n), APT[1] + 30, yb(n) + 26, fill=white)
+        cv.rect(SHAFT[0] - 20, yb(n) + 22, APT[1] + 30, yb(n) + 30, fill=slab)
+    # ---- glass elevator shaft
+    cv.rect(SHAFT[0], top_y - 260, SHAFT[1], GROUND, fill=(200, 225, 245, 45) if variant != "dusk" else
+            (150, 170, 220, 40))
+    cv.rect(SHAFT[0], top_y - 260, SHAFT[0] + 14, GROUND, fill=anth)
+    cv.rect(SHAFT[1] - 14, top_y - 260, SHAFT[1], GROUND, fill=anth)
+    for n in range(FLOORS + 1):
+        cv.rect(SHAFT[0], yb(n) - 5, SHAFT[1], yb(n) + 5, fill=anth)
+    for k in range(13):
+        yy = top_y + k * 420
+        cv.poly([(SHAFT[0] + 20, yy + 260), (SHAFT[0] + 120, yy), (SHAFT[0] + 150, yy), (SHAFT[0] + 50, yy + 260)],
+                fill=(255, 255, 255, 35))
+    # ---- roof: parapet, glass railing, solar panels, planters, machine room
+    cv.rect(SHAFT[0] - 30, top_y - 24, APT[1] + 40, top_y + 6, fill=white)
+    cv.rect(STAIRS[0], top_y - 130, APT[1] + 30, top_y - 24, fill=(235, 242, 248, 80))
+    cv.rect(STAIRS[0], top_y - 136, APT[1] + 30, top_y - 128, fill=anth)
     for k in range(4):
-        cv.rect(SHAFT[0] + 30 + k * 62, top_y - 250, SHAFT[0] + 62 + k * 62, top_y - 120, fill=cream_d, r=12)
-    cv.rect(SHAFT[0] - 40, top_y - 320, SHAFT[1] + 40, top_y - 296, fill=teal)
-    for px in (2150, 2500):  # palms
-        cv.rect(px - 12, top_y - 380, px + 12, top_y - 20, fill=hexc("#8a5a3c"))
-        for a in range(6):
-            ang = math.pi + a * math.pi / 5
-            cv.line([(px, top_y - 380), (px + math.cos(ang) * 150, top_y - 380 + math.sin(ang) * 80 + 60)],
-                    hexc("#2f8a5a"), 34)
-    for k in range(10):
-        cv.circle(1820 + k * 44, top_y - 140 - (k % 3) * 18, 26, fill=hexc("#e05a8a") if k % 2 else hexc("#3e9a5a"))
-    # street
-    cv.rect(0, GROUND, W, GROUND + 230, fill=hexc("#ffffff"))
-    wave = hexc("#8a7cc8") if variant != "rain" else hexc("#7d8294")
-    for row in range(3):
-        pts = [(x, GROUND + 50 + row * 60 + 18 * math.sin(x / 45)) for x in range(0, W + 20, 20)]
-        cv.line(pts, wave, 20, cap=False)
-    cv.rect(0, GROUND + 230, W, H, fill=hexc("#4a4458") if variant != "rain" else hexc("#3f4250"))
+        px = 1900 + k * 170
+        cv.poly([(px, top_y - 30), (px + 140, top_y - 30), (px + 110, top_y - 120), (px - 10, top_y - 120)],
+                fill=hexc("#253a6b"))
+        for j in range(1, 3):
+            cv.line([(px + j * 47 - 4 * j, top_y - 30), (px + j * 40 - 10, top_y - 120)], hexc("#5170a8"), 3, cap=False)
+    for px in (1560, 2600):
+        cv.rect(px - 50, top_y - 80, px + 50, top_y - 24, fill=anth_l, r=6)
+        cv.circle(px, top_y - 170, 80, fill=hexc("#5e9a5a") if variant != "rain" else hexc("#6a7f6a"))
+        cv.circle(px - 40, top_y - 140, 55, fill=hexc("#4f8a4c") if variant != "rain" else hexc("#5f735f"))
+        cv.rect(px - 6, top_y - 110, px + 6, top_y - 80, fill=wood_d)
+    cv.rect(SHAFT[0] - 20, top_y - 300, SHAFT[1] + 20, top_y - 24, fill=anth)
+    for k in range(5):
+        cv.rect(SHAFT[0] + 10 + k * 56, top_y - 260, SHAFT[0] + 46 + k * 56, top_y - 70, fill=anth_l)
+    # ---- street level: pavers, trees, lamps, road
+    cv.rect(0, GROUND, W, GROUND + 230, fill=hexc("#d9d6d0") if variant != "rain" else hexc("#a9abb0"))
+    for k in range(0, W, 120):
+        cv.rect(k, GROUND, k + 4, GROUND + 230, fill=hexc("#c7c3bb") if variant != "rain" else hexc("#9a9ca2"))
+    cv.rect(0, GROUND + 105, W, GROUND + 110, fill=hexc("#c7c3bb") if variant != "rain" else hexc("#9a9ca2"))
+    cv.rect(0, GROUND + 215, W, GROUND + 240, fill=hexc("#b8b4ab"))
+    cv.rect(0, GROUND + 240, W, H, fill=hexc("#3b3f4a") if variant != "rain" else hexc("#353841"))
     for x in range(0, W, 300):
-        cv.rect(x + 40, GROUND + 380, x + 200, GROUND + 400, fill=hexc("#ffffff"))
-    # lobby entrance opening near shaft (walkway from street)
+        cv.rect(x + 40, GROUND + 390, x + 200, GROUND + 408, fill=hexc("#ffffff"))
+    tree = hexc("#5e9a5a") if variant != "rain" else hexc("#617061")
+    for tx in (350, 850, 3000, 3420):
+        cv.rect(tx - 10, GROUND - 260, tx + 10, GROUND, fill=wood_d)
+        cv.circle(tx, GROUND - 330, 120, fill=tree)
+        cv.circle(tx + 60, GROUND - 280, 80, fill=_dk(tree, 0.12))
+    for lx in (600, 3200):
+        cv.rect(lx - 6, GROUND - 520, lx + 6, GROUND, fill=anth)
+        cv.rect(lx - 6, GROUND - 520, lx + 70, GROUND - 508, fill=anth)
+        cv.rect(lx + 40, GROUND - 510, lx + 80, GROUND - 498, fill=hexc("#fff3c4"))
     if variant == "rain":
-        img = ImageEnhance.Color(img).enhance(0.45)
-        img = ImageEnhance.Brightness(img).enhance(0.82)
-        arr = np.asarray(img).astype(np.float32)
-        arr = arr * np.array([0.95, 0.98, 1.06])
+        img = ImageEnhance.Color(img).enhance(0.55)
+        img = ImageEnhance.Brightness(img).enhance(0.85)
+        arr = np.asarray(img).astype(np.float32) * np.array([0.95, 0.98, 1.06])
         img = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
     return img
+
+
+def _dk(c, f=0.2):
+    return mix(c, (20, 16, 30), f)
 
 
 WORLDS = {}
@@ -248,38 +303,46 @@ def draw_cab(cv, floor_f, door=0.0, rain=False):
     yb_ = GROUND - floor_f * FH
     x0, x1 = SX - CAB_W / 2, SX + CAB_W / 2
     y0 = yb_ - CAB_H
-    cv.line([(SX, yb(FLOORS) - FH - 40), (SX, y0)], hexc("#555066"), 6, cap=False)
-    gold = hexc("#d9a441") if not rain else hexc("#a99266")
-    cv.rect(x0 - 14, y0 - 14, x1 + 14, yb_ + 6, fill=gold, r=10)
-    back = hexc("#22857a") if not rain else hexc("#4b6d6a")
+    anth = hexc(ANTH)
+    cv.line([(SX, yb(FLOORS) - FH - 40), (SX, y0)], hexc("#555a66"), 5, cap=False)
+    cv.rect(x0 - 12, y0 - 12, x1 + 12, yb_ + 6, fill=anth, r=8)
+    back = hexc("#e9e4dc") if not rain else hexc("#b9b9b9")
     cv.rect(x0, y0, x1, yb_, fill=back)
-    cv.rect(x0 + 30, y0 + 16, x1 - 30, y0 + 30, fill=hexc("#fff3c4"), r=6)
-    cv.rect(x0 + 18, y0 + 70, x0 + 46, y0 + 200, fill=hexc("#e9e4ec"), r=8)
+    cv.rect(x0 + 40, y0 + 40, x1 - 40, yb_ - 40, fill=hexc(WOOD) if not rain else hexc("#8f8070"))
+    for g in range(5):
+        cv.rect(x0 + 60 + g * 32, y0 + 40, x0 + 63 + g * 32, yb_ - 40, fill=hexc(WOOD_D))
+    cv.rect(x0 + 20, y0 + 12, x1 - 20, y0 + 22, fill=hexc("#fff6dc"), r=4)
+    cv.rect(x0 + 14, y0 + 90, x0 + 38, y0 + 210, fill=hexc("#c9ced6"), r=6)
     for k in range(7):
-        cv.circle(x0 + 32, y0 + 85 + k * 17, 5, fill=hexc("#8a8396"))
-    return (x0, y0, x1, yb_, door, gold)
+        cv.circle(x0 + 26, y0 + 104 + k * 16, 5, fill=anth)
+    cv.rect(x0, yb_ - 140, x1, yb_ - 132, fill=hexc("#c9ced6"))
+    return (x0, y0, x1, yb_, door, anth)
 
 
 def draw_cab_doors(cv, info):
-    x0, y0, x1, y1, door, gold = info
+    x0, y0, x1, y1, door, frame = info
     half = (x1 - x0) / 2
     off = half * door
-    col = (60, 180, 165, 120)
+    col = (190, 215, 235, 70)
     cv.rect(x0 - off, y0, x0 + half - off, y1, fill=col)
     cv.rect(x0 + half + off, y0, x1 + off, y1, fill=col)
-    cv.rect(x0 - 14, y0 - 14, x0, y1 + 6, fill=gold)
-    cv.rect(x1, y0 - 14, x1 + 14, y1 + 6, fill=gold)
+    cv.rect(x0 - 12, y0 - 12, x0, y1 + 6, fill=frame)
+    cv.rect(x1, y0 - 12, x1 + 12, y1 + 6, fill=frame)
     if door < 0.95:
-        cv.line([(x0 + half - off, y0), (x0 + half - off, y1)], hexc("#1b5f57"), 4, cap=False)
-        cv.line([(x0 + half + off, y0), (x0 + half + off, y1)], hexc("#1b5f57"), 4, cap=False)
-    cv.rect(x0 - 14, y1 - 6, x1 + 14, y1 + 8, fill=gold)
+        cv.line([(x0 + half - off, y0), (x0 + half - off, y1)], hexc(ANTH_L), 4, cap=False)
+        cv.line([(x0 + half + off, y0), (x0 + half + off, y1)], hexc(ANTH_L), 4, cap=False)
+    cv.rect(x0 - 12, y1 - 6, x1 + 12, y1 + 8, fill=frame)
 
 
 # ------------------------------------------------------------------ timing
 
 TIM = json.load(open(os.path.join(HERE, "timing.json"), encoding="utf-8"))
-S = [x["start"] for x in TIM]
-E = [x["end"] for x in TIM]
+KEYS = ["Das hier ist Alex", "Alex wohnt", "Jeden Morgen", "Bis hierhin", "Aber jeden Abend",
+        "Alex steigt in den Aufzug", "Dort steigt", "Seine Nachbarn", "Denn Alex", "Eines Tages",
+        "Alex kommt nach Hause", "Am nächsten Tag", "Und Alex steigt", "Warum macht", "PAUSE", "Kleiner Tipp",
+        "Schreib deine", "Hier kommt", "Alex ist klein", "Nach unten", "Aber nach oben", "Und bei Regen",
+        "Da hat Alex", "Mit der Spitze", "Hättest", "Schreib's"]
+S, E = anchors(TIM, KEYS)
 END = E[-1] + 2.6
 XFADE = 0.25
 
@@ -334,9 +397,9 @@ def actor_alex(cv, t, keys, umbrella=None, face_default=1, **kw):
 # --- scene A: intro ------------------------------------------------------------
 
 def scene_intro(t):
-    t_wide = S[1]
+    t_wide = S[1] + 0.8
     cam = keyframes(t, [(0, (1900, yb(12) - 170, 1150)), (t_wide - 0.1, (1900, yb(12) - 170, 1150)),
-                        (t_wide + 1.6, (1925, 3300, 6500))])
+                        (t_wide + 1.2, (1925, 3300, 6500))])
 
     def actors(cv):
         draw_cab_doors(cv, draw_cab(cv, 0.0))
@@ -348,11 +411,11 @@ def scene_intro(t):
     pop = ease_out_back(prog(t, 0.15, 0.55)) * (1 - prog(t, t_wide - 0.2, t_wide + 0.2))
     pill(frame, sx, sy - 40, "ALEX", 70, scale=pop, rot=4)
     # highlight floor 12 on wide shot
-    if t > t_wide + 1.0:
-        bx, by = world_to_screen(APT[0] + 70, yb(12) - FH + 60, view)
+    if t > t_wide + 0.7:
+        bx, by = world_to_screen(APT[0] + 95, yb(12) - FH + 70, view)
         pulse = 1 + 0.12 * math.sin(t * 8)
         pill(frame, bx + 150, by, "12. STOCK", 56, bg="#ffd34d",
-             scale=ease_out_back(prog(t, t_wide + 1.0, t_wide + 1.4)) * pulse, rot=-3)
+             scale=ease_out_back(prog(t, t_wide + 0.7, t_wide + 1.0)) * pulse, rot=-3)
     return frame
 
 
@@ -589,7 +652,7 @@ def scene_sunny(t):
                 r = 1500 - i * 40
                 cv.arc(1925 - r, HORIZON - r * 0.9, 1925 + r, HORIZON + r * 0.9, 180, 360, hexc(c, 150), 40)
 
-    frame, view = render_world_frame(t, "dusk", cam, actors)
+    frame, view = render_world_frame(t, "day", cam, actors)
     clock_badge(frame, OUT_W / 2, 190, 18, 0, "18:00", scale=ease_out_back(prog(t, t0, t0 + 0.4)))
     if t > t_ride0:
         floor_display(frame, OUT_W / 2, 400, "E" if fl < 0.5 else str(int(round(fl))), arrow=1 if t < t_ride1 else 0)
@@ -605,7 +668,7 @@ def scene_question(t):
     t0 = S[13]
     t_tip = S[15]
     t_cm = S[16]
-    img = vgradient(OUT_W, OUT_H, [(0, "#2b2140"), (1, "#3a2c78")])
+    img = vgradient(OUT_W, OUT_H, [(0, "#14213d"), (1, "#2b3f74")])
     cv = Canvas(img)
     # stars
     rng = np.random.default_rng(1)
@@ -663,35 +726,44 @@ def btn_y(idx):
 
 
 def draw_interior(cv, lit=None, glow=0.0, reach_ok=None):
-    ink = hexc("#2b2140")
-    # outside wall
-    cv.rect(0, 0, OUT_W, OUT_H, fill=hexc("#f5efe6"))
-    cv.rect(0, 1560, OUT_W, OUT_H, fill=hexc("#8a7cc8"))
-    for row in range(4):
-        pts = [(x, 1610 + row * 70 + 16 * math.sin(x / 40)) for x in range(0, OUT_W + 20, 20)]
-        cv.line(pts, hexc("#ffffff"), 18, cap=False)
-    # cab frame
-    cv.rect(100, 280, 980, 1560, fill=hexc("#d9a441"), r=24)
-    cv.rect(130, 310, 950, 1540, fill=hexc("#22857a"))
-    for k in range(3):
-        cv.rect(470 + k * 160, 360, 590 + k * 160, 1500, fill=hexc("#2a958a"), r=16)
-    cv.rect(400, 330, 700, 360, fill=hexc("#fff3c4"), r=12)
-    cv.rect(130, 1500, 950, 1540, fill=hexc("#1c6e65"))
-    # handrail
-    cv.rect(560, 1170, 940, 1188, fill=hexc("#d9a441"), r=8)
-    # panel
-    cv.rect(PANEL_X - 60, btn_y(12) - 60, PANEL_X + 60, BTN_BOTTOM + 60, fill=hexc("#e9e4ec"), r=30)
+    ink = hexc("#22243a")
+    anth = hexc(ANTH)
+    # lobby wall (light concrete panels) + floor tiles
+    cv.rect(0, 0, OUT_W, OUT_H, fill=hexc("#e7e4df"))
+    for k in range(0, OUT_W, 270):
+        cv.rect(k, 0, k + 3, 1560, fill=hexc("#d6d2cb"))
+    for k in range(0, 1560, 390):
+        cv.rect(0, k, OUT_W, k + 3, fill=hexc("#d6d2cb"))
+    cv.rect(0, 1560, OUT_W, OUT_H, fill=hexc("#bdb8b0"))
+    for k in range(-400, OUT_W + 400, 180):
+        cv.line([(k, 1560), (k - 260, OUT_H)], hexc("#aaa59c"), 4, cap=False)
+    cv.rect(0, 1700, OUT_W, 1705, fill=hexc("#aaa59c"))
+    # cab: anthracite portal, brushed steel sides, wood back wall
+    cv.rect(90, 270, 990, 1570, fill=anth, r=10)
+    cv.rect(125, 305, 955, 1540, fill=hexc("#c3c8cf"))
+    for k in range(0, 830, 14):
+        cv.rect(125 + k, 305, 127 + k, 1540, fill=hexc("#b5bac2") if (k // 14) % 3 else hexc("#d0d4da"))
+    cv.rect(420, 330, 935, 1500, fill=hexc(WOOD))
+    for k in range(9):
+        cv.rect(450 + k * 55, 330, 455 + k * 55, 1500, fill=hexc(WOOD_D))
+    cv.rect(380, 318, 900, 334, fill=hexc("#fff6dc"), r=6)
+    cv.rect(125, 1500, 955, 1540, fill=hexc("#3a3d46"))
+    cv.rect(560, 1160, 935, 1176, fill=hexc("#e2e5ea"), r=8)
+    cv.rect(580, 1176, 590, 1205, fill=hexc("#e2e5ea"))
+    # button panel (brushed steel)
+    cv.rect(PANEL_X - 62, btn_y(12) - 62, PANEL_X + 62, BTN_BOTTOM + 62, fill=hexc("#dfe3e8"), r=18)
+    cv.rect(PANEL_X - 62, btn_y(12) - 62, PANEL_X + 62, BTN_BOTTOM + 62, outline=hexc("#9aa1ab"), width=3, r=18)
     for idx in range(13):
         y = btn_y(idx)
         label = "E" if idx == 0 else str(idx)
         on = lit is not None and idx == lit
         r = 20
         if on and glow > 0:
-            cv.circle(PANEL_X, y, r + 16 * glow, fill=hexc("#ffd34d", int(120 * glow)))
+            cv.circle(PANEL_X, y, r + 16 * glow, fill=hexc("#ffd34d", int(130 * glow)))
         out_of_reach = reach_ok is not None and idx > reach_ok
-        fill = hexc("#ffd34d") if on else (hexc("#d6cfdc") if out_of_reach else hexc("#ffffff"))
-        cv.circle(PANEL_X, y, r, fill=fill, outline=hexc("#8a8396"), width=3)
-        cv.text(PANEL_X, y + 1, label, 22, ink)
+        fill = hexc("#ffd34d") if on else (hexc("#8a8f99") if out_of_reach else anth)
+        cv.circle(PANEL_X, y, r, fill=fill, outline=hexc("#ffffff") if not on else hexc("#ffb800"), width=3)
+        cv.text(PANEL_X, y + 1, label, 21, ink if on else hexc("#ffffff"))
 
 
 def scene_solution(t):

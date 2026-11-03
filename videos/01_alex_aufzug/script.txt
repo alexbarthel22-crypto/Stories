@@ -1,6 +1,5 @@
 # Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden.
 # {emotion} am Zeilenanfang = Zeile mit Emotions-Stimme sprechen (amused, surprised, ...).
-{amused} Das hier ist Alex.
 Alex wohnt im zwölften Stock eines Hochhauses.
 Jeden Morgen um sieben Uhr verlässt er seine Wohnung, fährt mit dem Aufzug nach unten und geht zur Arbeit.
 {amused} Bis hierhin ganz normal.

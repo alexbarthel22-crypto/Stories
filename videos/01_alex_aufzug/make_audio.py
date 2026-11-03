@@ -4,8 +4,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "engine"))
 from audio import mix
 
+from toolkit import anchors
 T = json.load(open(os.path.join(HERE, "timing.json"), encoding="utf-8"))
-S = [x["start"] for x in T]
+KEYS = ["Das hier ist Alex", "Alex wohnt", "Jeden Morgen", "Bis hierhin", "Aber jeden Abend",
+        "Alex steigt in den Aufzug", "Dort steigt", "Seine Nachbarn", "Denn Alex", "Eines Tages",
+        "Alex kommt nach Hause", "Am nächsten Tag", "Und Alex steigt", "Warum macht", "PAUSE", "Kleiner Tipp",
+        "Schreib deine", "Hier kommt", "Alex ist klein", "Nach unten", "Aber nach oben", "Und bei Regen",
+        "Da hat Alex", "Mit der Spitze", "Hättest", "Schreib's"]
+S, _ = anchors(T, KEYS)
 END = T[-1]["end"] + 2.6
 ev = [
     ("pop", 0.2, 0.7),                                  # name tag

@@ -4,7 +4,7 @@ Vertikale Erklärvideos (1080×1920, 30 fps) im flachen Vektor-Look mit natürli
 
 | # | Thema | Datei | Länge |
 |---|-------|-------|-------|
-| 1 | Alex und der Aufzug | `videos/01_alex_aufzug/video.mp4` | 1:18 |
+| 1 | Alex und der Aufzug | `videos/01_alex_aufzug/video.mp4` | 1:16 |
 
 ## Aufbau
 - `engine/toolkit.py` – Zeichen-Toolkit (Figuren, Kamera, Titel-Pills, Uhr, Etagenanzeige, Regen …)

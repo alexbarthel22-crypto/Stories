@@ -156,141 +156,224 @@ def vgradient(w, h, stops):
 # ---------------------------------------------------------------- people
 
 class Style:
+    """Character look. Proportions are fractions of the total height h."""
+
     def __init__(self, h, skin, hair, top, pants, shoes="#ffffff", hair_style="short",
-                 head=0.16, glasses=False, accent=None):
+                 head=None, glasses=False, accent=None, under="#ffffff", leg=0.45, torso=0.30,
+                 arm=0.36, width=0.13, beard=False, sole="#f4f4f4", shoe_accent=None, brows=None):
         self.h, self.skin, self.hair, self.top = h, skin, hair, top
         self.pants, self.shoes, self.hair_style = pants, shoes, hair_style
-        self.head, self.glasses, self.accent = head, glasses, accent
+        self.glasses, self.accent, self.under = glasses, accent, under
+        self.leg, self.torso, self.arm, self.width = leg, torso, arm, width
+        self.head = head if head else (1 - leg - torso - 0.03) / 2
+        self.beard, self.sole, self.shoe_accent = beard, sole, shoe_accent
+        self.brows = brows or hair
+
+
+def _shade(c, f):
+    return mix(c, (20, 16, 40), f)
 
 
 def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bounce=0.0,
                 wave=0.0, h=None, arms_up=0.0, arm_scale=1.0):
-    """Flat cartoon person standing with feet at (x, y).
+    """Flat-vector person (3/4 view) standing with feet at (x, y).
 
     phase: walk-cycle phase in radians (None = standing)
     reach: (tx, ty) world point the front hand reaches towards
     umbrella: None | 'open' | 'closed' | 'pointer' (closed, extends from reaching hand)
-    returns hand position of the front arm.
+    returns the front hand position (umbrella tip for 'closed'/'pointer').
     """
     h = h or st.h
     y = y - bounce
-    ink = hexc("#2b2140")
+    f = face
+    ink = hexc("#22243a")
     skin = hexc(st.skin)
-    leg_len = 0.40 * h
-    hip_y = y - leg_len
-    sh_y = y - 0.72 * h
-    head_r = st.head * h
-    head_y = sh_y - head_r * 0.95
-    lw = 0.10 * h
-
-    # legs
-    sw = math.sin(phase) if phase is not None else 0.0
-    for sgn, shade in ((-1, 0.82), (1, 1.0)):
-        a = sgn * sw * 0.45
-        fx, fy = x + math.sin(a) * leg_len, hip_y + math.cos(a) * leg_len
-        col = mix(hexc(st.pants), (0, 0, 0), 1 - shade)
-        cv.line([(x + sgn * lw * 0.25, hip_y), (fx, fy - lw * 0.3)], col, lw)
-        cv.ellipse(fx - lw * 0.55 + face * lw * 0.25, fy - lw * 0.55, fx + lw * 0.65 + face * lw * 0.25, fy + lw * 0.1,
-                   fill=hexc(st.shoes), outline=ink, width=0.012 * h)
-
-    # back arm
-    arm_len = 0.36 * h * arm_scale
-    aw = 0.075 * h
-    sx_b = x - face * 0.10 * h
-    ab = -sw * 0.5 if phase is not None else 0.12 * face
-    if arms_up:
-        ab = -face * (math.pi * 0.85 * arms_up)
-    hb = (sx_b + math.sin(ab) * arm_len, sh_y + math.cos(ab) * arm_len)
-    cv.line([(sx_b, sh_y + aw * 0.4), hb], mix(hexc(st.top), (0, 0, 0), 0.15), aw)
-    cv.circle(hb[0], hb[1], aw * 0.55, fill=skin)
-
-    # torso
-    tw = 0.20 * h
-    cv.rect(x - tw, sh_y - 0.02 * h, x + tw, hip_y + 0.05 * h, fill=hexc(st.top), r=0.07 * h)
-    if st.accent:
-        cv.rect(x - tw * 0.15, sh_y + 0.02 * h, x + tw * 0.15, hip_y, fill=hexc(st.accent), r=0.02 * h)
-    cv.rect(x - tw, hip_y - 0.02 * h, x + tw, hip_y + 0.07 * h, fill=hexc(st.pants), r=0.03 * h)
-
-    # head + hair
-    hx = x + face * 0.02 * h
-    if st.hair_style == "long":
-        cv.rect(hx - head_r * 1.1, head_y - head_r * 0.6, hx + head_r * 1.1, head_y + head_r * 1.6,
-                fill=hexc(st.hair), r=head_r * 0.6)
-    cv.circle(hx, head_y, head_r, fill=skin)
+    skin_d = _shade(skin, 0.18)
+    top = hexc(st.top)
+    top_d = _shade(top, 0.22)
+    pants = hexc(st.pants)
+    pants_d = _shade(pants, 0.25)
     hair = hexc(st.hair)
-    if st.hair_style == "curly":
-        for i in range(7):
-            a = math.pi * (1.05 + i * 0.15)
-            cv.circle(hx + math.cos(a) * head_r * 0.85, head_y + math.sin(a) * head_r * 0.85, head_r * 0.42, fill=hair)
-    elif st.hair_style in ("short", "long"):
-        cv.pieslice(hx - head_r * 1.05, head_y - head_r * 1.12, hx + head_r * 1.05, head_y + head_r * 0.9,
-                    180, 360, fill=hair)
-        cv.circle(hx - face * head_r * 0.8, head_y - head_r * 0.05, head_r * 0.32, fill=hair)
-    elif st.hair_style == "cap":
-        cv.pieslice(hx - head_r * 1.05, head_y - head_r * 1.15, hx + head_r * 1.05, head_y + head_r * 0.9,
-                    180, 360, fill=hair)
-        cv.rect(hx, head_y - head_r * 0.25, hx + face * head_r * 1.5, head_y - head_r * 0.05, fill=hair, r=head_r * 0.1)
-    # face
-    ex = hx + face * head_r * 0.38
-    cv.circle(ex - head_r * 0.22, head_y - head_r * 0.05, head_r * 0.11, fill=ink)
-    cv.circle(ex + head_r * 0.22, head_y - head_r * 0.05, head_r * 0.11, fill=ink)
-    if st.glasses:
-        for gx in (ex - head_r * 0.22, ex + head_r * 0.22):
-            cv.circle(gx, head_y - head_r * 0.05, head_r * 0.24, outline=ink, width=head_r * 0.07)
-    cv.arc(ex - head_r * 0.3, head_y + head_r * 0.05, ex + head_r * 0.3, head_y + head_r * 0.5, 20, 160, ink,
-           head_r * 0.08)
-    cv.circle(ex + face * head_r * 0.5, head_y + head_r * 0.25, head_r * 0.13, fill=hexc("#f49a8f", 160))
 
-    # front arm
-    sx_f = x + face * 0.10 * h
-    shoulder = (sx_f, sh_y + aw * 0.4)
+    leg_len = st.leg * h
+    hip_y = y - leg_len
+    sh_y = hip_y - st.torso * h
+    head_r = st.head * h
+    head_y = sh_y - 0.03 * h - head_r * 0.92
+    tw = st.width * h
+    lw = max(0.085 * h, tw * 0.62)
+    arm_len = st.arm * h * arm_scale
+    aw = lw * 0.78
+    sw = math.sin(phase) if phase is not None else 0.0
+
+    # ---------- arms (back first)
+    sx_b = x - f * tw * 0.72
+    ab = -sw * 0.45 if phase is not None else 0.10 * f
+    if arms_up:
+        ab = -f * (math.pi * 0.85 * arms_up)
+    hb = (sx_b + math.sin(ab) * arm_len, sh_y + aw * 0.5 + math.cos(ab) * arm_len)
+    cv.line([(sx_b, sh_y + aw * 0.5), hb], top_d, aw)
+    cv.circle(hb[0], hb[1], aw * 0.52, fill=skin_d)
+
+    # ---------- legs + sneakers
+    for sgn, back in ((-1, True), (1, False)):
+        a = sgn * sw * 0.42
+        hx = x + sgn * tw * 0.32 * (0.6 if back else 1)
+        fx, fy = hx + math.sin(a) * leg_len, hip_y + math.cos(a) * leg_len
+        col = pants_d if back else pants
+        cv.line([(hx, hip_y), (fx, fy - lw * 0.45)], col, lw)
+        # cuff
+        cv.line([(fx - lw * 0.48, fy - lw * 0.55), (fx + lw * 0.48, fy - lw * 0.55)], _shade(col, 0.15), lw * 0.18,
+                cap=False)
+        # sneaker: upper + sole
+        L = lw * 1.25
+        x0, x1 = (fx - L * 0.45, fx + L) if f > 0 else (fx - L, fx + L * 0.45)
+        shoe = hexc(st.shoes) if not back else _shade(hexc(st.shoes), 0.12)
+        cv.rect(x0, fy - lw * 0.62, x1, fy - lw * 0.05, fill=shoe, r=lw * 0.32)
+        cv.rect(x0 - lw * 0.04, fy - lw * 0.18, x1 + lw * 0.04, fy + lw * 0.05, fill=hexc(st.sole), r=lw * 0.08)
+        if st.shoe_accent:
+            cx_ = (x0 + x1) / 2
+            cv.line([(cx_ - lw * 0.25, fy - lw * 0.3), (cx_ + lw * 0.25, fy - lw * 0.45)], hexc(st.shoe_accent),
+                    lw * 0.14)
+
+    # ---------- torso: jacket over shirt
+    hip_w = tw * 0.92
+    cv.poly([(x - tw, sh_y + tw * 0.25), (x + tw, sh_y + tw * 0.25), (x + hip_w, hip_y + 0.03 * h),
+             (x - hip_w, hip_y + 0.03 * h)], fill=top)
+    cv.circle(x - tw + tw * 0.25, sh_y + tw * 0.25, tw * 0.25, fill=top)
+    cv.circle(x + tw - tw * 0.25, sh_y + tw * 0.25, tw * 0.25, fill=top)
+    cv.rect(x - tw * 0.75, sh_y, x + tw * 0.75, sh_y + tw * 0.4, fill=top, r=tw * 0.2)
+    # shirt visible in the open jacket (shifted to the facing side)
+    cx_ = x + f * tw * 0.18
+    cv.poly([(cx_ - tw * 0.26, sh_y + tw * 0.05), (cx_ + tw * 0.26, sh_y + tw * 0.05),
+             (cx_ + tw * 0.22, hip_y - 0.01 * h), (cx_ - tw * 0.22, hip_y - 0.01 * h)], fill=hexc(st.under))
+    # jacket shading on the back side + hem band
+    cv.poly([(x - f * tw, sh_y + tw * 0.25), (x - f * tw * 0.55, sh_y + tw * 0.25),
+             (x - f * hip_w * 0.6, hip_y + 0.03 * h), (x - f * hip_w, hip_y + 0.03 * h)], fill=top_d)
+    if st.accent:
+        cv.rect(x - hip_w, hip_y - 0.02 * h, x + hip_w, hip_y + 0.035 * h, fill=hexc(st.accent), r=0.012 * h)
+    # belt / waist
+    cv.rect(x - hip_w * 0.95, hip_y + 0.02 * h, x + hip_w * 0.95, hip_y + 0.05 * h, fill=pants_d, r=0.01 * h)
+
+    # ---------- neck + head
+    cv.rect(x - head_r * 0.28, sh_y - 0.05 * h, x + head_r * 0.28, sh_y + tw * 0.15, fill=skin_d, r=head_r * 0.1)
+    hx = x + f * head_r * 0.08
+    if st.hair_style == "long":   # hair behind the head
+        cv.rect(hx - head_r * 1.08, head_y - head_r * 0.5, hx + head_r * 1.08, head_y + head_r * 1.45,
+                fill=_shade(hair, 0.1), r=head_r * 0.7)
+    has_hair = st.hair_style in ("quiff", "short", "long")
+    # ear (back side)
+    ear_x = hx - f * head_r * 0.9
+    cv.ellipse(ear_x - head_r * 0.2, head_y - head_r * 0.08, ear_x + head_r * 0.2, head_y + head_r * 0.36, fill=skin_d)
+    # hair mass (skull), then the face on top of it -> curved hairline
+    if has_hair:
+        cv.ellipse(hx - head_r * 1.0, head_y - head_r * 1.1, hx + head_r * 1.0, head_y + head_r * 0.62, fill=hair)
+        cv.ellipse(ear_x - head_r * 0.2, head_y - head_r * 0.08, ear_x + head_r * 0.2, head_y + head_r * 0.36,
+                   fill=skin_d)
+    fcx = hx + f * head_r * 0.12
+    top_face = head_y - (head_r * 0.62 if has_hair else head_r)
+    cv.ellipse(fcx - head_r * 0.86, top_face, fcx + head_r * 0.9, head_y + head_r * 1.02, fill=skin)
+    # jaw/chin to the facing side
+    cv.ellipse(fcx + f * head_r * 0.05 - head_r * 0.68, head_y + head_r * 0.05, fcx + f * head_r * 0.05 + head_r * 0.72,
+               head_y + head_r * 1.06, fill=skin)
+    if st.beard:
+        cv.pieslice(fcx - head_r * 0.82, head_y - head_r * 0.3, fcx + head_r * 0.86, head_y + head_r * 1.12, 15, 165,
+                    fill=hair + (60,))
+    if st.hair_style == "quiff":
+        # swept-up fringe over the forehead, towards the facing side
+        cv.poly([(hx - f * head_r * 0.75, head_y - head_r * 0.7), (hx - f * head_r * 0.2, head_y - head_r * 1.28),
+                 (hx + f * head_r * 0.55, head_y - head_r * 1.36), (hx + f * head_r * 1.02, head_y - head_r * 1.0),
+                 (hx + f * head_r * 0.92, head_y - head_r * 0.62), (hx + f * head_r * 0.35, head_y - head_r * 0.78),
+                 (hx - f * head_r * 0.15, head_y - head_r * 0.6)], fill=hair)
+        hl = mix(hair, (255, 255, 255), 0.22)
+        cv.line([(hx - f * head_r * 0.25, head_y - head_r * 1.1), (hx + f * head_r * 0.55, head_y - head_r * 1.2)],
+                hl, head_r * 0.07)
+        cv.line([(hx - f * head_r * 0.05, head_y - head_r * 0.95), (hx + f * head_r * 0.7, head_y - head_r * 1.02)],
+                hl, head_r * 0.05)
+    elif st.hair_style == "long":
+        cv.pieslice(fcx - head_r * 0.95, head_y - head_r * 1.0, fcx + head_r * 0.95, head_y + head_r * 0.1,
+                    200 if f > 0 else 240, 300 if f > 0 else 340, fill=hair)
+    # face features (shifted to the facing side)
+    fx_ = hx + f * head_r * 0.32
+    eye_y = head_y + head_r * 0.02
+    for k, ex in enumerate((fx_ - head_r * 0.30, fx_ + head_r * 0.30)):
+        sc = 0.85 if (k == 0) == (f > 0) else 1.0   # far eye a bit smaller
+        cv.ellipse(ex - head_r * 0.15 * sc, eye_y - head_r * 0.19, ex + head_r * 0.15 * sc, eye_y + head_r * 0.17,
+                   fill=hexc("#ffffff"))
+        cv.circle(ex + f * head_r * 0.04, eye_y + head_r * 0.01, head_r * 0.10 * sc, fill=ink)
+        cv.circle(ex + f * head_r * 0.07, eye_y - head_r * 0.04, head_r * 0.035, fill=hexc("#ffffff"))
+        cv.line([(ex - head_r * 0.16, eye_y - head_r * 0.32), (ex + head_r * 0.14, eye_y - head_r * 0.36)],
+                hexc(st.brows), head_r * 0.08)
+        if st.glasses:
+            cv.circle(ex, eye_y, head_r * 0.26, outline=ink, width=head_r * 0.06)
+    if st.glasses:
+        cv.line([(fx_ - head_r * 0.05, eye_y), (fx_ + head_r * 0.05, eye_y)], ink, head_r * 0.06)
+    # nose + mouth + cheek
+    cv.ellipse(fx_ + f * head_r * 0.06 - head_r * 0.1, eye_y + head_r * 0.2, fx_ + f * head_r * 0.06 + head_r * 0.12,
+               eye_y + head_r * 0.38, fill=skin_d)
+    cv.pieslice(fx_ - head_r * 0.24, eye_y + head_r * 0.44, fx_ + head_r * 0.28, eye_y + head_r * 0.76, 0, 180,
+                fill=hexc("#8a3b3b"))
+    cv.pieslice(fx_ - head_r * 0.18, eye_y + head_r * 0.45, fx_ + head_r * 0.22, eye_y + head_r * 0.58, 0, 180,
+                fill=hexc("#ffffff"))
+    cv.circle(fx_ - f * head_r * 0.52, eye_y + head_r * 0.34, head_r * 0.13, fill=hexc("#ff8a7a", 70))
+
+    # ---------- front arm
+    sx_f = x + f * tw * 0.72
+    shoulder = (sx_f, sh_y + aw * 0.5)
     if reach is not None:
         dx, dy = reach[0] - shoulder[0], reach[1] - shoulder[1]
         dist = math.hypot(dx, dy) or 1
         L = min(dist, arm_len * 1.05)
         hand = (shoulder[0] + dx / dist * L, shoulder[1] + dy / dist * L)
     else:
-        af = sw * 0.5 if phase is not None else -0.12 * face
+        af = sw * 0.45 if phase is not None else -0.10 * f
         if wave:
-            af = face * (2.4 + 0.35 * math.sin(wave))
+            af = f * (2.4 + 0.35 * math.sin(wave))
         if arms_up:
-            af = face * math.pi * 0.85 * arms_up
+            af = f * math.pi * 0.85 * arms_up
         hand = (sx_f + math.sin(af) * arm_len, shoulder[1] + math.cos(af) * arm_len)
 
+    hand_tip = hand
     if umbrella == "open":
-        top = (hand[0], head_y - head_r * 2.6)
-        cv.line([hand, top], ink, 0.02 * h)
+        tip_top = (hand[0], head_y - head_r * 2.3)
+        cv.line([hand, tip_top], ink, 0.02 * h)
         cr = 0.42 * h
-        cv.pieslice(top[0] - cr, top[1] - cr * 0.55, top[0] + cr, top[1] + cr * 0.55, 180, 360, fill=hexc("#3f7fd9"))
+        canopy, canopy2 = hexc("#2f6fd6"), hexc("#ffcf3f")
+        cv.pieslice(tip_top[0] - cr, tip_top[1] - cr * 0.55, tip_top[0] + cr, tip_top[1] + cr * 0.55, 180, 360,
+                    fill=canopy)
         for i in range(4):
-            xx = top[0] - cr + (2 * cr) * (i + 0.5) / 4
-            cv.pieslice(xx - cr / 4, top[1] - cr * 0.12, xx + cr / 4, top[1] + cr * 0.12, 0, 180, fill=hexc("#3f7fd9"))
-        cv.pieslice(top[0] - cr * 0.35, top[1] - cr * 0.55, top[0] + cr * 0.35, top[1] + cr * 0.55, 180, 360,
-                    fill=hexc("#ffd34d"))
-        cv.circle(top[0], top[1] - cr * 0.56, 0.02 * h, fill=ink)
+            xx = tip_top[0] - cr + (2 * cr) * (i + 0.5) / 4
+            cv.pieslice(xx - cr / 4, tip_top[1] - cr * 0.12, xx + cr / 4, tip_top[1] + cr * 0.12, 0, 180,
+                        fill=canopy if i % 2 == 0 else canopy2)
+        cv.pieslice(tip_top[0] - cr * 0.33, tip_top[1] - cr * 0.55, tip_top[0] + cr * 0.33, tip_top[1] + cr * 0.55,
+                    180, 360, fill=canopy2)
+        cv.circle(tip_top[0], tip_top[1] - cr * 0.56, 0.02 * h, fill=ink)
     elif umbrella in ("closed", "pointer"):
         if umbrella == "pointer" and reach is not None:
             dx, dy = hand[0] - shoulder[0], hand[1] - shoulder[1]
             dd = math.hypot(dx, dy) or 1
             ux, uy = dx / dd, dy / dd
         else:
-            ux, uy = face * 0.25, 0.97
+            ux, uy = f * 0.25, 0.97
         L = 0.62 * h
         tip = (hand[0] + ux * L, hand[1] + uy * L)
         back = (hand[0] - ux * 0.08 * h, hand[1] - uy * 0.08 * h)
         nx, ny = -uy, ux
         mid = (hand[0] + ux * L * 0.35, hand[1] + uy * L * 0.35)
         cv.poly([(mid[0] + nx * 0.05 * h, mid[1] + ny * 0.05 * h), (tip[0] - ux * 0.12 * h, tip[1] - uy * 0.12 * h),
-                 (mid[0] - nx * 0.05 * h, mid[1] - ny * 0.05 * h), (hand[0], hand[1])], fill=hexc("#3f7fd9"))
+                 (mid[0] - nx * 0.05 * h, mid[1] - ny * 0.05 * h), (hand[0], hand[1])], fill=hexc("#2f6fd6"))
         cv.line([back, tip], ink, 0.018 * h)
         cv.arc(back[0] - 0.06 * h, back[1] - 0.03 * h, back[0] + 0.02 * h, back[1] + 0.07 * h, 90, 270, ink, 0.02 * h)
         hand_tip = tip
-    else:
-        hand_tip = hand
 
-    cv.line([shoulder, hand], hexc(st.top), aw)
-    cv.circle(hand[0], hand[1], aw * 0.6, fill=skin)
-    return hand_tip if umbrella in ("closed", "pointer") else hand
+    cv.line([shoulder, hand], top, aw)
+    if st.accent:  # cuff
+        dx, dy = hand[0] - shoulder[0], hand[1] - shoulder[1]
+        dd = math.hypot(dx, dy) or 1
+        c0 = (hand[0] - dx / dd * aw * 0.9, hand[1] - dy / dd * aw * 0.9)
+        cv.line([c0, (hand[0] - dx / dd * aw * 0.45, hand[1] - dy / dd * aw * 0.45)], hexc(st.accent), aw, cap=False)
+    cv.circle(hand[0], hand[1], aw * 0.56, fill=skin)
+    return hand_tip
 
 
 # ---------------------------------------------------------------- overlays (screen space)
@@ -420,3 +503,20 @@ def vignette(img, strength=0.25):
     r = np.sqrt(((xx - w / 2) / (w / 2)) ** 2 + ((yy - h / 2) / (h / 2)) ** 2)
     m = 1 - strength * np.clip(r - 0.6, 0, 1)
     return m[..., None]
+
+
+def anchors(timing, keys):
+    """Map script-line prefixes to (starts, ends). Lines missing from timing collapse onto the next
+    present line, so scene code keeps working when a line is removed from the script."""
+    S, E = [None] * len(keys), [None] * len(keys)
+    for i, k in enumerate(keys):
+        for x in timing:
+            if x["text"].startswith(k):
+                S[i], E[i] = x["start"], x["end"]
+                break
+    nxt = timing[-1]["end"]
+    for i in range(len(keys) - 1, -1, -1):
+        if S[i] is None:
+            S[i] = E[i] = nxt
+        nxt = S[i]
+    return S, E
