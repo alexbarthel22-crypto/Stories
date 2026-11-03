@@ -3,7 +3,7 @@
 {amused} Das hier ist Alex.
 Alex wohnt im zwölften Stock eines Hochhauses.
 Jeden Morgen um sieben Uhr verlässt er seine Wohnung, fährt mit dem Aufzug nach unten und geht zur Arbeit.
-{amused} Ganz normal.
+{amused} Bis hierhin ganz normal.
 Aber jeden Abend, gegen achtzehn Uhr, passiert etwas Seltsames.
 Alex steigt in den Aufzug und fährt nur bis in den neunten Stock.
 Dort steigt er aus und läuft die letzten drei Stockwerke zu Fuß.

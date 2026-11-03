@@ -36,6 +36,8 @@ def synth(text, voice, model, hint=None, retries=7):
         try:
             with urllib.request.urlopen(req, timeout=180) as r:
                 d = json.load(r)
+            if "candidates" not in d:
+                raise RuntimeError(f"Gemini blocked line ({d.get('promptFeedback')}) - rephrase it: {text}")
             part = d["candidates"][0]["content"]["parts"][0]["inlineData"]
             pcm = np.frombuffer(base64.b64decode(part["data"]), "<i2").astype(np.float32) / 32768
             time.sleep(float(os.environ.get("TTS_SPACING", "4")))  # stay under per-minute quota
