@@ -63,6 +63,13 @@ def pop():
     return np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(n, 0.002, 0.04) * 0.35
 
 
+def click():
+    """light switch click"""
+    n = int(0.03 * SR)
+    x = np.random.default_rng(3).standard_normal(n) * _env(n, 0.0005, 0.004)
+    return (x * 0.6 + tone(3200, 0.03, (1,), d=0.006) * 0.4) * 0.8
+
+
 def tick():
     n = int(0.04 * SR)
     return np.random.default_rng(0).standard_normal(n) * _env(n, 0.001, 0.006) * 0.5 + \
@@ -124,7 +131,7 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
     fade = np.ones(n); fl = int(1.5 * SR); fade[-fl:] = np.linspace(1, 0, fl); fade[:int(0.3 * SR)] = np.linspace(0, 1, int(0.3 * SR))
     sfx = np.zeros(n)
     for kind, t, gain, *extra in events:
-        s = {"ding": ding, "pop": pop, "tick": tick}.get(kind)
+        s = {"ding": ding, "pop": pop, "tick": tick, "click": click}.get(kind)
         if kind == "rain":
             s = rain_noise(extra[0]); r = int(0.4 * SR)
             s[:r] *= np.linspace(0, 1, r); s[-r:] *= np.linspace(1, 0, r)

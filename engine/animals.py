@@ -1,5 +1,6 @@
 """Flat-vector animals and props in the channel style (world coordinates, feet/ground at y)."""
 import math
+import numpy as np
 from toolkit import hexc, mix
 
 INK = hexc("#22243a")
@@ -141,3 +142,56 @@ def draw_boat_front(cv, x, wy, t=0.0, oar=None):
         cv.line([(px, py), (ex, ey)], hexc("#e3c79a"), 9)
         cv.ellipse(ex - 16, ey - 9, ex + 16, ey + 9, fill=hexc("#e3c79a"))
         cv.circle(px, py, 8, fill=rim)
+
+
+def draw_bulb(cv, x, y, s=1.0, state="off", t=0.0):
+    """hanging light bulb, glass centre at (x, y). state: on | warm | cold | off"""
+    r = 26 * s
+    if state == "on":
+        for k in range(6, 0, -1):
+            cv.circle(x, y, r * (1 + k * 0.7), fill=(255, 214, 110, 16 + 6 * (6 - k)))
+        for a in range(10):
+            ang = a / 10 * 2 * math.pi + t * 0.4
+            cv.line([(x + math.cos(ang) * r * 1.6, y + math.sin(ang) * r * 1.6),
+                     (x + math.cos(ang) * r * 2.3, y + math.sin(ang) * r * 2.3)], hexc("#ffd34d"), 5 * s)
+        glass, fil = hexc("#fff3b0"), hexc("#ff9f1c")
+    elif state == "warm":
+        for k in range(3, 0, -1):
+            cv.circle(x, y, r * (1 + k * 0.35), fill=(255, 120, 60, 22))
+        glass, fil = hexc("#ffd2b0"), hexc("#e8663b")
+        for k in range(3):   # heat waves
+            xx = x - r * 0.9 + k * r * 0.9
+            pts = [(xx + 5 * s * math.sin((yy + t * 120) / (7 * s)), y - r * 1.4 - yy)
+                   for yy in np.linspace(0, 34 * s, 9)]
+            cv.line(pts, hexc("#ff7a3d", 200), 4 * s, cap=False)
+    elif state == "cold":
+        glass, fil = hexc("#dfeaf5"), hexc("#8a96a8")
+    else:
+        glass, fil = hexc("#e9edf2"), hexc("#8a96a8")
+    cv.circle(x, y, r, fill=glass, outline=hexc("#9aa3b0"), width=2.5 * s)
+    cv.rect(x - r * 0.42, y - r * 1.55, x + r * 0.42, y - r * 0.75, fill=glass)
+    cv.line([(x - r * 0.3, y + r * 0.1), (x - r * 0.12, y - r * 0.35), (x + r * 0.12, y + r * 0.1),
+             (x + r * 0.3, y - r * 0.35)], fil, 3 * s, cap=False)
+    cv.rect(x - r * 0.5, y - r * 2.15, x + r * 0.5, y - r * 1.45, fill=hexc("#8f97a3"), r=3 * s)
+    for k in range(3):
+        cv.rect(x - r * 0.5, y - r * 2.0 + k * r * 0.2, x + r * 0.5, y - r * 1.93 + k * r * 0.2, fill=hexc("#6b7380"))
+    cv.circle(x - r * 0.38, y - r * 0.3, r * 0.18, fill=(255, 255, 255, 170))
+
+
+def draw_switch(cv, x, y, s=1.0, on=False, label=None, highlight=False):
+    """single rocker switch centred at (x, y)"""
+    w, h = 46 * s, 64 * s
+    if highlight:
+        cv.rect(x - w * 0.75, y - h * 0.75, x + w * 0.75, y + h * 0.75, fill=hexc("#ffd34d", 150), r=12 * s)
+    cv.rect(x - w / 2, y - h / 2, x + w / 2, y + h / 2, fill=hexc("#ffffff"), outline=hexc("#c9ced6"), width=2 * s,
+            r=7 * s)
+    top = hexc("#e9edf2") if on else hexc("#ffffff")
+    if on:
+        cv.rect(x - w * 0.36, y - h * 0.38, x + w * 0.36, y + h * 0.05, fill=hexc("#d9dee5"), r=5 * s)
+        cv.rect(x - w * 0.36, y + h * 0.05, x + w * 0.36, y + h * 0.38, fill=top, r=5 * s)
+    else:
+        cv.rect(x - w * 0.36, y - h * 0.38, x + w * 0.36, y - h * 0.05, fill=top, r=5 * s)
+        cv.rect(x - w * 0.36, y - h * 0.05, x + w * 0.36, y + h * 0.38, fill=hexc("#d9dee5"), r=5 * s)
+    cv.circle(x, y - h * 0.22, 4 * s, fill=hexc("#37b26c") if on else hexc("#b8bec8"))
+    if label:
+        cv.text(x, y - h * 0.85, label, 22 * s, INK)

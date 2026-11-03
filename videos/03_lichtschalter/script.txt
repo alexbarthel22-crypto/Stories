@@ -1,0 +1,21 @@
+# Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden.
+# {emotion} am Zeilenanfang = Regieanweisung für diese Zeile (amused, surprised, ...).
+Nils steht im Erdgeschoss eines Hauses vor drei Lichtschaltern.
+Einer davon schaltet eine Glühbirne ganz oben im Dachgeschoss ein.
+Von unten kann Nils die Lampe aber nicht sehen.
+Er darf die Schalter so oft betätigen, wie er will.
+Aber er darf nur ein einziges Mal nach oben gehen, um nachzusehen.
+{surprised} Wie findet Nils heraus, welcher Schalter der richtige ist?
+[PAUSE 1.6]
+Kleiner Tipp: Eine Glühbirne macht nicht nur Licht.
+Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!
+Hier kommt die Lösung.
+Nils schaltet Schalter eins ein und wartet ein paar Minuten.
+Dann schaltet er Schalter eins wieder aus.
+Jetzt schaltet er Schalter zwei ein und geht nach oben.
+Leuchtet die Lampe, ist es Schalter zwei.
+Ist sie aus, aber die Glühbirne ist warm, war es Schalter eins.
+{surprised} Denn sie hat ja ein paar Minuten gebrannt!
+Und ist sie aus und kalt, dann ist es Schalter drei.
+{amused} Hättest du's gewusst?
+Schreib's in die Kommentare und folg mir für das nächste Rätsel!
