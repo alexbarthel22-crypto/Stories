@@ -2,3 +2,4 @@
 **/stills/
 __pycache__/
 *.pyc
+**/stills_safe/

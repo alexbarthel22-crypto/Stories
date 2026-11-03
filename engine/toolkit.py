@@ -13,6 +13,28 @@ FONT_BOLD = "/usr/share/fonts/opentype/inter/Inter-ExtraBold.otf"
 FONT_SEMI = "/usr/share/fonts/opentype/inter/Inter-SemiBold.otf"
 _font_cache = {}
 
+# TikTok UI safe zones for 1080x1920 (search bar on top, icon column right, caption/comments bottom)
+SAFE_TOP, SAFE_BOTTOM, SAFE_RIGHT, SAFE_LEFT = 220, 1480, 940, 40
+SAFE_RIGHT_Y = (760, 1480)
+UI_LOG = []          # (label, x0, y0, x1, y1) of every screen-space UI element drawn
+
+
+def log_ui(label, x0, y0, x1, y1):
+    UI_LOG.append((label, x0, y0, x1, y1))
+
+
+def safe_violation(x0, y0, x1, y1):
+    v = []
+    if y0 < SAFE_TOP:
+        v.append("top")
+    if y1 > SAFE_BOTTOM:
+        v.append("bottom")
+    if x1 > SAFE_RIGHT and y1 > SAFE_RIGHT_Y[0] and y0 < SAFE_RIGHT_Y[1]:
+        v.append("right")
+    if x0 < SAFE_LEFT:
+        v.append("left")
+    return v
+
 
 def font(size, bold=True):
     key = (size, bold)
@@ -399,6 +421,9 @@ def pill(img, cx, cy, text, size=64, fg="#2b2140", bg="#fff6e6", pad=(34, 18), s
         tile = tile.resize((max(1, int(tile.width * scale)), max(1, int(tile.height * scale))), Image.BICUBIC)
     x = cx - pad_s * scale if anchor == "l" else cx - tile.width / 2
     img.paste(tile, (int(x), int(cy - tile.height / 2)), tile)
+    if scale > 0.6:
+        m = pad_s * scale
+        log_ui("pill:" + text, x + m, cy - tile.height / 2 + m, x + tile.width - m, cy + tile.height / 2 - m)
 
 
 def clock_badge(img, cx, cy, hour, minute, label, scale=1.0, night=False):
@@ -433,6 +458,8 @@ def clock_badge(img, cx, cy, hour, minute, label, scale=1.0, night=False):
         cv.circle(icon_x, ccy, 26, fill=hexc("#ffd34d"))
     tile = tile.resize((int(w * scale), int(h * scale)), Image.LANCZOS)
     img.paste(tile, (int(cx - tile.width / 2), int(cy - tile.height / 2)), tile)
+    if scale > 0.6:
+        log_ui("clock:"+label+"", cx - tile.width / 2, cy - tile.height / 2, cx + tile.width / 2, cy + tile.height / 2)
 
 
 def floor_display(img, cx, cy, text, scale=1.0, arrow=0):
@@ -455,6 +482,8 @@ def floor_display(img, cx, cy, text, scale=1.0, arrow=0):
             cv.poly([(ax - 22, ay - 12), (ax + 22, ay - 12), (ax, ay + 20)], fill=col)
     tile = tile.resize((int(w * scale), int(h * scale)), Image.LANCZOS)
     img.paste(tile, (int(cx - tile.width / 2), int(cy - tile.height / 2)), tile)
+    if scale > 0.6:
+        log_ui("floor:"+text+"", cx - tile.width / 2, cy - tile.height / 2, cx + tile.width / 2, cy + tile.height / 2)
 
 
 def check_icon(img, cx, cy, r, scale=1.0, ok=True):
@@ -476,6 +505,8 @@ def check_icon(img, cx, cy, r, scale=1.0, ok=True):
         cv.line([(c - r * 0.3, c + r * 0.3), (c + r * 0.3, c - r * 0.3)], hexc("#ffffff"), r * 0.18)
     tile = tile.resize((max(1, int(size * scale)), max(1, int(size * scale))), Image.LANCZOS)
     img.paste(tile, (int(cx - tile.width / 2), int(cy - tile.height / 2)), tile)
+    if scale > 0.6:
+        log_ui("check", cx - tile.width / 2, cy - tile.height / 2, cx + tile.width / 2, cy + tile.height / 2)
 
 
 def speech_bubble(cv, x, y, r, text, fill="#ffffff", fg="#2b2140"):

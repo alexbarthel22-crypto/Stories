@@ -414,7 +414,7 @@ def scene_intro(t):
     if t > t_wide + 0.7:
         bx, by = world_to_screen(APT[0] + 95, yb(12) - FH + 70, view)
         pulse = 1 + 0.12 * math.sin(t * 8)
-        pill(frame, bx + 150, by, "12. STOCK", 56, bg="#ffd34d",
+        pill(frame, bx + 150, max(by, 300), "12. STOCK", 56, bg="#ffd34d",
              scale=ease_out_back(prog(t, t_wide + 0.7, t_wide + 1.0)) * pulse, rot=-3)
     return frame
 
@@ -458,9 +458,9 @@ def scene_morning(t):
                      (SX - 160, GROUND - fl * FH + 10)], fill=hexc("#37b26c"))
 
     frame, view = render_world_frame(t, "day", cam, actors)
-    clock_badge(frame, OUT_W / 2, 190, 7, 0, "07:00", scale=ease_out_back(prog(t, t0, t0 + 0.4)))
+    clock_badge(frame, OUT_W / 2, 330, 7, 0, "07:00", scale=ease_out_back(prog(t, t0, t0 + 0.4)))
     if t_ride0 < t < t_ride1 + 0.6:
-        floor_display(frame, OUT_W / 2, 400, "E" if fl < 0.5 else str(int(round(fl))), arrow=-1)
+        floor_display(frame, OUT_W / 2, 530, "E" if fl < 0.5 else str(int(round(fl))), arrow=-1)
     if t > S[3] - 0.1:
         check_icon(frame, OUT_W / 2, OUT_H / 2 - 100, 120, scale=ease_out_back(prog(t, S[3] - 0.1, S[3] + 0.25)))
         pill(frame, OUT_W / 2, OUT_H / 2 + 110, "GANZ NORMAL", 64, scale=ease_out_back(prog(t, S[3], S[3] + 0.35)))
@@ -522,19 +522,19 @@ def scene_evening(t):
                 cv.line(pts[:max(2, int(len(pts) * reveal))], (255, 211, 77, 200), 12)
 
     frame, view = render_world_frame(t, "dusk", cam, actors)
-    clock_badge(frame, OUT_W / 2, 190, 18, 0, "18:00", scale=ease_out_back(prog(t, t0, t0 + 0.4)), night=True)
+    clock_badge(frame, OUT_W / 2, 330, 18, 0, "18:00", scale=ease_out_back(prog(t, t0, t0 + 0.4)), night=True)
     if t0 + 1.2 < t < t_in:
         sx, sy = world_to_screen(x, y - 260, view)
         pill(frame, sx, sy, "?", 90, bg="#ffd34d", scale=ease_out_back(prog(t, t0 + 1.2, t0 + 1.6)))
     if t_ride0 < t < t_exit + 0.4:
-        floor_display(frame, OUT_W / 2, 400, "E" if fl < 0.5 else str(int(round(fl))), arrow=1 if t < t_ride1 else 0)
+        floor_display(frame, OUT_W / 2, 530, "E" if fl < 0.5 else str(int(round(fl))), arrow=1 if t < t_ride1 else 0)
     if t_ride1 < t < t_exit + 0.6:
-        check_icon(frame, OUT_W / 2 + 190, 400, 60, scale=ease_out_back(prog(t, t_ride1, t_ride1 + 0.3)), ok=True)
+        check_icon(frame, OUT_W / 2 + 190, 530, 60, scale=ease_out_back(prog(t, t_ride1, t_ride1 + 0.3)), ok=True)
     if t > t_exit + 0.6:
         steps = clamp((t - (t_exit + 0.6)) / (t_top - t_exit - 0.6) * 3, 0, 3)
         n = 9 + int(steps)
-        pill(frame, OUT_W / 2, 400, f"{min(n, 12)}. STOCK  ·  ZU FUSS", 56, bg="#fff6e6")
-        pill(frame, OUT_W / 2, OUT_H - 330, "3 STOCKWERKE", 70, bg="#ffd34d", rot=-3,
+        pill(frame, OUT_W / 2, 530, f"{min(n, 12)}. STOCK  ·  ZU FUSS", 56, bg="#fff6e6")
+        pill(frame, OUT_W / 2, 1340, "3 STOCKWERKE", 70, bg="#ffd34d", rot=-3,
              scale=ease_out_back(prog(t, t_exit + 0.3, t_exit + 0.7)))
     return frame
 
@@ -564,6 +564,7 @@ def scene_neighbours(t):
     frame, view = render_world_frame(t, "dusk", cam, actors)
     for nm, wx, wy, ts in (("ELISA", 2400, yb(12) - 150, t0 + 0.3), ("PAUL", 2300, yb(11) - 150, t0 + 0.6)):
         sx, sy = world_to_screen(wx - 190, wy, view)
+        sy = min(sy, 1400)
         pill(frame, sx, sy, nm, 40, pad=(20, 10), scale=ease_out_back(prog(t, ts, ts + 0.3)))
     items = [("GESUND", S[8] + 0.5), ("SPORTLICH", S[8] + 1.2), ("TREPPEN? KEIN PROBLEM", S[8] + 2.3)]
     for i, (txt, ts) in enumerate(items):
@@ -615,12 +616,12 @@ def scene_rain(t):
     frame, view = render_world_frame(t, "rain", cam, actors)
     rain(frame, t)
     if t < t_in + 1.0:
-        pill(frame, OUT_W / 2, 220, "REGEN!", 80, bg="#c5def5", rot=-4, scale=ease_out_back(prog(t, t0, t0 + 0.4)))
+        pill(frame, OUT_W / 2, 330, "REGEN!", 80, bg="#c5def5", rot=-4, scale=ease_out_back(prog(t, t0, t0 + 0.4)))
     if t_ride0 < t:
-        floor_display(frame, OUT_W / 2, 330, "E" if fl < 0.5 else str(int(round(fl))), arrow=1 if t < t_ride1 else 0)
+        floor_display(frame, OUT_W / 2, 400, "E" if fl < 0.5 else str(int(round(fl))), arrow=1 if t < t_ride1 else 0)
     if t > t_ride1:
-        check_icon(frame, OUT_W / 2 + 190, 330, 60, scale=ease_out_back(prog(t, t_ride1, t_ride1 + 0.3)))
-        pill(frame, OUT_W / 2, 520, "DIREKT IN DEN 12. STOCK", 54, bg="#ffd34d",
+        check_icon(frame, OUT_W / 2 + 190, 400, 60, scale=ease_out_back(prog(t, t_ride1, t_ride1 + 0.3)))
+        pill(frame, OUT_W / 2, 580, "DIREKT IN DEN 12. STOCK", 54, bg="#ffd34d",
              scale=ease_out_back(prog(t, t_ride1 + 0.1, t_ride1 + 0.45)))
     return frame
 
@@ -653,11 +654,11 @@ def scene_sunny(t):
                 cv.arc(1925 - r, HORIZON - r * 0.9, 1925 + r, HORIZON + r * 0.9, 180, 360, hexc(c, 150), 40)
 
     frame, view = render_world_frame(t, "day", cam, actors)
-    clock_badge(frame, OUT_W / 2, 190, 18, 0, "18:00", scale=ease_out_back(prog(t, t0, t0 + 0.4)))
+    clock_badge(frame, OUT_W / 2, 330, 18, 0, "18:00", scale=ease_out_back(prog(t, t0, t0 + 0.4)))
     if t > t_ride0:
-        floor_display(frame, OUT_W / 2, 400, "E" if fl < 0.5 else str(int(round(fl))), arrow=1 if t < t_ride1 else 0)
+        floor_display(frame, OUT_W / 2, 530, "E" if fl < 0.5 else str(int(round(fl))), arrow=1 if t < t_ride1 else 0)
     if t > t_ride1:
-        pill(frame, OUT_W / 2, OUT_H - 330, "WIEDER NUR BIS 9", 66, bg="#ffd34d", rot=-3,
+        pill(frame, OUT_W / 2, 1340, "WIEDER NUR BIS 9", 66, bg="#ffd34d", rot=-3,
              scale=ease_out_back(prog(t, t_ride1, t_ride1 + 0.35)))
     return frame
 
@@ -678,25 +679,25 @@ def scene_question(t):
         cv.circle(x, y, 2 + 2 * tw, fill=(255, 255, 255, int(80 + 100 * tw)))
     # Alex thinking in the centre
     s = 2.6
-    cv_s = Canvas(img, -OUT_W / 2 / s, -(OUT_H * 0.70) / s, s)
+    cv_s = Canvas(img, -OUT_W / 2 / s, -Q_FEET / s, s)
     cv_s.ellipse(-60, -8, 60, 12, fill=(0, 0, 0, 70))
     draw_person(cv_s, 0, 0, ALEX, face=1, reach=(28, -125))
     # big question
     p = ease_out_back(prog(t, t0, t0 + 0.35))
-    pill(img, OUT_W / 2, 420, "WARUM MACHT", 92, bg="#fff6e6", scale=p, rot=-3)
-    pill(img, OUT_W / 2, 580, "ALEX DAS?", 110, bg="#ffd34d", scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.55)), rot=2)
+    pill(img, OUT_W / 2, 360, "WARUM MACHT", 92, bg="#fff6e6", scale=p, rot=-3)
+    pill(img, OUT_W / 2, 515, "ALEX DAS?", 110, bg="#ffd34d", scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.55)), rot=2)
     # thinking dots during pause
     if S[14] - 0.2 < t < t_tip:
         for i in range(3):
             ph = (t * 3 - i * 0.35) % 2
             a = clamp(1 - abs(ph - 0.5) * 2) if ph < 1 else 0
-            cv.circle(OUT_W / 2 + 120 + i * 70, OUT_H * 0.70 - 560 - i * 35, 20 + 10 * a, fill=(255, 255, 255, int(120 + 135 * a)))
+            cv.circle(OUT_W / 2 + 120 + i * 70, Q_FEET - 520 - i * 35, 20 + 10 * a, fill=(255, 255, 255, int(120 + 135 * a)))
     if t > t_tip:
         sc = ease_out_back(prog(t, t_tip, t_tip + 0.35))
-        pill(img, OUT_W / 2, 800, "TIPP: REGEN", 84, bg="#c5def5", fg="#2b2140", scale=sc, rot=-2)
+        pill(img, OUT_W / 2, 690, "TIPP: REGEN", 84, bg="#c5def5", fg="#2b2140", scale=sc, rot=-2)
         # little cloud icon
         if sc > 0.3:
-            c = Canvas(img, -(OUT_W / 2 + 330), -800, 1.0)
+            c = Canvas(img, -(OUT_W / 2 + 330), -690, 1.0)
             for dx_, dy_, r in [(-40, 0, 40), (0, -25, 52), (45, 0, 40)]:
                 c.circle(dx_, dy_, r * sc, fill=hexc("#ffffff"))
             for k in range(3):
@@ -704,8 +705,8 @@ def scene_question(t):
                 c.line([(-35 + k * 35, yy), (-45 + k * 35, yy + 26)], hexc("#7fb7ff"), 7)
     if t > t_cm:
         sc = ease_out_back(prog(t, t_cm, t_cm + 0.35))
-        pill(img, OUT_W / 2, OUT_H - 260, "SCHREIB'S IN DIE KOMMENTARE", 50, bg="#ffffff", scale=sc)
-        cc = Canvas(img, -(OUT_W / 2), -(OUT_H - 420), 1.0)
+        pill(img, OUT_W / 2, 1405, "SCHREIB'S IN DIE KOMMENTARE", 40, bg="#ffffff", scale=sc)
+        cc = Canvas(img, -(OUT_W / 2 + 330), -1260, 1.0)
         if sc > 0.2:
             cc.rect(-80 * sc, -55 * sc, 80 * sc, 45 * sc, fill=hexc("#ffd34d"), r=30 * sc)
             cc.poly([(-30 * sc, 40 * sc), (-55 * sc, 85 * sc), (5 * sc, 40 * sc)], fill=hexc("#ffd34d"))
@@ -717,6 +718,7 @@ def scene_question(t):
 # --- scene H: solution in the elevator --------------------------------------------------------
 
 PANEL_X = 250
+Q_FEET = 1200          # Alex's feet in the question scene
 BTN_BOTTOM = 1390
 BTN_STEP = 43
 
@@ -831,28 +833,33 @@ def scene_solution(t):
         cv.line([(380, 1500 - alex_h - 20), (900, 1500 - alex_h - 20)], hexc("#ffd34d", int(255 * a)), 6)
     face = -1
     hand = draw_person(cv, ax, ay, ALEX, face=face, reach=reach, umbrella=umb, h=alex_h, arm_scale=1.3)
+    # move the whole elevator up so Alex's feet stay clear of TikTok's caption area
+    SH = 90
+    shifted = Image.new("RGB", img.size, hexc("#bdb8b0"))
+    shifted.paste(img.crop((0, SH, OUT_W, OUT_H)), (0, 0))
+    img = shifted
     if t > t_umb and t < t_press:
         sc = ease_out_back(prog(t, t_umb, t_umb + 0.35))
-        pill(img, 760, 900, "REGENSCHIRM!", 56, bg="#c5def5", scale=sc, rot=3)
+        pill(img, 610, 900 - SH, "REGENSCHIRM!", 56, bg="#c5def5", scale=sc, rot=3)
     # banners
     if t < t_small + 0.2:
         sc = ease_out_back(prog(t, t0, t0 + 0.35)) * (1 - prog(t, t_small - 0.1, t_small + 0.2))
-        pill(img, OUT_W / 2, 180, "DIE LÖSUNG", 96, bg="#fff6e6", rot=-4, scale=sc)
+        pill(img, OUT_W / 2, 330, "DIE LÖSUNG", 96, bg="#fff6e6", rot=-4, scale=sc)
     if t_small <= t < t_down:
-        pill(img, OUT_W / 2, 180, "ALEX IST KLEINWÜCHSIG", 60, bg="#ffd34d", rot=-2,
+        pill(img, OUT_W / 2, 330, "ALEX IST KLEINWÜCHSIG", 60, bg="#ffd34d", rot=-2,
              scale=ease_out_back(prog(t, t_small, t_small + 0.35)))
     if t_down <= t < t_up:
-        pill(img, OUT_W / 2, 180, "RUNTER: KNOPF E  ✓", 62, bg="#fff6e6", rot=-2,
+        pill(img, OUT_W / 2, 330, "RUNTER: KNOPF E  ✓", 62, bg="#fff6e6", rot=-2,
              scale=ease_out_back(prog(t, t_down, t_down + 0.35)))
     if t_up <= t < t_rain:
-        pill(img, OUT_W / 2, 180, "HOCH: NUR BIS 9", 66, bg="#fff6e6", rot=2,
+        pill(img, OUT_W / 2, 330, "HOCH: NUR BIS 9", 66, bg="#fff6e6", rot=2,
              scale=ease_out_back(prog(t, t_up, t_up + 0.35)))
     if t_rain <= t < t_end:
-        pill(img, OUT_W / 2, 180, "UND BEI REGEN?", 70, bg="#c5def5", rot=-2,
+        pill(img, OUT_W / 2, 330, "UND BEI REGEN?", 70, bg="#c5def5", rot=-2,
              scale=ease_out_back(prog(t, t_rain, t_rain + 0.35)))
     if t >= t_press + 0.8 and t < t_end:
-        check_icon(img, PANEL_X - 110, btn_y(12) - 60, 50, scale=ease_out_back(prog(t, t_press + 0.8, t_press + 1.1)))
-        pill(img, 680, 900, "12. STOCK  ✓", 64, bg="#ffd34d", scale=ease_out_back(prog(t, t_press + 1.0, t_press + 1.35)))
+        check_icon(img, PANEL_X - 110, btn_y(12) - 60 - SH, 50, scale=ease_out_back(prog(t, t_press + 0.8, t_press + 1.1)))
+        pill(img, 680, 900 - SH, "12. STOCK  ✓", 64, bg="#ffd34d", scale=ease_out_back(prog(t, t_press + 1.0, t_press + 1.35)))
     if t_rain <= t < t_umb:
         rain_layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
         rain(rain_layer, t, density=120, color=(90, 120, 180, 120))
@@ -871,17 +878,17 @@ def scene_outro(t):
     pill(img, OUT_W / 2, 520, "HÄTTEST DU'S", 96, bg="#fff6e6", rot=-3, scale=ease_out_back(prog(t, t0, t0 + 0.35)))
     pill(img, OUT_W / 2, 690, "GEWUSST?", 110, bg="#ffd34d", rot=2, scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.55)))
     if t > t1:
-        pill(img, OUT_W / 2, 960, "SCHREIB'S IN DIE KOMMENTARE", 48, bg="#ffffff",
+        pill(img, OUT_W / 2, 870, "SCHREIB'S IN DIE KOMMENTARE", 40, bg="#ffffff",
              scale=ease_out_back(prog(t, t1, t1 + 0.35)))
         followed = t > t1 + 2.0
         txt = "GEFOLGT  ✓" if followed else "+  FOLGEN"
         bg = "#37b26c" if followed else "#e2574c"
         pulse = 1 + (0.06 * math.sin(t * 10) if not followed else 0)
-        pill(img, OUT_W / 2, 1130, txt, 72, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
-        pill(img, OUT_W / 2, 1290, "MORGEN: NEUES RÄTSEL", 48, bg="#fff6e6",
+        pill(img, OUT_W / 2, 1010, txt, 72, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
+        pill(img, OUT_W / 2, 1145, "MORGEN: NEUES RÄTSEL", 48, bg="#fff6e6",
              scale=ease_out_back(prog(t, t1 + 1.0, t1 + 1.35)))
     s = 2.0
-    cvs = Canvas(img, -(OUT_W / 2) / s, -(OUT_H - 90) / s, s)
+    cvs = Canvas(img, -(OUT_W / 2) / s, -1470 / s, s)
     draw_person(cvs, 0, 0, ALEX, face=1, wave=t * 9)
     return img
 

@@ -21,4 +21,6 @@ python3 engine/tts_gemini.py videos/01_alex_aufzug/script.txt videos/01_alex_auf
   --voice Puck --model gemini-3.1-flash-tts-preview --tempo 1.12
 cd videos/01_alex_aufzug && python3 make_audio.py && python3 make_video.py
 ```
+TikTok-Sicherheitsbereiche prüfen: `python3 safecheck.py` (meldet jedes Textelement, das unter Suchleiste, Icon-Spalte oder Beschreibung läge; `--stills` erzeugt Kontrollbilder mit eingeblendeten Zonen).
+
 Szenen-Timings werden automatisch aus `timing.json` übernommen – Text ändern, neu sprechen lassen, neu rendern.
