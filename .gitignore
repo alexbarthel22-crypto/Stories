@@ -1,0 +1,4 @@
+**/cache/
+**/stills/
+__pycache__/
+*.pyc
