@@ -65,11 +65,11 @@ ein F-Boy 😏🌙 „Mein Hobby ist Reiten“ – „Kannst ja mal auf mir reit
 
 #fboy #redflags #redflag #dating #breadcrumbing #situationship #comedy #fürdich #fyp
 
-## TikTok Folge 3 – OF-Model (Alex als Alexa)
+## TikTok Folge 3 – OF-Model (Alex als Alexia)
 Cover: `episodes/06_of_model/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein OF-Model 📸💄 Natural Look in nur 2 Stunden, 300 Fotos für 1 Post – und geantwortet hat eigentlich Kevin 😅 Welches Klischee ist das beste? 👇 Markier jemanden, der überall „Link in Bio“ schreibt! Und was soll Alex morgen sein?
+ein OF-Model 📸💄 Aus Alex wird Alexia – Natural Look in nur 2 Stunden, 300 Fotos für 1 Post, und die Fans wollen heiraten 💍 Geantwortet hat aber Kevin 😅 Kennst du jemanden, der auch mit OF starten sollte? Markier ihn! 👇 Und was soll Alex morgen sein?
 
 #contentcreator #linkinbio #bossbabe #influencer #klischee #comedy #fürdich #fyp

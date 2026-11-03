@@ -50,10 +50,34 @@ def trim_save(a, sr, path):
     return len(a) / sr
 
 
-def gemini_tts(text, mood, path):
-    body = {"contents": [{"parts": [{"text": PROFILE.format(mood=mood, text=text)}]}],
+# Pro Folge optional:
+#   GEMINI_REPLACE = {"OF-Model": "O-Eff-Model"}  -> Aussprache-Ersatz nur für die Gemini-Stimme
+#   VOICE_OVERRIDE = {("szene", zeile): dict(voice="Algenib", profile="...", text="...")}
+GEM_REPLACE = getattr(script, "GEMINI_REPLACE", {})
+OVERRIDE = getattr(script, "VOICE_OVERRIDE", {})
+FAN_PROFILE = """# AUDIO PROFILE: {profile}
+
+### DIRECTOR'S NOTES
+Stimmung: {mood}
+Sprache: Deutsch.
+Wichtig: Sprich ausschließlich den Text unter TRANSCRIPT, wortwörtlich, nichts hinzufügen oder weglassen.
+
+#### TRANSCRIPT
+{text}"""
+
+
+def gem_text_fix(text):
+    for a, b in GEM_REPLACE.items():
+        text = text.replace(a, b)
+    return text
+
+
+def gemini_tts(text, mood, path, voice=None, profile=None):
+    prompt = (FAN_PROFILE.format(profile=profile, mood=mood, text=text) if profile
+              else PROFILE.format(mood=mood, text=gem_text_fix(text)))
+    body = {"contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {"responseModalities": ["AUDIO"],
-                                 "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": VOICE}}}}}
+                                 "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice or VOICE}}}}}
     raw = None
     for model in GEMINI_MODELS:
         if model in _exhausted:
@@ -117,6 +141,11 @@ def run(job):
     key, gem_text, piper_text, mood = job
     p = f"{out}/{key}.wav"
     if GEMINI:
+        sid, _, li = key.rpartition("_")
+        ov = OVERRIDE.get((sid, int(li))) if li.isdigit() else None
+        if ov:
+            return key, p, gemini_tts(ov.get("text", gem_text), ov.get("mood", mood), p,
+                                      voice=ov["voice"], profile=ov["profile"])
         return key, p, gemini_tts(gem_text, mood, p)
     return key, p, piper_tts(piper_text, LS, p)
 

@@ -462,7 +462,7 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     c.set_source(g); c.fill()
 
     # Beine (leicht konisch) + Hosensaum
-    pants = sp["pants"]
+    pants = skin if sp.get("bare_legs") else sp["pants"]
     for sx in (-1, 1):
         cx = sx * 5.3
         c.move_to(cx - 4.9, -27 + by * 0.3)
@@ -471,11 +471,12 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.line_to(cx - 4.2, -5.5)
         c.close_path()
         _fill_line(c, pants, -27, -5, 0.8)
-        rrect(c, cx - 4.5, -7.6, 9.0, 2.6, 1.0)
-        _fill_line(c, shade(pants, 0.9), -8, -5, 0.6)
-    # Sneaker
+        if not sp.get("bare_legs"):
+            rrect(c, cx - 4.5, -7.6, 9.0, 2.6, 1.0)
+            _fill_line(c, shade(pants, 0.9), -8, -5, 0.6)
+    # Sneaker oder Pumps
     shoes = sp["shoes"]
-    for sx in (-1, 1):
+    for sx in ((-1, 1) if not sp.get("heels") else ()):
         cx = sx * 6.0
         c.move_to(cx - 5.4 * (1 if sx > 0 else 1.25), -1.8)
         c.curve_to(cx - 5.6, -6.6, cx + 1, -7.4, cx + 3.2, -5.4)
@@ -489,7 +490,29 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
             c.move_to(cx - 1.6 + i * 1.3, -6.2 + i * 0.25); c.line_to(cx - 0.4 + i * 1.3, -5.0 + i * 0.25)
         c.stroke()
 
+    if sp.get("heels"):
+        for sx in (-1, 1):
+            cx = sx * 5.6
+            c.move_to(cx - 3.2, -6.0); c.curve_to(cx - 3.4, -2.6, cx - 0.5, -1.4, cx + 4.2, -1.3)
+            c.curve_to(cx + 4.6, -2.2, cx + 2.4, -3.6, cx + 1.8, -6.0); c.close_path()
+            _fill_line(c, shoes, -6.5, -1, 0.6, 1.15, 0.88, 0.6)
+            rrect(c, cx - 3.3, -2.4, 1.1, 2.4, 0.3); fill(c, shade(shoes, 0.6))
     c.translate(0, by)
+
+    # lange Haare hinten (hinter dem Körper)
+    if sp.get("hair_style") == "fem":
+        hy0, hair = -73, sp["hair"]
+        c.move_to(-21, hy0 + 30)
+        c.curve_to(-26, hy0 + 14, -25, hy0 - 22, 0, hy0 - 22)
+        c.curve_to(25, hy0 - 22, 26, hy0 + 14, 21, hy0 + 30)
+        for k in range(6):
+            x1 = 21 - (k + 1) * 7
+            c.curve_to(21 - k * 7 - 2, hy0 + 33, x1 + 2, hy0 + 33, x1, hy0 + 30)
+        c.close_path()
+        _fill_line(c, shade(hair, 0.9), hy0 - 22, hy0 + 36, 0.9, 1.1, 0.85, 0.68)
+        c.set_line_width(0.8); src(c, shade(hair, 0.72), 0.7)
+        for sx in (-1, 1):
+            c.move_to(sx * 20, hy0 + 2); c.curve_to(sx * 23, hy0 + 14, sx * 19, hy0 + 22, sx * 21, hy0 + 32); c.stroke()
 
     # Tote-Bag (hinter dem Arm, links)
     if sp.get("tote"):
@@ -509,7 +532,19 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
 
     # Oberkörper mit runden Schultern
     top = sp["top"]
+    style = sp.get("top_style", "tee")
     def torso_path():
+        if style == "dress":
+            c.move_to(-5, -56.5)
+            c.curve_to(-9.5, -56.2, -13.8, -55.4, -14.6, -50.5)
+            c.curve_to(-14.4, -45, -11, -41, -10.4, -37.5)
+            c.curve_to(-12.5, -30, -16.5, -22, -18, -15.5)
+            c.curve_to(-6, -13.8, 6, -13.8, 18, -15.5)
+            c.curve_to(16.5, -22, 12.5, -30, 10.4, -37.5)
+            c.curve_to(11, -41, 14.4, -45, 14.6, -50.5)
+            c.curve_to(13.8, -55.4, 9.5, -56.2, 5, -56.5)
+            c.close_path()
+            return
         c.move_to(-5, -56.5)
         c.curve_to(-10, -56.2, -14.5, -55.6, -15.8, -50.5)
         c.line_to(-15.4, -26.5)
@@ -521,9 +556,21 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.close_path()
     torso_path()
     _fill_line(c, top, -57, -24, 0.9)
-    style = sp.get("top_style", "tee")
     c.save(); torso_path(); c.clip()
-    if style == "cardigan":
+    if style == "dress":
+        # Herz-Ausschnitt, Taillenband, Falten
+        c.move_to(-9.5, -58); c.curve_to(-7.5, -52, -3, -50.5, 0, -52.2)
+        c.curve_to(3, -50.5, 7.5, -52, 9.5, -58); c.close_path()
+        c.set_source(_grad(c, skin, -58, -50, 1.04, 0.92)); c.fill()
+        c.set_line_width(0.7); src(c, shade(top, 0.6))
+        c.move_to(-9.5, -57.5); c.curve_to(-7.5, -52, -3, -50.5, 0, -52.2)
+        c.curve_to(3, -50.5, 7.5, -52, 9.5, -57.5); c.stroke()
+        rrect(c, -12, -39, 24, 2.6, 1); fill(c, shade(top, 0.75))
+        c.set_line_width(0.45); src(c, shade(top, 0.78))
+        for xx in (-9, -4.5, 0, 4.5, 9):
+            c.move_to(xx * 0.8, -36); c.line_to(xx * 1.5, -16)
+        c.stroke()
+    elif style == "cardigan":
         c.move_to(-4.2, -57); c.line_to(4.2, -57); c.line_to(1.6, -24); c.line_to(-1.6, -24); c.close_path()
         c.set_source(_grad(c, sp.get("inner", "#FFFFFF"), -57, -24, 1.0, 0.92)); c.fill()
         c.set_line_width(0.6); src(c, shade(top, 0.7))
@@ -585,12 +632,13 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         dx, dy = side * math.sin(a), math.cos(a)
         L = 20.5
         ex_, ey_ = sx + dx * L, sy + dy * L
-        sleeve = skin if style == "tank" else top
-        c.set_line_width(8.6 if style != "tank" else 7.8); src(c, shade(sleeve, 0.62 if style != "tank" else 0.72))
+        bare = style in ("tank", "dress")
+        sleeve = skin if bare else top
+        c.set_line_width(8.6 if not bare else 7.2); src(c, shade(sleeve, 0.62 if not bare else 0.72))
         c.move_to(sx, sy); c.line_to(ex_, ey_); c.stroke()
-        c.set_line_width(7.0 if style != "tank" else 6.4); c.set_source(_grad(c, sleeve, sy - 4, ey_ + 4, 1.06, 0.9))
+        c.set_line_width(7.0 if not bare else 5.8); c.set_source(_grad(c, sleeve, sy - 4, ey_ + 4, 1.06, 0.9))
         c.move_to(sx, sy); c.line_to(ex_, ey_); c.stroke()
-        if style != "tank":
+        if not bare:
             # Bündchen
             c.set_line_width(7.4); src(c, shade(top, 0.82))
             c.move_to(sx + dx * (L - 0.6), sy + dy * (L - 0.6)); c.line_to(ex_ + dx * 0.4, ey_ + dy * 0.4); c.stroke()
@@ -638,6 +686,12 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     eye_y = hy0 + 1.6
     big = expr == "puppy"
     iris = sp.get("eyes", "#3B6EA8")
+    mk = sp.get("makeup")
+    if mk:
+        for sx in (-1, 1):
+            g = cairo.RadialGradient(sx * 6.6, eye_y - 2.6, 0.3, sx * 6.6, eye_y - 2.6, 5.2)
+            g.add_color_stop_rgba(0, *rgb(mk.get("shadow", "#C8708E"), 0.7)); g.add_color_stop_rgba(1, *rgb(mk.get("shadow", "#C8708E"), 0))
+            ellipse(c, sx * 6.6, eye_y - 2.4, 5.4, 3.4); c.set_source(g); c.fill()
     for sx in (-1, 1):
         ex0 = sx * 6.4
         if blink < 0.35:
@@ -659,6 +713,11 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         # Oberlid
         c.set_line_width(1.0); src(c, "#2A1E1A")
         c.arc(0, 0.2, rxs * 1.02, math.pi * 1.08, math.pi * 1.92); c.stroke()
+        if mk:
+            c.set_line_width(1.5); src(c, "#1A1214")
+            c.arc(0, 0.2, rxs * 1.04, math.pi * 1.15, math.pi * 1.95); c.stroke()
+            c.move_to(sx * rxs * 0.98, -0.6); c.line_to(sx * (rxs + 1.8), -2.2); c.line_to(sx * rxs * 0.9, -0.2); c.close_path()
+            fill(c, "#1A1214")
         if sp.get("lashes"):
             c.set_line_width(0.6)
             for k, ang in enumerate((1.6, 1.78, 1.92)):
@@ -668,10 +727,14 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
             c.stroke()
         c.restore()
     # Augenbrauen (dicker, getapert)
-    brow = sp.get("brow", shade(hair, 0.68) if hs == "alex" else shade(hair, 0.85))
-    c.set_line_width(1.7); src(c, brow)
+    brow = sp.get("brow", shade(hair, 0.68) if hs in ("alex", "fem") else shade(hair, 0.85))
+    c.set_line_width(1.7 if not mk else 1.05); src(c, brow)
     for sx in (-1, 1):
-        if expr == "angry":
+        if mk and expr not in ("angry", "sad", "puppy"):
+            lift = -1.0 if (expr == "smug" and sx > 0) else 0
+            c.move_to(sx * 3.2, eye_y - 7.6 + lift)
+            c.curve_to(sx * 5.5, eye_y - 10.4 + lift, sx * 8.2, eye_y - 10.4 + lift, sx * 10.2, eye_y - 7.4 + lift)
+        elif expr == "angry":
             c.move_to(sx * 10, eye_y - 9); c.line_to(sx * 3.4, eye_y - 6.4)
         elif expr in ("sad", "puppy"):
             c.move_to(sx * 9.6, eye_y - 6.8); c.line_to(sx * 3.4, eye_y - 9.0)
@@ -696,7 +759,17 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     # Mund
     my = hy0 + 10.2
     lip = sp.get("lips", "#6E2430")
-    if expr in ("happy", "talk"):
+    if mk and expr in ("smug", "neutral"):
+        up = 1.2 if expr == "smug" else 0
+        c.move_to(-4.6, my + 0.6 - up * 0.3)
+        c.curve_to(-3, my - 1.2, -1.4, my - 1.4, 0, my - 0.4)
+        c.curve_to(1.4, my - 1.4, 3, my - 1.2, 4.6, my + 0.6 - up)
+        c.curve_to(3, my + 3.4, -3, my + 3.4, -4.6, my + 0.6 - up * 0.3); c.close_path()
+        c.set_source(_grad(c, lip, my - 1.4, my + 3.2, 1.15, 0.85)); c.fill()
+        c.set_line_width(0.5); src(c, shade(lip, 0.6))
+        c.move_to(-4.4, my + 0.6 - up * 0.3); c.curve_to(-1.5, my + 1.2, 1.5, my + 1.2, 4.4, my + 0.6 - up); c.stroke()
+        ellipse(c, 1.0, my + 1.9, 1.4, 0.5); src(c, "#FFFFFF", 0.55); c.fill()
+    elif expr in ("happy", "talk"):
         c.move_to(-5.4, my - 0.8)
         c.curve_to(-3.6, my + 5.6, 3.6, my + 5.6, 5.4, my - 0.8)
         c.curve_to(2, my + 0.2, -2, my + 0.2, -5.4, my - 0.8); c.close_path()
@@ -739,6 +812,29 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.move_to(-3, my + 0.8); c.curve_to(-1, my + 1.4, 1, my + 1.4, 3, my + 0.8); c.stroke()
 
     # Haare vorne
+    if hs == "fem":
+        g = cairo.LinearGradient(0, hy0 - 24, 0, hy0 + 22)
+        g.add_color_stop_rgba(0, *rgb(shade(hair, 1.3))); g.add_color_stop_rgba(0.45, *rgb(hair))
+        g.add_color_stop_rgba(1, *rgb(shade(hair, 0.82)))
+        c.move_to(-18.8, hy0 + 22)
+        c.curve_to(-21.5, hy0 + 4, -21, hy0 - 16, -10, hy0 - 21.5)
+        c.curve_to(-2, hy0 - 25, 14, hy0 - 23, 18.8, hy0 - 10)
+        c.curve_to(21, hy0 - 2, 20.6, hy0 + 12, 19, hy0 + 22)
+        c.curve_to(17.4, hy0 + 23, 15.6, hy0 + 21, 15.2, hy0 + 18)
+        c.curve_to(16.4, hy0 + 8, 16.2, hy0 - 2, 14.4, hy0 - 6.5)
+        c.curve_to(9, hy0 - 6.2, 0, hy0 - 9.5, -7.5, hy0 - 15.5)
+        c.curve_to(-11.5, hy0 - 11, -14.6, hy0 - 4, -15.2, hy0 + 4)
+        c.curve_to(-15.4, hy0 + 11, -15.4, hy0 + 17, -15.8, hy0 + 21)
+        c.curve_to(-16.6, hy0 + 23, -18, hy0 + 23, -18.8, hy0 + 22)
+        c.close_path()
+        c.set_source(g); c.fill_preserve()
+        c.set_line_width(0.9); src(c, shade(hdark, 0.72)); c.stroke()
+        c.set_line_width(0.75); src(c, shade(hdark, 0.85), 0.8)
+        for (a0, a1, a2, a3) in (((-6, -19), (2, -17), (9, -12), (14, -8)), ((-9, -17.5), (-2, -13), (6, -9.5), (13, -7)),
+                                 ((-17, -6), (-18, 4), (-17, 12), (-17.5, 20)), ((17, -4), (18.4, 6), (17.5, 14), (17.5, 20))):
+            c.move_to(a0[0], hy0 + a0[1]); c.curve_to(a1[0], hy0 + a1[1], a2[0], hy0 + a2[1], a3[0], hy0 + a3[1]); c.stroke()
+        c.set_line_width(1.6); src(c, "#FFFFFF", 0.5)
+        c.move_to(-4, hy0 - 21.5); c.curve_to(1, hy0 - 22.6, 7, hy0 - 21.5, 11, hy0 - 18.5); c.stroke()
     if hs in ("alex", "alex_long"):
         # Schatten der Tolle auf der Stirn
         c.save()

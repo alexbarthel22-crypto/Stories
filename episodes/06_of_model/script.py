@@ -1,12 +1,15 @@
-"""Folge (TikTok Folge 3): Heute ist Alex ... ein OF-Model – als Alexa.
+"""Folge (TikTok Folge 3): Heute ist Alex ... ein OF-Model – als Alexia.
 Gesprochen/geschrieben wird nur "OF". Komplett jugendfrei: Humor über Business-Klischees.
 Keine Zahlen/Gebühren – nur Klischees.
-Outro: bewusst NICHT "Markier ein OF-Model" (Bloßstellungsgefahr), sondern "Link in Bio"-Leute.
+Stimme wie Pick-me-Boy: gemini-3.8-flash-tts, Puck. Fans: eigene männliche Gemini-Stimmen.
 """
 
 ROLE = "EIN OF-MODEL."
-ROLE_TTS = "ein O-F-Model."
-ROLE_SAY = "ein O-F-Model!"
+ROLE_TTS = "ein O-Eff-Model."
+ROLE_SAY = "ein O-Eff-Model!"
+
+# Aussprache für Gemini: OF = "O-Eff"
+GEMINI_REPLACE = {"OF-Model": "O-Eff-Model", "OF ": "O-Eff "}
 
 MOODS = {
     "intro_pre": "spannend, aber zügig und kurz gesprochen, ohne lange Pause",
@@ -41,11 +44,21 @@ THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="OF-MODEL", bg="#B0307A", a
              pill="#2B1030", pill_text="#FFFFFF", expr="smug", pose="phone", prop="📱",
              emojis=("💸", "💄", "📸", "💅"))
 
+# Männliche Fan-Stimmen (nicht der Erzähler)
+VOICE_OVERRIDE = {
+    ("dms", 1): dict(voice="Algenib", text="Du bist die Einzige, die mich versteht.",
+                     profile="Ein männlicher Fan, Ende dreißig, tiefe raue Stimme, schmachtend und übertrieben verliebt.",
+                     mood="leise, sehnsüchtig, etwas peinlich"),
+    ("dms", 2): dict(voice="Charon", text="Ich hab dir Trinkgeld geschickt. Heiratest du mich?",
+                     profile="Ein männlicher Fan, Mitte vierzig, tiefe Männerstimme, aufgeregt und hoffnungsvoll.",
+                     mood="aufgeregt, naiv, voller Hoffnung"),
+}
+
 SCENES = [
     dict(id="what", bg="#B0307A", clock=None, title="WAS IST EIN OF-MODEL?", dark=True, lines=[
         ("Ein OF-Model verkauft exklusive Inhalte an zahlende Fans. Im Abo.",
          "Ein O-F-Model verkauft exklusive Inhalte an zahlende Fans. Im Abo."),
-        ("Und dafür wird Alex heute zu Alexa: Perücke, Wimpern, Lipgloss.", None),
+        ("Und dafür wird Alex heute zu Alexia: Perücke, Make-up, Kleid.", None),
     ]),
     dict(id="morning", bg="#F2A65A", clock="09:00", title="NATURAL LOOK", lines=[
         ("Neun Uhr. Der natürliche Look. Dauert nur zwei Stunden.", None),
@@ -55,12 +68,14 @@ SCENES = [
         ("Mittags Werbung auf allen Kanälen. Unter jedem Video: Link in Bio.", None),
     ]),
     dict(id="dms", bg="#36B5C2", clock="17:00", title="DIE NACHRICHTEN", lines=[
-        ("Hunderte Nachrichten. Ein Fan schreibt: Du bist die Einzige, die mich versteht.", None),
-        ("Alexa antwortet: Du auch, Babe. In Wahrheit hat Kevin geantwortet. Der bezahlte Chatter.", None),
+        ("Nachmittags: Hunderte Nachrichten von Fans.", None),
+        ("Fan 1: Du bist die Einzige, die mich versteht.", None),
+        ("Fan 2: Ich hab dir Trinkgeld geschickt. Heiratest du mich?", None),
+        ("Alexia antwortet: Du auch, Babe. In Wahrheit hat Kevin geantwortet. Der bezahlte Chatter.", None),
     ]),
     dict(id="family", bg="#E9A23B", clock="19:00", title="FAMILIENESSEN", lines=[
         ("Oma fragt: Und, was machst du so beruflich?", None),
-        ("Alexa: Ich bin Content Creatorin. Im Bereich Fitness.", None),
+        ("Alexia: Ich bin Content Creatorin. Im Bereich Fitness.", None),
     ]),
     dict(id="boss", bg="#2B1030", clock="21:00", title="BOSS BABE", dark=True, lines=[
         ("Abends postet sie: Ich bin keine Influencerin. Ich bin Unternehmerin.", None),
@@ -74,7 +89,7 @@ SCENES = [
         ("Und jeder Fan heißt Babe.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du jemanden, der auch überall Link in Bio schreibt? Markier ihn!", None),
+        ("Kennst du jemanden, der auch mit OF starten sollte? Markier ihn!", None),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]

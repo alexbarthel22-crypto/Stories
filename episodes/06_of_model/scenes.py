@@ -4,8 +4,9 @@ Kein Plattform-Logo, keine Zahlen zu Gebühren. Endsequenz: TikTok-Folge 3.
 import math, random
 from alexlib import *
 
-ALEXA = alex(hair_style="alex_long", lashes=True, lips="#D8346E", earrings="#F2C94C",
-             top="#F07FB0", top_style="tee", pants="#F4F4F4", shoes="#FFFFFF")
+# Alexia: gleiches Gesicht wie Alex (Augen, Sommersprossen), aber glaubwürdig weiblich gestylt
+ALEXA = alex(hair_style="fem", makeup=dict(shadow="#C8708E"), lashes=True, lips="#D8346E", earrings="#F2C94C",
+             top="#E8457A", top_style="dress", bare_legs=True, heels=True, shoes="#E8457A")
 FEET, AH = 1665, 470
 OMA = person_spec(5, girl=True, hair_style="bun", hair="#C9C9CF", skin="#F1C9A8", top="#8E5BE0",
                   pants="#4A4A5A", shoes="#5A3A2A", glasses=True)
@@ -22,7 +23,7 @@ def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
 
 
 def alexa_bottom(c, S, expr="smug", pose="idle", prop=None, x=W / 2, h=AH):
-    person(c, x, FEET, h, ALEXA, S.t, expr, pose, prop, name="Alexa")
+    person(c, x, FEET, h, ALEXA, S.t, expr, pose, prop, name="Alexia")
 
 
 def out_fade(t, t_end, d=0.2):
@@ -93,7 +94,7 @@ def sc_what(c, S):
             c.save(); rrect(c, x0, y0, w, h, 42); c.clip()
             c.arc(W / 2, y0 + 160, 70, 0, 2 * math.pi); fill(c, "#F07FB0")
             text(c, "A", W / 2, y0 + 160, 70, "#FFFFFF", FONT_HEAD)
-            text(c, "@alexa.exklusiv", W / 2, y0 + 270, 32, INK, FONT_HEAD)
+            text(c, "@alexia.exklusiv", W / 2, y0 + 270, 32, INK, FONT_HEAD)
             rrect(c, x0 + 40, y0 + 320, w - 80, 260, 20); fill(c, "#E9D5E2")
             emoji(c, "🔒", W / 2, y0 + 430, 110)
             text(c, "Exklusiv für Abonnenten", W / 2, y0 + 540, 26, "#7A4A6A", FONT_BOLD)
@@ -105,16 +106,20 @@ def sc_what(c, S):
     else:
         s = pop(t, a1 + 0.05)
         def makeover():
-            card(c, W / 2, 680, 920, 560, 1)
-            text(c, "VERWANDLUNG", W / 2, 450, 48, INK, FONT_HEAD)
-            person(c, 260, 880, 360, alex(), t, "neutral", bob=False, name="Alex")
-            emoji(c, "➡️", W / 2, 720, 110)
-            person(c, 820, 880, 360, ALEXA, t, "smug", bob=False, name="Alexa")
-            for i, (lab, f) in enumerate((("Perücke", 0.45), ("Wimpern", 0.6), ("Lipgloss", 0.75))):
+            card(c, W / 2, 690, 920, 620, 1)
+            text(c, "VERWANDLUNG", W / 2, 440, 48, INK, FONT_HEAD)
+            person(c, 270, 850, 340, alex(), t, "neutral", bob=False, name="Alex")
+            emoji(c, "➡️", W / 2, 700, 100)
+            person(c, 810, 850, 340, ALEXA, t, "smug", bob=False, name="Alexia")
+            # Aufzählung UNTER den Figuren, überdeckt niemanden
+            chips = [("Perücke", "💇", 0.35), ("Make-up", "💄", 0.55), ("Kleid", "👗", 0.75)]
+            for i, (lab, ic, f) in enumerate(chips):
                 if t > S.at(1, f):
-                    rrect(c, 380, 520 + i * 0, 0, 0, 0)
-            labels = [l for l, f in (("Perücke ✅", 0.45), ("Wimpern ✅", 0.6), ("Lipgloss ✅", 0.75)) if t > S.at(1, f)]
-            text(c, "  ·  ".join(labels), W / 2, 520, 32, "#B0307A", FONT_HEAD)
+                    x = 240 + i * 300
+                    def chip(x=x, lab=lab, ic=ic):
+                        rrect(c, x - 135, 885, 270, 74, 37); fill(c, "#B0307A")
+                        text(c, ic + " " + lab + " ✅", x, 922, 32, "#FFFFFF", FONT_HEAD)
+                    scaled(c, x, 922, pop(t, S.at(1, f), 0.25), chip)
         scaled(c, W / 2, 680, s, makeover)
         alexa_bottom(c, S, "smug", "hips")
         sparkle_lines(c, t, a1 + 0.1, W / 2, FEET - AH * 0.7, n=12, r0=200, r1=360, d=0.5)
@@ -166,22 +171,34 @@ def sc_promo(c, S):
 
 
 def sc_dms(c, S):
-    t, a1 = S.t, S.at(1)
+    t, a1, a2, a3 = S.t, S.at(1), S.at(2), S.at(3)
     s = pop(t, S.at(0, 0.0))
-    x0, y0, w, h = phone(c, W / 2 - 120 if t > a1 else W / 2, 690, 520, 800, s, screen="#FFFFFF")
+    px = W / 2 - 120 if t > S.at(3, 0.35) else W / 2
+    x0, y0, w, h = phone(c, px, 690, 520, 820, s, screen="#FFFFFF")
     def screen():
         c.save(); rrect(c, x0, y0, w, h, 42); c.clip()
-        chat_header(c, x0, y0, w, "Fan_2847", "#7A8A96")
-        chat_msg(c, "Du bist die Einzige, die mich versteht 🥺", x0, w, y0 + 340, False, pop(t, S.at(0, 0.2), 0.25))
+        chat_header(c, x0, y0, w, "Fans 💬", "#7A8A96")
+        y = y0 + 190          # Oberkante der nächsten Nachricht
+        def fan(name, msg, t0):
+            nonlocal y
+            text(c, name, x0 + 30, y + 14, 22, "#777777", FONT_BOLD, anchor="l")
+            lines = wrap(c, msg, 30, w - 140, FONT_BOLD)
+            bh = len(lines) * 30 * 1.25 + 26
+            chat_msg(c, msg, x0, w, y + 36 + bh, False, pop(t, t0, 0.25))
+            y += 36 + bh + 24
         if t > a1:
-            chat_msg(c, "Du auch, Babe 😘", x0, w, y0 + 470, True, pop(t, a1 + 0.05, 0.2))
-        badge = min(999, int(999 * clamp((t - S.at(0, 0.1)) / 1.5)))
+            fan("Fan_2847", "Du bist die Einzige, die mich versteht 🥺", a1 + 0.05)
+        if t > a2:
+            fan("Thomas_77", "Hab dir Trinkgeld geschickt 💸 Heiratest du mich? 💍", a2 + 0.05)
+        if t > a3:
+            chat_msg(c, "Du auch, Babe 😘", x0, w, y + 70, True, pop(t, a3 + 0.05, 0.2))
         c.restore()
+        badge = min(999, int(999 * clamp((t - S.at(0, 0.1)) / 1.5)))
         c.arc(x0 + w - 6, y0 + 6, 46, 0, 2 * math.pi); fill(c, "#E23B3B")
         text(c, str(badge), x0 + w - 6, y0 + 6, 32, "#FFFFFF", FONT_HEAD)
     scaled(c, x0 + w / 2, 690, s, screen)
-    if t > S.at(1, 0.35):
-        ks = pop(t, S.at(1, 0.35))
+    if t > S.at(3, 0.35):
+        ks = pop(t, S.at(3, 0.35))
         def kevin():
             person(c, 860, 1160, 380, KEVIN, t, "neutral", bob=False)
             rrect(c, 720, 1000, 280, 30, 8); fill(c, "#B07A4F")
@@ -190,7 +207,7 @@ def sc_dms(c, S):
             rrect(c, 700, 600, 320, 80, 16); fill(c, "#FFE14D")
             text(c, "KEVIN · CHATTER", 860, 640, 36, INK, FONT_HEAD)
         scaled(c, 860, 900, ks, kevin)
-    alexa_bottom(c, S, "smug", "idle", x=320 if t > a1 else W / 2)
+    alexa_bottom(c, S, "smug", "idle", x=320 if t > S.at(3, 0.35) else W / 2)
 
 
 def sc_family(c, S):
@@ -225,7 +242,7 @@ def sc_boss(c, S):
             card(c, W / 2, 700, 900, 560, 1)
             c.arc(170, 490, 50, 0, 2 * math.pi); fill(c, "#F07FB0")
             text(c, "A", 170, 490, 50, "#FFFFFF", FONT_HEAD)
-            text(c, "alexa.exklusiv", 240, 490, 34, INK, FONT_HEAD, anchor="l")
+            text(c, "alexia.exklusiv", 240, 490, 34, INK, FONT_HEAD, anchor="l")
             text_block(c, "Ich bin keine Influencerin. Ich bin UNTERNEHMERIN. 👑💼", W / 2, 680, 50, 780, INK, FONT_HEAD)
             text(c, "#bossbabe #ceo #grind", W / 2, 860, 34, "#3D8BFF", FONT_BOLD)
         scaled(c, W / 2, 700, pop(t, S.at(0, 0.05)) * o, post)
@@ -254,7 +271,7 @@ def sc_signs(c, S):
 
 def sc_outro(c, S):
     t, a1 = S.t, S.at(1)
-    q = "Kennst du jemanden, der überall „Link in Bio“ schreibt?" if t < a1 else "Was soll Alex morgen sein?"
+    q = "Kennst du jemanden, der auch mit OF starten sollte?" if t < a1 else "Was soll Alex morgen sein?"
     qs = pop(t, S.at(0, 0.0)) if t < a1 else pop(t, a1)
     card(c, W / 2, 230, 920, 170, qs)
     scaled(c, W / 2, 230, qs, lambda: text_block(c, q, W / 2, 230, 46, 860, INK, FONT_HEAD))
@@ -267,7 +284,7 @@ def sc_outro(c, S):
             text(c, "@", W / 2, 625, 300, "#B0307A", FONT_HEAD)
             rrect(c, 160, 900, 760, 100, 50); fill(c, "#FFFFFF")
             rrect(c, 160, 900, 760, 100, 50); c.set_line_width(5); src(c, INK); c.stroke()
-            typed = "@link_in_bio"
+            typed = "@die_neue_ceo"
             n = int(clamp((t - S.at(0, 0.45)) / 1.0) * len(typed))
             cur = "|" if int(t * 3) % 2 == 0 else ""
             text(c, typed[:n] + cur, 210, 950, 44, "#3D8BFF", FONT_HEAD, anchor="l")
