@@ -565,6 +565,15 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     c.set_source(g); c.paint()
     c.restore()
 
+    # Halskette (optional)
+    if sp.get("chain"):
+        c.save()
+        c.set_line_width(1.1); src(c, sp["chain"])
+        c.move_to(-6.5, -56.2); c.curve_to(-5, -47.5, 5, -47.5, 6.5, -56.2); c.stroke()
+        c.set_line_width(0.5); src(c, "#FFFFFF", 0.7)
+        c.move_to(-5.8, -54.5); c.curve_to(-4.4, -48.6, -1, -48.2, 0, -48.2); c.stroke()
+        c.restore()
+
     # Arme (Ärmel mit Kontur, Bündchen, Hand)
     arms = {"idle": (12, 12), "wave": (14, 155 + 18 * math.sin(t * 9)), "phone": (12, 150),
             "shrug": (115, 115), "up": (168, 168), "point": (12, 95), "hips": (35, 35),
