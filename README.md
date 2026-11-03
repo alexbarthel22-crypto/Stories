@@ -35,3 +35,8 @@ python3 tools/build.py episodes/02_neu --stills 2,10,30   # Vorschau-Bilder
 python3 tools/build.py episodes/02_neu                    # fertiges MP4
 ```
 Sound-Effekte neu extrahieren: `python3 tools/extract_sfx.py referenz.wav assets/sfx`
+
+## Feste Regeln für neue Folgen
+- Schluss immer: „Kennst du jemanden, der …? Markier sie oder ihn!“ + „Und was soll Alex morgen sein? Schreib's in die Kommentare.“
+- Raster am Ende zeigt die tatsächlich veröffentlichten TikTok-Folgen (Folge 1 = Pick-me-Boy).
+- Stimme: gemini-3.8-flash-tts, Puck (wie Pick-me-Boy), nicht auf andere Modelle ausweichen.

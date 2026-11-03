@@ -1,4 +1,4 @@
-"""TikTok Folge 4: Heute ist Alex ... emotional abhängig.  (Aufbau wie Pick-me-Boy)
+"""TikTok Folge 2: Heute ist Alex ... emotional abhängig.  (Aufbau wie Pick-me-Boy)
 Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, tighten 1.08.
 Ton: nachvollziehbar-lustig, nicht herablassend; kurzer ernster Satz am Ende.
 """
@@ -77,7 +77,7 @@ SCENES = [
         ("Und mal ernst: Rede mit deinen Freunden. Du bist auch allein wertvoll.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du jemanden, der gerade emotional abhängig ist, aber auch alleine wertvoll ist? Markier ihn!", None),
+        ("Kennst du jemanden, der gerade emotional abhängig ist, aber auch alleine wertvoll ist? Markier sie oder ihn!", None),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]
