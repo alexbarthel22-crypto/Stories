@@ -381,8 +381,9 @@ def scene_morning(t):
     def actors(cv):
         info = draw_cab(cv, fl, door(t))
         x, y, moving, dx = path_pos(t, keys)
-        if t_ride0 <= t <= t_ride1:
+        if abs(x - (SX + 10)) < 1:  # inside the cab: ride with it
             y = GROUND - fl * FH
+            moving = moving and dx != 0
         face = 1 if dx > 0 else -1 if dx < 0 else 1
         draw_person(cv, x, y, ALEX, phase=walk_phase(t, moving and not (t_ride0 <= t <= t_ride1)), face=face)
         draw_cab_doors(cv, info)
@@ -425,8 +426,9 @@ def scene_evening(t):
 
     fl = cab_floor(t)
     x, y, moving, dx = path_pos(t, keys)
-    if t_ride0 <= t <= t_ride1:
+    if abs(x - (SX + 10)) < 1:  # inside the cab: ride with it
         y = GROUND - fl * FH
+        moving = moving and dx != 0
     if t < t_ride0:
         cam = keyframes(t, [(t0, (1900, yb(0) - 220, 1350)), (t_in + 0.2, (1550, yb(0) - 220, 1350))])
     elif t < t_exit:
@@ -526,8 +528,9 @@ def scene_rain(t):
     fl = keyframes(t, [(t_ride0, 0.0), (t_ride1, 12.0)])
     door = (1 - prog(t, t_in + 0.9, t_ride0)) if t < t_ride0 else prog(t, t_ride1, t_ride1 + 0.3)
     x, y, moving, dx = path_pos(t, keys)
-    if t_ride0 <= t <= t_ride1:
+    if abs(x - (SX + 10)) < 1:  # inside the cab: ride with it
         y = GROUND - fl * FH
+        moving = moving and dx != 0
     if t < t_ride0:
         cam = keyframes(t, [(t0, (2100, yb(0) - 260, 1500)), (t_in + 0.8, (1600, yb(0) - 240, 1350))])
     else:
@@ -570,8 +573,9 @@ def scene_sunny(t):
     fl = keyframes(t, [(t_ride0, 0.0), (t_ride1, 9.0)])
     door = 0.0 if t < t_ride1 else prog(t, t_ride1, t_ride1 + 0.3)
     x, y, moving, dx = path_pos(t, keys)
-    if t <= t_ride1:
+    if abs(x - (SX + 10)) < 1:  # inside the cab: ride with it
         y = GROUND - fl * FH
+        moving = moving and dx != 0
     cam = keyframes(t, [(t0, (1925, 3400, 6500)), (t1 - 0.7, (1925, 3400, 6500)),
                         (t_ride1 - 0.2, (1520, yb(9) - 200, 1500))])
 

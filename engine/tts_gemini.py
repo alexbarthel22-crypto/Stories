@@ -101,7 +101,7 @@ def trim(a, thr=0.006):
     return a[max(nz[0] - int(SR * 0.02), 0):nz[-1] + int(SR * 0.08)]
 
 
-def main(script, out_dir, voice, model, gap=0.08, cache_dir=None):
+def main(script, out_dir, voice, model, tempo=1.0, gap=0.08, cache_dir=None):
     cache_dir = cache_dir or os.path.join(out_dir, "cache", "tts")
     os.makedirs(cache_dir, exist_ok=True)
     chunks, timing, t = [], [], 0.0
@@ -139,6 +139,16 @@ def main(script, out_dir, voice, model, gap=0.08, cache_dir=None):
         timing.append({"text": l, "start": round(t, 3), "end": round(t + len(a) / SR, 3)})
         chunks += [a, np.zeros(int(SR * g), np.float32)]; t += len(a) / SR + g
     v = np.concatenate(chunks)
+    if tempo != 1.0:  # speed up without pitch change; scale timings accordingly
+        import subprocess, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            sf.write(f"{d}/i.wav", v, SR)
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{d}/i.wav", "-af", f"atempo={tempo}", f"{d}/o.wav"],
+                           check=True)
+            v = sf.read(f"{d}/o.wav", dtype="float32")[0]
+        for x in timing:
+            x["start"], x["end"] = round(x["start"] / tempo, 3), round(x["end"] / tempo, 3)
+        t /= tempo
     sf.write(os.path.join(out_dir, "voice.wav"), v / np.abs(v).max() * 0.9, SR)
     json.dump(timing, open(os.path.join(out_dir, "timing.json"), "w"), ensure_ascii=False, indent=1)
     w = sum(len(x["text"].split()) for x in timing if x["text"] != "PAUSE")
@@ -149,5 +159,6 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("script"); ap.add_argument("out_dir")
     ap.add_argument("--voice", default="Puck"); ap.add_argument("--model", default="gemini-3.8-flash-tts")
+    ap.add_argument("--tempo", type=float, default=1.0, help="speed factor, e.g. 1.12")
     a = ap.parse_args()
-    main(a.script, a.out_dir, a.voice, a.model)
+    main(a.script, a.out_dir, a.voice, a.model, a.tempo)
