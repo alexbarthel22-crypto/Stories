@@ -36,14 +36,20 @@ def yb(n):
     return GROUND - n * FH
 
 
-# Alex in the story: just a bit shorter than average, normal proportions (no spoiler)
-ALEX = Style(215, "#f1c19c", "#3b2418", "#e8a33a", "#2c3e66", shoes="#ffffff", hair_style="quiff",
+# Alex: same size throughout, a bit shorter than his neighbours (no spoiler, no sudden shrinking)
+ALEX = Style(205, "#f1c19c", "#3b2418", "#e8a33a", "#2c3e66", shoes="#ffffff", hair_style="quiff",
              leg=0.41, torso=0.31, arm=0.34, width=0.145, accent="#2d2a3a", under="#ffffff",
              shoe_accent="#e2574c")
-# Alex as revealed in the solution: short stature
-ALEX_REAL = Style(150, "#f1c19c", "#3b2418", "#e8a33a", "#2c3e66", shoes="#ffffff", hair_style="quiff",
-                  leg=0.31, torso=0.31, arm=0.30, width=0.17, accent="#2d2a3a", under="#ffffff",
-                  shoe_accent="#e2574c")
+NEIGHBOUR_H = 255
+
+
+def shoulder_of(st, x, y, h, face):
+    """front shoulder position as drawn by draw_person"""
+    tw = st.width * h
+    lw = max(0.085 * h, tw * 0.62)
+    return x + face * tw * 0.72, y - (st.leg + st.torso) * h + lw * 0.78 * 0.5
+
+
 ELISA = Style(250, "#f6d2b8", "#e9b949", "#7d5bd0", "#2f3350", hair_style="long", under="#f3eefc", shoes="#2f3350")
 PAUL = Style(258, "#8d5a3b", "#1f1a24", "#d9534a", "#46618f", hair_style="short", glasses=True, beard=True,
              shoes="#f2f2f2")
@@ -317,9 +323,6 @@ def draw_cab(cv, floor_f, door=0.0, rain=False):
     for g in range(5):
         cv.rect(x0 + 60 + g * 32, y0 + 40, x0 + 63 + g * 32, yb_ - 40, fill=hexc(WOOD_D))
     cv.rect(x0 + 20, y0 + 12, x1 - 20, y0 + 22, fill=hexc("#fff6dc"), r=4)
-    cv.rect(x0 + 14, y0 + 90, x0 + 38, y0 + 210, fill=hexc("#c9ced6"), r=6)
-    for k in range(7):
-        cv.circle(x0 + 26, y0 + 104 + k * 16, 5, fill=anth)
     cv.rect(x0, yb_ - 140, x1, yb_ - 132, fill=hexc("#c9ced6"))
     return (x0, y0, x1, yb_, door, anth)
 
@@ -725,8 +728,8 @@ def scene_question(t):
 
 PANEL_X = 250
 Q_FEET = 1200          # Alex's feet in the question scene
-BTN_BOTTOM = 1390
-BTN_STEP = 43
+BTN_BOTTOM = 1250       # panel mounted high: Alex only reaches up to 9
+BTN_STEP = 42
 
 
 def btn_y(idx):
@@ -785,8 +788,9 @@ def scene_solution(t):
     t_end = S[24]
     img = Image.new("RGB", (OUT_W, OUT_H))
     cv = Canvas(img)
-    alex_h = 430
-    ax, ay = 380, 1500
+    alex_h = 600
+    ax, ay = 420, 1500
+    ARM = 1.15
     lit, glow, reach, umb, reach_ok = None, 0.0, None, None, None
     if t_down <= t < t_up:
         lp = prog(t, t_down + 1.6, t_down + 2.4)
@@ -809,7 +813,7 @@ def scene_solution(t):
             p = prog(t, t_press - 0.4, t_press + 1.2)
             umb = "pointer"
             # aim the umbrella tip from low buttons up to button 12
-            sh = (ax - 0.10 * alex_h, ay - 0.72 * alex_h + 0.075 * alex_h * 0.4)
+            sh = shoulder_of(ALEX, ax, ay, alex_h, -1)
             tgt_idx = 6 + 6 * smooth(p)
             tx, ty = PANEL_X + 14, btn_y(tgt_idx)
             dx_, dy_ = tx - sh[0], ty - sh[1]
@@ -825,20 +829,8 @@ def scene_solution(t):
         cv.rect(PANEL_X - 90, zone_top, PANEL_X + 90, BTN_BOTTOM + 30, outline=hexc("#37b26c"), width=8, r=20)
         for idx in (10, 11, 12):
             cv.line([(PANEL_X - 26, btn_y(idx) - 14), (PANEL_X + 26, btn_y(idx) + 14)], hexc("#e2574c"), 6)
-    # comparison silhouette during "kleinwüchsig"
-    if t_small - 0.1 < t < t_down:
-        a = prog(t, t_small - 0.1, t_small + 0.3) * (1 - prog(t, t_down - 0.3, t_down))
-        ghost = Style(720, "#ffffff", "#ffffff", "#ffffff", "#ffffff", hair_style="short")
-        layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
-        gl = Canvas(layer)
-        draw_person(gl, 760, 1500, ghost, face=-1)
-        alpha = layer.split()[3].point(lambda v: int(v * 0.35 * a))
-        layer.putalpha(alpha)
-        img.paste(layer, (0, 0), layer)
-        # height lines
-        cv.line([(380, 1500 - alex_h - 20), (900, 1500 - alex_h - 20)], hexc("#ffd34d", int(255 * a)), 6)
     face = -1
-    hand = draw_person(cv, ax, ay, ALEX_REAL, face=face, reach=reach, umbrella=umb, h=alex_h, arm_scale=1.3)
+    hand = draw_person(cv, ax, ay, ALEX, face=face, reach=reach, umbrella=umb, h=alex_h, arm_scale=ARM)
     # move the whole elevator up so Alex's feet stay clear of TikTok's caption area
     SH = 90
     shifted = Image.new("RGB", img.size, hexc("#bdb8b0"))
@@ -884,18 +876,19 @@ def scene_outro(t):
     pill(img, OUT_W / 2, 520, "HÄTTEST DU'S", 96, bg="#fff6e6", rot=-3, scale=ease_out_back(prog(t, t0, t0 + 0.35)))
     pill(img, OUT_W / 2, 690, "GEWUSST?", 110, bg="#ffd34d", rot=2, scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.55)))
     if t > t1:
-        pill(img, OUT_W / 2, 870, "SCHREIB'S IN DIE KOMMENTARE", 40, bg="#ffffff",
+        pill(img, OUT_W / 2, 840, "SCHREIB'S IN DIE KOMMENTARE", 40, bg="#ffffff",
              scale=ease_out_back(prog(t, t1, t1 + 0.35)))
         followed = t > t1 + 2.0
         txt = "GEFOLGT  ✓" if followed else "+  FOLGEN"
         bg = "#37b26c" if followed else "#e2574c"
         pulse = 1 + (0.06 * math.sin(t * 10) if not followed else 0)
-        pill(img, OUT_W / 2, 1010, txt, 72, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
-        pill(img, OUT_W / 2, 1145, "MORGEN: NEUES RÄTSEL", 48, bg="#fff6e6",
+        pill(img, OUT_W / 2, 965, txt, 72, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
+        pill(img, OUT_W / 2, 1085, "MORGEN: NEUES RÄTSEL", 48, bg="#fff6e6",
              scale=ease_out_back(prog(t, t1 + 1.0, t1 + 1.35)))
-    s = 2.0
+    s = 1.4
     cvs = Canvas(img, -(OUT_W / 2) / s, -1470 / s, s)
-    draw_person(cvs, 0, 0, ALEX_REAL, face=1, wave=t * 9)
+    cvs.ellipse(-70, -10, 70, 14, fill=(0, 0, 0, 90))
+    draw_person(cvs, 0, 0, ALEX, face=1, wave=t * 9)
     return img
 
 
