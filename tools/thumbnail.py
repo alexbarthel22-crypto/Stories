@@ -15,7 +15,7 @@ def _load(n):
 script, scenes = _load("script"), _load("scenes")
 TH = getattr(script, "THUMB", dict(l1="PICK ME", l2="BOY", bg="#EC7FAE", expr="smug", pose="hips", prop="🧋",
                                   emojis=("🚩", "🚩", "🌹", "🥺")))
-SPEC = getattr(scenes, "AL", None) or getattr(scenes, "PM")
+SPEC = getattr(scenes, "AL", None) or getattr(scenes, "ALEXA", None) or getattr(scenes, "PM")
 out, l1, l2 = os.path.join(ep, "thumbnail.png"), TH["l1"], TH["l2"]
 surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
 c = cairo.Context(surf)

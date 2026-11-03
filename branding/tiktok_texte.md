@@ -64,3 +64,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein F-Boy 😏🌙 „Mein Hobby ist Reiten“ – „Kannst ja mal auf mir reiten 😏“ … und um 23:30 der Jawline-Snap: „Bist du wach?“ 👀 Welcher Spruch ist der schlimmste? 🚩 Markier ihn! Und was soll Alex morgen sein? 👇
 
 #fboy #redflags #redflag #dating #breadcrumbing #situationship #comedy #fürdich #fyp
+
+## TikTok Folge 3 – OF-Model (Alex als Alexa)
+Cover: `episodes/06_of_model/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein OF-Model 📸💄 Natural Look in nur 2 Stunden, 300 Fotos für 1 Post – und geantwortet hat eigentlich Kevin 😅 Welches Klischee ist das beste? 👇 Markier jemanden, der überall „Link in Bio“ schreibt! Und was soll Alex morgen sein?
+
+#contentcreator #linkinbio #bossbabe #influencer #klischee #comedy #fürdich #fyp

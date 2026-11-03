@@ -606,15 +606,17 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     hs = sp.get("hair_style", "short")
     hair, hdark = sp["hair"], sp.get("hair_dark", shade(sp["hair"], 0.75))
     hy0 = -73
-    if hs in ("long", "bun"):
+    if hs in ("long", "bun", "alex_long"):
         c.move_to(-20.5, hy0 + 22); c.curve_to(-24, hy0 + 2, -22, hy0 - 20, 0, hy0 - 20)
         c.curve_to(22, hy0 - 20, 24, hy0 + 2, 20.5, hy0 + 22); c.close_path()
-        _fill_line(c, hdark, hy0 - 20, hy0 + 22, 0.8, 1.05, 0.9, 0.7)
+        _fill_line(c, shade(hair, 0.93) if hs == "alex_long" else hdark, hy0 - 20, hy0 + 22, 0.8, 1.05, 0.9, 0.7)
     # Ohren
     for sx in (-1, 1):
         c.arc(sx * 17.4, hy0 + 1.5, 3.7, 0, 2 * math.pi)
         _fill_line(c, skin, hy0 - 2, hy0 + 5, 0.7, 1.0, 0.9, 0.72)
         c.arc(sx * 17.6, hy0 + 1.6, 1.6, 0, 2 * math.pi); src(c, shade(skin, 0.82)); c.fill()
+        if sp.get("earrings"):
+            c.arc(sx * 17.8, hy0 + 6.2, 1.5, 0, 2 * math.pi); src(c, sp["earrings"]); c.fill()
     # Kopf mit Verlauf
     ellipse(c, 0, hy0, 17.6, 18.6)
     g = cairo.RadialGradient(-5, hy0 - 7, 3, 0, hy0, 21)
@@ -657,6 +659,13 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         # Oberlid
         c.set_line_width(1.0); src(c, "#2A1E1A")
         c.arc(0, 0.2, rxs * 1.02, math.pi * 1.08, math.pi * 1.92); c.stroke()
+        if sp.get("lashes"):
+            c.set_line_width(0.6)
+            for k, ang in enumerate((1.6, 1.78, 1.92)):
+                a_ = math.pi * ang
+                px, py = math.cos(a_) * rxs * 1.02 * sx, 0.2 + math.sin(a_) * rxs * 1.02
+                c.move_to(px, py); c.line_to(px * 1.18 + sx * 0.5, py * 1.18 - 0.3)
+            c.stroke()
         c.restore()
     # Augenbrauen (dicker, getapert)
     brow = sp.get("brow", shade(hair, 0.68) if hs == "alex" else shade(hair, 0.85))
@@ -686,7 +695,7 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     c.move_to(-1.0, hy0 + 4.6); c.curve_to(-0.2, hy0 + 6.2, 1.3, hy0 + 6.0, 1.5, hy0 + 4.8); c.stroke()
     # Mund
     my = hy0 + 10.2
-    lip = "#6E2430"
+    lip = sp.get("lips", "#6E2430")
     if expr in ("happy", "talk"):
         c.move_to(-5.4, my - 0.8)
         c.curve_to(-3.6, my + 5.6, 3.6, my + 5.6, 5.4, my - 0.8)
@@ -730,7 +739,7 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.move_to(-3, my + 0.8); c.curve_to(-1, my + 1.4, 1, my + 1.4, 3, my + 0.8); c.stroke()
 
     # Haare vorne
-    if hs == "alex":
+    if hs in ("alex", "alex_long"):
         # Schatten der Tolle auf der Stirn
         c.save()
         ellipse(c, 0, hy0, 17.2, 18.2); c.clip()

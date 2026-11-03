@@ -59,7 +59,7 @@ def gemini_tts(text, mood, path):
         if model in _exhausted:
             continue
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
-        for attempt in range(5):
+        for attempt in range(8):
             req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={
                 "Content-Type": "application/json", "x-goog-api-key": os.environ["GEMINI_API_KEY"]})
             try:
@@ -73,7 +73,7 @@ def gemini_tts(text, mood, path):
                     _exhausted.add(model)
                     break
                 print("  retry", attempt, model, text[:30], e.code)
-                time.sleep(2 ** attempt * 3)
+                time.sleep(min(60, 2 ** attempt * 3))
             except (urllib.error.URLError, KeyError, TimeoutError) as e:
                 print("  retry", attempt, model, text[:30], e)
                 time.sleep(2 ** attempt * 3)
@@ -132,7 +132,7 @@ if only:
         for i, l in enumerate(s["lines"]):
             res[f"{s['id']}_{i}"] = (l["file"], l["dur"])
     jobs = [j for j in jobs if j[0] in only]
-with ThreadPoolExecutor(3 if GEMINI else 1) as ex:
+with ThreadPoolExecutor(int(os.environ.get("TTS_PARALLEL", "3")) if GEMINI else 1) as ex:
     res.update({k: (p, d) for k, p, d in ex.map(run, jobs)})
 
 meta = {"backend": "gemini:" + VOICE if GEMINI else "piper",
