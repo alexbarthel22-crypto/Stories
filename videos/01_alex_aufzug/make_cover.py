@@ -37,7 +37,7 @@ def cover():
     pill(img, OUT_W / 2, 420, l1, fit(l1, 960, 88), rot=-2)
     pill(img, OUT_W / 2, 570, l2, fit(l2, 960, 88), bg="#ffd34d", rot=1.5)
     l3 = "Er wohnt im 12.!"
-    pill(img, OUT_W / 2, 1590, l3, fit(l3, 860, 66), bg="#ffffff", rot=-2)
+    pill(img, OUT_W / 2, 725, l3, fit(l3, 860, 60), bg="#ffffff", rot=-2)
     return img
 
 
