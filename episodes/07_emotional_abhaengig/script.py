@@ -3,13 +3,17 @@ Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, tighten 1.08.
 Ton: nachvollziehbar-lustig, nicht herablassend; kurzer ernster Satz am Ende.
 """
 
+# Vortrag exakt wie Pick-me-Boy: gleiche Regieanweisung (tools/tts.py PROFILE_PICKME)
+TTS_PROFILE = "pickme"
+
 ROLE = "EMOTIONAL ABHÄNGIG."
 ROLE_TTS = "emotional abhängig."
 ROLE_SAY = "emotional abhängig!"
 
 MOODS = {
-    "intro_pre": "spannend, aber zügig und kurz gesprochen, ohne lange Pause",
-    "intro_role": "dramatische Enthüllung, halb mitfühlend, halb amüsiert",
+    # Intro-Stimmungen 1:1 wie in Folge 1 (Pick-me-Boy)
+    "intro_pre": "geheimnisvoll und spannend, wie vor einer großen Enthüllung, langgezogen",
+    "intro_role": "triumphierende, laute Enthüllung mit einem Augenzwinkern",
     "what": "erklärend und mitfühlend-amüsiert, das Zitat von Alex klammernd und weinerlich",
     "morning": "amüsiert, die Analyse übertrieben dramatisch wie ein Detektiv",
     "online": "zunehmend nervös und hektisch, die Pointe trocken",

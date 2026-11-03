@@ -39,6 +39,21 @@ Wichtig: Sprich ausschließlich den Text unter TRANSCRIPT, wortwörtlich, nichts
 {text}"""
 
 
+# Exakt die Regieanweisung, mit der Folge 1 (Pick-me-Boy) gesprochen wurde.
+# Aktiv, wenn script.py TTS_PROFILE = "pickme" setzt.
+PROFILE_PICKME = """# AUDIO PROFILE: Der Erzähler
+Ein junger deutscher TikTok-Storyteller, Mitte zwanzig, charmant, witzig und sehr ausdrucksstark.
+
+### DIRECTOR'S NOTES
+Stil: emotional und lebendig, echte Betonung, kleine Kunstpausen vor Pointen. Zitate von Alex mit verstellter, übertrieben gefühlvoller Stimme. Tempo: zügig wie auf TikTok.
+Stimmung in diesem Satz: {mood}
+Sprache: Deutsch, englische Begriffe englisch aussprechen.
+
+#### TRANSCRIPT
+{text}"""
+if getattr(script, "TTS_PROFILE", None) == "pickme":
+    PROFILE = PROFILE_PICKME
+
 def trim_save(a, sr, path):
     thr = int(np.abs(a).max() * 0.02) + 50
     nz = np.where(np.abs(a) > thr)[0]
