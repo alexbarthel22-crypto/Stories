@@ -1,8 +1,9 @@
 # Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden.
-Das hier ist Alex.
+# {emotion} am Zeilenanfang = Zeile mit Emotions-Stimme sprechen (amused, surprised, ...).
+{amused} Das hier ist Alex.
 Alex wohnt im zwölften Stock eines Hochhauses.
 Jeden Morgen um sieben Uhr verlässt er seine Wohnung, fährt mit dem Aufzug nach unten und geht zur Arbeit.
-Ganz normal.
+{amused} Ganz normal.
 Aber jeden Abend, gegen achtzehn Uhr, passiert etwas Seltsames.
 Alex steigt in den Aufzug und fährt nur bis in den neunten Stock.
 Dort steigt er aus und läuft die letzten drei Stockwerke zu Fuß.
@@ -12,16 +13,16 @@ Eines Tages regnet es wie aus Eimern.
 Alex kommt nach Hause, steigt in den Aufzug und fährt direkt bis in den zwölften Stock.
 Am nächsten Tag scheint wieder die Sonne.
 Und Alex steigt, wie immer, im neunten Stock aus.
-Warum macht Alex das?
+{surprised} Warum macht Alex das?
 [PAUSE 1.6]
-Ein kleiner Tipp: Es hat etwas mit dem Regen zu tun.
+Kleiner Tipp: Es hat etwas mit dem Regen zu tun.
 Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!
-Okay, hier kommt die Lösung.
-Alex ist kleinwüchsig. Er ist also ziemlich klein.
-Nach unten zu fahren ist kein Problem, denn der Knopf für das Erd-geschoss ist ganz unten.
+Hier kommt die Lösung.
+Alex ist kleinwüchsig.
+Nach unten zu fahren ist kein Problem, denn der Knopf fürs Erdgeschoss ist ganz unten.
 Aber nach oben kommt er nur bis zum Knopf für den neunten Stock.
-Und bei Regen?
+{surprised} Und bei Regen?
 Da hat Alex seinen Regenschirm dabei.
-Mit der Spitze drückt er ganz einfach den Knopf für den zwölften Stock.
-Hättest du's gewusst?
+Mit der Spitze drückt er einfach den Knopf für den zwölften Stock.
+{amused} Hättest du's gewusst?
 Schreib's in die Kommentare und folg mir für das nächste Rätsel!
