@@ -77,7 +77,7 @@ SCENES = [
         ("Und mal ernst: Rede mit deinen Freunden. Du bist auch allein wertvoll.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du jemanden, der auch immer auf die Antwort wartet? Markier ihn!", None),
+        ("Kennst du jemanden, der gerade emotional abhängig ist, aber auch alleine wertvoll ist? Markier ihn!", None),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]

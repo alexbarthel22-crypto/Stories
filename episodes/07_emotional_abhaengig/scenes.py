@@ -260,10 +260,10 @@ def sc_real(c, S):
 
 def sc_outro(c, S):
     t, a1 = S.t, S.at(1)
-    q = "Kennst du jemanden, der auch immer auf die Antwort wartet?" if t < a1 else "Was soll Alex morgen sein?"
+    q = "Kennst du jemanden, der gerade emotional abhängig ist – aber auch alleine wertvoll? 🤍" if t < a1 else "Was soll Alex morgen sein?"
     qs = pop(t, S.at(0, 0.0)) if t < a1 else pop(t, a1)
-    card(c, W / 2, 230, 920, 170, qs)
-    scaled(c, W / 2, 230, qs, lambda: text_block(c, q, W / 2, 230, 44, 860, INK, FONT_HEAD))
+    card(c, W / 2, 240, 940, 200, qs)
+    scaled(c, W / 2, 240, qs, lambda: text_block(c, q, W / 2, 240, 42, 880, INK, FONT_HEAD))
     if t < a1 + 0.2:
         out = out_fade(t, a1)
         s = pop(t, S.at(0, 0.3)) * out
@@ -273,7 +273,7 @@ def sc_outro(c, S):
             text(c, "@", W / 2, 625, 300, "#3E5C9A", FONT_HEAD)
             rrect(c, 160, 900, 760, 100, 50); fill(c, "#FFFFFF")
             rrect(c, 160, 900, 760, 100, 50); c.set_line_width(5); src(c, INK); c.stroke()
-            typed = "@wartet_auf_antwort"
+            typed = "@du_bist_wertvoll"
             n = int(clamp((t - S.at(0, 0.4)) / 1.0) * len(typed))
             cur = "|" if int(t * 3) % 2 == 0 else ""
             text(c, typed[:n] + cur, 200, 950, 40, "#3D8BFF", FONT_HEAD, anchor="l")
