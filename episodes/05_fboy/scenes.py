@@ -312,17 +312,18 @@ def sc_outro(c, S):
         emoji(c, "👇", 880, 1110 + math.sin(t * 8) * 12, 90 * pop(t, S.at(0, 0.6)) * out)
     if t >= a1:
         colors = ["#EC7FAE", "#5FA9B8", "#D9534F", "#1F6B4A", "#2B2D5E", "#8E5BE0", "#36B5C2", "#F07F4F", "#555A66"]
-        prev = [("🌹", "FOLGE 1"), ("🛋️", "FOLGE 2"), ("😡", "FOLGE 3"), ("💰", "FOLGE 4"), ("😏", "HEUTE ✅")]
+        # Folge 1 = Pick-me-Boy, heute = Folge 2 (F-Boy)
+        prev = [("🌹", "FOLGE 1"), ("😏", "HEUTE ✅")]
         for i in range(9):
             r, cc = i // 3, i % 3
             x, y = 260 + cc * 280, 500 + r * 230
             def icon(x=x, y=y, i=i):
                 c.arc(x, y, 95, 0, 2 * math.pi); fill(c, colors[i])
                 c.arc(x, y, 95, 0, 2 * math.pi); c.set_line_width(6); src(c, "#FFFFFF"); c.stroke()
-                if i < 5:
+                if i < len(prev):
                     e, lab = prev[i]
                     emoji(c, e, x, y, 100)
-                    rrect(c, x - 85, y + 70, 170, 46, 12); fill(c, "#2FA36B" if i == 4 else "#555A66")
+                    rrect(c, x - 85, y + 70, 170, 46, 12); fill(c, "#2FA36B" if i == len(prev) - 1 else "#555A66")
                     text(c, lab, x, y + 93, 26, "#FFFFFF", FONT_HEAD)
                 else:
                     text(c, "?", x, y, 110, "#FFFFFF", FONT_HEAD)
