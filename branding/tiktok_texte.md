@@ -1,7 +1,10 @@
 # TikTok-Texte – Account „Alex ist heute:“
 
 ## Profilbild
-`branding/alex_profilbild.png` (1080×1080, für den runden Zuschnitt gebaut)
+Aktuell (Herbst): `branding/alex_profilbild.png` (1080×1080, für den runden Zuschnitt gebaut)
+Saison-Versionen: `branding/profilbilder/alex_profilbild_{herbst,winter,fruehling,sommer}.png`
+Neu erzeugen: `python3 tools/profile_pic.py --alle branding/profilbilder`
+Das Gesicht bleibt in jeder Saison identisch; neue Saison = neuer Eintrag in THEMES in tools/profile_pic.py.
 
 ## Bio (max. 80 Zeichen)
 Jeden Tag eine neue Rolle 🎭 Du entscheidest, was ich morgen bin 👇
