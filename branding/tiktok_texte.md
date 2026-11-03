@@ -61,6 +61,6 @@ Cover: `episodes/05_fboy/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein F-Boy 😏🌙 Liest um 7, antwortet um 23:30 – mit einem Jawline-Snap und „Bist du wach?“ 👀 Welche Red Flag kennst du zu gut? 🚩 Markier ihn! Und was soll Alex morgen sein? 👇
+ein F-Boy 😏🌙 „Mein Hobby ist Reiten“ – „Kannst ja mal auf mir reiten 😏“ … und um 23:30 der Jawline-Snap: „Bist du wach?“ 👀 Welcher Spruch ist der schlimmste? 🚩 Markier ihn! Und was soll Alex morgen sein? 👇
 
 #fboy #redflags #redflag #dating #breadcrumbing #situationship #comedy #fürdich #fyp

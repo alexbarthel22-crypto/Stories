@@ -13,7 +13,8 @@ MOODS = {
     "what": "erklärend, amüsiert; das Zitat von Alex lässig und überheblich",
     "seen": "trocken und genervt, die Pointe ironisch",
     "gym": "lässig, amüsiert und deutlich",
-    "date": "erst amüsiert, dann entlarvend; das Zitat lässig-ausweichend",
+    "date": "erst amüsiert, dann entlarvend; Alex' Sprüche lässig und cringe",
+    "shower": "amüsiert und trocken, die Pointe peinlich berührt",
     "chats": "verschwörerisch und amüsiert",
     "snap": "ruhig, amüsiert und deutlich, nicht flüstern",
     "crumbs": "erst überrascht, dann trocken erklärend",
@@ -54,10 +55,14 @@ SCENES = [
     ]),
     dict(id="date", bg="#E06A6A", clock="20:00", title="DAS DATE", lines=[
         ("Beim Date redet er nur über sich. Und schaut ständig aufs Handy.", None),
+        ("Mia erzählt, ihr Hobby ist Reiten. Alex grinst: Du kannst ja mal auf mir reiten.", None),
         ("Fragst du, was ihr seid: Lass uns das nicht labeln.", None),
     ]),
     dict(id="chats", bg="#6CC08B", clock="22:00", title="5 CHATS", lines=[
         ("Danach hat er fünf Chats gleichzeitig offen. Jeder beginnt mit: Hey du.", None),
+    ]),
+    dict(id="shower", bg="#36B5C2", clock="23:00", title="GUTE NACHT?", lines=[
+        ("Sie schreibt: Ich geh jetzt duschen. Seine Antwort, nach zwei Sekunden: Ohne mich?", None),
     ]),
     dict(id="snap", bg="#1E1F3A", clock="23:30", title="DER NACHT-SNAP", dark=True, lines=[
         ("Halb zwölf nachts kommt der Snap. Jawline von unten, schlechtes Licht.", None),

@@ -156,13 +156,43 @@ def sc_date(c, S):
         emoji(c, "📱", 300, 880, 90 * pop(t, S.at(0, 0.6)), rot=-0.2)
         emoji(c, "☕", 540, 880, 80); emoji(c, "🥤", 760, 880, 80)
     scaled(c, W / 2, 700, s, table)
-    person(c, alex_x, FEET, AH, AL, t, "smug", "phone", "📱", name="Alex")
-    mia_ex = "neutral" if t < a1 + 0.5 else "cringe"
+    a2 = S.at(2)
+    reiten = a1 <= t < a2
+    person(c, alex_x, FEET, AH, AL, t, "smug", "idle" if reiten else "phone", None if reiten else "📱", name="Alex")
+    mia_ex = "happy" if t < S.at(1, 0.55) else "cringe"
     scaled(c, mia_x, FEET, pop(t, S.at(0, 0.2)), lambda: person(c, mia_x, FEET, AH * 0.97, MIA, t, mia_ex, name="Mia", blink_seed=3))
-    if t >= a1:
-        bubble(c, "Lass uns das nicht labeln 😏", 430, 1070, pop(t, a1 + 0.05), tail=(-0.4, 1), size=40, max_w=520)
-    if t > a1 + 0.6:
-        emoji(c, "🙄", mia_x + 120, 1180, 70 * pop(t, a1 + 0.6))
+    if reiten:
+        # Mia: Hobby Reiten -> Alex' Spruch
+        bubble(c, "Mein Hobby ist Reiten 🐴", 770, 960, pop(t, S.at(1, 0.05)) * out_fade(t, a2 - 0.1),
+               tail=(0.3, 1), size=40, max_w=500)
+        bubble(c, "Du kannst ja mal auf mir reiten 😏", 400, 1070, pop(t, S.at(1, 0.5)) * out_fade(t, a2 - 0.1),
+               tail=(-0.4, 1), size=40, max_w=520)
+        if t > S.at(1, 0.75):
+            emoji(c, "😬", mia_x + 120, 1180, 80 * pop(t, S.at(1, 0.75)))
+            red_flag_stamp(c, 700, 560, pop(t, S.at(1, 0.8), 0.25), "CRINGE", rot=0.12)
+    if t >= a2:
+        bubble(c, "Lass uns das nicht labeln 😏", 430, 1070, pop(t, a2 + 0.05), tail=(-0.4, 1), size=40, max_w=520)
+        if t > a2 + 0.6:
+            emoji(c, "🙄", mia_x + 120, 1180, 70 * pop(t, a2 + 0.6))
+
+
+def sc_shower(c, S):
+    t = S.t
+    s = pop(t, S.at(0, 0.0))
+    x0, y0, w, h = phone(c, W / 2, 700, 540, 820, s, screen="#FFFFFF")
+    def screen():
+        c.save(); rrect(c, x0, y0, w, h, 42); c.clip()
+        chat_header(c, x0, y0, w, "Mia", "#3B2A20")
+        chat_msg(c, "Ich geh jetzt duschen, bis morgen 👋", x0, w, y0 + 330, False, pop(t, S.at(0, 0.1), 0.25))
+        text(c, "23:04", x0 + 40, y0 + 360, 22, "#999999", FONT_BOLD, anchor="l")
+        if t > S.at(0, 0.7):
+            chat_msg(c, "Ohne mich? 😏", x0, w, y0 + 480, True, pop(t, S.at(0, 0.7), 0.2))
+            text(c, "23:04 · 2 Sek. später", x0 + w - 30, y0 + 510, 22, "#3D8BFF", FONT_BOLD, anchor="r")
+        c.restore()
+    scaled(c, W / 2, 700, s, screen)
+    if t > S.at(0, 0.85):
+        red_flag_stamp(c, W / 2, 1060, pop(t, S.at(0, 0.85), 0.25), "CRINGE", rot=-0.1)
+    alex_bottom(c, S, "smug", "phone", "📱", x=880, h=AH * 0.9)
 
 
 def sc_chats(c, S):
@@ -305,5 +335,5 @@ def sc_outro(c, S):
     alex_bottom(c, S, "happy", "wave")
 
 
-SCENE_DRAW = dict(what=sc_what, seen=sc_seen, gym=sc_gym, date=sc_date, chats=sc_chats, snap=sc_snap,
+SCENE_DRAW = dict(what=sc_what, seen=sc_seen, gym=sc_gym, date=sc_date, chats=sc_chats, shower=sc_shower, snap=sc_snap,
                   crumbs=sc_crumbs, flags=sc_flags, outro=sc_outro)
