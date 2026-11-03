@@ -1,0 +1,25 @@
+# Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden.
+# {emotion} am Zeilenanfang = Regieanweisung für diese Zeile (amused, surprised, ...).
+Niklas steht mit einem Wolf, einer Ziege und einem Kohlkopf an einem Fluss.
+Er muss alle drei sicher auf die andere Seite bringen.
+Das Problem: Sein kleines Boot fasst nur ihn und eine einzige Sache.
+Und es gibt zwei Regeln.
+Bleiben Wolf und Ziege allein, frisst der Wolf die Ziege.
+Bleiben Ziege und Kohl allein, frisst die Ziege den Kohl.
+{surprised} Wie bringt Niklas alle drei heil ans andere Ufer?
+[PAUSE 1.6]
+Kleiner Tipp: Manchmal muss man einen Schritt zurückgehen.
+Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!
+Hier kommt die Lösung.
+Zuerst bringt Niklas die Ziege hinüber. Wolf und Kohl können problemlos zusammenbleiben.
+Dann fährt er allein zurück.
+Jetzt holt er den Kohl und bringt ihn ans andere Ufer.
+{surprised} Aber Achtung: Ziege und Kohl dürfen nicht allein bleiben!
+Also nimmt er die Ziege wieder mit zurück.
+Er setzt die Ziege ab und bringt stattdessen den Wolf hinüber.
+Wolf und Kohl warten zusammen, das ist kein Problem.
+Dann fährt er wieder allein zurück.
+Zum Schluss holt er die Ziege.
+{amused} Und alle drei sind sicher drüben!
+{amused} Hättest du's gewusst?
+Schreib's in die Kommentare und folg mir für das nächste Rätsel!

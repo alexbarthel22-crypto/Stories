@@ -1,4 +1,4 @@
-Hintergrundmusik: music.mp3
+Hintergrundmusik (Kanal-Theme, in allen Videos): raetsel_theme.mp3
 Erzeugt am 2026-11-03 mit Google Lyria (Modell lyria-3.5) über die Gemini API, rein instrumental.
 Prompt: verspielte, neugierige, leicht geheimnisvolle Rätselmusik – Pizzicato-Streicher, Marimba,
 gezupfter Bass, leichte Besen-Percussion und Fingerschnipsen, ca. 100 BPM, ohne Gesang.

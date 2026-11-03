@@ -136,7 +136,7 @@ class Canvas:
 
     def ellipse(self, x0, y0, x1, y1, fill=None, outline=None, width=1):
         a, b = self.p(x0, y0), self.p(x1, y1)
-        self.d.ellipse([a[0], a[1], b[0], b[1]], fill=fill, outline=outline,
+        self.d.ellipse([min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])], fill=fill, outline=outline,
                        width=self.w(width) if outline else 0)
 
     def line(self, pts, fill, width=1, joint="curve", cap=True):
@@ -153,11 +153,12 @@ class Canvas:
 
     def pieslice(self, x0, y0, x1, y1, a0, a1, fill):
         a, b = self.p(x0, y0), self.p(x1, y1)
-        self.d.pieslice([a[0], a[1], b[0], b[1]], a0, a1, fill=fill)
+        self.d.pieslice([min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])], a0, a1, fill=fill)
 
     def arc(self, x0, y0, x1, y1, a0, a1, fill, width=1):
         a, b = self.p(x0, y0), self.p(x1, y1)
-        self.d.arc([a[0], a[1], b[0], b[1]], a0, a1, fill=fill, width=self.w(width))
+        self.d.arc([min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])], a0, a1, fill=fill,
+                   width=self.w(width))
 
     def text(self, x, y, s, size, fill, anchor="mm", bold=True):
         self.d.text(self.p(x, y), s, font=font(max(6, int(size * self.s)), bold), fill=fill, anchor=anchor)

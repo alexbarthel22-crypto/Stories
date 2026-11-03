@@ -5,11 +5,19 @@ Vertikale Erklärvideos (1080×1920, 30 fps) im flachen Vektor-Look mit natürli
 | # | Thema | Datei | Länge |
 |---|-------|-------|-------|
 | 1 | Alex und der Aufzug | `videos/01_alex_aufzug/video.mp4` | 1:16 |
+| 2 | Niklas, Wolf, Ziege und Kohlkopf | `videos/02_fluss/video.mp4` | 1:09 |
+
+## Kanal-Standard (für jedes neue Video)
+- Musik: immer `assets/music/raetsel_theme.mp3` (Lyria), 15 dB unter der Stimme
+- Stimme: Gemini TTS, Stimme „Puck“, `gemini-3.1-flash-tts-preview`, Tempo 1.12
+- Optik: flacher Vektor-Look, Blaue-Stunde-Skyline, Inter-ExtraBold-Pills, Fragen-Szene mit Denkpause, Outro „Hättest du's gewusst?“
+- `safecheck.py` muss „OK“ melden; Cover (`make_cover.py`) + `description.txt` ohne Spoiler
 
 ## Aufbau
 - `engine/toolkit.py` – Zeichen-Toolkit (Figuren, Kamera, Titel-Pills, Uhr, Etagenanzeige, Regen …)
 - `engine/tts_gemini.py` – **Standard:** Gemini TTS (natürlich, emotional), eine Anfrage pro Zeile mit gemeinsamem Stil-Prompt, `{amused}`/`{surprised}` als Regieanweisung, automatische Whisper-Prüfung gegen erfundenen Text, Tempo-Faktor. Braucht `GEMINI_API_KEY` (optional `WHISPER_DIR` für die Prüfung).
 - `engine/tts.py` – Offline-Fallback (Piper): Hauptstimme `de_DE-thorsten-high`, emotionale Zeilen (`{amused}`, `{surprised}`) mit `de_DE-thorsten_emotional-medium`, +2 Halbtöne (jünger). Korrigiert den ç-Laut („ich“, „-ig“) und hat ein Aussprache-Lexikon (`LEXICON`). Schreibt `voice.wav` + `timing.json`
+- `engine/animals.py` – Wolf, Ziege, Kohlkopf, Boot im Kanal-Stil
 - `engine/audio.py` – Soundeffekte, Mix mit Ducking; Hintergrundmusik aus Datei (z. B. mit Google Lyria generiert, siehe `music.txt`) oder als prozeduraler Fallback
 - `videos/<nr>_<name>/` – `script.txt` (Sprechtext, `[PAUSE x]` = Pause), `make_audio.py`, `make_video.py`
 
