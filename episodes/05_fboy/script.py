@@ -37,8 +37,10 @@ SHUFFLE = [
     ("EIN ROCKSTAR.", "🎸", "#151515", "#5C5C66"),
 ]
 
-THUMB = dict(l1="F-BOY", l2="ALARM", bg="#2B2D5E", expr="smug", pose="phone", prop="📱",
-             emojis=("🚩", "👻", "🌙", "💪"))
+# Cover: gleiche Anordnung wie Pick-me-Boy, Farben passend zum Thema (Nacht + Neon-Pink)
+THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="F-BOY", bg="#24264F", accent="#FF5CA8",
+             pill="#FF5CA8", pill_text="#FFFFFF", expr="smug", pose="hips", prop="📱",
+             emojis=("🚩", "🌙", "👻", "🚩"))
 
 SCENES = [
     dict(id="what", bg="#2B2D5E", clock=None, title="WAS IST EIN F-BOY?", dark=True, lines=[

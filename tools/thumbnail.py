@@ -37,11 +37,16 @@ def outlined(s, y, size, fill_col, rot=-0.04):
     c.restore()
 
 # Kopfzeile (unterhalb der TikTok-Leiste, im 3:4-Ausschnitt)
-rrect(c, W / 2 - 330, 300, 660, 110, 55); fill(c, INK)
-text(c, "HEUTE IST ALEX…", W / 2, 355, 62, "#FFFFFF", FONT_HEAD)
-# Rolle riesig
-outlined(l1, 560, 250, "#FFFFFF")
-outlined(l2, 790, 250, "#FFE14D")
+head = TH.get("head", "HEUTE IST ALEX…")
+hw = text_width(c, head, 62, FONT_HEAD) + 110
+rrect(c, W / 2 - hw / 2, 300, hw, 110, 55); fill(c, TH.get("pill", INK))
+text(c, head, W / 2, 355, 62, TH.get("pill_text", "#FFFFFF"), FONT_HEAD)
+# Rolle riesig: zwei Zeilen (l1 weiß, l2 Akzent) oder nur ein Wort (l1 leer)
+if l1:
+    outlined(l1, 560, 250, TH.get("color1", "#FFFFFF"))
+    outlined(l2, 790, 250, TH.get("accent", "#FFE14D"))
+else:
+    outlined(l2, 660, 300, TH.get("accent", "#FFE14D"))
 # Alex
 for e, (x, y, s, r) in zip(TH["emojis"], ((150, 1020, 130, -0.3), (930, 1060, 130, 0.3), (190, 1350, 110, -0.2), (900, 1340, 110, 0.2))):
     emoji(c, e, x, y, s, r)
