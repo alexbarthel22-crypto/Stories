@@ -36,9 +36,14 @@ def yb(n):
     return GROUND - n * FH
 
 
-ALEX = Style(150, "#f1c19c", "#3b2418", "#e8a33a", "#2c3e66", shoes="#ffffff", hair_style="quiff",
-             leg=0.31, torso=0.31, arm=0.30, width=0.17, accent="#2d2a3a", under="#ffffff",
+# Alex in the story: just a bit shorter than average, normal proportions (no spoiler)
+ALEX = Style(215, "#f1c19c", "#3b2418", "#e8a33a", "#2c3e66", shoes="#ffffff", hair_style="quiff",
+             leg=0.41, torso=0.31, arm=0.34, width=0.145, accent="#2d2a3a", under="#ffffff",
              shoe_accent="#e2574c")
+# Alex as revealed in the solution: short stature
+ALEX_REAL = Style(150, "#f1c19c", "#3b2418", "#e8a33a", "#2c3e66", shoes="#ffffff", hair_style="quiff",
+                  leg=0.31, torso=0.31, arm=0.30, width=0.17, accent="#2d2a3a", under="#ffffff",
+                  shoe_accent="#e2574c")
 ELISA = Style(250, "#f6d2b8", "#e9b949", "#7d5bd0", "#2f3350", hair_style="long", under="#f3eefc", shoes="#2f3350")
 PAUL = Style(258, "#8d5a3b", "#1f1a24", "#d9534a", "#46618f", hair_style="short", glasses=True, beard=True,
              shoes="#f2f2f2")
@@ -544,16 +549,15 @@ def scene_evening(t):
 def scene_neighbours(t):
     t0 = S[7]
     t1 = S[8]
-    cam = keyframes(t, [(t0, (2150, yb(12) - 100, 1500)), (t0 + 1.2, (2200, yb(11) - 60, 1900)),
-                        (t1, (2150, yb(12) - 160, 1500))])
+    # neighbours alone first, then a separate shot of Alex (no direct size comparison)
+    cam = keyframes(t, [(t0, (2300, yb(12) - 100, 1500)), (t0 + 1.2, (2330, yb(11) - 60, 1900)),
+                        (t1 - 0.05, (2330, yb(11) - 60, 1900)), (t1 + 0.45, (1880, yb(12) - 220, 1150))])
 
     def actors(cv):
         # Elisa on 12th floor at her door, Paul on 11th floor
         draw_person(cv, 2400, yb(12), ELISA, face=-1)
         draw_person(cv, 2300, yb(11), PAUL, face=-1)
-        if t < t1:
-            draw_person(cv, ALEX_DOOR_X + 20, yb(12), ALEX, face=1)
-        else:  # Alex jumps / stretches
+        if t >= t1:  # Alex alone, fit and sporty: jumps / stretches
             j = abs(math.sin((t - t1) * 6))
             draw_person(cv, ALEX_DOOR_X + 20, yb(12), ALEX, face=1, bounce=j * 50, arms_up=j)
         for k, (bx, by, tt) in enumerate([(2470, yb(12) - 330, t0 + 0.6), (2400, yb(11) - 340, t0 + 1.0)]):
@@ -563,6 +567,8 @@ def scene_neighbours(t):
 
     frame, view = render_world_frame(t, "dusk", cam, actors)
     for nm, wx, wy, ts in (("ELISA", 2400, yb(12) - 150, t0 + 0.3), ("PAUL", 2300, yb(11) - 150, t0 + 0.6)):
+        if t > t1 - 0.1:
+            break
         sx, sy = world_to_screen(wx - 190, wy, view)
         sy = min(sy, 1400)
         pill(frame, sx, sy, nm, 40, pad=(20, 10), scale=ease_out_back(prog(t, ts, ts + 0.3)))
@@ -678,10 +684,10 @@ def scene_question(t):
         tw = 0.5 + 0.5 * math.sin(t * 3 + x)
         cv.circle(x, y, 2 + 2 * tw, fill=(255, 255, 255, int(80 + 100 * tw)))
     # Alex thinking in the centre
-    s = 2.6
+    s = 1.9
     cv_s = Canvas(img, -OUT_W / 2 / s, -Q_FEET / s, s)
     cv_s.ellipse(-60, -8, 60, 12, fill=(0, 0, 0, 70))
-    draw_person(cv_s, 0, 0, ALEX, face=1, reach=(28, -125))
+    draw_person(cv_s, 0, 0, ALEX, face=1, reach=(30, -178))
     # big question
     p = ease_out_back(prog(t, t0, t0 + 0.35))
     pill(img, OUT_W / 2, 360, "WARUM MACHT", 92, bg="#fff6e6", scale=p, rot=-3)
@@ -691,7 +697,7 @@ def scene_question(t):
         for i in range(3):
             ph = (t * 3 - i * 0.35) % 2
             a = clamp(1 - abs(ph - 0.5) * 2) if ph < 1 else 0
-            cv.circle(OUT_W / 2 + 120 + i * 70, Q_FEET - 520 - i * 35, 20 + 10 * a, fill=(255, 255, 255, int(120 + 135 * a)))
+            cv.circle(OUT_W / 2 + 120 + i * 70, Q_FEET - 470 - i * 35, 20 + 10 * a, fill=(255, 255, 255, int(120 + 135 * a)))
     if t > t_tip:
         sc = ease_out_back(prog(t, t_tip, t_tip + 0.35))
         pill(img, OUT_W / 2, 690, "TIPP: REGEN", 84, bg="#c5def5", fg="#2b2140", scale=sc, rot=-2)
@@ -832,7 +838,7 @@ def scene_solution(t):
         # height lines
         cv.line([(380, 1500 - alex_h - 20), (900, 1500 - alex_h - 20)], hexc("#ffd34d", int(255 * a)), 6)
     face = -1
-    hand = draw_person(cv, ax, ay, ALEX, face=face, reach=reach, umbrella=umb, h=alex_h, arm_scale=1.3)
+    hand = draw_person(cv, ax, ay, ALEX_REAL, face=face, reach=reach, umbrella=umb, h=alex_h, arm_scale=1.3)
     # move the whole elevator up so Alex's feet stay clear of TikTok's caption area
     SH = 90
     shifted = Image.new("RGB", img.size, hexc("#bdb8b0"))
@@ -889,7 +895,7 @@ def scene_outro(t):
              scale=ease_out_back(prog(t, t1 + 1.0, t1 + 1.35)))
     s = 2.0
     cvs = Canvas(img, -(OUT_W / 2) / s, -1470 / s, s)
-    draw_person(cvs, 0, 0, ALEX, face=1, wave=t * 9)
+    draw_person(cvs, 0, 0, ALEX_REAL, face=1, wave=t * 9)
     return img
 
 
