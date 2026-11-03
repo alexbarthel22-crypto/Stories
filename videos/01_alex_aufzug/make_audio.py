@@ -29,5 +29,7 @@ ev = [
     ("pop", S[22], 0.7), ("ding", S[23] + 1.2, 0.8),
     ("pop", S[24], 0.8), ("pop", S[25] + 0.4, 0.7), ("pop", S[25] + 2.0, 0.7),
 ]
-mix(os.path.join(HERE, "voice.wav"), END, ev, os.path.join(HERE, "mix.wav"))
+# Background music: instrumental track generated with Google Lyria (lyria-3.5), see music.txt
+mix(os.path.join(HERE, "voice.wav"), END, ev, os.path.join(HERE, "mix.wav"),
+    music_path=os.path.join(HERE, "music.mp3"), music_db=-15.0)
 print("mix.wav", round(END, 2), "s")

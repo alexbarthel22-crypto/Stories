@@ -86,7 +86,19 @@ def place(buf, s, t, gain=1.0):
     buf[k:e] += s[:e - k] * gain
 
 
-def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45):
+def load_music(path, n):
+    """Decode any audio file to mono float at SR, trimmed/padded to n samples."""
+    import subprocess
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-f", "f32le", "-ac", "1", "-ar", str(SR), "-"],
+                         capture_output=True, check=True).stdout
+    m = np.frombuffer(raw, np.float32).astype(np.float64)
+    out = np.zeros(n)
+    out[:min(n, len(m))] = m[:n]
+    return out
+
+
+def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_path=None, music_db=-15.0):
+    """music_path: use this track (e.g. Lyria) instead of the procedural loop, placed music_db below the voice."""
     v, sr = sf.read(voice_path, dtype="float32")
     if v.ndim > 1:
         v = v.mean(1)
@@ -95,7 +107,14 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45):
         v = np.interp(x, np.arange(len(v)) / sr, v)
     n = int(length * SR)
     voice = np.zeros(n); voice[:min(n, len(v))] = v[:n]
-    mus = music(length) * music_gain
+    if music_path:
+        mus = load_music(music_path, n)
+        speech = np.abs(voice) > 0.02
+        v_rms = np.sqrt((voice[speech] ** 2).mean()) if speech.any() else 0.1
+        m_rms = np.sqrt((mus ** 2).mean()) + 1e-9
+        mus *= v_rms * 10 ** (music_db / 20) / m_rms
+    else:
+        mus = music(length) * music_gain
     # duck music under voice (smoothed envelope)
     env = np.abs(voice)
     win = int(0.25 * SR)
