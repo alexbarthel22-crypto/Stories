@@ -212,7 +212,7 @@ def sc_snap(c, S):
         text(c, "23:31", x0 + w - 40, y0 + 70, 28, "#FFFFFF", FONT_BOLD, anchor="r")
         if t >= a1:
             c.rectangle(x0, y0 + h * 0.42, w, 90); src(c, "#000000", 0.6); c.fill()
-            text(c, "Wach? 👀", W / 2, y0 + h * 0.42 + 45, 48, "#FFFFFF", FONT_BOLD)
+            text(c, "Bist du wach? 👀", W / 2, y0 + h * 0.42 + 45, 48, "#FFFFFF", FONT_BOLD)
         c.restore()
     scaled(c, W / 2, 720, s, screen)
     if t > S.at(0, 0.6):

@@ -55,3 +55,12 @@ Milliardär 💰🛥️ „Ich hab bei null angefangen“ – mit 1 Million von 
 
 Fakten im Video: Mindestlohn 2026 = 13,90 €/h (Vollzeit ≈ 28.900 €/Jahr brutto → ≈ 34.600 Jahre für 1 Mrd.);
 1.000 €/Tag ausgeben → ≈ 2.740 Jahre; Beispiel 3 % Zinsen → 30 Mio. €/Jahr ≈ 82.000 €/Tag.
+
+## Video 5 – F-Boy
+Cover: `episodes/05_fboy/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein F-Boy 😏🌙 Liest um 7, antwortet um 23:30 – mit einem Jawline-Snap und „Bist du wach?“ 👀 Welche Red Flag kennst du zu gut? 🚩 Markier ihn! Und was soll Alex morgen sein? 👇
+
+#fboy #redflags #redflag #dating #breadcrumbing #situationship #comedy #fürdich #fyp

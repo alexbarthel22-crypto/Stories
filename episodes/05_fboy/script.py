@@ -1,6 +1,6 @@
 """Folge 5: Heute ist Alex ... ein F-Boy.  (Aufbau wie Folge 1 / Pick-me-Boy)
 Gesprochen wird nur "F-Boy" (Eff-Boy) – das ausgeschriebene Wort kommt nicht vor.
-Stimme wie Folge 1: gemini-3.8-flash-tts, Puck, tighten 1.08.
+Stimme: gemini-2.5-pro-preview-tts, Puck, tighten 1.08 (3.8-Modell war am Tageslimit).
 """
 
 ROLE = "EIN F-BOY."
@@ -12,10 +12,10 @@ MOODS = {
     "intro_role": "triumphierende, laute Enthüllung mit einem Augenzwinkern",
     "what": "erklärend, amüsiert; das Zitat von Alex lässig und überheblich",
     "seen": "trocken und genervt, die Pointe ironisch",
-    "gym": "übertrieben angeberisch wie ein Gym-Influencer, dann trocken",
+    "gym": "lässig, amüsiert und deutlich",
     "date": "erst amüsiert, dann entlarvend; das Zitat lässig-ausweichend",
     "chats": "verschwörerisch und amüsiert",
-    "snap": "flüsternd wie spät in der Nacht, die Pointe trocken",
+    "snap": "ruhig, amüsiert und deutlich, nicht flüstern",
     "crumbs": "erst überrascht, dann trocken erklärend",
     "flags": "energisch wie ein Countdown, jede Red Flag mit Nachdruck",
     "outro": "freundlich, aufgedreht, direkt an die Zuschauer, auffordernd",
@@ -50,7 +50,7 @@ SCENES = [
         ("Antwort? Vielleicht heute Nacht.", None),
     ]),
     dict(id="gym", bg="#4FA3C7", clock="17:00", title="IM GYM", lines=[
-        ("Im Gym: Spiegel-Selfie, Muskeln anspannen. Bildunterschrift: Grind never stops.", None),
+        ("Im Gym: Spiegel-Selfie. Muskeln anspannen. Bildunterschrift: Grind never stops.", None),
     ]),
     dict(id="date", bg="#E06A6A", clock="20:00", title="DAS DATE", lines=[
         ("Beim Date redet er nur über sich. Und schaut ständig aufs Handy.", None),
@@ -61,7 +61,7 @@ SCENES = [
     ]),
     dict(id="snap", bg="#1E1F3A", clock="23:30", title="DER NACHT-SNAP", dark=True, lines=[
         ("Halb zwölf nachts kommt der Snap. Jawline von unten, schlechtes Licht.", None),
-        ("Text dazu: Wach?", None),
+        ("Dazu der Text: Bist du wach?", None),
     ]),
     dict(id="crumbs", bg="#8E5BE0", clock=None, title="EINE WOCHE SPÄTER", dark=True, lines=[
         ("Du meldest dich nicht mehr. Sofort schreibt er: Vermiss dich.", None),
