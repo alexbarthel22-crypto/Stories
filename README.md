@@ -8,6 +8,7 @@ Deutsche Kurzvideos (9:16, 1080×1920, max. 1:30). Hauptfigur **Alex** schlüpft
 | 1 | Pick-me-Boy | `episodes/01_pick_me_boy/01_pick_me_boy.mp4` | 1:27 |
 | 2 | Arbeitslos | `episodes/02_arbeitslos/02_arbeitslos.mp4` | 1:19 |
 | 3 | Choleriker | `episodes/03_choleriker/03_choleriker.mp4` | 1:20 |
+| 4 | Milliardär | `episodes/04_milliardaer/04_milliardaer.mp4` | 1:22 |
 
 ## Alex – fester Look (gilt für alle Folgen)
 Definiert in `tools/alexlib.py` → `ALEX_BASE`. **Nicht ändern**, nur das Outfit wechselt pro Rolle.

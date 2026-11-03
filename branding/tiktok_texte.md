@@ -40,3 +40,15 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 Choleriker 😡💢 Von 0 auf 100 wegen … einem Toast. Und 5 Minuten später: „Sorry, war nicht so gemeint 😇“ Welches Anzeichen trifft auf jemanden zu, den du kennst? 👇 Markier ihn! Und was soll Alex morgen sein?
 
 #choleriker #wutanfall #relatable #comedy #alltag #fürdich #fyp
+
+## Video 4 – Milliardär
+Cover: `episodes/04_milliardaer/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+Milliardär 💰🛥️ „Ich hab bei null angefangen“ – mit 1 Million von Papa 😅 Mit Mindestlohn bräuchtest du über 34.000 Jahre für eine Milliarde. Hättest du das gedacht? 👇 Markier jemanden, der dir Geld leihen soll! Und was soll Alex morgen sein?
+
+#milliardär #reich #geld #mindestlohn #selfmade #luxus #comedy #fürdich #fyp
+
+Fakten im Video: Mindestlohn 2026 = 13,90 €/h (Vollzeit ≈ 28.900 €/Jahr brutto → ≈ 34.600 Jahre für 1 Mrd.);
+1.000 €/Tag ausgeben → ≈ 2.740 Jahre; Beispiel 3 % Zinsen → 30 Mio. €/Jahr ≈ 82.000 €/Tag.
