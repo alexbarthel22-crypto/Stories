@@ -105,6 +105,9 @@ def gemini_tts(text, mood, path, voice=None, profile=None):
             used_models.add(model)
             break
     if raw is None:
+        if os.environ.get("TTS_KEEP_GOING"):
+            print("  FEHLT (später nachholen):", text[:40])
+            return None
         raise RuntimeError("Gemini TTS fehlgeschlagen (alle Modelle): " + text)
     if raw[:4] == b"RIFF":
         with wave.open(io.BytesIO(raw)) as w:
@@ -163,6 +166,11 @@ if only:
     jobs = [j for j in jobs if j[0] in only]
 with ThreadPoolExecutor(int(os.environ.get("TTS_PARALLEL", "3")) if GEMINI else 1) as ex:
     res.update({k: (p, d) for k, p, d in ex.map(run, jobs)})
+missing = [k for k, (p, d) in res.items() if d is None]
+for k in missing:
+    res[k] = (res[k][0], 0.0)
+if missing:
+    print("FEHLENDE ZEILEN:", ",".join(missing))
 
 meta = {"backend": "gemini:" + VOICE if GEMINI else "piper",
         "intro": {"pre": res["intro_pre"][1], "role": res["intro_role"][1]}, "scenes": []}
