@@ -47,8 +47,6 @@ function corgi(o = {}) {
   <circle cx="148" cy="332" r="${eyeR}" fill="#fff" stroke="${K}" stroke-width="6"/>
   ${o.blink ? '' : `<circle cx="70" cy="339" r="10" fill="#5A3416"/><circle cx="144" cy="335" r="10" fill="#5A3416"/><circle cx="67" cy="335" r="3" fill="#fff"/><circle cx="141" cy="331" r="3" fill="#fff"/>`}
   <ellipse cx="170" cy="380" rx="14" ry="8" fill="#F0A0A0" opacity=".7"/>
-  <path d="M62 440 Q110 470 170 446 L174 470 Q112 496 58 466 Z" fill="#2F7FD8" stroke="${K}" stroke-width="6"/>
-  <path d="M90 454 v22 M130 456 v22" stroke="#FFD31A" stroke-width="9"/>
   ${mud}`;
 }
 
@@ -131,7 +129,20 @@ function fullTeam(t, baseBack, baseFront, s, m, rolling) {
     [teamPlayer(6, t), 390], [busguy({blink: blinkAt(t, 2)}), 790], [teamPlayer(7, t), 910]];
   fr.forEach(([svg, x]) => front += place(svg, x, baseFront, s));
   front += place(coach({mouth: m, blink: blinkAt(t)}), 590, baseFront + 6, s * 1.1);
-  const dog = rolling ? place(corgiRoll(t), 500, baseFront + 130, 0.5)
+  const dog = rolling ? corgiBall(t, 520, baseFront + 150, 0.56)
                       : place(corgi({wag: Math.sin(t * 14), blink: blinkAt(t, 1.7)}), 520, baseFront + 120, 0.4);
   return back + front + dog;
+}
+
+// Pichu spielt mit dem Fussball: huepft hinterher und stupst ihn mit der Nase an
+function corgiBall(t, x, base, s) {
+  const p = (t * 1.3) % 2, dir = p < 1 ? 1 : -1, u = p < 1 ? p : p - 1;
+  const bx = x - 150 * s * 2 + (dir > 0 ? u : 1 - u) * 300 * s * 2;
+  const by = base - Math.abs(Math.sin(t * 7)) * 120 * s;
+  const hop = Math.abs(Math.sin(t * 7 + 1)) * 40 * s;
+  const dogX = bx + 330 * s;
+  const dog = place(corgi({wag: Math.sin(t * 18), blink: blinkAt(t, 1.7), kick: Math.sin(t * 14) * 14}), dogX, base - hop, s);
+  const ball = `<g transform="translate(${bx} ${by - 44 * s}) rotate(${t * 400})">${ballIcon(0, 0, 44 * s * 1.6)}</g>
+    <ellipse cx="${bx}" cy="${base + 4}" rx="${40 * s * 1.6}" ry="${10 * s * 1.6}" fill="#000" opacity=".25"/>`;
+  return dog + ball;
 }

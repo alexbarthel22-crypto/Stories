@@ -1,6 +1,6 @@
 // Szenen, Hintergruende, UI-Elemente. Leinwand 1080x1920.
 const W = 1080, H = 1920;
-const FONT = `font-family="Inter" font-weight="900"`;
+const FONT = `font-family="Lilita"`;
 
 // ---------- Helfer ----------
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));

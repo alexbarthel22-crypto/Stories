@@ -16,8 +16,8 @@ const SCENES = {
   intro(t, d, m) {
     const z = 1 + 0.35 * easeOut(t / d);
     return cam(z, 540, 1180, field(t) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1290, 0.6)) +
-      popG(t, 0.05, 540, 330, badge(540, 330, 'TAG 1', {bg: '#2F7FD8', fg: '#fff', fs: 130, r: 26, rot: -3})) +
-      popG(t, 0.7, 540, 490, badge(540, 490, 'VEREIN GEGRÜNDET', {bg: '#FFD31A', fs: 46}));
+      popG(t, 0.05, 540, 330, badge(540, 330, 'TAG 1', {kind: 'pitch', fs: 150, pad: 120})) +
+      popG(t, 0.7, 540, 490, badge(540, 490, 'VEREIN GEGRÜNDET', {bg: '#FFD31A', fs: 52, ball: true}));
   },
   follow(t, d, m) {
     const z = 1.05 + 0.08 * (t / d);
@@ -29,11 +29,11 @@ const SCENES = {
     let c = '';
     [[300, 0.15], [540, 0.45], [780, 0.75]].forEach(([x, t0], i) => {
       const s = pop(t, t0);
-      if (s > 0) c += place(chair({mud: i === 1}), x, 1360, 1.0 * s);
+      if (s > 0) c += place(chair({mud: i === 1}), x, 1210, 1.0 * s);
     });
     return cam(z, 540, 1100, field(t, 1040, {goal: false}) + c) +
-      popG(t, 0.0, 540, 560, badge(540, 560, 'TRIBÜNE', {fs: 80})) +
-      popG(t, 0.9, 540, 700, badge(540, 700, '3 KLAPPSTÜHLE', {bg: '#FFD31A', fs: 50, rot: 2}));
+      popG(t, 0.0, 540, 400, badge(540, 400, 'TRIBÜNE', {fs: 80})) +
+      popG(t, 0.9, 540, 540, badge(540, 540, '3 KLAPPSTÜHLE', {bg: '#FFD31A', fs: 50, rot: 2}));
   },
   welcome(t, d, m) {
     const ls = backOut(t / 0.35);
@@ -116,12 +116,12 @@ const SCENES = {
   seat(t, d, m) {
     const fol = t > 1.0;
     let c = '';
-    [300, 540, 780].forEach((x, i) => c += place(chair({num: String(i + 1)}), x, 1340, 0.9));
-    [300, 540, 780].forEach((x, i) => { const gs = pop(t, 1.3 + i * 0.25); if (gs > 0) c += place(ghost(), x, 1160, 0.9 * gs); });
+    [300, 540, 780].forEach((x, i) => c += place(chair({num: String(i + 1)}), x, 1250, 0.9));
+    [300, 540, 780].forEach((x, i) => { const gs = pop(t, 1.3 + i * 0.25); if (gs > 0) c += place(ghost(), x, 1070, 0.9 * gs); });
     const tap = t > 0.6 && t < 1.1 ? `<circle cx="${90 + 260}" cy="${240 + 280}" r="${30 + (t - 0.6) * 90}" fill="#fff" opacity="${0.5 - (t - 0.6)}"/>` : '';
     return cam(1.0, 540, 960, field(t, 1080, {goal: false}) + c) +
       popG(t, 0.0, 540, 360, profileCard(90, 240, fol ? 1 : 0, fol)) + tap +
-      popG(t, 2.1, 520, 720, badge(520, 720, 'KLAPPSTUHL NR. 001', {bg: '#2F7FD8', fg: '#fff', fs: 52, rot: -2}));
+      popG(t, 2.1, 520, 630, badge(520, 630, 'KLAPPSTUHL NR. 001', {bg: '#2F7FD8', fg: '#fff', fs: 52, rot: -2}));
   },
   money(t, d, m) {
     const kg = SEG.caps[SEG.caps.length - 1].t0 - SEG.start;
@@ -147,7 +147,7 @@ const SCENES = {
 
 let SEG = null;
 function render(f) {
-  UID = 0;
+  UID = 0; PID = 0;
   const t = f / DATA.fps;
   let si = DATA.segs.findIndex(s => t < s.end);
   if (si < 0) si = DATA.segs.length - 1;

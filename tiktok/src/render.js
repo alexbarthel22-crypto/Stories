@@ -3,7 +3,7 @@ const {chromium}=require('playwright');const {spawn}=require('child_process');co
  const [,, out, from, to, step] = process.argv;
  const b=await chromium.launch(); const p=await b.newPage({viewport:{width:1080,height:1920}});
  p.on('pageerror',e=>{console.error('PAGEERR',e.message);process.exit(1)});
- await p.goto('file://'+__dirname+'/page.html');
+ await p.goto('file://'+__dirname+'/page.html'); await p.evaluate(()=>{render(0);return document.fonts.ready});
  const data=JSON.parse(fs.readFileSync(__dirname+'/data.json'));
  const nf=data.env.length;
  if(out.endsWith('.mp4')){

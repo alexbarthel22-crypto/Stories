@@ -127,7 +127,7 @@ function player(o) {
   <path d="M214 358 Q250 392 286 358" fill="${trim}" stroke="${K}" stroke-width="6"/>
   <rect x="166" y="530" width="168" height="58" rx="6" fill="${o.shorts || '#1F3E66'}" stroke="${K}" stroke-width="7"/>
   <path d="M250 548 V588" stroke="${K}" stroke-width="6"/>
-  <text x="250" y="500" text-anchor="middle" font-family="Inter" font-weight="900" font-size="90" fill="${trim}" stroke="${K}" stroke-width="7" paint-order="stroke">${o.num || ''}</text>
+  <text x="250" y="500" text-anchor="middle" font-family="Lilita" font-size="90" fill="${trim}" stroke="${K}" stroke-width="7" paint-order="stroke">${o.num || ''}</text>
   ${o.front || ''}
   <defs><clipPath id="${id}"><circle cx="250" cy="225" r="140"/></clipPath></defs>
   <circle cx="112" cy="235" r="24" fill="${skin}" stroke="${K}" stroke-width="7"/>
@@ -206,7 +206,10 @@ function chair(o = {}) {
   <path d="M180 610 L330 700 M320 610 L170 700" stroke="${K}" stroke-width="20" stroke-linecap="round"/>
   <path d="M180 610 L330 700 M320 610 L170 700" stroke="#8C9196" stroke-width="10" stroke-linecap="round"/>
   <path d="M150 590 L350 590 L340 620 L160 620Z" fill="#C9682E" stroke="${K}" stroke-width="8" stroke-linejoin="round"/>
-  ${o.num ? `<circle cx="250" cy="425" r="30" fill="#FFD31A" stroke="${K}" stroke-width="6"/><text x="250" y="440" text-anchor="middle" font-family="Inter" font-weight="900" font-size="40" fill="#111">${o.num}</text>` : ''}
+  <path d="M160 566 Q250 548 340 566 Q352 580 344 596 Q250 606 156 596 Q148 580 160 566Z" fill="#2F7FD8" stroke="${K}" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M170 590 Q250 598 330 590" stroke="#FFD31A" stroke-width="5" fill="none" stroke-dasharray="10 7"/>
+  <circle cx="250" cy="576" r="6" fill="#1F3E66"/>
+  ${o.num ? `<circle cx="250" cy="425" r="30" fill="#FFD31A" stroke="${K}" stroke-width="6"/><text x="250" y="440" text-anchor="middle" font-family="Lilita" font-size="40" fill="#111">${o.num}</text>` : ''}
   ${o.mud ? `<path d="M200 600 q14 -10 24 0 q4 12 -10 12 q-14 0 -14 -12z M290 470 q8 -6 14 0 q2 8 -6 8z" fill="#6B4226"/>` : ''}`;
 }
 
@@ -214,5 +217,5 @@ function chair(o = {}) {
 function ghost(o = {}) {
   return `<g fill="rgba(255,255,255,0.12)" stroke="#fff" stroke-width="9" stroke-dasharray="22 16">
     <circle cx="250" cy="370" r="70"/><rect x="170" y="450" width="160" height="150" rx="40"/></g>
-    <text x="250" y="398" text-anchor="middle" font-family="Inter" font-weight="900" font-size="80" fill="#fff">?</text>`;
+    <text x="250" y="398" text-anchor="middle" font-family="Lilita" font-size="80" fill="#fff">?</text>`;
 }
