@@ -17,19 +17,21 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | 14 | Träumer *(Platzhalter-Name)* | Sturm | Locken, blaue Kopfhörer |
 
 - **Cheftrainer (Ich-Erzähler):** dunkle Haare mit Seitenscheitel, kurzer Vollbart, blaue Parka-Jacke
-- **Pichu (gesprochen „Pitschu“), Maskottchen:** Pembroke Corgi, rotgold mit weißer Brust, Schnauze, Blesse und Beinen, große Stehohren, langer Körper, buschiger Schwanz, **kein Halsband**
+- **Pichu (gesprochen „Pitschu“), Maskottchen:** Pembroke Corgi, rotgold mit weißer Brust, Schnauze, Blesse und Beinen, große Stehohren, langer Körper, kurzer Hals, kurze Beine, buschiger Schwanz, **kein Halsband**
 
 Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, Torwart grün.
 
 ## Stand nach Tag 1
 - Liga: Kreisliga. Ziel: Deutscher Meister (Bundesliga)
-- Tribüne: 3 Klappstühle mit blauen Sitzkissen, Nr. 1–3
-- Flutlicht: Taschenlampe auf einem Holzmast
+- Tribüne: 3 Klappstühle (ohne Sitzkissen), Nr. 1–3, stehen außerhalb des Platzes
+- Flutlicht: Taschenlampe auf einem Holzmast, außerhalb des Platzes
 - Vereinskasse: 500 € und ein Kaugummi
+- Geld-Regel: Jeder Follower bringt 1 € in die Vereinskasse, jeder Kommentar 2 €
 - Fans: 0. Erstes Spiel: Sonntag
 
 ## Videostil
 - Format 1080×1920, 30 fps, maximal 59 s
 - Dauerregen, Untertitel Wort für Wort (Schrift Lilita One, weiß mit brauner Kontur, Schlüsselwörter gelb)
 - Boxen im Spielfeld-Look oder orange, dicke braune Kontur, harter Schatten
+- Fußball immer im Stil des ⚽-Emojis
 - TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1300, rechts nicht über x 940

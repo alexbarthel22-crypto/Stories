@@ -29,9 +29,9 @@ const SCENES = {
     let c = '';
     [[300, 0.15], [540, 0.45], [780, 0.75]].forEach(([x, t0], i) => {
       const s = pop(t, t0);
-      if (s > 0) c += place(chair({mud: i === 1}), x, 1210, 1.0 * s);
+      if (s > 0) c += place(chair({mud: i === 1}), x, 1215, 1.0 * s);
     });
-    return cam(z, 540, 1100, field(t, 1040, {goal: false}) + c) +
+    return cam(z, 540, 1100, field(t, 1040, {goal: false, touchY: 1250}) + c) +
       popG(t, 0.0, 540, 400, badge(540, 400, 'TRIBÜNE', {fs: 80})) +
       popG(t, 0.9, 540, 540, badge(540, 540, '3 KLAPPSTÜHLE', {bg: '#FFD31A', fs: 50, rot: 2}));
   },
@@ -47,13 +47,13 @@ const SCENES = {
     let splat = '';
     for (let i = 0; i < 10; i++) splat += `<ellipse cx="${rnd(i + 70) * 1100}" cy="${1150 + rnd(i + 80) * 800}" rx="${20 + rnd(i) * 20}" ry="8" fill="#4A3828"/>`;
     return cam(1.15, px, 1150, field(t, 900, {puddles: pud, goalX: 640}) + splat +
-        `<g transform="translate(${600} ${1520}) rotate(${t * 40})"><circle r="40" fill="#fff" stroke="#111" stroke-width="8"/><path d="M0 -16 L15 -5 L9 13 L-9 13 L-15 -5Z" fill="#111"/><path d="M-40 4 Q-10 40 36 14 Q40 2 40 0 Q0 30 -40 4Z" fill="#6B4226"/></g>`) +
+        `<g transform="translate(600 1520) rotate(${t * 40})">${ballIcon(0, 0, 44)}<path d="M-30 18 q16 10 34 4 q-6 14 -24 10z M10 -30 q10 -4 14 4 q-4 6 -12 2z" fill="#6B4226"/></g>`) +
       popG(t, 0.1, 540, 300, badge(540, 300, 'UNSER PLATZ', {fs: 70})) +
       popG(t, 1.2, 540, 430, badge(540, 430, 'WASSERSTAND: HOCH', {bg: '#E8432E', fg: '#fff', fs: 44, rot: -2}));
   },
   light(t, d, m) {
     const z = 1.0 + 0.06 * (t / d);
-    return cam(z, 540, 960, field(t, 1080, {goalX: 780}) + flashMast(250, 1350, 360, t, true)) +
+    return cam(z, 540, 960, field(t, 1080, {goalX: 780, touchY: 1260}) + flashMast(230, 1225, 330, t, true)) +
       popG(t, 0.5, 640, 560, badge(640, 560, '1 TASCHENLAMPE', {bg: '#FFD31A', fs: 52, rot: -3})) +
       popG(t, 1.4, 640, 690, badge(640, 690, 'AKKU: 3 %', {bg: '#E8432E', fg: '#fff', fs: 42, rot: 2}));
   },
@@ -79,8 +79,8 @@ const SCENES = {
       popG(t, ff, 300, 1450, badge(300, 1450, 'FLIP-FLOPS', {bg: '#FF3FA4', fg: '#fff', fs: 46, rot: -6}));
   },
   pichu(t, d, m) {
-    const hop = Math.abs(Math.sin(t * 6)) * 24;
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(corgi({wag: Math.sin(t * 16), blink: blinkAt(t, .3)}), 600, 1640 - hop, 1.7)) +
+    const hop = Math.abs(Math.sin(t * 6)) * 16;
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(corgi({wag: Math.sin(t * 16), blink: blinkAt(t, .3)}), 560, 1250 - hop, 1.35)) +
       popG(t, 0.1, 500, 320, nameCard(80, 240, '★', 'PICHU', 'MASKOTTCHEN · CORGI', '#FFD31A'));
   },
   goal(t, d, m) {
@@ -94,7 +94,7 @@ const SCENES = {
       const a = (i / 7) * Math.PI * 2 + t * 0.8;
       stars += `<text x="${520 + Math.cos(a) * 180}" y="${540 + Math.sin(a) * 70}" text-anchor="middle" ${FONT} font-size="48" fill="#FFD31A" stroke="#14213D" stroke-width="5" paint-order="stroke">★</text>`;
     }
-    return cam(1.0, 540, 960, field(t, 880, {goal: false}) + beams + fullTeam(t, 960, 1090, 0.44, m, true)) +
+    return cam(1.0, 540, 960, field(t, 880, {goal: false}) + beams + fullTeam(t, 960, 1090, 0.44, m, false)) +
       popG(t, 0.0, 520, 250, bigText(520, 270, 'UNSER ZIEL:', '#fff', 58)) +
       popG(t, 0.6, 520, 520, trophy(520, 530, 0.72 + 0.02 * Math.sin(t * 5)) + stars) +
       popG(t, 1.0, 520, 350, bigText(520, 360, 'DEUTSCHER MEISTER', '#FFD31A', 78));
@@ -108,7 +108,7 @@ const SCENES = {
     let c = '';
     [300, 540, 780].forEach(x => c += place(chair({}), x, 1240, 0.62));
     const z = 1.0 + 0.1 * easeOut(t / d);
-    return cam(z, 540, 1150, field(t, 1040, {goal: false}) + c + place(coach({mouth: m * 0.6, mood: 'sad', blink: blinkAt(t)}), 860, 1560, 0.85)) +
+    return cam(z, 540, 1150, field(t, 1040, {goal: false, touchY: 1265}) + c + place(coach({mouth: m * 0.6, mood: 'sad', blink: blinkAt(t)}), 860, 1560, 0.85)) +
       popG(t, 0.1, 520, 300, badge(520, 300, 'FANS', {fs: 60})) +
       popG(t, 0.9, 520, 500, bigText(520, 570, '0', '#FF4A4A', 260)) +
       popG(t, 2.0, 300, 1020, badge(300, 1020, 'LEER', {bg: '#E8432E', fg: '#fff', fs: 50, rot: -5}));
@@ -119,24 +119,37 @@ const SCENES = {
     [300, 540, 780].forEach((x, i) => c += place(chair({num: String(i + 1)}), x, 1250, 0.9));
     [300, 540, 780].forEach((x, i) => { const gs = pop(t, 1.3 + i * 0.25); if (gs > 0) c += place(ghost(), x, 1070, 0.9 * gs); });
     const tap = t > 0.6 && t < 1.1 ? `<circle cx="${90 + 260}" cy="${240 + 280}" r="${30 + (t - 0.6) * 90}" fill="#fff" opacity="${0.5 - (t - 0.6)}"/>` : '';
-    return cam(1.0, 540, 960, field(t, 1080, {goal: false}) + c) +
+    return cam(1.0, 540, 960, field(t, 1080, {goal: false, touchY: 1280}) + c) +
       popG(t, 0.0, 540, 360, profileCard(90, 240, fol ? 1 : 0, fol)) + tap +
       popG(t, 2.1, 520, 630, badge(520, 630, 'KLAPPSTUHL NR. 001', {bg: '#2F7FD8', fg: '#fff', fs: 52, rot: -2}));
   },
   money(t, d, m) {
     const kg = SEG.caps[SEG.caps.length - 1].t0 - SEG.start;
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(690, 1330, 0.95) + cashBox(690, 1240, 1.0, t > 0.4) +
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(690, 1180, 0.95) + cashBox(690, 1015, 0.8, t > 0.4) +
         place(coach({mouth: m, blink: blinkAt(t)}), 250, 1560, 0.95)) +
       popG(t, 0.0, 520, 300, badge(520, 300, 'VEREINSKASSE', {fs: 60})) +
-      popG(t, 0.9, 520, 470, bigText(520, 520, '500 €', '#6BF06B', 190)) +
-      popG(t, kg, 520, 660, badge(520, 660, '+ 1 KAUGUMMI', {bg: '#FF7EB6', fs: 54, rot: 3}));
+      popG(t, 0.9, 520, 450, bigText(520, 500, '500 €', '#6BF06B', 170)) +
+      popG(t, kg, 520, 620, badge(520, 620, '+ 1 KAUGUMMI', {bg: '#FF7EB6', fs: 54, rot: 3}));
+  },
+  rule(t, d, m) {
+    const c = SEG.caps.map(x => x.t0 - SEG.start);
+    let coins = '';
+    for (let i = 0; i < 8; i++) {
+      const t0 = 0.2 + i * 0.42, k = (t - t0) / 0.6;
+      if (k > 0 && k < 1) coins += coin(470 + rnd(i + 700) * 140, 520 + k * 380, 30, i % 3 === 2 && t > c[3]);
+    }
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(540, 1180, 0.95) + cashBox(540, 1015, 0.8, true) + coins +
+        place(coach({mouth: m, blink: blinkAt(t)}), 170, 1600, 0.85)) +
+      popG(t, c[0], 520, 300, badge(520, 300, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 52})) +
+      popG(t, c[3], 520, 440, badge(520, 440, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 52, rot: -2}));
   },
   options(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1680, 1.15)) +
-      popG(t, c[0], 190, 600, optionCard(190, 600, ICON_BOOT, 'STÜRMER', 'KAUFEN?', -6)) +
-      popG(t, c[1], 480, 580, optionCard(480, 580, ICON_HOUSE, 'VEREINSHAUS', 'MIETEN?', 0)) +
-      popG(t, c[2], 770, 600, optionCard(770, 600, ICON_Q, 'WAS GANZ', 'ANDERES?', 6));
+      popG(t, 0.0, 520, 300, badge(520, 300, 'WAS TUN MIT DEM GELD?', {fs: 52})) +
+      popG(t, c[2], 190, 640, optionCard(190, 640, ICON_BOOT, 'STÜRMER', 'KAUFEN?', -6)) +
+      popG(t, c[3], 480, 620, optionCard(480, 620, ICON_HOUSE, 'VEREINSHAUS', 'MIETEN?', 0)) +
+      popG(t, c[4], 770, 640, optionCard(770, 640, ICON_Q, 'WAS GANZ', 'ANDERES?', 6));
   },
   comment(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1680, 1.25)) +

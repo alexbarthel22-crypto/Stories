@@ -206,9 +206,6 @@ function chair(o = {}) {
   <path d="M180 610 L330 700 M320 610 L170 700" stroke="${K}" stroke-width="20" stroke-linecap="round"/>
   <path d="M180 610 L330 700 M320 610 L170 700" stroke="#8C9196" stroke-width="10" stroke-linecap="round"/>
   <path d="M150 590 L350 590 L340 620 L160 620Z" fill="#C9682E" stroke="${K}" stroke-width="8" stroke-linejoin="round"/>
-  <path d="M160 566 Q250 548 340 566 Q352 580 344 596 Q250 606 156 596 Q148 580 160 566Z" fill="#2F7FD8" stroke="${K}" stroke-width="7" stroke-linejoin="round"/>
-  <path d="M170 590 Q250 598 330 590" stroke="#FFD31A" stroke-width="5" fill="none" stroke-dasharray="10 7"/>
-  <circle cx="250" cy="576" r="6" fill="#1F3E66"/>
   ${o.num ? `<circle cx="250" cy="425" r="30" fill="#FFD31A" stroke="${K}" stroke-width="6"/><text x="250" y="440" text-anchor="middle" font-family="Lilita" font-size="40" fill="#111">${o.num}</text>` : ''}
   ${o.mud ? `<path d="M200 600 q14 -10 24 0 q4 12 -10 12 q-14 0 -14 -12z M290 470 q8 -6 14 0 q2 8 -6 8z" fill="#6B4226"/>` : ''}`;
 }

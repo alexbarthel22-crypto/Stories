@@ -46,7 +46,7 @@ function field(t, hz = 1060, o = {}) {
     s += `<ellipse cx="${x}" cy="${y}" rx="${50 + rnd(i) * 80}" ry="${12 + rnd(i + 2) * 12}" fill="#4F8A3E" opacity=".8"/>`;
   }
   if (o.goal !== false) s += goalPost(o.goalX || 760, hz + 40, 0.9);
-  s += `<path d="M-400 ${hz + 70} H1480" stroke="#E8E2D0" stroke-width="7" opacity=".45"/>`;
+  if (!o.touchY) s += `<path d="M-400 ${hz + 70} H1480" stroke="#E8E2D0" stroke-width="7" opacity=".45"/>`;
   // Pfuetzen mit Regenringen
   const puddles = o.puddles || [[180, hz + 260, 170, 30], [820, hz + 330, 200, 34], [520, hz + 600, 260, 46], [120, hz + 760, 200, 40], [900, hz + 700, 150, 30]];
   puddles.forEach((p, i) => {
@@ -58,6 +58,14 @@ function field(t, hz = 1060, o = {}) {
       s += `<ellipse cx="${rx}" cy="${ry}" rx="${8 + ph * 40}" ry="${2 + ph * 9}" fill="none" stroke="#C9D3E3" stroke-width="3" opacity="${0.6 * (1 - ph)}"/>`;
     }
   });
+  if (o.touchY) {
+    s += `<rect x="-400" y="${hz}" width="${W + 800}" height="${o.touchY - hz}" fill="#4A8038"/>`;
+    for (let i = 0; i < 18; i++) {
+      const x = rnd(i + 900) * 1300 - 100, y = hz + 10 + rnd(i + 950) * (o.touchY - hz - 20);
+      s += `<path d="M${x} ${y} l6 -18 l6 18 l6 -14 l4 14" stroke="#356A2A" stroke-width="5" fill="none" stroke-linejoin="round"/>`;
+    }
+    s += `<path d="M-400 ${o.touchY} H1480" stroke="#F0EDE0" stroke-width="11"/>`;
+  }
   return s;
 }
 
@@ -103,18 +111,6 @@ function trophy(cx, cy, s) {
   </g>`;
 }
 
-function cashBox(cx, cy, s, open) {
-  return `<g transform="translate(${cx} ${cy}) scale(${s})">
-    <rect x="-170" y="-60" width="340" height="170" rx="16" fill="#3E7D4F" stroke="#111" stroke-width="10"/>
-    ${open ? `<path d="M-170 -60 L-150 -200 L190 -200 L170 -60Z" fill="#336B42" stroke="#111" stroke-width="10" stroke-linejoin="round"/>
-      <g transform="translate(-60 -70) rotate(-8)"><rect x="-70" y="-40" width="140" height="70" rx="6" fill="#8FD18B" stroke="#111" stroke-width="7"/><text x="0" y="12" text-anchor="middle" ${FONT} font-size="40" fill="#1E5A2A">€</text></g>
-      <g transform="translate(40 -76) rotate(6)"><rect x="-70" y="-40" width="140" height="70" rx="6" fill="#8FD18B" stroke="#111" stroke-width="7"/><text x="0" y="12" text-anchor="middle" ${FONT} font-size="40" fill="#1E5A2A">€</text></g>
-      <g transform="translate(120 -70)"><rect x="-34" y="-18" width="68" height="36" rx="12" fill="#FF7EB6" stroke="#111" stroke-width="7"/><path d="M-20 0 H20" stroke="#fff" stroke-width="5" opacity=".7"/></g>` : ''}
-    <rect x="-120" y="-10" width="240" height="56" rx="8" fill="#F3EBD8" stroke="#111" stroke-width="7"/>
-    <text x="0" y="30" text-anchor="middle" ${FONT} font-size="32" fill="#111">VEREINSKASSE</text>
-    <rect x="-20" y="60" width="40" height="34" rx="6" fill="#FFD31A" stroke="#111" stroke-width="6"/>
-  </g>`;
-}
 
 function crate(cx, cy, s) {
   return `<g transform="translate(${cx} ${cy}) scale(${s})">

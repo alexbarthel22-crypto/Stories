@@ -1,69 +1,3 @@
-// Pichu (Pembroke Corgi nach Fotos): rotgold, weisse Brust/Beine/Schnauze/Blesse,
-// langer Koerper, kurze Beine, grosse Stehohren, buschiger Schwanz. Seitenansicht nach links, Fuesse y=705.
-const CG = '#D9944C', CG2 = '#E8B077', CW = '#FFF8EC', CE = '#F2C2A8';
-
-function corgi(o = {}) {
-  const tw = o.wag || 0;
-  const eyeR = o.blink ? 3 : 19;
-  const mud = o.mud ? `<g fill="#5A3B22" opacity=".9">
-      <path d="M200 470 q30 -20 60 0 q10 24 -24 28 q-36 0 -36 -28z"/><path d="M330 520 q20 -14 40 0 q6 18 -18 18 q-24 0 -22 -18z"/>
-      <path d="M120 560 q14 -10 28 0 q4 14 -14 14 q-16 0 -14 -14z"/><path d="M280 590 q18 -8 30 4 q2 12 -14 10z"/>
-      <circle cx="70" cy="330" r="10"/><circle cx="150" cy="390" r="12"/></g>` : '';
-  const legKick = o.kick || 0;
-  const leg = (x, top, len, col, dx) => `<g transform="rotate(${dx} ${x + 19} ${top})">
-      <rect x="${x}" y="${top}" width="38" height="${len}" rx="14" fill="${col}" stroke="${K}" stroke-width="7"/>
-      <ellipse cx="${x + 16}" cy="${top + len - 4}" rx="27" ry="13" fill="${CW}" stroke="${K}" stroke-width="7"/></g>`;
-  return `
-  ${o.noShadow ? '' : '<ellipse cx="260" cy="702" rx="200" ry="16" fill="#000" opacity="0.3"/>'}
-  <g transform="rotate(${tw * 14} 420 500)">
-    <path d="M405 490 Q480 500 490 590 Q494 660 456 690 Q426 650 414 590 Z" fill="${CG}" stroke="${K}" stroke-width="7" stroke-linejoin="round"/>
-    <path d="M450 600 Q470 650 456 690 Q432 660 424 610 Z" fill="${CW}"/>
-  </g>
-  ${leg(150, 590, 108, '#EDE2D2', -legKick)}
-  ${leg(372, 590, 108, '#EDE2D2', legKick)}
-  <path d="M110 470 Q120 420 200 418 L370 418 Q448 424 450 520 Q450 604 392 612 L176 618 Q104 612 104 540 Z" fill="${CG}" stroke="${K}" stroke-width="8" stroke-linejoin="round"/>
-  <path d="M220 438 Q300 426 390 440" stroke="${CG2}" stroke-width="12" fill="none" stroke-linecap="round" opacity=".8"/>
-  <path d="M160 604 Q270 630 420 598 L404 612 Q280 640 170 618 Z" fill="${CW}"/>
-  <path d="M370 600 Q400 560 440 560 Q446 600 410 612 Z" fill="${CW}" opacity=".9"/>
-  <path d="M74 420 Q52 520 110 600 Q166 618 182 566 Q146 520 152 440 Q120 410 74 420 Z" fill="${CW}" stroke="${K}" stroke-width="7" stroke-linejoin="round"/>
-  ${leg(116, 588, 112, CW, legKick * 0.8)}
-  ${leg(352, 588, 112, CW, -legKick * 0.8)}
-  <path d="M62 470 Q50 380 100 330 L170 330 Q190 400 160 460 Z" fill="${CG}" stroke="${K}" stroke-width="7" stroke-linejoin="round"/>
-  <path d="M70 470 Q66 410 92 380 Q110 420 120 470 Z" fill="${CW}"/>
-  <g>
-    <path d="M128 300 Q138 200 168 182 Q196 230 196 312 Z" fill="${CG}" stroke="${K}" stroke-width="8" stroke-linejoin="round"/>
-    <path d="M144 296 Q152 228 168 206 Q182 240 182 300 Z" fill="${CE}"/>
-    <path d="M58 306 Q52 200 82 178 Q118 220 124 300 Z" fill="${CG}" stroke="${K}" stroke-width="8" stroke-linejoin="round"/>
-    <path d="M72 300 Q70 226 84 204 Q106 236 110 298 Z" fill="${CW}"/>
-  </g>
-  <ellipse cx="118" cy="352" rx="84" ry="70" fill="${CG}" stroke="${K}" stroke-width="8"/>
-  <path d="M106 290 Q114 330 102 372 L132 372 Q122 330 118 288 Z" fill="${CW}"/>
-  <path d="M60 360 Q20 368 6 388 Q10 412 56 418 Q110 420 150 396 Q140 368 112 362 Q86 372 60 360 Z" fill="${CW}" stroke="${K}" stroke-width="7" stroke-linejoin="round"/>
-  <ellipse cx="12" cy="388" rx="17" ry="13" fill="#1A1A1A"/>
-  <ellipse cx="8" cy="383" rx="5" ry="3" fill="#777"/>
-  ${o.tongue === 0 ? `<path d="M40 412 Q70 420 96 410" stroke="${K}" stroke-width="6" fill="none" stroke-linecap="round"/>`
-                   : `<path d="M40 410 Q70 422 96 410" stroke="${K}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M58 414 q4 34 22 30 q14 -4 6 -32z" fill="#F38BA0" stroke="${K}" stroke-width="5"/>`}
-  <circle cx="74" cy="336" r="${eyeR}" fill="#fff" stroke="${K}" stroke-width="6"/>
-  <circle cx="148" cy="332" r="${eyeR}" fill="#fff" stroke="${K}" stroke-width="6"/>
-  ${o.blink ? '' : `<circle cx="70" cy="339" r="10" fill="#5A3416"/><circle cx="144" cy="335" r="10" fill="#5A3416"/><circle cx="67" cy="335" r="3" fill="#fff"/><circle cx="141" cy="331" r="3" fill="#fff"/>`}
-  <ellipse cx="170" cy="380" rx="14" ry="8" fill="#F0A0A0" opacity=".7"/>
-  ${mud}`;
-}
-
-// Pichu waelzt sich im Schlamm (auf dem Ruecken, Beine strampeln)
-function corgiRoll(t) {
-  const rot = 180 + Math.sin(t * 7) * 22;
-  let spl = '';
-  for (let i = 0; i < 8; i++) {
-    const ph = (t * 1.6 + rnd(i + 500)) % 1;
-    const a = -Math.PI * (0.15 + 0.7 * rnd(i + 600));
-    const x = 260 + Math.cos(a) * 260 * ph, y = 690 + Math.sin(a) * 300 * ph + 400 * ph * ph;
-    spl += `<circle cx="${x}" cy="${y}" r="${14 * (1 - ph) + 4}" fill="#5A3B22" stroke="${K}" stroke-width="3"/>`;
-  }
-  return `<ellipse cx="260" cy="700" rx="300" ry="46" fill="#4A3020" stroke="#2C1C12" stroke-width="7"/>
-    <g transform="translate(0 -160) rotate(${rot} 260 520)">${corgi({noShadow: true, mud: true, kick: Math.sin(t * 16) * 22, wag: Math.sin(t * 12)})}</g>${spl}`;
-}
-
 // ---------- Die restlichen 8 Spieler ----------
 const HAIR = {
   mullet: c => `<path d="M100 210 Q100 70 250 70 Q400 70 400 210 Q380 140 250 140 Q120 140 100 210Z" fill="${c}"/>`,
@@ -129,20 +63,7 @@ function fullTeam(t, baseBack, baseFront, s, m, rolling) {
     [teamPlayer(6, t), 390], [busguy({blink: blinkAt(t, 2)}), 790], [teamPlayer(7, t), 910]];
   fr.forEach(([svg, x]) => front += place(svg, x, baseFront, s));
   front += place(coach({mouth: m, blink: blinkAt(t)}), 590, baseFront + 6, s * 1.1);
-  const dog = rolling ? corgiBall(t, 520, baseFront + 150, 0.56)
-                      : place(corgi({wag: Math.sin(t * 14), blink: blinkAt(t, 1.7)}), 520, baseFront + 120, 0.4);
+  const dog = place(corgi({wag: Math.sin(t * 14), blink: blinkAt(t, 1.7)}), 500, baseFront + 120, 0.34);
   return back + front + dog;
 }
 
-// Pichu spielt mit dem Fussball: huepft hinterher und stupst ihn mit der Nase an
-function corgiBall(t, x, base, s) {
-  const p = (t * 1.3) % 2, dir = p < 1 ? 1 : -1, u = p < 1 ? p : p - 1;
-  const bx = x - 150 * s * 2 + (dir > 0 ? u : 1 - u) * 300 * s * 2;
-  const by = base - Math.abs(Math.sin(t * 7)) * 120 * s;
-  const hop = Math.abs(Math.sin(t * 7 + 1)) * 40 * s;
-  const dogX = bx + 330 * s;
-  const dog = place(corgi({wag: Math.sin(t * 18), blink: blinkAt(t, 1.7), kick: Math.sin(t * 14) * 14}), dogX, base - hop, s);
-  const ball = `<g transform="translate(${bx} ${by - 44 * s}) rotate(${t * 400})">${ballIcon(0, 0, 44 * s * 1.6)}</g>
-    <ellipse cx="${bx}" cy="${base + 4}" rx="${40 * s * 1.6}" ry="${10 * s * 1.6}" fill="#000" opacity=".25"/>`;
-  return dog + ball;
-}

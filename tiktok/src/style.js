@@ -32,9 +32,8 @@ function pitchFill(x, y, w, h, r) {
 }
 
 function ballIcon(cx, cy, r) {
-  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="${BROWN}" stroke-width="${r / 6}"/>
-    <path d="M${cx} ${cy - r * 0.35} L${cx + r * 0.33} ${cy - r * 0.1} L${cx + r * 0.2} ${cy + r * 0.3} L${cx - r * 0.2} ${cy + r * 0.3} L${cx - r * 0.33} ${cy - r * 0.1}Z" fill="${BROWN}"/>
-    <path d="M${cx} ${cy - r * 0.35} V${cy - r} M${cx + r * 0.33} ${cy - r * 0.1} L${cx + r * 0.95} ${cy - r * 0.3} M${cx - r * 0.33} ${cy - r * 0.1} L${cx - r * 0.95} ${cy - r * 0.3} M${cx + r * 0.2} ${cy + r * 0.3} L${cx + r * 0.55} ${cy + r * 0.8} M${cx - r * 0.2} ${cy + r * 0.3} L${cx - r * 0.55} ${cy + r * 0.8}" stroke="${BROWN}" stroke-width="${r / 10}"/>`;
+  const f = r * 2.05;
+  return `<text x="${cx}" y="${cy + f * 0.36}" text-anchor="middle" font-family="Noto Color Emoji" font-size="${f}">⚽</text>`;
 }
 
 function textW(text, fs) { return text.length * fs * 0.56; }
