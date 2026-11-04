@@ -31,6 +31,8 @@ BUCKETS = {"big": dict(cap=5, bw=0.23 * M, tw=0.30 * M, h=0.26 * M, home=(115, T
 DRINK, DRINK_D = "#a3162f", "#7a0f22"
 STREAM = (170, 28, 52, 235)
 ANTH, WOOD, WOOD_D = "#2c2f38", "#b9804f", "#94603a"
+DECK_DEPTH = 170
+RAIL_TOP = FLOOR - DECK_DEPTH - 0.9 * M
 PERSON_H = {"dario": 1.78 * M, "friend1": 1.66 * M * 0.86, "friend2": 1.74 * M * 0.86}
 
 DARIO = Style(215, "#c98c62", "#1d1712", "#3f7fd9", "#2f3a56", shoes="#ffffff", hair_style="quiff",
@@ -66,19 +68,34 @@ def draw_world():
                                 mix(col, (255, 255, 255), 0.2))
             x += w + int(rng.integers(8, 34))
     # terrace: glass railing, deck
-    cv.rect(0, 1200, W, FLOOR, fill=hexc("#33406e"))
-    rail = FLOOR - 1.05 * M
-    cv.rect(0, rail, W, FLOOR, fill=(225, 235, 245, 70))
+    back = FLOOR - DECK_DEPTH                     # where the deck meets the railing (further back)
+    rail = RAIL_TOP
+    cv.rect(0, 1200, W, back, fill=hexc("#33406e"))
+    cv.rect(0, rail, W, back, fill=(225, 235, 245, 70))
     cv.rect(0, rail - 8, W, rail + 4, fill=hexc(ANTH))
-    for k in range(0, W, 180):
-        cv.rect(k - 3, rail, k + 3, FLOOR, fill=hexc("#454955"))
-    deck = vgradient(W * ZW, (H - FLOOR) * ZW, [(0, "#b9804f"), (1, "#8a5a36")])
-    img.paste(deck, (0, FLOOR * ZW))
+    for k in range(0, W, 160):
+        cv.rect(k - 3, rail, k + 3, back, fill=hexc("#454955"))
+    deck = vgradient(W * ZW, int(H - back) * ZW, [(0, "#9a6a42"), (DECK_DEPTH / (H - back), "#b9804f"), (1, "#8a5a36")])
+    img.paste(deck, (0, int(back * ZW)))
     cv = Canvas(img, 0, 0, ZW)
-    for k in range(FLOOR + 40, H, 60):
-        cv.rect(0, k, W, k + 4, fill=hexc(WOOD_D))
+    k = back + 14
+    while k < H:      # planks get wider towards the front (perspective)
+        cv.rect(0, k, W, k + 3, fill=hexc(WOOD_D))
+        k += 18 if k < FLOOR else 60
     # planters
-    for px in (1015,):
+    # bunting (pennant garland) across the terrace
+    cols = ["#e2574c", "#ffd34d", "#37b26c", "#3f7fd9", "#f08a5d", "#9b6fd1"]
+    for row, (y0, sag) in enumerate(((540, 60), (610, 45))):
+        pts = [(x, y0 + sag * math.sin(math.pi * x / W)) for x in range(-40, W + 60, 60)]
+        cv.line(pts, hexc("#22243a"), 3, cap=False)
+        for i, (x, y) in enumerate(pts[:-1]):
+            cv.poly([(x + 4, y + 2), (x + 52, y + 4), (x + 28, y + 46)], fill=hexc(cols[(i + row * 2) % 6]))
+    # speaker box
+    cv.rect(960, FLOOR - 250, 1060, FLOOR, fill=hexc("#22243a"), r=10)
+    for cy_, r_ in ((FLOOR - 190, 26), (FLOOR - 90, 40)):
+        cv.circle(1010, cy_, r_, fill=hexc("#454955"))
+        cv.circle(1010, cy_, r_ * 0.45, fill=hexc("#2c2f38"))
+    for px in (40,):
         cv.rect(px - 50, FLOOR - 160, px + 50, FLOOR, fill=hexc(ANTH), r=8)
         for a in range(7):
             cv.circle(px + (a - 3) * 16, FLOOR - 200 - (a % 3) * 34, 36, fill=hexc("#4f8a4c"))
@@ -347,19 +364,141 @@ def fmt_l(v):
     return f"{v:.1f} L".replace(".", ",")
 
 
+BPM = 104
+BEAT = BPM / 60
+
+
+def beat_bob(t, amp, ph=0.0):
+    return abs(math.sin(math.pi * BEAT * t + ph)) * amp
+
+
+def blinking(t, seed):
+    period = 3.1 + seed * 0.7
+    return ((t + seed * 1.37) % period) < 0.13
+
+
+GUEST_STYLES = [Style(200, "#c9a58c", "#3a3348", "#5a5f8a", "#2f3350", hair_style="short"),
+                Style(200, "#8a6a5a", "#2a2230", "#7a5a8a", "#3a3350", hair_style="long"),
+                Style(200, "#d9b49a", "#5a4a3a", "#4a7a7a", "#2f3a46", hair_style="quiff")]
+
+
+def party_background(cv, t, finale=0.0):
+    """subtle background motion: fireworks, balloons, dancing guests, speaker pulse"""
+    # small, faint fireworks in the sky
+    for k in range(3):
+        period = 6.0
+        tt = (t + k * 2.1) % period
+        if tt < 1.4:
+            rng = np.random.default_rng(int((t + k * 2.1) // period) * 7 + k)
+            fx, fy = rng.uniform(150, 900), rng.uniform(170, 380)
+            col = [(255, 211, 77), (240, 138, 93), (159, 210, 240), (200, 170, 255)][int(rng.integers(0, 4))]
+            r = 25 + tt * 70
+            a = int(110 * (1 - tt / 1.4))
+            for i in range(12):
+                ang = i / 12 * 2 * math.pi
+                cv.line([(fx + math.cos(ang) * r * 0.55, fy + math.sin(ang) * r * 0.55 + tt * 12),
+                         (fx + math.cos(ang) * r, fy + math.sin(ang) * r + tt * 18)], col + (a,), 3, cap=False)
+    # balloon clusters tied to the railing
+    rail = RAIL_TOP
+    for bx0, cols in ((70, ("#e2574c", "#ffd34d", "#3f7fd9")), (1000, ("#37b26c", "#e98aa0", "#ffd34d"))):
+        for i, c in enumerate(cols):
+            ox = (i - 1) * 34 + 6 * math.sin(t * 0.9 + i)
+            oy = -170 - (i % 2) * 50 + 5 * math.sin(t * 1.3 + i * 2)
+            bxx, byy = bx0 + ox, rail + oy
+            cv.line([(bx0, rail), (bxx, byy + 36)], (240, 240, 240, 160), 2, cap=False)
+            cv.ellipse(bxx - 28, byy - 34, bxx + 28, byy + 34, fill=hexc(c))
+            cv.ellipse(bxx - 14, byy - 22, bxx - 4, byy - 6, fill=(255, 255, 255, 90))
+    # dancing guests further back (smaller, muted, slow)
+    for i, (gx, st_) in enumerate(((455, GUEST_STYLES[0]), (640, GUEST_STYLES[1]), (595, GUEST_STYLES[2]))):
+        gh = 1.7 * M * 0.62
+        draw_person(cv, gx, FLOOR - 120, st_, face=1 if i % 2 else -1, h=gh,
+                    bounce=beat_bob(t, 6, i), lean=8 * math.sin(t * 1.7 + i),
+                    arms_up=0.15 + 0.25 * abs(math.sin(math.pi * BEAT * t / 2 + i)) + finale * 0.5)
+    cv.rect(0, FLOOR - 160, W, FLOOR - 100, fill=(51, 64, 110, 0))
+    # speaker pulse
+    p = beat_bob(t, 1.0)
+    cv.circle(1010, FLOOR - 90, 18 + 6 * p, fill=hexc("#5d6270"))
+
+
+def confetti(cv, t, t0):
+    if t < t0:
+        return
+    rng = np.random.default_rng(12)
+    n = 70
+    xs, sp, ph = rng.uniform(0, W, n), rng.uniform(380, 620, n), rng.uniform(0, 6.28, n)
+    cols = ["#e2574c", "#ffd34d", "#37b26c", "#3f7fd9", "#f08a5d", "#9b6fd1"]
+    for i in range(n):
+        y = -40 + (t - t0) * sp[i]
+        if y > FLOOR:
+            continue
+        x = xs[i] + 30 * math.sin((t - t0) * 3 + ph[i])
+        a = (t - t0) * 6 + ph[i]
+        cv.poly([(x + math.cos(a) * 12, y + math.sin(a) * 5), (x - math.sin(a) * 6, y + math.cos(a) * 9),
+                 (x - math.cos(a) * 12, y - math.sin(a) * 5), (x + math.sin(a) * 6, y - math.cos(a) * 9)],
+                fill=hexc(cols[i % 6]))
+
+
+DARIO_HOME = 515
+
+
+def dario_track():
+    """Dario walks to the bucket he works with: (time, x, y) keys"""
+    keys = [(0.0, DARIO_HOME, FLOOR)]
+    for (t0, t1, kind, src, dst, amt) in ACTIONS:
+        tx = 575 if kind == "fill" else (430 if kind == "pour" else 600)
+        keys += [(t0, keys[-1][1], FLOOR), (t0 + min(0.6, (t1 - t0) * 0.2), tx, FLOOR), (t1, tx, FLOOR)]
+    keys += [(ACTIONS[-1][1] + 0.7, DARIO_HOME, FLOOR)]
+    return keys
+
+
+DARIO_KEYS = dario_track()
+
+
+def draw_friends(cv, t, cheer):
+    # friend 2 (left) talks, friend 1 (right) listens; both hold sangria and toast now and then
+    for i, (x, st_, face, hk) in enumerate(((120, FRIEND2, 1, "friend2"), (300, FRIEND1, -1, "friend1"))):
+        h = PERSON_H[hk]
+        sh_y = FLOOR - (st_.leg + st_.torso) * h
+        toast = smooth(prog((t + i * 0.3) % 7.0, 5.2, 5.7)) * (1 - smooth(prog((t + i * 0.3) % 7.0, 6.3, 6.8)))
+        sip = smooth(prog((t + i * 2.5) % 9.0, 3.0, 3.5)) * (1 - smooth(prog((t + i * 2.5) % 9.0, 4.2, 4.7)))
+        hx = x + face * (40 + 30 * toast) + (-face * 10 * sip)
+        hy = sh_y + 95 - 120 * toast - 70 * sip
+        talk = (0.5 + 0.5 * math.sin(t * 13)) if (i == 0 and (t % 5.0) < 2.4) else 0.0
+        reach = None if cheer > 0.05 else (hx, hy)
+        draw_person(cv, x, FLOOR, st_, face=face, h=h, bounce=beat_bob(t, 4, i * 0.8),
+                    lean=5 * math.sin(t * 1.1 + i * 1.7), blink=blinking(t, i + 1), talk=talk, cup=DRINK,
+                    reach=reach, arms_up=cheer * (0.6 + 0.4 * abs(math.sin(t * 6 + i))))
+
+
 def draw_scene(cv, t, solution=True, dario_face=1, cheer=0.0):
     string_lights(cv, t)
-    # friends in the back
-    draw_person(cv, 300, FLOOR - 50, FRIEND1, face=-1, h=PERSON_H["friend1"], arms_up=cheer * abs(math.sin(t * 6)))
-    draw_person(cv, 120, FLOOR - 50, FRIEND2, face=1, h=PERSON_H["friend2"], arms_up=cheer * abs(math.sin(t * 6 + 1)))
+    party_background(cv, t, cheer)
+    draw_friends(cv, t, cheer)
     if solution:
         pos, lv, tilt, streams, tap_to = bucket_states(t)
     else:
         pos = {n: BUCKETS[n]["home"] for n in BUCKETS}
         lv, tilt, streams, tap_to = {"big": 0, "small": 0}, {"big": 0, "small": 0}, [], None
     draw_barrel(cv, t, stream_to=tap_to)
-    draw_person(cv, 515, FLOOR, DARIO, face=dario_face, wave=0, arms_up=cheer * abs(math.sin(t * 6 + 2)),
-                h=PERSON_H["dario"])
+    # Dario: walks to the bucket he handles and grabs its handle
+    if solution:
+        dx_, dy_, moving, ddx = path_pos(t, DARIO_KEYS)
+    else:
+        dx_, moving, ddx = DARIO_HOME, False, 0
+    reach, face = None, dario_face
+    active = [a for a in ACTIONS if a[0] <= t < a[1]] if solution else []
+    if active and cheer < 0.05:
+        src = active[0][3]
+        b = BUCKETS[src]
+        bx, by = pos[src]
+        reach = (bx + (b["tw"] * 0.25 if bx > dx_ else -b["tw"] * 0.25) * 0, by - b["h"] - 0.2 * b["tw"])
+        face = 1 if bx > dx_ else -1
+    elif moving:
+        face = 1 if ddx > 0 else -1
+    draw_person(cv, dx_, FLOOR, DARIO, face=face, h=PERSON_H["dario"], phase=t * 9 if moving else None,
+                bounce=0 if moving else beat_bob(t, 4, 2), lean=0 if reach else 4 * math.sin(t * 0.9),
+                blink=blinking(t, 0), reach=reach, arm_scale=1.15,
+                arms_up=cheer * (0.6 + 0.4 * abs(math.sin(t * 6 + 2))))
     draw_table(cv)
     lips = {}
     order = sorted(BUCKETS, key=lambda n: 1 if tilt[n] else 0)   # pouring bucket in front
@@ -369,6 +508,8 @@ def draw_scene(cv, t, solution=True, dario_face=1, cheer=0.0):
         lip = lips[src]
         d = 1 if tilt[src] > 0 else -1
         cv.line([lip, (lip[0] + d * 10, lip[1] + 18), (lip[0] + d * 14, target[1] + 6)], STREAM, 9)
+    if solution:
+        confetti(cv, t, st("Eins plus drei") + 0.1)
     return pos, lv
 
 
@@ -500,7 +641,7 @@ def scene_outro(t):
     t0, t1 = st("Hättest"), st("Schreib's")
 
     def actors(cv):
-        draw_scene(cv, 0, solution=False, dario_face=1)
+        draw_scene(cv, t, solution=False, dario_face=1, cheer=0.6)
     img, _ = render_world_frame(FULL, actors)
     img = ImageEnhance.Brightness(img).enhance(0.55)
     pill(img, OUT_W / 2, 520, "HÄTTEST DU'S", 96, bg="#fff6e6", rot=-3, scale=ease_out_back(prog(t, t0, t0 + 0.35)))
@@ -515,11 +656,7 @@ def scene_outro(t):
         pill(img, OUT_W / 2, 965, txt, 72, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
         pill(img, OUT_W / 2, 1085, "MORGEN: NEUES RÄTSEL", 48, bg="#fff6e6",
              scale=ease_out_back(prog(t, t1 + 1.0, t1 + 1.35)))
-    cv = Canvas(img)
-    cv.ellipse(OUT_W / 2 - 200, 1462, OUT_W / 2 + 200, 1488, fill=(0, 0, 0, 90))
-    s = 1.3
-    draw_person(Canvas(img, -(OUT_W / 2 - 80) / s, -1470 / s, s), 0, 0, DARIO, face=1, wave=t * 9)
-    pill(img, OUT_W / 2 + 140, 1330, "4 L  ✓", 52, bg="#37b26c", fg="#ffffff", pad=(22, 10), rot=-3)
+    pill(img, OUT_W / 2, 1230, "4 L  ✓", 56, bg="#37b26c", fg="#ffffff", pad=(22, 10), rot=-3)
     return img
 
 

@@ -198,15 +198,18 @@ def _shade(c, f):
 
 
 def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bounce=0.0,
-                wave=0.0, h=None, arms_up=0.0, arm_scale=1.0):
+                wave=0.0, h=None, arms_up=0.0, arm_scale=1.0, lean=0.0, blink=False, talk=0.0, cup=None):
     """Flat-vector person (3/4 view) standing with feet at (x, y).
 
     phase: walk-cycle phase in radians (None = standing)
     reach: (tx, ty) world point the front hand reaches towards
     umbrella: None | 'open' | 'closed' | 'pointer' (closed, extends from reaching hand)
+    lean: shift of the upper body in px (sway); blink: eyes closed; talk: 0..1 mouth opening;
+    cup: colour of a drink glass held in the front hand (None = no glass).
     returns the front hand position (umbrella tip for 'closed'/'pointer').
     """
     h = h or st.h
+    x = x + lean
     y = y - bounce
     f = face
     ink = hexc("#22243a")
@@ -241,7 +244,7 @@ def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bou
     # ---------- legs + sneakers
     for sgn, back in ((-1, True), (1, False)):
         a = sgn * sw * 0.42
-        hx = x + sgn * tw * 0.32 * (0.6 if back else 1)
+        hx = x - lean + sgn * tw * 0.32 * (0.6 if back else 1)
         fx, fy = hx + math.sin(a) * leg_len, hip_y + math.cos(a) * leg_len
         col = pants_d if back else pants
         cv.line([(hx, hip_y), (fx, fy - lw * 0.45)], col, lw)
@@ -321,10 +324,14 @@ def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bou
     eye_y = head_y + head_r * 0.02
     for k, ex in enumerate((fx_ - head_r * 0.30, fx_ + head_r * 0.30)):
         sc = 0.85 if (k == 0) == (f > 0) else 1.0   # far eye a bit smaller
-        cv.ellipse(ex - head_r * 0.15 * sc, eye_y - head_r * 0.19, ex + head_r * 0.15 * sc, eye_y + head_r * 0.17,
-                   fill=hexc("#ffffff"))
-        cv.circle(ex + f * head_r * 0.04, eye_y + head_r * 0.01, head_r * 0.10 * sc, fill=ink)
-        cv.circle(ex + f * head_r * 0.07, eye_y - head_r * 0.04, head_r * 0.035, fill=hexc("#ffffff"))
+        if blink:
+            cv.arc(ex - head_r * 0.15 * sc, eye_y - head_r * 0.1, ex + head_r * 0.15 * sc, eye_y + head_r * 0.12, 20, 160,
+                   ink, head_r * 0.06)
+        else:
+            cv.ellipse(ex - head_r * 0.15 * sc, eye_y - head_r * 0.19, ex + head_r * 0.15 * sc, eye_y + head_r * 0.17,
+                       fill=hexc("#ffffff"))
+            cv.circle(ex + f * head_r * 0.04, eye_y + head_r * 0.01, head_r * 0.10 * sc, fill=ink)
+            cv.circle(ex + f * head_r * 0.07, eye_y - head_r * 0.04, head_r * 0.035, fill=hexc("#ffffff"))
         cv.line([(ex - head_r * 0.16, eye_y - head_r * 0.32), (ex + head_r * 0.14, eye_y - head_r * 0.36)],
                 hexc(st.brows), head_r * 0.08)
         if st.glasses:
@@ -334,8 +341,9 @@ def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bou
     # nose + mouth + cheek
     cv.ellipse(fx_ + f * head_r * 0.06 - head_r * 0.1, eye_y + head_r * 0.2, fx_ + f * head_r * 0.06 + head_r * 0.12,
                eye_y + head_r * 0.38, fill=skin_d)
-    cv.pieslice(fx_ - head_r * 0.24, eye_y + head_r * 0.44, fx_ + head_r * 0.28, eye_y + head_r * 0.76, 0, 180,
-                fill=hexc("#8a3b3b"))
+    mo = clamp(talk) * head_r * 0.14
+    cv.pieslice(fx_ - head_r * 0.24, eye_y + head_r * 0.44 - mo * 0.3, fx_ + head_r * 0.28, eye_y + head_r * 0.76 + mo, 0,
+                180, fill=hexc("#8a3b3b"))
     cv.pieslice(fx_ - head_r * 0.18, eye_y + head_r * 0.45, fx_ + head_r * 0.22, eye_y + head_r * 0.58, 0, 180,
                 fill=hexc("#ffffff"))
     cv.circle(fx_ - f * head_r * 0.52, eye_y + head_r * 0.34, head_r * 0.13, fill=hexc("#ff8a7a", 70))
@@ -396,6 +404,15 @@ def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bou
         c0 = (hand[0] - dx / dd * aw * 0.9, hand[1] - dy / dd * aw * 0.9)
         cv.line([c0, (hand[0] - dx / dd * aw * 0.45, hand[1] - dy / dd * aw * 0.45)], hexc(st.accent), aw, cap=False)
     cv.circle(hand[0], hand[1], aw * 0.56, fill=skin)
+    if cup:   # drink glass in the hand
+        gh, gw = 0.09 * h, 0.035 * h
+        cx, cy = hand[0] + f * aw * 0.2, hand[1]
+        cv.poly([(cx - gw, cy - gh * 0.75), (cx + gw, cy - gh * 0.75), (cx + gw * 0.75, cy + gh * 0.25),
+                 (cx - gw * 0.75, cy + gh * 0.25)], fill=(230, 240, 248, 170))
+        cv.poly([(cx - gw * 0.9, cy - gh * 0.35), (cx + gw * 0.9, cy - gh * 0.35), (cx + gw * 0.72, cy + gh * 0.22),
+                 (cx - gw * 0.72, cy + gh * 0.22)], fill=hexc(cup))
+        cv.circle(cx + gw * 0.7, cy - gh * 0.75, gw * 0.45, fill=hexc("#f0a03c"))
+        cv.circle(hand[0], hand[1], aw * 0.5, fill=skin)
     return hand_tip
 
 
