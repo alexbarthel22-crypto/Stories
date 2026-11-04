@@ -1,0 +1,20 @@
+# Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden.
+# {emotion} am Zeilenanfang = Regieanweisung für diese Zeile (amused, surprised, ...).
+Dario will seinen Freunden genau vier Liter Monster White servieren.
+Das Getränk ist in einem großen Fass.
+Zum Abmessen hat er aber nur zwei Eimer: einen Fünf-Liter-Eimer und einen Drei-Liter-Eimer.
+Und die Eimer haben keine Markierungen.
+{surprised} Wie bekommt Dario genau vier Liter abgemessen?
+[PAUSE 1.6]
+Kleiner Tipp: Was bleibt übrig, wenn der große Eimer voll ist?
+Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!
+Hier kommt die Lösung.
+Dario füllt den kleinen Eimer und kippt ihn in den großen. Jetzt sind dort drei Liter.
+Dann füllt er den kleinen Eimer noch einmal und gießt, bis der große Eimer voll ist.
+Da nur noch zwei Liter hineinpassen, bleibt genau ein Liter im kleinen Eimer.
+Jetzt kippt er den großen Eimer zurück ins Fass.
+Und gießt den einen Liter aus dem kleinen Eimer in den großen.
+Zum Schluss füllt er den kleinen Eimer ein letztes Mal und kippt ihn dazu.
+{amused} Eins plus drei: genau vier Liter!
+{amused} Hättest du's gewusst?
+Schreib's in die Kommentare und folg mir für das nächste Rätsel!

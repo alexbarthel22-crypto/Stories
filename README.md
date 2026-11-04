@@ -7,6 +7,7 @@ Vertikale Erklärvideos (1080×1920, 30 fps) im flachen Vektor-Look mit natürli
 | 1 | Alex und der Aufzug | `videos/01_alex_aufzug/video.mp4` | 1:16 |
 | 2 | Niklas, Wolf, Ziege und Kohlkopf | `videos/02_fluss/video.mp4` | 1:09 |
 | 3 | Nils und die drei Lichtschalter | `videos/03_lichtschalter/video.mp4` | 1:00 |
+| 4 | Dario und die zwei Eimer (4 Liter) | `videos/04_eimer/video.mp4` | 1:02 |
 
 ## Kanal-Standard (für jedes neue Video)
 - Musik: immer `assets/music/raetsel_theme.mp3` (Lyria), 15 dB unter der Stimme
