@@ -44,9 +44,13 @@ const {chromium} = require('playwright');
     s += rain(t, 150, 0.4);
     // Texte (Story-Sicherheitsbereich: oben ~250 px, unten ~260 px frei)
     s += badge(540, 330, 'TRAINING', {kind: 'pitch', fs: 110, pad: 80});
-    s += badge(330, 1470, '▶ VIDEO 1 IST ONLINE', {kind: 'red', fs: 38, rot: -2});
-    s += badge(330, 1560, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 40, rot: 2});
-    s += badge(330, 1650, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 40, rot: -2});
+    s += badge(330, 1400, '▶ VIDEO 1 IST ONLINE', {kind: 'red', fs: 38, rot: -2});
+    s += badge(330, 1490, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 40, rot: 2});
+    s += `<g transform="rotate(-2 360 1590)">${badge(400, 1590, '+2 € PRO VIDEO TEILEN', {kind: 'orange', fs: 34})}
+      <clipPath id="shareclip"><rect x="16" y="1538" width="104" height="104" rx="20"/></clipPath>
+      <rect x="11" y="1541" width="114" height="114" rx="24" fill="#3A2316"/>
+      <image href="${SHARE_ICON}" x="16" y="1538" width="104" height="104" clip-path="url(#shareclip)"/>
+      <rect x="16" y="1538" width="104" height="104" rx="20" fill="none" stroke="#3A2316" stroke-width="6"/></g>`;
     document.getElementById('root').innerHTML = `<defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E2438"/><stop offset="1" stop-color="#46506A"/></linearGradient>
       <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs>${s}<rect width="1080" height="1920" fill="url(#vig)"/>`;
   });
