@@ -14,10 +14,10 @@ function teamLine(t, base, s, m) {
 
 const SCENES = {
   intro(t, d, m) {
-    const z = 1 + 0.35 * easeOut(t / d);
+    const z = 1 + 0.35 * easeOut(t / (d * 0.75));
     return cam(z, 540, 1180, field(t) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1290, 0.6)) +
       popG(t, 0.05, 540, 330, badge(540, 330, 'TAG 1', {kind: 'pitch', fs: 150, pad: 120})) +
-      popG(t, 0.7, 540, 490, badge(540, 490, 'VEREIN GEGRÜNDET', {bg: '#FFD31A', fs: 52, ball: true}));
+      popG(t, 0.42, 540, 490, badge(540, 490, 'VEREIN GEGRÜNDET', {bg: '#FFD31A', fs: 52, ball: true}));
   },
   follow(t, d, m) {
     const z = 1.05 + 0.08 * (t / d);
@@ -124,12 +124,10 @@ const SCENES = {
       popG(t, 2.1, 520, 630, badge(520, 630, 'KLAPPSTUHL NR. 001', {bg: '#2F7FD8', fg: '#fff', fs: 52, rot: -2}));
   },
   money(t, d, m) {
-    const kg = SEG.caps[SEG.caps.length - 1].t0 - SEG.start;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(690, 1180, 0.95) + cashBox(690, 1015, 0.8, t > 0.4) +
         place(coach({mouth: m, blink: blinkAt(t)}), 250, 1560, 0.95)) +
       popG(t, 0.0, 520, 300, badge(520, 300, 'VEREINSKASSE', {fs: 60})) +
-      popG(t, 0.9, 520, 450, bigText(520, 500, '500 €', '#6BF06B', 170)) +
-      popG(t, kg, 520, 620, badge(520, 620, '+ 1 KRONKORKEN', {bg: '#E8432E', fs: 54, rot: 3}));
+      popG(t, 0.9, 520, 450, bigText(520, 500, '500 €', '#6BF06B', 170));
   },
   rule(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);

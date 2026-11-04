@@ -78,7 +78,7 @@ function cashBox(cx, cy, s, open, t = 0) {
   const money = open ? `
     ${banknote(-110, -110, -14, 100)}${banknote(10, -128, 4, 100)}${banknote(120, -104, 16, 50)}
     ${banknote(-60, -70, -6, 50)}${banknote(70, -66, 8, 50)}
-    ${crownCap(150, -44, 0.9)}` : '';
+` : '';
   return `<g transform="translate(${cx} ${cy}) scale(${s})">
     ${lid}
     <rect x="-220" y="-50" width="440" height="40" rx="6" fill="#163B25" stroke="#3A2316" stroke-width="8"/>

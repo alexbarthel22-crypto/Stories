@@ -7,7 +7,7 @@ Ich gründe einen Verein und will Deutscher Meister werden. Mit 0 Fans. 😭⚽
 Jeder Follow = 1 Tribünenplatz + 1 € in die Kasse
 Jeder Kommentar = +2 €
 
-Kasse: 500 € und ein Kronkorken 💶
+Kasse: 500 € 💶
 Was machen wir damit? 👇 Top-Kommentar entscheidet!
 
 #fußball #kreisliga #fussballverein #fürdich #fyp #bundesliga #animation #fcschlammloch

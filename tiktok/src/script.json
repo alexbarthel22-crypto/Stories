@@ -137,11 +137,10 @@
  },
  {
   "id": "money",
-  "say": "In der Vereinskasse: fünfhundert Euro. Und ein Kronkorken.",
+  "say": "In der Vereinskasse: fünfhundert Euro.",
   "cap": [
    "IN DER VEREINSKASSE:",
-   "*500 EURO.",
-   "UND EIN *KRONKORKEN."
+   "*500 EURO."
   ]
  },
  {

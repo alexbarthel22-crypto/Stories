@@ -181,7 +181,7 @@ def build_sfx(segs, N):
         L = lambda lt, snd: put(st + lt, snd)
         if k > 0: L(0, splat())
         sid = s['id']
-        if sid == 'intro': L(0.05, whoosh()); L(0.1, pop()); L(0.7, pop())
+        if sid == 'intro': L(0.05, whoosh()); L(0.1, pop()); L(0.42, pop())
         elif sid == 'follow': L(0.6, pop())
         elif sid == 'chairs':
             L(0.0, pop()); L(0.9, pop())
@@ -193,7 +193,7 @@ def build_sfx(segs, N):
             L(0.5, pop()); L(1.4, pop())
         elif sid == 'league': L(0.1, pop()); L(0.8, pop())
         elif sid in ('vlad', 'opa'): L(0.1, pop())
-        elif sid == 'pichu': L(0.1, pop()); L(1.0, croak())
+        elif sid == 'pichu': L(0.1, pop())
         elif sid == 'bus': L(0.1, pop()); L(c[-1], pop())
         elif sid == 'goal': L(0.0, pop()); L(0.6, fanfare()); L(1.0, pop())
         elif sid == 'sunday': L(0.0, pop()); L(0.6, whistle())
@@ -202,7 +202,7 @@ def build_sfx(segs, N):
             L(0.0, pop()); L(0.6, click()); L(1.0, ding())
             for x in (1.3, 1.55, 1.8): L(x, pop())
             L(2.1, pop())
-        elif sid == 'money': L(0.0, pop()); L(0.4, clack()); L(0.9, kaching()); L(c[-1], capclink())
+        elif sid == 'money': L(0.0, pop()); L(0.4, clack()); L(0.9, kaching())
         elif sid == 'rule':
             L(c[0], pop()); L(c[3], pop())
             for i in range(14):
