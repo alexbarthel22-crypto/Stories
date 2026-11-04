@@ -145,12 +145,12 @@
  },
  {
   "id": "rule",
-  "say": "Jeder Follower bringt einen Euro in die Kasse. Jeder Kommentar zwei.",
+  "say": "Jeder Follower bringt einen Euro in die Kasse. Video teilen bringt zwei.",
   "cap": [
    "JEDER *FOLLOWER",
    "BRINGT *1 EURO",
    "IN DIE KASSE.",
-   "JEDER *KOMMENTAR *2 €."
+   "VIDEO *TEILEN: *2 €."
   ]
  },
  {

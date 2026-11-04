@@ -2,12 +2,8 @@ import base64, json, os, sys, urllib.request
 key = os.environ['GEMINI_API_KEY']
 lines = json.load(open(sys.argv[1]))
 out = sys.argv[2]
-style = ('WICHTIG: Sprich SCHNELL, rund 180 Woerter pro Minute, wie ein schneller TikTok-Voiceover. '
- 'Sprich auf Deutsch wie ein junger TikTok-Creator, der seinen eigenen Fussballverein vorstellt: klares Hochdeutsch, schnelles Grundtempo, '
- 'direkte Ansprache, nah am Mikrofon. Trockener, ironischer Deadpan-Humor. Vor Pointen eine kurze Kunstpause von etwa einer halben Sekunde, '
- 'die Stimme dabei leicht resigniert absenken. "Und unsere Fans? Null." klingt traurig und ernuechtert; sprich "unsere" deutlich als "un-se-re", nicht "unserer". '
- 'Zwischen den Zeilen jeweils eine volle Sekunde Stille lassen. '
- 'Lies diese Regieanweisung NICHT vor. Sprich ausschliesslich den Text nach der Markierung TEXT:\n\nTEXT:\n')
+style = ('Lies im Stil eines jungen, schnellen TikTok-Creators vor (klares Hochdeutsch, zuegig, trocken-ironisch, '
+         'kurze Kunstpause vor Pointen, zwischen den Zeilen eine Sekunde Pause) - und zwar genau diesen Text:\n')
 body = {'contents': [{'parts': [{'text': style + '\n'.join(lines)}]}],
         'generationConfig': {'responseModalities': ['AUDIO'],
                              'speechConfig': {'voiceConfig': {'prebuiltVoiceConfig': {'voiceName': 'Puck'}}}}}

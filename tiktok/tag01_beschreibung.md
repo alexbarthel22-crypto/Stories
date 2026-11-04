@@ -2,13 +2,13 @@
 
 ## Empfohlen (zum Kopieren)
 
-Ich gründe einen Fußballverein und ihr entscheidet alles. Jeder Follow = 1 € für den Verein, jeder Kommentar = 2 €. Unser Torwart hat eine Augenklappe, Opa Jürgen ist 79 und unser Stürmer spielt in Flip-Flops 💀 Was machen wir mit den 500 €? Schreib es in die Kommentare 👇
+Ich gründe einen Fußballverein und ihr entscheidet alles. Jeder Follow = 1 € für den Verein, jedes geteilte Video = 2 €. Unser Torwart hat eine Augenklappe, Opa Jürgen ist 79 und unser Stürmer spielt in Flip-Flops 💀 Was machen wir mit den 500 €? Schreib es in die Kommentare 👇
 
 #fußballverein #kreisliga #fußball #amateurfußball #verein #fußballhumor #animation #serie #fcschlammloch
 
 ## Alternative A (Frage zuerst, provoziert Antworten)
 
-Schafft es dieses Team von der Kreisliga bis zum Deutschen Meister? 🏆 Ehrliche Meinung 👇 Jeder Follow bringt 1 €, jeder Kommentar 2 € in die Vereinskasse.
+Schafft es dieses Team von der Kreisliga bis zum Deutschen Meister? 🏆 Ehrliche Meinung 👇 Jeder Follow bringt 1 €, jedes geteilte Video 2 € in die Vereinskasse.
 
 #fußballverein #kreisliga #fußball #amateurfußball #fußballhumor #fcschlammloch
 

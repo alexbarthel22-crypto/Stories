@@ -61,7 +61,9 @@ json.dump(data, open('data.json', 'w'), ensure_ascii=False)
 open('data.js', 'w').write('const DATA = ' + json.dumps(data, ensure_ascii=False) + ';\n')
 s = open('logo.svg').read(); s = re.sub(r'^<svg[^>]*>', '', s).replace('</svg>', '').strip()
 open('logo.js', 'w').write('const LOGO = ' + json.dumps(s) + ';\n')
+import base64
+open('icon.js', 'w').write('const SHARE_ICON = "data:image/jpeg;base64,' + base64.b64encode(open('teilen_icon.jpg', 'rb').read()).decode() + '";\n')
 open('page.html', 'w').write('''<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:Lilita;src:url(lilita.woff2) format('woff2')}@font-face{font-family:Lilita;src:url(lilita-ext.woff2) format('woff2');unicode-range:U+0100-024F}html,body{margin:0;background:#000}svg{display:block}</style></head>
 <body><svg id="root" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
-<script src="logo.js"></script><script src="chars.js"></script><script src="scenes.js"></script><script src="style.js"></script><script src="team.js"></script><script src="pichu_kasse.js"></script><script src="data.js"></script><script src="main.js"></script></body></html>''')
+<script src="logo.js"></script><script src="icon.js"></script><script src="chars.js"></script><script src="scenes.js"></script><script src="style.js"></script><script src="team.js"></script><script src="pichu_kasse.js"></script><script src="data.js"></script><script src="main.js"></script></body></html>''')
 print('total', round(total, 2), 'frames', nf)

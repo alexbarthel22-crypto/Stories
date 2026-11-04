@@ -153,7 +153,11 @@ const SCENES = {
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(540, 1180, 0.95) + cashBox(540, 1015, 0.8, true) + coins +
         place(coach({mouth: m, blink: blinkAt(t)}), 170, 1600, 0.85)) +
       popG(t, c[0], 520, 300, badge(520, 300, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 52})) +
-      popG(t, c[3], 520, 440, badge(520, 440, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 52, rot: -2}));
+      popG(t, c[3], 520, 450, `<g transform="rotate(-2 520 450)">${badge(590, 450, '+2 € PRO VIDEO TEILEN', {kind: 'orange', fs: 44})}
+        <clipPath id="shareclip"><rect x="80" y="380" width="140" height="140" rx="26"/></clipPath>
+        <rect x="74" y="384" width="152" height="152" rx="30" fill="#3A2316"/>
+        <image href="${SHARE_ICON}" x="80" y="380" width="140" height="140" clip-path="url(#shareclip)"/>
+        <rect x="80" y="380" width="140" height="140" rx="26" fill="none" stroke="#3A2316" stroke-width="7"/></g>`);
   },
   options(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
