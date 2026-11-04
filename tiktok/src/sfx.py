@@ -166,6 +166,58 @@ def croak():
     return np.concatenate(out) * 0.5
 
 
+def _fft_shape(x, gain_fn):
+    X = np.fft.rfft(x); f = np.fft.rfftfreq(len(x), 1 / SR)
+    return np.fft.irfft(X * gain_fn(f), len(x))
+
+
+def stadium(d, swell_at, swell_len=0.7, fade_out=0.9):
+    """Grossstadion von weitem (TV-Stadionton): Grundteppich + anschwellender Jubel aus vielen
+    gefilterten Stimmen, lange Hallfahne, Tiefen abgesenkt, Fokus 1,5-5 kHz, vereinzelte ferne Pfiffe."""
+    t = _t(d); n = len(t)
+    # Lautstaerkekurve: Grundteppich -> Anschwellen -> Plateau -> Ausblenden
+    bed = 0.35
+    curve = bed + (1 - bed) * np.clip((t - swell_at) / swell_len, 0, 1) ** 1.5
+    curve *= np.clip((d - t) / fade_out, 0, 1) ** 0.8
+    curve *= np.minimum(1, t / 0.15)
+    # 1) Rauschteppich (Menge als Masse)
+    rumble = _fft_shape(rng.standard_normal(n), lambda f: np.exp(-((np.log(f + 1) - np.log(1400)) ** 2) / 1.1) * (f > 220))
+    rumble /= np.max(np.abs(rumble)) + 1e-9
+    # 2) Viele Stimmen: Rauschen mit Vokal-Formanten, stimmhaft moduliert, eigene Ein-/Ausschwingkurve
+    voices = np.zeros(n)
+    for i in range(70):
+        st = rng.random() * d * 0.9
+        ln = 0.5 + rng.random() * 1.8
+        a0, a1 = int(st * SR), min(n, int((st + ln) * SR))
+        if a1 - a0 < 2000: continue
+        tt = np.arange(a1 - a0) / SR
+        F1 = 450 + 500 * rng.random(); F2 = 1100 + 1600 * rng.random(); F3 = 2600 + 1200 * rng.random()
+        v = _fft_shape(rng.standard_normal(a1 - a0), lambda f: np.exp(-((f - F1) / 160) ** 2) + 0.8 * np.exp(-((f - F2) / 260) ** 2) + 0.5 * np.exp(-((f - F3) / 400) ** 2))
+        f0 = 170 + 260 * rng.random()
+        v *= 0.55 + 0.45 * np.sin(2 * np.pi * f0 * tt + 2 * np.sin(2 * np.pi * 5 * tt))
+        env = np.clip(np.sin(np.pi * tt / tt[-1]), 0, 1) ** 0.7 * (0.7 + 0.3 * np.sin(2 * np.pi * (3 + 4 * rng.random()) * tt))
+        voices[a0:a1] += v / (np.max(np.abs(v)) + 1e-9) * env * (0.4 + 0.6 * rng.random())
+    voices /= np.max(np.abs(voices)) + 1e-9
+    # 3) vereinzelte ferne Pfiffe
+    wh = np.zeros(n)
+    for _ in range(3):
+        st = int((swell_at + rng.random() * (d - swell_at - 0.6)) * SR); tt = _t(0.35 + 0.25 * rng.random())
+        f = 2300 + 900 * rng.random()
+        w = np.sin(2 * np.pi * f * tt + 6 * np.sin(2 * np.pi * 5 * tt)) * np.sin(np.pi * tt / tt[-1])
+        wh[st:st + len(w)] += w[:max(0, n - st)]
+    dry = (rumble * 0.45 + voices * 0.75 + wh * 0.06) * curve
+    # 4) Stadion-Hall: lange, dichte Hallfahne
+    irl = int(2.2 * SR); ir = rng.standard_normal(irl) * np.exp(-np.arange(irl) / (0.55 * SR))
+    ir = _fft_shape(ir, lambda f: 1 / (1 + (f / 3500) ** 2)); ir /= np.sqrt(np.sum(ir ** 2))
+    L = n + irl; wet = np.fft.irfft(np.fft.rfft(dry, L) * np.fft.rfft(ir, L), L)[:n]
+    wet /= np.max(np.abs(wet)) + 1e-9
+    out = dry / (np.max(np.abs(dry)) + 1e-9) * 0.45 + wet * 0.7
+    # 5) Broadcast-EQ: Tiefen weg, Fokus 1,5-5 kHz
+    out = _fft_shape(out, lambda f: (1 / (1 + (250 / (f + 1)) ** 4)) * (0.6 + 0.6 * np.exp(-((f - 3000) / 1800) ** 2)) / (1 + (f / 9000) ** 4))
+    out *= np.clip((d - t) / fade_out, 0, 1) ** 0.5
+    return out / (np.max(np.abs(out)) + 1e-9) * 0.3
+
+
 def build_sfx(segs, N):
     # Stadionjubel (cheer) ist vorhanden, wird in Folge 1 aber bewusst NICHT genutzt (veroeffentlichte Fassung = gemini_v3)
     fx = np.zeros(N, np.float32)
@@ -181,7 +233,7 @@ def build_sfx(segs, N):
         L = lambda lt, snd: put(st + lt, snd)
         if k > 0: L(0, splat())
         sid = s['id']
-        if sid == 'intro': L(0.0, whoosh()); L(0.3, thud()); L(0.3, pop()); L(0.6, pop())
+        if sid == 'intro': L(0.0, whoosh()); L(0.3, thud()); L(0.3, pop()); L(0.6, pop()); L(0.0, stadium((en - st) + 0.9, swell_at=0.8, swell_len=0.8, fade_out=1.1) / 0.6)
         elif sid == 'follow': L(0.6, pop())
         elif sid == 'chairs':
             L(0.0, pop()); L(0.9, pop())
