@@ -64,7 +64,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 
 ## Stimme
 - Hintergrundmusik: eigene Komposition, lizenzfrei – **Lo-Fi-Hip-Hop** (`src/music2.py`, Hörprobe `audio/hintergrundmusik_lofi.wav`): 92 BPM, a-Moll, E-Piano-Akkorde Am7–Fmaj7–C–G, Boom-Bap-Drums, Bass, kurze Pfeif-Melodie als Hook, leichtes Vinyl-Knistern; wird unter der Stimme leiser. (Die frühere Marimba-Musik `src/music.py` wird nicht mehr genutzt.)
-- Soundeffekte (leise gemischt): synthetisch in `src/sfx.py` (Szene 1: synthetische Großstadion-Kulisse `stadium()` nach dem Vorbild der Referenz – Grundteppich, Anschwellen zum Jubel, viel Hall, Fokus 1,5–5 kHz, Hörprobe `audio/stadion_intro_hoerprobe.wav`; Schlamm-Platscher bei Schnitten, Flackern beim Flutlicht; keine Platz- und Hupen-Sounds; Münzen, Kassenklingeln, Pfiff, Fanfare, trauriges Posaunen-„wah-wah“, Benachrichtigungs-Ding)
+- Soundeffekte (leise gemischt): synthetisch in `src/sfx.py` (Szene 1: Stadionjubel – mit Google Lyria 3 erzeugt, Ausschnitt ohne Musik geprüft, `audio/stadion_intro_lyria.wav`; Schlamm-Platscher bei Schnitten, Flackern beim Flutlicht; keine Platz- und Hupen-Sounds; Münzen, Kassenklingeln, Pfiff, Fanfare, trauriges Posaunen-„wah-wah“, Benachrichtigungs-Ding)
 - Final: Gemini TTS (`gemini-3.8-flash-tts`), Stimme **Puck**
 - Regie: schneller TikTok-Creator, trocken-ironisch, Kunstpausen vor Pointen, „Fans: null“ traurig, Ziel und Folgen-Aufruf mit Energie
 - Ganzes Skript in **einem** Aufruf einsprechen, an den Pausen in Szenen schneiden, mit `atempo=0.85` auf das Referenztempo (ca. 150 Wörter pro Minute) bringen
