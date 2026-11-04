@@ -634,9 +634,10 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         ex_, ey_ = sx + dx * L, sy + dy * L
         bare = style in ("tank", "dress")
         sleeve = skin if bare else top
-        c.set_line_width(8.6 if not bare else 7.2); src(c, shade(sleeve, 0.62 if not bare else 0.72))
+        pump = 1.45 if sp.get("pump") else 1.0
+        c.set_line_width((8.6 if not bare else 7.2) * pump); src(c, shade(sleeve, 0.62 if not bare else 0.72))
         c.move_to(sx, sy); c.line_to(ex_, ey_); c.stroke()
-        c.set_line_width(7.0 if not bare else 5.8); c.set_source(_grad(c, sleeve, sy - 4, ey_ + 4, 1.06, 0.9))
+        c.set_line_width((7.0 if not bare else 5.8) * pump); c.set_source(_grad(c, sleeve, sy - 4, ey_ + 4, 1.06, 0.9))
         c.move_to(sx, sy); c.line_to(ex_, ey_); c.stroke()
         if not bare:
             # Bündchen
