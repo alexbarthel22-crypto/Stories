@@ -68,7 +68,7 @@ const SCENES = {
   },
   opa(t, d, m) {
     const b = Math.sin(t * 2) * 4;
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(opa({blink: blinkAt(t, .9)}), 540, 1660 + b, 1.55)) +
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(opa({blink: blinkAt(t, .9)}), 520, 1240 + b, 1.2)) +
       popG(t, 0.1, 500, 320, nameCard(80, 240, '4', 'OPA JÜRGEN', 'ABWEHR · 79 JAHRE'));
   },
   bus(t, d, m) {
@@ -105,12 +105,12 @@ const SCENES = {
   },
   fans(t, d, m) {
     let c = '';
-    [300, 540, 780].forEach(x => c += place(chair({}), x, 1240, 0.62));
+    [440, 640, 840].forEach(x => c += place(chair({}), x, 1240, 0.62));
     const z = 1.0 + 0.1 * easeOut(t / d);
-    return cam(z, 540, 1150, field(t, 1040, {goal: false, touchY: 1265}) + c + place(coach({mouth: m * 0.6, mood: 'sad', blink: blinkAt(t)}), 860, 1560, 0.85)) +
+    return cam(z, 540, 1150, field(t, 1040, {goal: false, touchY: 1265}) + c + place(coach({mouth: m * 0.6, mood: 'sad', blink: blinkAt(t)}), 210, 1560, 0.85)) +
       popG(t, 0.1, 520, 300, badge(520, 300, 'FANS', {fs: 60})) +
       popG(t, 0.9, 520, 500, bigText(520, 570, '0', '#FF4A4A', 260)) +
-      popG(t, 2.0, 300, 1020, badge(300, 1020, 'LEER', {bg: '#E8432E', fg: '#fff', fs: 50, rot: -5}));
+      popG(t, 2.0, 640, 1020, badge(640, 1020, 'LEER', {bg: '#E8432E', fg: '#fff', fs: 50, rot: -5}));
   },
   seat(t, d, m) {
     const fol = t > 1.0;
@@ -147,7 +147,7 @@ const SCENES = {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1680, 1.15)) +
       popG(t, 0.0, 520, 300, badge(520, 300, 'WAS TUN MIT DEM GELD?', {fs: 52})) +
-      popG(t, c[2], 190, 640, optionCard(190, 640, ICON_BOOT, 'STÜRMER', 'KAUFEN?', -6)) +
+      popG(t, c[2], 190, 640, optionCard(190, 640, ICON_LIGHT, 'FLUTLICHT', 'KAUFEN?', -6)) +
       popG(t, c[3], 480, 620, optionCard(480, 620, ICON_HOUSE, 'VEREINSHAUS', 'MIETEN?', 0)) +
       popG(t, c[4], 770, 640, optionCard(770, 640, ICON_Q, 'WAS GANZ', 'ANDERES?', 6));
   },

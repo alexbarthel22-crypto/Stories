@@ -169,6 +169,10 @@ function commentCard(x, y) {
 
 const ICON_BOOT = `<path d="M-70 -70 L-10 -70 L-6 0 Q40 6 70 30 Q80 60 50 60 L-70 60Z" fill="#222" stroke="#111" stroke-width="8" stroke-linejoin="round"/>
   <path d="M-50 70 v14 M-10 70 v14 M30 70 v14" stroke="#111" stroke-width="10" stroke-linecap="round"/><path d="M-60 -20 H-10 M-60 10 H0" stroke="#FFD31A" stroke-width="8"/>`;
+const ICON_LIGHT = `<rect x="-8" y="-20" width="16" height="110" fill="#8C8C8C" stroke="#111" stroke-width="6"/>
+  <path d="M-30 -20 L-60 70 L60 70 L30 -20Z" fill="#FFF3B0" opacity=".7"/>
+  <rect x="-80" y="-90" width="160" height="70" rx="10" fill="#444" stroke="#111" stroke-width="8"/>
+  <circle cx="-45" cy="-55" r="20" fill="#FFF6C0" stroke="#111" stroke-width="5"/><circle cx="0" cy="-55" r="20" fill="#FFF6C0" stroke="#111" stroke-width="5"/><circle cx="45" cy="-55" r="20" fill="#FFF6C0" stroke="#111" stroke-width="5"/>`;
 const ICON_HOUSE = `<path d="M-90 -10 L0 -90 L90 -10Z" fill="#E8432E" stroke="#111" stroke-width="8" stroke-linejoin="round"/>
   <rect x="-70" y="-10" width="140" height="100" fill="#F3D9A4" stroke="#111" stroke-width="8"/>
   <rect x="-22" y="30" width="44" height="60" fill="#8A5A36" stroke="#111" stroke-width="6"/><rect x="34" y="10" width="28" height="28" fill="#9FC9EE" stroke="#111" stroke-width="5"/>`;

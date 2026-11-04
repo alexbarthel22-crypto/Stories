@@ -5,7 +5,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | Nr. | Name | Position | Aussehen |
 |---|---|---|---|
 | 1 | **Vlad** | Tor | schwarze Haare, Augenklappe (links), grünes Torwarttrikot, Handschuhe |
-| 4 | **Opa Jürgen** | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock, **Bierbauch** |
+| 4 | **Opa Jürgen** | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock, **kräftiger Körper mit Bierbauch** (breite Schultern, dicke Arme und Beine) |
 | 3 | Iro *(Platzhalter-Name)* | Abwehr | grüner Irokese, Ohrring |
 | 5 | Bulldozer *(Platzhalter-Name)* | Abwehr | Glatze, roter Vollbart |
 | 6 | Hipster *(Platzhalter-Name)* | Mittelfeld | Dutt, eckige Brille |

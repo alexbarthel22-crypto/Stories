@@ -156,11 +156,11 @@
  },
  {
   "id": "options",
-  "say": "Was machen wir mit dem Geld? Mittelstürmer kaufen? Vereinshaus mieten? Oder was ganz anderes?",
+  "say": "Was machen wir mit dem Geld? Flutlicht kaufen? Vereinshaus mieten? Oder was ganz anderes?",
   "cap": [
    "WAS MACHEN WIR",
    "MIT DEM *GELD?",
-   "*MITTELSTÜRMER KAUFEN?",
+   "*FLUTLICHT KAUFEN?",
    "*VEREINSHAUS MIETEN?",
    "ODER WAS",
    "GANZ *ANDERES?"

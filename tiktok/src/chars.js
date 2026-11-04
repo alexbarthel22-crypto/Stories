@@ -108,6 +108,10 @@ function player(o) {
   const legs = o.flipflops
     ? `<rect x="198" y="580" width="30" height="104" fill="${skin}" stroke="${K}" stroke-width="7"/>
        <rect x="272" y="580" width="30" height="104" fill="${skin}" stroke="${K}" stroke-width="7"/>`
+    : o.stocky ? `<rect x="188" y="580" width="44" height="40" fill="${skin}" stroke="${K}" stroke-width="7"/>
+       <rect x="268" y="580" width="44" height="40" fill="${skin}" stroke="${K}" stroke-width="7"/>
+       <rect x="186" y="616" width="48" height="70" fill="${o.socks || '#fff'}" stroke="${K}" stroke-width="7"/>
+       <rect x="266" y="616" width="48" height="70" fill="${o.socks || '#fff'}" stroke="${K}" stroke-width="7"/>`
     : `<rect x="198" y="580" width="30" height="40" fill="${skin}" stroke="${K}" stroke-width="7"/>
        <rect x="272" y="580" width="30" height="40" fill="${skin}" stroke="${K}" stroke-width="7"/>
        <rect x="196" y="616" width="34" height="70" fill="${o.socks || '#fff'}" stroke="${K}" stroke-width="7"/>
@@ -116,6 +120,7 @@ function player(o) {
   <ellipse cx="250" cy="702" rx="130" ry="18" fill="#000" opacity="0.3"/>
   ${legs}${feet}
   ${o.behind || ''}
+  ${o.stocky ? stockyBody(o, skin, jersey, trim, handL, handR) : `
   <path d="M178 380 L124 500" stroke="${K}" stroke-width="40" stroke-linecap="round"/>
   <path d="M178 380 L124 500" stroke="${skin}" stroke-width="26" stroke-linecap="round"/>
   <path d="M322 380 L376 500" stroke="${K}" stroke-width="40" stroke-linecap="round"/>
@@ -127,10 +132,7 @@ function player(o) {
   <path d="M214 358 Q250 392 286 358" fill="${trim}" stroke="${K}" stroke-width="6"/>
   <rect x="166" y="530" width="168" height="58" rx="6" fill="${o.shorts || '#1F3E66'}" stroke="${K}" stroke-width="7"/>
   <path d="M250 548 V588" stroke="${K}" stroke-width="6"/>
-  ${o.belly ? `<ellipse cx="250" cy="468" rx="116" ry="86" fill="${jersey}" stroke="${K}" stroke-width="8"/>
-    <path d="M178 430 Q190 400 222 392" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" opacity=".35"/>
-    <path d="M150 520 Q250 566 350 520" stroke="${K}" stroke-width="5" fill="none" opacity=".35"/>` : ''}
-  <text x="250" y="500" text-anchor="middle" font-family="Lilita" font-size="90" fill="${trim}" stroke="${K}" stroke-width="7" paint-order="stroke">${o.num || ''}</text>
+  <text x="250" y="500" text-anchor="middle" font-family="Lilita" font-size="90" fill="${trim}" stroke="${K}" stroke-width="7" paint-order="stroke">${o.num || ''}</text>`}
   ${o.front || ''}
   <defs><clipPath id="${id}"><circle cx="250" cy="225" r="140"/></clipPath></defs>
   <circle cx="112" cy="235" r="24" fill="${skin}" stroke="${K}" stroke-width="7"/>
@@ -146,6 +148,26 @@ function player(o) {
   ${o.face || ''}
   ${mouthSvg(o.mouth || 0, o.mood || 'smile', 250, o.mouthY || 300)}
   ${o.top || ''}`;
+}
+
+// Kraeftiger Koerper (Opa Juergen): breite Schultern, dicke Arme, runder Bauch als Teil des Trikots
+function stockyBody(o, skin, jersey, trim, handL, handR) {
+  return `
+  <path d="M166 384 L106 516" stroke="${K}" stroke-width="56" stroke-linecap="round"/>
+  <path d="M166 384 L106 516" stroke="${skin}" stroke-width="42" stroke-linecap="round"/>
+  <path d="M334 384 L394 516" stroke="${K}" stroke-width="56" stroke-linecap="round"/>
+  <path d="M334 384 L394 516" stroke="${skin}" stroke-width="42" stroke-linecap="round"/>
+  <path d="M172 360 L132 430 L168 448" stroke="${K}" stroke-width="8" fill="${jersey}" stroke-linejoin="round"/>
+  <path d="M328 360 L368 430 L332 448" stroke="${K}" stroke-width="8" fill="${jersey}" stroke-linejoin="round"/>
+  <circle cx="102" cy="526" r="27" fill="${skin}" stroke="${K}" stroke-width="7"/>
+  <circle cx="398" cy="526" r="27" fill="${skin}" stroke="${K}" stroke-width="7"/>
+  <rect x="152" y="536" width="196" height="56" rx="8" fill="${o.shorts || '#1F3E66'}" stroke="${K}" stroke-width="7"/>
+  <path d="M250 552 V592" stroke="${K}" stroke-width="6"/>
+  <path d="M174 356 L326 356 Q352 362 360 396 Q384 450 374 500 Q364 546 324 554 L176 554 Q136 546 126 500 Q116 450 140 396 Q148 362 174 356 Z" fill="${jersey}" stroke="${K}" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M146 470 Q150 420 178 396" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" opacity=".3"/>
+  <path d="M160 522 Q250 556 340 522" stroke="${K}" stroke-width="5" fill="none" opacity=".3"/>
+  <path d="M210 356 Q250 394 290 356" fill="${trim}" stroke="${K}" stroke-width="6"/>
+  <text x="250" y="492" text-anchor="middle" font-family="Lilita" font-size="96" fill="${trim}" stroke="${K}" stroke-width="7" paint-order="stroke">${o.num || ''}</text>`;
 }
 
 // Vlad: Torwart mit Augenklappe
@@ -169,7 +191,7 @@ function vlad(o = {}) {
 // Opa Juergen: Verteidiger, 79
 function opa(o = {}) {
   return player(Object.assign({
-    jersey: '#2F7FD8', trim: '#FFD31A', num: '4', shorts: '#1F3E66', socks: '#fff', skin: '#F2CCA6', browCol: '#E8E8E8', belly: true,
+    jersey: '#2F7FD8', trim: '#FFD31A', num: '4', shorts: '#1F3E66', socks: '#fff', skin: '#F2CCA6', browCol: '#E8E8E8', stocky: true,
     hair: `<path d="M100 260 Q100 160 140 150 Q150 200 130 260Z" fill="#EDEDED"/><path d="M400 260 Q400 160 360 150 Q350 200 370 260Z" fill="#EDEDED"/>
            <path d="M200 120 q20 -10 40 0 M260 110 q20 -8 36 4" stroke="#D8B48E" stroke-width="5" fill="none"/>`,
     hairOver: `<path d="M240 86 q-6 -26 10 -32 q4 18 -10 32z" fill="#EDEDED" stroke="${K}" stroke-width="5"/>`,
