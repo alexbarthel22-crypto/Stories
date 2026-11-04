@@ -10,7 +10,8 @@ Deutsche Kurzvideos (9:16, 1080×1920, max. 1:30). Hauptfigur **Alex** schlüpft
 | 3 | Choleriker | `episodes/03_choleriker/03_choleriker.mp4` | 1:20 |
 | 4 | Milliardär | `episodes/04_milliardaer/04_milliardaer.mp4` | 1:16 |
 | 5 | F-Boy | `episodes/05_fboy/05_fboy.mp4` | 1:18 |
-| 6 | OF-Model (Alexa) | `episodes/06_of_model/06_of_model.mp4` | 1:12 |
+| 6 | OF-Model (Alexia) | `episodes/06_of_model/06_of_model.mp4` | 1:16 |
+| 7 | Emotional abhängig (TikTok Folge 2) | `episodes/07_emotional_abhaengig/07_emotional_abhaengig.mp4` | 1:12 |
 
 ## Alex – fester Look (gilt für alle Folgen)
 Definiert in `tools/alexlib.py` → `ALEX_BASE`. **Nicht ändern**, nur das Outfit wechselt pro Rolle.

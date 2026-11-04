@@ -73,3 +73,13 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein OF-Model 📸💄 Aus Alex wird Alexia – Natural Look in nur 2 Stunden, 300 Fotos für 1 Post, und die Fans wollen heiraten 💍 Geantwortet hat aber Kevin 😅 Kennst du jemanden, der auch mit OF starten sollte? Markier ihn! 👇 Und was soll Alex morgen sein?
 
 #contentcreator #linkinbio #bossbabe #influencer #klischee #comedy #fürdich #fyp
+
+## TikTok Folge 2 – Emotional abhängig
+Cover: `episodes/07_emotional_abhaengig/thumbnail.png`
+Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung)
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+emotional abhängig 🥺📱 Sie schreibt „ok“ statt „okay“ – und Alex analysiert eine Stunde lang 🔎 Welches Anzeichen kennst du? 👇 Kennst du jemanden, der gerade emotional abhängig ist, aber auch alleine wertvoll ist? Markier sie oder ihn! 🤍 Und was soll Alex morgen sein?
+
+#emotionalabhängig #beziehung #overthinking #relatable #selbstwert #dating #comedy #fürdich #fyp
