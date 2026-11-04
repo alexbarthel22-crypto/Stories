@@ -12,7 +12,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | 7 | Vokuhila *(Platzhalter-Name)* | Mittelfeld | rotbrauner Vokuhila, rotes Stirnband |
 | 8 | Der Jüngste *(Platzhalter-Name)* | Mittelfeld | rote Cap, Zahnspange |
 | 10 | Spielmacherin *(Platzhalter-Name)* | Mittelfeld | braune Zöpfe mit pinken Haargummis |
-| 9 | **Der, der den Bus verpasst hat** | Sturm | blonde Strubbelhaare, verschlafene Augen, Rucksack, **Flip-Flops** |
+| 9 | **Der, der den Bus verpasst hat** (Name noch offen) | Sturm | blonde Strubbelhaare, verschlafene Augen, Rucksack, **Flip-Flops** |
 | 11 | Der Coole *(Platzhalter-Name)* | Sturm | Afro, Sonnenbrille |
 | 14 | Träumer *(Platzhalter-Name)* | Sturm | Locken, blaue Kopfhörer |
 
@@ -21,6 +21,17 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 
 Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, Torwart grün.
 
+## Umgebung (Schauplatz aller Videos)
+- **Wetter/Zeit:** Dauerregen, dunkler Abendhimmel (Dunkelblau bis Graublau), ziehende dunkle Wolken, Regenringe in Pfützen
+- **Hintergrund:** dichte Baumreihe in Dunkelgrün am Horizont
+- **Spielfeld:** ein einziges Schlammloch – brauner Matsch mit vereinzelten Grasflecken und vielen Pfützen
+- **Tor:** weißes Tor mit Netz, steht immer auf der Torlinie, davor Fünfmeterraum, Strafraum, Elfmeterpunkt und Teilkreis
+- **Spielfeldrand:** Grasstreifen hinter einer weißen Seitenlinie. Dort stehen die Tribüne und das Flutlicht
+- **Tribüne:** 3 orange Holz-Klappstühle mit Metallgestell, nummeriert 1–3, ohne Kissen
+- **Flutlicht:** Holzmast mit Klebeband-Schellen, oben eine schwarz-gelbe Taschenlampe, flackernd (Akku 3 %)
+- **Vereinskasse:** grüne Geldkassette mit Nieten, gelbem Schloss und Etikett „VEREINSKASSE“, steht auf einer Holzkiste
+- **Bushaltestelle:** Mast mit gelb-grünem H-Schild (gehört zum Stürmer #9)
+
 ## Stand nach Tag 1
 - Liga: Kreisliga. Ziel: Deutscher Meister (Bundesliga)
 - Tribüne: 3 Klappstühle (ohne Sitzkissen), Nr. 1–3, stehen außerhalb des Platzes
@@ -28,6 +39,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Vereinskasse: 500 € und ein Kaugummi
 - Geld-Regel: Jeder Follower bringt 1 € in die Vereinskasse, jeder Kommentar 2 €
 - Fans: 0. Erstes Spiel: Sonntag
+- Offene Frage an die Community: Flutlicht kaufen, Vereinshaus mieten oder etwas ganz anderes? Der Top-Kommentar entscheidet
 
 ## Videostil
 - Format 1080×1920, 30 fps, maximal 59 s
@@ -36,3 +48,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Fußball immer im Stil des ⚽-Emojis
 - Tor immer auf der Torlinie am Spielfeldrand, mit Fünfmeterraum, Strafraum und Elfmeterpunkt davor
 - TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1300, rechts nicht über x 940
+
+## Stimme
+- Entwurf: espeak-ng mit MBROLA `mb-de6` (offline, kostenlos), Tempo 192
+- Die finale Stimme ist noch offen
