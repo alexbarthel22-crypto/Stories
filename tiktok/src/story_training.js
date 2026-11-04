@@ -16,7 +16,7 @@ const {chromium} = require('playwright');
       + `<ellipse cx="${x}" cy="${y}" rx="52" ry="18" fill="none" stroke="#FFD31A" stroke-width="4" stroke-dasharray="8 8"/>`;
     const motion = (x, y) => `<g stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".8"><path d="M${x - 70} ${y + 30} l-60 30"/><path d="M${x - 60} ${y + 55} l-50 25"/><path d="M${x - 80} ${y + 5} l-45 22"/></g>`;
 
-    let s = field(t, 900, {goalX: 520, puddles: [[200, 1260, 210, 40], [760, 1180, 150, 26], [520, 1470, 220, 42], [120, 1420, 130, 22]]});
+    let s = field(t, 900, {goalX: 520, puddles: [[200, 1260, 210, 40], [760, 1180, 150, 26], [590, 1360, 190, 36], [120, 1420, 130, 22]]});
     // Ball schlaegt oben rechts ein, Vlad fliegt in die andere Ecke
     s += place(vlad({mood: 'sad'}), 330, 1010, 0.42).replace('<g transform="translate(330 1010)', '<g transform="translate(330 1010) rotate(-72)');
     s += splash(300, 1000, 0.8);
@@ -29,8 +29,8 @@ const {chromium} = require('playwright');
     s += rot(place(opa({mood: 'sad'}), 190, 1290, 0.5), 190, 1210, 82);
     s += `<path d="M70 1060 L140 1130" stroke="#7A4E2C" stroke-width="12" stroke-linecap="round"/>` + splash(220, 1230, 1.1);
     // Bus-Typ rutscht aus, ein Flip-Flop fliegt
-    s += rot(place(busguy({mood: 'sad'}), 520, 1490, 0.5), 520, 1380, -32);
-    s += `<g transform="translate(640 1230) rotate(-35)"><ellipse rx="34" ry="11" fill="#FF3FA4" stroke="#111" stroke-width="6"/><path d="M-10 -4 L4 -14 L16 -4" stroke="#FFD31A" stroke-width="6" fill="none"/></g>` + splash(560, 1470, 0.9);
+    s += rot(place(busguy({mood: 'sad'}), 580, 1370, 0.48), 580, 1265, -32);
+    s += `<g transform="translate(500 1010) rotate(35)"><ellipse rx="34" ry="11" fill="#FF3FA4" stroke="#111" stroke-width="6"/><path d="M-10 -4 L4 -14 L16 -4" stroke="#FFD31A" stroke-width="6" fill="none"/></g>` + splash(620, 1350, 0.9);
     // Seitenrand vorne rechts mit dem Trainer (Facepalm, Klemmbrett)
     s += `<path d="M560 1920 L1080 1470 L1080 1920 Z" fill="#4A8038"/><path d="M560 1920 L1080 1470" stroke="#F0EDE0" stroke-width="12"/>`;
     const facepalm = `<path d="M325 385 L300 260" stroke="#111" stroke-width="44" stroke-linecap="round"/>
@@ -44,10 +44,9 @@ const {chromium} = require('playwright');
     s += rain(t, 150, 0.4);
     // Texte (Story-Sicherheitsbereich: oben ~250 px, unten ~260 px frei)
     s += badge(540, 330, 'TRAINING', {kind: 'pitch', fs: 110, pad: 80});
-    s += badge(540, 470, 'LÄUFT BEI UNS.', {fs: 46, rot: -3});
-    s += badge(540, 600, '▶ VIDEO 1 IST ONLINE', {kind: 'red', fs: 48, rot: 2});
-    s += badge(300, 1560, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 40, rot: -2});
-    s += badge(300, 1650, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 40, rot: 2});
+    s += badge(330, 1470, '▶ VIDEO 1 IST ONLINE', {kind: 'red', fs: 38, rot: -2});
+    s += badge(330, 1560, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 40, rot: 2});
+    s += badge(330, 1650, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 40, rot: -2});
     document.getElementById('root').innerHTML = `<defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E2438"/><stop offset="1" stop-color="#46506A"/></linearGradient>
       <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs>${s}<rect width="1080" height="1920" fill="url(#vig)"/>`;
   });
