@@ -166,10 +166,10 @@ def croak():
     return np.concatenate(out) * 0.5
 
 
-def stadium_rec(target_db=-23.0):
-    """Echte Stadionkulisse (mit Google Lyria 3 erzeugt, frei nutzbar), Datei stadion_lyria.wav."""
+def stadium_rec(target_db=-21.0):
+    """Stadionjubel aus Pixabay-Aufnahme (crowd-cheering-379666, Pixabay-Lizenz), Ausschnitt 1,0-3,5 s, nur Szene 1."""
     import wave
-    w = wave.open('stadion_lyria.wav')
+    w = wave.open('stadion_jubel.wav')
     x = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float32) / 32768
     rms = np.sqrt(np.mean(x ** 2)) + 1e-9
     return x * (10 ** (target_db / 20) / rms)
