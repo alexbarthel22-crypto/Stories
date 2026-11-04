@@ -51,7 +51,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 
 ## Stimme
 - Hintergrundmusik: eigene Komposition, lizenzfrei (`src/music.py`, Hörprobe `audio/hintergrundmusik_schlammloch.wav`): Marimba-Melodie in F-Dur, 112 BPM, mit Bass, Shaker und weicher Kick; wird unter der Stimme leiser
-- Soundeffekte (leise gemischt): synthetisch in `src/sfx.py` (Schlamm-Platscher bei Schnitten, Flackern beim Flutlicht; keine Platz- und Hupen-Sounds; Münzen, Kassenklingeln, Pfiff, Fanfare, trauriges Posaunen-„wah-wah“, Benachrichtigungs-Ding)
+- Soundeffekte (leise gemischt): synthetisch in `src/sfx.py` (Stadionjubel bei „Ich gründe einen Fußballverein“, Schlamm-Platscher bei Schnitten, Flackern beim Flutlicht; keine Platz- und Hupen-Sounds; Münzen, Kassenklingeln, Pfiff, Fanfare, trauriges Posaunen-„wah-wah“, Benachrichtigungs-Ding)
 - Final: Gemini TTS (`gemini-3.8-flash-tts`), Stimme **Puck**
 - Regie: schneller TikTok-Creator, trocken-ironisch, Kunstpausen vor Pointen, „Fans: null“ traurig, Ziel und Folgen-Aufruf mit Energie
 - Ganzes Skript in **einem** Aufruf einsprechen, an den Pausen in Szenen schneiden, mit `atempo=0.85` auf das Referenztempo (ca. 150 Wörter pro Minute) bringen

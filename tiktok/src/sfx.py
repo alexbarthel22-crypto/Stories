@@ -128,6 +128,32 @@ def flicker_buzz(dur, on_fn):
     return out
 
 
+def cheer(d=2.8):
+    """Stadionjubel: viele gefilterte Rausch-Stimmen, Klatschen und ein paar Pfiffe."""
+    t = _t(d); n = len(t)
+    crowd = np.zeros(n)
+    for i in range(36):
+        x = rng.standard_normal(n)
+        lo, hi = int(SR / (500 + 900 * rng.random())), int(SR / (2500 + 1500 * rng.random()))
+        b = _lp(x, max(hi, 2)) - _lp(x, lo)
+        k = np.repeat(rng.random(int(d * 8) + 2), SR // 8)[:n]
+        am = _lp(np.pad(k, (0, n - len(k))), 2000)
+        crowd += b * (0.4 + am)
+    crowd /= np.max(np.abs(crowd)) + 1e-9
+    claps = np.zeros(n)
+    for p in rng.integers(0, n - 2000, int(d * 70)):
+        m = 600; claps[p:p + m] += rng.standard_normal(m) * np.exp(-np.arange(m) / 90) * (0.3 + 0.7 * rng.random())
+    claps = claps - _lp(claps, 6)
+    wh = np.zeros(n)
+    for _ in range(3):
+        st = int(rng.random() * (d - 0.8) * SR); tt = _t(0.45 + 0.3 * rng.random())
+        f = 2400 + 900 * rng.random()
+        w = np.sin(2 * np.pi * f * tt + 8 * np.sin(2 * np.pi * 6 * tt)) * np.sin(np.pi * tt / tt[-1])
+        wh[st:st + len(w)] += w[:n - st]
+    env = np.minimum(1, t / 0.35) * np.clip((d - t) / 1.4, 0, 1)
+    return (crowd * 0.55 + claps * 0.25 + wh * 0.05) * env * 1.1
+
+
 def build_sfx(segs, N):
     fx = np.zeros(N, np.float32)
 
@@ -142,7 +168,7 @@ def build_sfx(segs, N):
         L = lambda lt, snd: put(st + lt, snd)
         if k > 0: L(0, splat())
         sid = s['id']
-        if sid == 'intro': L(0.05, whoosh()); L(0.1, pop()); L(0.7, pop())
+        if sid == 'intro': L(0.05, whoosh()); L(0.1, pop()); L(0.7, pop()); L(c[-1], cheer(max(1.5, (en - st) - c[-1] + 0.6)))
         elif sid == 'follow': L(0.6, pop())
         elif sid == 'chairs':
             L(0.0, pop()); L(0.9, pop())
