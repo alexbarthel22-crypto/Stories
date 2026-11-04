@@ -1,0 +1,19 @@
+# Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden.
+# {emotion} am Zeilenanfang = Regieanweisung für diese Zeile (amused, surprised, ...).
+Du befindest dich in einem alten Kellergewölbe.
+Drei alte Holztüren führen ins Freie.
+Hinter der ersten Tür warten zwei wilde Tiger, die seit fünf Monaten nichts mehr gefressen haben.
+Hinter der zweiten Tür steht jemand mit Krücke und einer geladenen Pistole.
+Und hinter der dritten Tür wartet ein einäugiger Pirat mit seinem Säbel auf dich.
+{surprised} Durch welche Tür kommst du raus, ohne verletzt zu werden?
+[PAUSE 1.6]
+Kleiner Tipp: Denk genau über die Zeit nach.
+Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!
+Hier kommt die Lösung.
+Hinter Tür zwei wartet eine geladene Pistole. Viel zu gefährlich.
+Hinter Tür drei der Pirat mit seinem Säbel. Auch keine gute Idee.
+Aber Tür eins ist die richtige Antwort.
+{surprised} Denn Tiger, die fünf Monate nichts gefressen haben, sind längst verhungert!
+Du kannst also ganz entspannt ins Freie gehen.
+{amused} Hättest du's gewusst?
+Schreib's in die Kommentare und folg mir für das nächste Rätsel!

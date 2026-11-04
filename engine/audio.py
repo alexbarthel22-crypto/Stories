@@ -141,6 +141,71 @@ def fw_crackle():
     return out * np.linspace(1, 0.2, n)
 
 
+def creak(dur=0.9):
+    """old wooden door creak: wobbling, rough mid-frequency tone"""
+    n = int(dur * SR)
+    tt = np.arange(n) / SR
+    f = 420 + 160 * np.sin(2 * np.pi * 1.7 * tt) + 90 * tt / dur
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    x = np.sign(np.sin(ph)) * 0.35 + np.sin(ph * 2.01) * 0.25
+    am = 0.55 + 0.45 * np.abs(np.sin(2 * np.pi * 23 * tt))
+    env = np.minimum(1, tt / 0.08) * np.minimum(1, (dur - tt) / 0.15)
+    x = np.convolve(x * am * env, np.ones(6) / 6, mode="same")
+    return x * 0.5
+
+
+def growl(dur=1.1):
+    """big cat growl / roar: low rough noise with pitch contour"""
+    n = int(dur * SR)
+    tt = np.arange(n) / SR
+    f = 95 + 60 * np.sin(np.pi * tt / dur)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    saw = (ph / np.pi) % 2 - 1
+    noise = np.random.default_rng(41).standard_normal(n)
+    noise = np.convolve(noise, np.ones(30) / 30, mode="same") * 4
+    am = 0.6 + 0.4 * np.abs(np.sin(2 * np.pi * 31 * tt))
+    env = np.minimum(1, tt / 0.12) * np.minimum(1, (dur - tt) / 0.3)
+    x = (saw * 0.5 + noise * 0.6) * am * env
+    return np.convolve(x, np.ones(8) / 8, mode="same") * 0.8
+
+
+def buzzer():
+    n = int(0.45 * SR)
+    tt = np.arange(n) / SR
+    x = np.sign(np.sin(2 * np.pi * 140 * tt)) * 0.25 + np.sign(np.sin(2 * np.pi * 147 * tt)) * 0.25
+    return x * np.minimum(1, tt / 0.01) * np.minimum(1, (0.45 - tt) / 0.05)
+
+
+def step():
+    n = int(0.12 * SR)
+    tt = np.arange(n) / SR
+    x = np.sin(2 * np.pi * (110 - 300 * tt) * tt) * np.exp(-tt / 0.03)
+    x += np.random.default_rng(42).standard_normal(n) * np.exp(-tt / 0.01) * 0.3
+    return x * 0.7
+
+
+def drip():
+    n = int(0.25 * SR)
+    tt = np.arange(n) / SR
+    return np.sin(2 * np.pi * (1300 + 900 * tt) * tt) * np.exp(-tt / 0.035) * 0.5
+
+
+def swish():
+    return whoosh(0.28) * 1.1
+
+
+def crackle_bed(dur):
+    """quiet torch crackle for the whole cellar scene"""
+    n = int(dur * SR)
+    out = np.zeros(n)
+    rng = np.random.default_rng(43)
+    for _ in range(int(dur * 14)):
+        k = int(rng.uniform(0, n - 400))
+        m = int(rng.uniform(60, 300))
+        out[k:k + m] += rng.standard_normal(m) * _env(m, 0.0003, 0.002) * rng.uniform(0.2, 1.0)
+    return out
+
+
 def tick():
     n = int(0.04 * SR)
     return np.random.default_rng(0).standard_normal(n) * _env(n, 0.001, 0.006) * 0.5 + \
@@ -204,8 +269,11 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
     for kind, t, gain, *extra in events:
         s = {"ding": ding, "pop": pop, "tick": tick, "click": click, "clink": clink, "whoosh": whoosh,
              "tada": tada, "glug": glug, "fw_launch": fw_launch, "fw_boom": fw_boom,
-             "fw_crackle": fw_crackle}.get(kind)
-        if kind == "rain":
+             "fw_crackle": fw_crackle, "creak": creak, "growl": growl, "buzzer": buzzer, "step": step,
+             "drip": drip, "swish": swish}.get(kind)
+        if kind == "bed":
+            s = crackle_bed(extra[0])
+        elif kind == "rain":
             s = rain_noise(extra[0]); r = int(0.4 * SR)
             s[:r] *= np.linspace(0, 1, r); s[-r:] *= np.linspace(1, 0, r)
         else:

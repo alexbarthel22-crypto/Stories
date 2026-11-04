@@ -195,3 +195,125 @@ def draw_switch(cv, x, y, s=1.0, on=False, label=None, highlight=False):
     cv.circle(x, y - h * 0.22, 4 * s, fill=hexc("#37b26c") if on else hexc("#b8bec8"))
     if label:
         cv.text(x, y - h * 0.85, label, 22 * s, INK)
+
+
+def draw_tiger(cv, x, y, s=1.0, face=1, phase=None, roar=0.0, starved=False):
+    """cartoon tiger, ~190*s long. roar 0..1 opens the mouth; starved = lying flat, grey, X eyes"""
+    f = face
+    if starved:
+        fur, fur_d, belly, stripe = hexc("#b9a89a"), hexc("#9a8a7e"), hexc("#e6dfd6"), hexc("#7d7068")
+    else:
+        fur, fur_d, belly, stripe = hexc("#f08a2c"), hexc("#d46f1a"), hexc("#fbe6c8"), hexc("#2b1d14")
+    L, Hb = 190 * s, 74 * s
+    if starved:       # lying on its side
+        by = y - 30 * s
+        cv.ellipse(x - L * 0.5, by - Hb * 0.38, x + L * 0.5, by + Hb * 0.38, fill=fur)
+        for k in range(5):
+            xx = x - L * 0.3 + k * L * 0.14
+            cv.line([(xx, by - Hb * 0.36), (xx + 8 * s, by - Hb * 0.05)], stripe, 7 * s, cap=False)
+        for k in range(4):   # legs sticking out
+            lx = x - L * 0.25 + k * L * 0.16
+            cv.line([(lx, by + Hb * 0.2), (lx + 14 * s, by + Hb * 0.62)], fur_d, 13 * s)
+        cv.poly([(x - f * L * 0.48, by), (x - f * L * 0.85, by + 10 * s), (x - f * L * 0.84, by + 20 * s),
+                 (x - f * L * 0.48, by + 12 * s)], fill=fur_d)
+        hx, hy = x + f * L * 0.55, by + 2 * s
+        cv.circle(hx, hy, 34 * s, fill=fur)
+        for dx in (-18, 16):
+            cv.circle(hx + dx * s, hy - 28 * s, 10 * s, fill=fur_d)
+        cv.ellipse(hx + f * 4 * s - 20 * s, hy + 2 * s, hx + f * 4 * s + 20 * s, hy + 26 * s, fill=belly)
+        for ex in (hx - 12 * s, hx + 12 * s):     # X eyes
+            cv.line([(ex - 6 * s, hy - 14 * s), (ex + 6 * s, hy - 2 * s)], INK, 4 * s)
+            cv.line([(ex - 6 * s, hy - 2 * s), (ex + 6 * s, hy - 14 * s)], INK, 4 * s)
+        cv.circle(hx + f * 4 * s, hy + 8 * s, 5 * s, fill=INK)
+        cv.line([(hx + f * 4 * s, hy + 16 * s), (hx + f * 14 * s, hy + 24 * s)], hexc("#e98aa0"), 6 * s)  # tongue
+        return
+    by = y - 70 * s
+    # tail
+    cv.line([(x - f * L * 0.45, by - Hb * 0.1), (x - f * L * 0.7, by - Hb * 0.5), (x - f * L * 0.82, by - Hb * 0.9)],
+            fur, 12 * s)
+    cv.circle(x - f * L * 0.82, by - Hb * 0.9, 8 * s, fill=stripe)
+    _legs(cv, [x - f * L * 0.3, x + f * L * 0.2], by + Hb * 0.1, y, fur_d, 20 * s, phase)
+    cv.ellipse(x - L * 0.5, by - Hb * 0.5, x + L * 0.5, by + Hb * 0.5, fill=fur)
+    cv.ellipse(x - L * 0.32, by + Hb * 0.02, x + L * 0.3, by + Hb * 0.5, fill=belly)
+    for k in range(5):
+        xx = x - L * 0.32 + k * L * 0.15
+        cv.poly([(xx - 7 * s, by - Hb * 0.48), (xx + 7 * s, by - Hb * 0.48), (xx + 2 * s, by - Hb * 0.02)], fill=stripe)
+    _legs(cv, [x - f * L * 0.36, x + f * L * 0.3], by + Hb * 0.15, y, fur, 21 * s, None if phase is None else phase + 1)
+    # head
+    hx, hy = x + f * L * 0.5, by - Hb * 0.55
+    cv.circle(hx, hy, 40 * s, fill=fur)
+    for dx in (-24, 20):
+        cv.circle(hx + dx * s, hy - 34 * s, 12 * s, fill=fur)
+        cv.circle(hx + dx * s, hy - 34 * s, 6 * s, fill=belly)
+    for k in (-1, 1):
+        cv.poly([(hx + k * 10 * s, hy - 40 * s), (hx + k * 4 * s, hy - 40 * s), (hx + k * 7 * s, hy - 24 * s)], fill=stripe)
+    cv.ellipse(hx + f * 10 * s - 26 * s, hy + 2 * s, hx + f * 10 * s + 26 * s, hy + 30 * s, fill=belly)
+    # angry eyes + brows
+    for ex in (hx + f * 2 * s - 12 * s, hx + f * 2 * s + 14 * s):
+        cv.ellipse(ex - 7 * s, hy - 12 * s, ex + 7 * s, hy, fill=hexc("#ffe46b"))
+        cv.circle(ex + f * 2 * s, hy - 6 * s, 3.5 * s, fill=INK)
+    cv.line([(hx + f * 2 * s - 22 * s, hy - 22 * s), (hx + f * 2 * s - 4 * s, hy - 14 * s)], INK, 4 * s)
+    cv.line([(hx + f * 2 * s + 24 * s, hy - 22 * s), (hx + f * 2 * s + 6 * s, hy - 14 * s)], INK, 4 * s)
+    cv.circle(hx + f * 12 * s, hy + 8 * s, 6 * s, fill=hexc("#e98aa0"))
+    mo = 6 + 18 * roar
+    cv.ellipse(hx + f * 12 * s - 16 * s, hy + 14 * s, hx + f * 12 * s + 16 * s, hy + (14 + mo) * s, fill=hexc("#6b1d1d"))
+    for k in (-1, 1):   # fangs
+        fx_ = hx + f * 12 * s + k * 8 * s
+        cv.poly([(fx_ - 4 * s, hy + 14 * s), (fx_ + 4 * s, hy + 14 * s), (fx_, hy + (22 + roar * 6) * s)],
+                fill=hexc("#ffffff"))
+    for k in (-1, 1):   # whiskers
+        cv.line([(hx + f * 22 * s, hy + 12 * s + k * 4 * s), (hx + f * 48 * s, hy + 8 * s + k * 10 * s)], INK, 2 * s)
+
+
+def draw_pistol(cv, hand, face=1, s=1.0):
+    """cartoon pistol held in the hand, pointing forward"""
+    hx, hy = hand
+    f = face
+    cv.rect(min(hx, hx + f * 62 * s), hy - 18 * s, max(hx, hx + f * 62 * s), hy - 4 * s, fill=hexc("#3a3d46"), r=3 * s)
+    cv.rect(min(hx - f * 6 * s, hx + f * 14 * s), hy - 18 * s, max(hx - f * 6 * s, hx + f * 14 * s), hy + 22 * s,
+            fill=hexc("#2a2c33"), r=4 * s)
+    cv.rect(min(hx + f * 50 * s, hx + f * 62 * s), hy - 22 * s, max(hx + f * 50 * s, hx + f * 62 * s), hy - 18 * s,
+            fill=hexc("#2a2c33"))
+
+
+def draw_crutch(cv, top, bottom, s=1.0):
+    cv.line([top, bottom], hexc("#c9ced6"), 9 * s, cap=False)
+    cv.line([(top[0] - 20 * s, top[1]), (top[0] + 20 * s, top[1])], hexc("#5d6270"), 12 * s)
+    mid = (top[0] + (bottom[0] - top[0]) * 0.35, top[1] + (bottom[1] - top[1]) * 0.35)
+    cv.line([(mid[0] - 10 * s, mid[1]), (mid[0] + 10 * s, mid[1])], hexc("#5d6270"), 8 * s)
+    cv.rect(bottom[0] - 8 * s, bottom[1] - 10 * s, bottom[0] + 8 * s, bottom[1], fill=hexc("#22243a"), r=3 * s)
+
+
+def draw_saber(cv, hand, face=1, s=1.0, ang=-1.0):
+    """curved pirate saber; ang = blade direction (radians, 0 = forward)"""
+    f = face
+    hx, hy = hand
+    pts = []
+    for k in range(9):
+        q = k / 8
+        a = ang + 0.5 * q * q
+        pts.append((hx + f * math.cos(a) * 150 * s * q, hy + math.sin(a) * 150 * s * q - 30 * s * math.sin(math.pi * q) * 0))
+    cv.line(pts, hexc("#dfe5ec"), 12 * s)
+    cv.line(pts, hexc("#ffffff"), 3 * s, cap=False)
+    cv.arc(hx - 20 * s, hy - 14 * s, hx + 20 * s, hy + 18 * s, 0, 360, hexc("#d9a441"), 5 * s)
+
+
+def draw_pirate_extras(cv, x, y, st, h, face=1):
+    """tricorn hat + eye patch for a person drawn with draw_person at (x, y)"""
+    f = face
+    head_r = st.head * h
+    sh_y = y - (st.leg + st.torso) * h
+    head_y = sh_y - 0.03 * h - head_r * 0.92
+    hx = x + f * head_r * 0.08
+    cv.poly([(hx - head_r * 1.5, head_y - head_r * 0.55), (hx + head_r * 1.5, head_y - head_r * 0.55),
+             (hx + head_r * 0.9, head_y - head_r * 1.55), (hx, head_y - head_r * 1.2), (hx - head_r * 0.9, head_y - head_r * 1.55)],
+            fill=hexc("#1d1a24"))
+    cv.line([(hx - head_r * 1.4, head_y - head_r * 0.62), (hx + head_r * 1.4, head_y - head_r * 0.62)], hexc("#d9a441"),
+            head_r * 0.12)
+    cv.circle(hx, head_y - head_r * 1.0, head_r * 0.2, fill=hexc("#f4f1ea"))
+    fx_ = hx + f * head_r * 0.32
+    ex = fx_ + f * head_r * 0.30
+    eye_y = head_y + head_r * 0.02
+    cv.line([(hx - head_r * 0.9, head_y - head_r * 0.45), (ex + f * head_r * 0.2, eye_y - head_r * 0.1)],
+            hexc("#1d1a24"), head_r * 0.07)
+    cv.ellipse(ex - head_r * 0.2, eye_y - head_r * 0.2, ex + head_r * 0.2, eye_y + head_r * 0.2, fill=hexc("#1d1a24"))
