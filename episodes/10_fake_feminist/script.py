@@ -76,7 +76,7 @@ SCENES = [
         ("Gleichberechtigung nur, wenn's ihm nützt.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du auch so einen Fake-Feministen? Markier sie oder ihn!", None),
+        ("Kennst du auch so einen Fake-Feministen? Markier ihn!", None),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]
