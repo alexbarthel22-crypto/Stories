@@ -421,6 +421,43 @@ def party_background(cv, t, finale=0.0):
     cv.circle(1010, FLOOR - 90, 18 + 6 * p, fill=hexc("#5d6270"))
 
 
+# big opening fireworks (first ~2.7 s): (launch time, x, burst y, colour)
+INTRO_FIREWORKS = [(0.05, 300, 380, (255, 211, 77)), (0.40, 780, 320, (255, 105, 120)),
+                   (0.75, 540, 460, (110, 200, 255)), (1.10, 200, 300, (200, 150, 255)),
+                   (1.40, 860, 430, (110, 235, 160)), (1.70, 600, 290, (255, 165, 80))]
+FW_LAUNCH, FW_BURST = 0.35, 1.0
+
+
+def big_fireworks(cv, t):
+    for (t0, fx, fy, col) in INTRO_FIREWORKS:
+        tt = t - t0
+        if tt < 0 or tt > FW_LAUNCH + FW_BURST:
+            continue
+        if tt < FW_LAUNCH:     # rising rocket with trail
+            q = tt / FW_LAUNCH
+            y = 980 + (fy - 980) * (1 - (1 - q) ** 2)
+            cv.line([(fx, y + 70), (fx, y)], col + (160,), 5, cap=False)
+            cv.circle(fx, y, 7, fill=(255, 250, 230, 230))
+            continue
+        q = (tt - FW_LAUNCH) / FW_BURST           # explosion
+        r = 50 + 270 * (1 - (1 - q) ** 3)
+        a = int(250 * (1 - q) ** 1.2)
+        if q < 0.12:
+            cv.circle(fx, fy, 60 * (1 - q / 0.12) + 20, fill=(255, 255, 240, int(170 * (1 - q / 0.12))))
+        for ring, (n_, rf, wid) in enumerate(((36, 1.0, 7), (24, 0.6, 5))):
+          for i in range(n_):
+            ang = i / n_ * 2 * math.pi + (i % 2) * 0.06 + ring * 0.13
+            rr = r * rf * (0.82 + 0.18 * ((i * 7) % 5) / 4)
+            drop = 70 * q * q
+            x1, y1 = fx + math.cos(ang) * rr, fy + math.sin(ang) * rr + drop
+            x0, y0 = fx + math.cos(ang) * rr * 0.7, fy + math.sin(ang) * rr * 0.7 + drop * 0.7
+            c_ = col if ring == 0 else (255, 245, 220)
+            cv.line([(x0, y0), (x1, y1)], c_ + (a,), wid, cap=False)
+            if q > 0.3 and (i + int(t * 20)) % 3 == 0:   # twinkling sparks
+                cv.circle(x1, y1 + 10, 5, fill=(255, 250, 220, a))
+        cv.circle(fx, fy, 220 * q + 40, fill=col + (int(40 * (1 - q)),))
+
+
 def confetti(cv, t, t0):
     if t < t0:
         return
@@ -471,7 +508,9 @@ def draw_friends(cv, t, cheer):
                     reach=reach, arms_up=cheer * (0.6 + 0.4 * abs(math.sin(t * 6 + i))))
 
 
-def draw_scene(cv, t, solution=True, dario_face=1, cheer=0.0):
+def draw_scene(cv, t, solution=True, dario_face=1, cheer=0.0, intro=False):
+    if intro:
+        big_fireworks(cv, t)
     string_lights(cv, t)
     party_background(cv, t, cheer)
     draw_friends(cv, t, cheer)
@@ -542,7 +581,7 @@ def scene_story(t):
     cam = keyframes(t, [(t0, FULL), (t0 + 1.2, FULL), (t1, CAM)])
 
     def actors(cv):
-        draw_scene(cv, t, solution=False, dario_face=1)
+        draw_scene(cv, t, solution=False, dario_face=1, intro=t < 3.2)
 
     frame, view = render_world_frame(cam, actors)
     if t < t1 + 0.2:

@@ -108,6 +108,39 @@ def glug():
     return out
 
 
+def fw_launch():
+    """rising whistle of a firework rocket"""
+    n = int(0.38 * SR)
+    tt = np.arange(n) / SR
+    f = 900 + 1700 * (tt / tt[-1]) ** 1.5
+    tone_ = np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.25
+    hiss = np.random.default_rng(31).standard_normal(n) * 0.18
+    env = np.minimum(1, tt / 0.05) * (0.6 + 0.4 * tt / tt[-1])
+    return (tone_ + hiss) * env
+
+
+def fw_boom():
+    """low thump + noise burst"""
+    n = int(1.1 * SR)
+    tt = np.arange(n) / SR
+    thump = np.sin(2 * np.pi * (70 - 30 * tt) * tt) * np.exp(-tt / 0.18)
+    x = np.random.default_rng(32).standard_normal(n)
+    x = np.convolve(x, np.ones(10) / 10, mode="same") * np.exp(-tt / 0.25) * 1.2
+    return (thump * 0.9 + x) * np.minimum(1, tt / 0.004)
+
+
+def fw_crackle():
+    """sparkling crackle after the burst"""
+    n = int(0.9 * SR)
+    out = np.zeros(n)
+    rng = np.random.default_rng(33)
+    for _ in range(45):
+        k = int(rng.uniform(0, n - 600))
+        m = int(rng.uniform(120, 400))
+        out[k:k + m] += rng.standard_normal(m) * _env(m, 0.0003, 0.002) * rng.uniform(0.3, 1.0)
+    return out * np.linspace(1, 0.2, n)
+
+
 def tick():
     n = int(0.04 * SR)
     return np.random.default_rng(0).standard_normal(n) * _env(n, 0.001, 0.006) * 0.5 + \
@@ -170,7 +203,8 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
     sfx = np.zeros(n)
     for kind, t, gain, *extra in events:
         s = {"ding": ding, "pop": pop, "tick": tick, "click": click, "clink": clink, "whoosh": whoosh,
-             "tada": tada, "glug": glug}.get(kind)
+             "tada": tada, "glug": glug, "fw_launch": fw_launch, "fw_boom": fw_boom,
+             "fw_crackle": fw_crackle}.get(kind)
         if kind == "rain":
             s = rain_noise(extra[0]); r = int(0.4 * SR)
             s[:r] *= np.linspace(0, 1, r); s[-r:] *= np.linspace(1, 0, r)
