@@ -206,6 +206,48 @@ def crackle_bed(dur):
     return out
 
 
+def chainsaw(dur=2.0):
+    """two-stroke engine: buzzy saw tone with revving"""
+    n = int(dur * SR)
+    tt = np.arange(n) / SR
+    rev = 0.5 + 0.5 * np.abs(np.sin(2 * np.pi * 0.75 * tt))
+    f = 85 + 75 * rev
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    saw = ((ph / np.pi) % 2 - 1)
+    buzz = saw * (0.6 + 0.4 * np.sign(np.sin(ph * 0.5)))
+    noise = np.random.default_rng(51).standard_normal(n)
+    noise = np.convolve(noise, np.ones(4) / 4, mode="same") * 0.35 * rev
+    env = np.minimum(1, tt / 0.15) * np.minimum(1, (dur - tt) / 0.25)
+    x = (buzz * 0.45 + noise) * env
+    return np.convolve(x, np.ones(5) / 5, mode="same") * 0.7
+
+
+def shing():
+    """metallic blade ring"""
+    out = sum(tone(f, 0.8, (1,), d=d) * g for f, d, g in ((2630, 0.35, 0.4), (3950, 0.25, 0.3), (5480, 0.18, 0.2)))
+    n = int(0.03 * SR)
+    out[:n] += np.random.default_rng(52).standard_normal(n) * _env(n, 0.0005, 0.006) * 0.5
+    return out * 0.7
+
+
+def squawk():
+    """short parrot squawk"""
+    n = int(0.22 * SR)
+    tt = np.arange(n) / SR
+    f = 1500 + 700 * np.sin(2 * np.pi * 9 * tt)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    x = np.sign(np.sin(ph)) * 0.3 + np.random.default_rng(53).standard_normal(n) * 0.15
+    return x * np.minimum(1, tt / 0.01) * np.minimum(1, (0.22 - tt) / 0.06)
+
+
+def wrong():
+    """soft two-tone 'nope' (replaces the harsh buzzer)"""
+    out = np.zeros(int(0.6 * SR))
+    place(out, tone(note(64), 0.35, (1, .3), d=0.2) * 0.5, 0.0)
+    place(out, tone(note(59), 0.45, (1, .3), d=0.25) * 0.5, 0.16)
+    return out
+
+
 def tick():
     n = int(0.04 * SR)
     return np.random.default_rng(0).standard_normal(n) * _env(n, 0.001, 0.006) * 0.5 + \
@@ -270,9 +312,11 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
         s = {"ding": ding, "pop": pop, "tick": tick, "click": click, "clink": clink, "whoosh": whoosh,
              "tada": tada, "glug": glug, "fw_launch": fw_launch, "fw_boom": fw_boom,
              "fw_crackle": fw_crackle, "creak": creak, "growl": growl, "buzzer": buzzer, "step": step,
-             "drip": drip, "swish": swish}.get(kind)
+             "drip": drip, "swish": swish, "shing": shing, "squawk": squawk, "wrong": wrong}.get(kind)
         if kind == "bed":
             s = crackle_bed(extra[0])
+        elif kind == "chainsaw":
+            s = chainsaw(extra[0])
         elif kind == "rain":
             s = rain_noise(extra[0]); r = int(0.4 * SR)
             s[:r] *= np.linspace(0, 1, r); s[-r:] *= np.linspace(1, 0, r)

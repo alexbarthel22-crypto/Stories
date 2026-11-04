@@ -9,26 +9,24 @@ st = mv.st
 t2, t3, t4, t5 = st("Hinter der ersten"), st("Hinter der zweiten"), st("Und hinter der dritten"), st("Durch welche")
 a2, a3, a1, why, out, t_end = st("Hinter Tür zwei"), st("Hinter Tür drei"), st("Aber Tür eins"), st("Denn Tiger"), \
     st("Du kannst also"), st("Hättest")
-ev = [("bed", 0.0, 0.35, t5),                               # torch crackle in the cellar (story)
-      ("bed", st("Hier kommt"), 0.35, t_end - st("Hier kommt")),
-      *[("drip", x, 0.5) for x in (1.3, 6.2, 12.8, 18.4, 35.5, 46.9)],
-      ("pop", st("Du befindest") + 0.3, 0.6), ("pop", st("Drei alte") + 0.2, 0.6),
-      # door 1: creak + tiger roars
-      ("creak", t2 + 0.45, 0.55), ("growl", t2 + 1.0, 0.55), ("growl", t2 + 2.6, 0.45), ("pop", t2 + 0.7, 0.5),
-      ("creak", t3 - 0.55, 0.4),
-      # door 2: creak + pistol click
-      ("creak", t3 + 0.45, 0.55), ("click", t3 + 1.3, 1.0), ("click", t3 + 1.42, 0.8), ("pop", t3 + 0.7, 0.5),
-      ("creak", t4 - 0.55, 0.4),
-      # door 3: creak + saber swishes
-      ("creak", t4 + 0.45, 0.55), ("swish", t4 + 1.2, 0.6), ("swish", t4 + 1.85, 0.6), ("swish", t4 + 3.1, 0.5),
-      ("pop", t4 + 0.7, 0.5), ("creak", t5 - 0.65, 0.4),
+ev = [("bed", 0.0, 0.3, t5),                                # quiet torch crackle in the cellar
+      ("bed", st("Hier kommt"), 0.3, t_end - st("Hier kommt")),
+      *[("drip", x, 0.45) for x in (3.1, 12.8, 18.4, 35.5, 46.9)],
+      ("pop", st("Drei alte") + 0.2, 0.6),
+      # door 1: tigers roar
+      ("growl", t2 + 0.8, 0.5), ("growl", t2 + 2.6, 0.42), ("pop", t2 + 0.7, 0.5),
+      # door 2: chainsaw running
+      ("chainsaw", t3 + 0.5, 0.42, t4 - t3 - 0.7), ("pop", t3 + 0.7, 0.5),
+      # door 3: saber swishes + blade ring + parrot
+      ("swish", t4 + 1.0, 0.6), ("shing", t4 + 1.15, 0.5), ("swish", t4 + 2.2, 0.55), ("shing", t4 + 2.35, 0.45),
+      ("squawk", t4 + 1.7, 0.35), ("pop", t4 + 0.7, 0.5),
       ("whoosh", t5 - 0.15, 0.6), ("pop", t5, 0.8), ("pop", t5 + 0.2, 0.6),
       *[("tick", st("PAUSE") + 0.25 + k * 0.5, 0.9) for k in range(3)],
       ("pop", st("Kleiner Tipp"), 0.7), ("pop", st("Schreib deine"), 0.6),
       ("whoosh", st("Hier kommt") - 0.15, 0.6), ("pop", st("Hier kommt"), 0.8),
-      ("creak", a2 + 0.45, 0.5), ("click", a2 + 1.0, 0.9), ("buzzer", a2 + 0.9, 0.6), ("creak", a3 - 0.55, 0.35),
-      ("creak", a3 + 0.45, 0.5), ("swish", a3 + 1.1, 0.55), ("buzzer", a3 + 0.9, 0.6), ("creak", a1 - 0.65, 0.35),
-      ("ding", a1, 0.8), ("creak", why, 0.55), ("pop", why + 0.6, 0.6), ("pop", why + 1.2, 0.7),
+      ("chainsaw", a2 + 0.5, 0.35, 1.6), ("wrong", a2 + 0.9, 0.6),
+      ("swish", a3 + 0.9, 0.5), ("shing", a3 + 1.05, 0.4), ("wrong", a3 + 0.9, 0.6),
+      ("ding", a1, 0.8), ("pop", why + 0.6, 0.6), ("pop", why + 1.2, 0.7),
       ("tada", out, 0.7), *[("step", out + 0.6 + k * 0.28, 0.8) for k in range(int((t_end - out - 0.9) / 0.28))],
       ("whoosh", t_end - 0.15, 0.6), ("pop", t_end, 0.8), ("pop", st("Schreib's") + 0.4, 0.7),
       ("pop", st("Schreib's") + 2.0, 0.7)]

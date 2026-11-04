@@ -11,7 +11,7 @@ from PIL import Image, ImageEnhance, ImageDraw, ImageChops
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "engine"))
 from toolkit import *  # noqa
-from animals import draw_tiger, draw_pistol, draw_crutch, draw_saber, draw_pirate_extras
+from animals import draw_tiger, draw_saber, draw_pirate_extras, draw_chainsaw, draw_parrot
 
 CACHE = os.path.join(HERE, "cache")
 os.makedirs(CACHE, exist_ok=True)
@@ -27,7 +27,8 @@ STONE, STONE_D, STONE_L = "#4a4250", "#3a3340", "#5d5464"
 WOOD, WOOD_D = "#7a4f2e", "#5c3a22"
 DU = Style(205, "#f1c19c", "#6b4423", "#e2574c", "#2f3a56", shoes="#ffffff", hair_style="quiff",
            accent="#9b2f27", under="#f4efe4", shoe_accent="#ffd34d")
-GUNMAN = Style(205, "#e9b48f", "#7a7a7a", "#5d6270", "#3b4a6b", hair_style="short", beard=True, shoes="#22243a")
+SAWMAN = Style(205, "#e9b48f", "#3a3530", "#4a5a3a", "#3b3f4a", hair_style="short", beard=True, shoes="#22243a",
+               accent="#2f3a26")
 PIRATE = Style(205, "#c98c62", "#1d1712", "#8b2a2a", "#2f2a36", hair_style="short", beard=True, shoes="#22243a")
 
 
@@ -166,54 +167,80 @@ def torches(cv, t):
 
 
 def draw_leaf(cv, k, opened):
-    """wooden door leaf hinged on the left, opening = narrowing (perspective)"""
+    """wooden door leaf hinged on the RIGHT (so everything behind it stays visible), opening = narrowing"""
     cx = DOOR_X[k]
     pts = door_poly(k, 0)
-    x0 = cx - DOOR_W / 2
-    f = 1 - 0.86 * smooth(opened)
-    leaf = [(x0 + (x - x0) * f, y + (0 if x == x0 else (y - WALL_BOTTOM) * 0.0)) for x, y in pts]
+    x1 = cx + DOOR_W / 2
+    f = 1 - 0.9 * smooth(opened)
+    leaf = [(x1 - (x1 - x) * f, y) for x, y in pts]
     shade = mix(hexc(WOOD), (0, 0, 0), 0.35 * smooth(opened))
     cv.poly(leaf, fill=shade)
-    for i in range(1, 5):
-        px = x0 + DOOR_W * i / 5 * f
-        cv.line([(px, WALL_BOTTOM), (px, DOOR_RECT_TOP - math.sqrt(max(0, (DOOR_W / 2) ** 2 - (px - cx) ** 2)) * (1 if f > 0.95 else 0.9) + 4)],
-                hexc(WOOD_D), 4, cap=False)
+    if f > 0.25:
+        for i in range(1, 5):
+            px = x1 - DOOR_W * i / 5 * f
+            cv.line([(px, WALL_BOTTOM), (px, DOOR_RECT_TOP - 0.85 * math.sqrt(max(0, (DOOR_W / 2) ** 2 - ((x1 - DOOR_W * i / 5) - cx) ** 2)) + 6)],
+                    hexc(WOOD_D), 4, cap=False)
     for yy in (DOOR_RECT_TOP + 40, WALL_BOTTOM - 70):
-        cv.rect(x0 + 6 * f, yy - 9, x0 + (DOOR_W - 6) * f, yy + 9, fill=hexc("#2c2f38"))
-        for rx in (x0 + 18 * f, x0 + (DOOR_W - 18) * f):
+        cv.rect(x1 - (DOOR_W - 6) * f, yy - 9, x1 - 6 * f, yy + 9, fill=hexc("#2c2f38"))
+        for rx in (x1 - (DOOR_W - 18) * f, x1 - 18 * f):
             cv.circle(rx, yy, 5, fill=hexc("#8a8f99"))
     if f > 0.4:
-        hx = x0 + DOOR_W * 0.8 * f
+        hx = x1 - DOOR_W * 0.8 * f
         cv.circle(hx, (DOOR_RECT_TOP + WALL_BOTTOM) / 2, 14, outline=hexc("#b8902f"), width=5)
 
 
 def outside(cv, k, t, starved=False):
-    """what waits behind door k (drawn into the doorway, clipped)"""
+    """what waits behind door k (drawn into the doorway, clipped) – animated"""
     cx = DOOR_X[k]
-    sky = [(cx - DOOR_W / 2, DOOR_RECT_TOP - DOOR_W / 2), (cx + DOOR_W / 2, WALL_BOTTOM)]
-    cv.rect(sky[0][0], sky[0][1], sky[1][0], WALL_BOTTOM - 140, fill=hexc("#9fd2f0"))
-    cv.rect(sky[0][0], WALL_BOTTOM - 150, sky[1][0], WALL_BOTTOM - 120, fill=hexc("#cfe9f6"))
-    cv.rect(sky[0][0], WALL_BOTTOM - 130, sky[1][0], WALL_BOTTOM, fill=hexc("#6fae5a"))
+    x0, x1 = cx - DOOR_W / 2, cx + DOOR_W / 2
+    top = DOOR_RECT_TOP - DOOR_W / 2
+    cv.rect(x0, top, x1, WALL_BOTTOM - 140, fill=hexc("#9fd2f0"))
+    cv.rect(x0, WALL_BOTTOM - 150, x1, WALL_BOTTOM - 120, fill=hexc("#cfe9f6"))
+    cv.rect(x0, WALL_BOTTOM - 130, x1, WALL_BOTTOM, fill=hexc("#6fae5a"))
     cv.circle(cx + 60, DOOR_RECT_TOP - 50, 26, fill=hexc("#fff3c4"))
+    for i in range(2):          # drifting clouds
+        ccx = x0 - 60 + ((t * 18 + i * 140 + k * 50) % (DOOR_W + 120))
+        ccy = top + 60 + i * 50
+        cv.rect(ccx - 40, ccy - 10, ccx + 40, ccy + 12, fill=(255, 255, 255, 220), r=11)
+        cv.circle(ccx - 8, ccy - 10, 16, fill=(255, 255, 255, 220))
+    bx = x0 + ((t * 40 + k * 70) % (DOOR_W + 40)) - 20     # a bird far away
+    by = top + 110 + 8 * math.sin(t * 2 + k)
+    wing = 6 * math.sin(t * 14)
+    cv.line([(bx - 10, by - wing), (bx, by), (bx + 10, by - wing)], hexc("#2b2140"), 3)
+    for g in range(9):          # swaying grass
+        gx = x0 + 12 + g * 24
+        sw = 5 * math.sin(t * 2.2 + g)
+        cv.line([(gx, WALL_BOTTOM - 4), (gx + sw, WALL_BOTTOM - 26)], hexc("#4f8a4c"), 4)
     gy = WALL_BOTTOM - 20
     if k == 0:
         if starved:
             draw_tiger(cv, cx - 28, gy + 8, 0.68, face=1, starved=True)
             draw_tiger(cv, cx + 30, gy - 34, 0.6, face=-1, starved=True)
+            for i in range(4):  # flies circling
+                a = t * 4 + i * 1.6
+                fx, fy = cx + math.cos(a) * 46 + (i - 1.5) * 10, gy - 70 + math.sin(a * 1.3) * 18
+                cv.circle(fx, fy, 3.5, fill=hexc("#22243a"))
+                ww = 4 + 2 * math.sin(t * 40 + i)
+                cv.ellipse(fx - ww, fy - 7, fx, fy - 2, fill=(255, 255, 255, 170))
+                cv.ellipse(fx, fy - 7, fx + ww, fy - 2, fill=(255, 255, 255, 170))
         else:
             r = 0.5 + 0.5 * math.sin(t * 6)
-            draw_tiger(cv, cx - 34, gy - 30, 0.62, face=1, roar=r)
-            draw_tiger(cv, cx + 28, gy, 0.72, face=-1, roar=1 - r)
+            pace = 10 * math.sin(t * 1.6)
+            draw_tiger(cv, cx - 34 - pace, gy - 30, 0.62, face=1, roar=r, phase=t * 6)
+            draw_tiger(cv, cx + 28 + pace, gy, 0.72, face=-1, roar=1 - r, phase=t * 6 + 1)
     elif k == 1:
-        hand = draw_person(cv, cx + 30, gy, GUNMAN, face=-1, h=300, reach=(cx - 60, gy - 205),
-                           bounce=abs(math.sin(t * 2)) * 2)
-        draw_pistol(cv, hand, face=-1, s=1.0)
-        draw_crutch(cv, (cx + 72, gy - 200), (cx + 95, gy), 1.0)
+        rev = abs(math.sin(t * 3.0))
+        sh = 3 * math.sin(t * 40) * rev
+        hand = draw_person(cv, cx + 38 + sh, gy, SAWMAN, face=-1, h=300, reach=(cx - 20, gy - 170 + 10 * rev),
+                           angry=True, lean=-6 * rev)
+        draw_chainsaw(cv, hand, face=-1, s=0.62, t=t, running=True)
     else:
-        sw = -0.9 + 0.35 * math.sin(t * 5)
-        hand = draw_person(cv, cx + 20, gy, PIRATE, face=-1, h=300, reach=(cx - 50, gy - 240))
-        draw_saber(cv, hand, face=-1, s=0.9, ang=sw)
-        draw_pirate_extras(cv, cx + 20, gy, PIRATE, 300, face=-1)
+        sw = -1.1 + 0.6 * math.sin(t * 5)
+        hand = draw_person(cv, cx + 34, gy, PIRATE, face=-1, h=300, reach=(cx - 40, gy - 250 - 20 * math.sin(t * 5)),
+                           angry=True)
+        draw_saber(cv, hand, face=-1, s=0.75, ang=sw)
+        draw_pirate_extras(cv, cx + 34, gy, PIRATE, 300, face=-1)
+        draw_parrot(cv, cx + 34 + 30, gy - 0.72 * 300 + 2, 0.8, t=t, face=-1)
 
 
 def draw_doors(cv, t, opened, starved=False):
@@ -272,16 +299,16 @@ def scene_story(t):
 
     frame, view = render_world_frame(cam, actors)
     if t < t1:
-        sx, sy = w2s(540, 1440 - 360, view)
-        pill(frame, sx, sy, "DU", 60, bg="#ffd34d", rot=3, scale=ease_out_back(prog(t, t0 + 0.3, t0 + 0.6)))
-        pill(frame, OUT_W / 2, 330, "ALTES KELLERGEWÖLBE", 56, bg="#fff6e6", rot=-2,
-             scale=ease_out_back(prog(t, t0 + 0.6, t0 + 0.95)))
+        sx, sy = w2s(540, 1440 - 170, view)
+        pill(frame, sx + 150, sy, "DU", 60, bg="#ffd34d", rot=3, scale=ease_out_back(prog(t, t0 + 0.3, t0 + 0.6)))
+
     if t1 <= t < t2 + 0.2:
         door_pills(frame, view, scale=ease_out_back(prog(t, t1 + 0.2, t1 + 0.55)))
         pill(frame, OUT_W / 2, 330, "3 TÜREN INS FREIE", 60, bg="#fff6e6", rot=-2,
              scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)))
+    karaoke_title(frame, t)
     for k, (ta, tb, lab) in enumerate(((t2, t3, "2 TIGER · 5 MONATE NICHTS GEFRESSEN"),
-                                        (t3, t4, "KRÜCKE + GELADENE PISTOLE"),
+                                        (t3, t4, "BÖSER MANN MIT MOTORSÄGE"),
                                         (t4, t5, "EINÄUGIGER PIRAT MIT SÄBEL"))):
         if ta <= t < tb:
             pill(frame, OUT_W / 2, 330, f"TÜR {k + 1}", 64, bg="#ffd34d", rot=-2, scale=ease_out_back(prog(t, ta, ta + 0.3)))
@@ -289,6 +316,56 @@ def scene_story(t):
             pill(frame, OUT_W / 2 - 20, 1400, lab, size, bg="#e2574c", fg="#ffffff",
                  scale=ease_out_back(prog(t, ta + 0.7, ta + 1.0)))
     return frame
+
+
+TITLE_LINES = [["DU", "BEFINDEST", "DICH"], ["IN", "EINEM", "ALTEN"], ["KELLERGEWÖLBE"]]
+
+
+def karaoke_title(frame, t):
+    """the first sentence big in the middle; each word grows while it is spoken"""
+    t0, t1 = S[K["Du befindest"]], E[K["Du befindest"]]
+    if t > t1 + 0.45:
+        return
+    words = [w for line in TITLE_LINES for w in line]
+    weights = [len(w) + 2 for w in words]
+    tot = sum(weights)
+    spans, acc = [], t0 + 0.05
+    for wgt in weights:
+        d = (t1 - t0 - 0.1) * wgt / tot
+        spans.append((acc, acc + d))
+        acc += d
+    fade = 1 - prog(t, t1 + 0.1, t1 + 0.45)
+    layer = Image.new("RGBA", frame.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    base, gap, max_w = 84, 26, 790          # line width limit keeps the title clear of TikTok's side areas
+    i = 0
+    for li, line in enumerate(TITLE_LINES):
+        cy = 760 + li * 118
+        acts, spokens = [], []
+        for j, w in enumerate(line):
+            a, b = spans[i + j]
+            acts.append(smooth(prog(t, a - 0.06, a + 0.08)) * (1 - smooth(prog(t, b, b + 0.15))))
+            spokens.append(t >= a)
+        sizes = [base * (1 + 0.3 * ac) for ac in acts]
+        widths = [font(int(sz)).getbbox(w)[2] for sz, w in zip(sizes, line)]
+        total_w = sum(widths) + gap * (len(line) - 1)
+        k = min(1.0, max_w / total_w)
+        sizes = [sz * k for sz in sizes]
+        widths = [wd * k for wd in widths]
+        total_w = sum(widths) + gap * k * (len(line) - 1)
+        x = OUT_W / 2 - total_w / 2
+        for j, w in enumerate(line):
+            sz = max(10, int(sizes[j]))
+            act, spoken = acts[j], spokens[j]
+            col = (255, 211, 77, int(255 * fade)) if act > 0.3 else ((255, 255, 255, int(255 * fade)) if spoken else
+                                                                      (255, 255, 255, int(130 * fade)))
+            cxw = x + widths[j] / 2
+            d.text((cxw, cy), w, font=font(sz), fill=col, anchor="mm", stroke_width=max(4, sz // 13),
+                   stroke_fill=(20, 16, 36, int(255 * fade)))
+            log_ui("title:" + w, cxw - widths[j] / 2, cy - sz * 0.55, cxw + widths[j] / 2, cy + sz * 0.55)
+            x += widths[j] + gap * k
+        i += len(line)
+    frame.paste(layer, (0, 0), layer)
 
 
 def door_icon(cv, x, y, s, n, open_=0.0):
@@ -363,7 +440,7 @@ def scene_solution(t):
     if t0 + 1.0 < t < a2:
         door_pills(frame, view)
     if a2 <= t < a3:
-        pill(frame, OUT_W / 2, 330, "TÜR 2: PISTOLE", 64, bg="#fff6e6", rot=-2, scale=ease_out_back(prog(t, a2, a2 + 0.3)))
+        pill(frame, OUT_W / 2, 330, "TÜR 2: MOTORSÄGE", 64, bg="#fff6e6", rot=-2, scale=ease_out_back(prog(t, a2, a2 + 0.3)))
         check_icon(frame, OUT_W / 2, 1380, 70, ok=False, scale=ease_out_back(prog(t, a2 + 0.9, a2 + 1.2)))
     if a3 <= t < a1:
         pill(frame, OUT_W / 2, 330, "TÜR 3: SÄBEL", 64, bg="#fff6e6", rot=-2, scale=ease_out_back(prog(t, a3, a3 + 0.3)))

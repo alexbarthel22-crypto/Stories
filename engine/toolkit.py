@@ -198,7 +198,8 @@ def _shade(c, f):
 
 
 def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bounce=0.0,
-                wave=0.0, h=None, arms_up=0.0, arm_scale=1.0, lean=0.0, blink=False, talk=0.0, cup=None):
+                wave=0.0, h=None, arms_up=0.0, arm_scale=1.0, lean=0.0, blink=False, talk=0.0, cup=None,
+                angry=False):
     """Flat-vector person (3/4 view) standing with feet at (x, y).
 
     phase: walk-cycle phase in radians (None = standing)
@@ -332,8 +333,13 @@ def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bou
                        fill=hexc("#ffffff"))
             cv.circle(ex + f * head_r * 0.04, eye_y + head_r * 0.01, head_r * 0.10 * sc, fill=ink)
             cv.circle(ex + f * head_r * 0.07, eye_y - head_r * 0.04, head_r * 0.035, fill=hexc("#ffffff"))
-        cv.line([(ex - head_r * 0.16, eye_y - head_r * 0.32), (ex + head_r * 0.14, eye_y - head_r * 0.36)],
-                hexc(st.brows), head_r * 0.08)
+        if angry:   # brows slanting down towards the nose
+            d = 1 if ex < fx_ else -1
+            cv.line([(ex - d * head_r * 0.2, eye_y - head_r * 0.44), (ex + d * head_r * 0.17, eye_y - head_r * 0.22)],
+                    hexc(st.brows), head_r * 0.11)
+        else:
+            cv.line([(ex - head_r * 0.16, eye_y - head_r * 0.32), (ex + head_r * 0.14, eye_y - head_r * 0.36)],
+                    hexc(st.brows), head_r * 0.08)
         if st.glasses:
             cv.circle(ex, eye_y, head_r * 0.26, outline=ink, width=head_r * 0.06)
     if st.glasses:
@@ -341,11 +347,19 @@ def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bou
     # nose + mouth + cheek
     cv.ellipse(fx_ + f * head_r * 0.06 - head_r * 0.1, eye_y + head_r * 0.2, fx_ + f * head_r * 0.06 + head_r * 0.12,
                eye_y + head_r * 0.38, fill=skin_d)
-    mo = clamp(talk) * head_r * 0.14
-    cv.pieslice(fx_ - head_r * 0.24, eye_y + head_r * 0.44 - mo * 0.3, fx_ + head_r * 0.28, eye_y + head_r * 0.76 + mo, 0,
-                180, fill=hexc("#8a3b3b"))
-    cv.pieslice(fx_ - head_r * 0.18, eye_y + head_r * 0.45, fx_ + head_r * 0.22, eye_y + head_r * 0.58, 0, 180,
-                fill=hexc("#ffffff"))
+    if angry:   # evil grin with clenched teeth
+        cv.pieslice(fx_ - head_r * 0.34, eye_y + head_r * 0.36, fx_ + head_r * 0.38, eye_y + head_r * 0.72, 0, 180,
+                    fill=hexc("#5a1d1d"))
+        cv.rect(fx_ - head_r * 0.3, eye_y + head_r * 0.54, fx_ + head_r * 0.34, eye_y + head_r * 0.64, fill=hexc("#ffffff"))
+        for k in range(5):
+            xx = fx_ - head_r * 0.3 + k * head_r * 0.16
+            cv.line([(xx, eye_y + head_r * 0.54), (xx, eye_y + head_r * 0.64)], hexc("#5a1d1d"), head_r * 0.025, cap=False)
+    else:
+        mo = clamp(talk) * head_r * 0.14
+        cv.pieslice(fx_ - head_r * 0.24, eye_y + head_r * 0.44 - mo * 0.3, fx_ + head_r * 0.28, eye_y + head_r * 0.76 + mo, 0,
+                    180, fill=hexc("#8a3b3b"))
+        cv.pieslice(fx_ - head_r * 0.18, eye_y + head_r * 0.45, fx_ + head_r * 0.22, eye_y + head_r * 0.58, 0, 180,
+                    fill=hexc("#ffffff"))
     cv.circle(fx_ - f * head_r * 0.52, eye_y + head_r * 0.34, head_r * 0.13, fill=hexc("#ff8a7a", 70))
 
     # ---------- front arm

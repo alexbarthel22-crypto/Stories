@@ -27,7 +27,7 @@ def cover():
     pill(img, OUT_W / 2, 285, "NUR 1 TÜR IST SICHER", 44, bg="#e2574c", fg="#ffffff", pad=(26, 12), rot=-2)
     l1 = "WELCHE WÄHLST DU?"
     pill(img, OUT_W / 2 - 20, 425, l1, fit(l1, 880, 92), bg="#ffd34d", rot=-2)
-    for k, lab in enumerate(("TIGER", "PISTOLE", "PIRAT")):
+    for k, lab in enumerate(("TIGER", "MOTORSÄGE", "PIRAT")):
         sx, sy = mv.w2s(mv.DOOR_X[k], mv.DOOR_RECT_TOP - mv.DOOR_W / 2 - 150, view)
         pill(img, sx, sy, lab, 40, bg="#fff6e6", pad=(16, 9), rot=(-3, 2, -2)[k])
     return img

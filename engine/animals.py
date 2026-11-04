@@ -317,3 +317,47 @@ def draw_pirate_extras(cv, x, y, st, h, face=1):
     cv.line([(hx - head_r * 0.9, head_y - head_r * 0.45), (ex + f * head_r * 0.2, eye_y - head_r * 0.1)],
             hexc("#1d1a24"), head_r * 0.07)
     cv.ellipse(ex - head_r * 0.2, eye_y - head_r * 0.2, ex + head_r * 0.2, eye_y + head_r * 0.2, fill=hexc("#1d1a24"))
+
+
+def draw_chainsaw(cv, hand, face=1, s=1.0, t=0.0, running=True):
+    """chainsaw held at hand (rear handle), bar pointing forward; running = chain + smoke + shake"""
+    f = face
+    hx, hy = hand
+    if running:
+        hy += math.sin(t * 60) * 2 * s
+    body = hexc("#f08a2c")
+    cv.rect(min(hx - f * 20 * s, hx + f * 70 * s), hy - 34 * s, max(hx - f * 20 * s, hx + f * 70 * s), hy + 14 * s,
+            fill=body, r=10 * s)
+    cv.rect(min(hx - f * 26 * s, hx + f * 4 * s), hy - 46 * s, max(hx - f * 26 * s, hx + f * 4 * s), hy - 30 * s,
+            fill=INK, r=6 * s)                                    # top handle
+    cv.rect(min(hx + f * 20 * s, hx + f * 54 * s), hy - 30 * s, max(hx + f * 20 * s, hx + f * 54 * s), hy - 4 * s,
+            fill=hexc("#2c2f38"), r=4 * s)
+    # bar + chain
+    bx0, bx1 = hx + f * 66 * s, hx + f * 200 * s
+    cv.rect(min(bx0, bx1), hy - 22 * s, max(bx0, bx1), hy + 4 * s, fill=hexc("#aeb5bf"), r=12 * s)
+    off = (t * 220 * s) % (16 * s) if running else 0
+    n = int(140 / 16)
+    for k in range(n + 1):
+        x = bx0 + f * (k * 16 * s + off)
+        if (x - bx1) * f > 0:
+            break
+        cv.poly([(x, hy - 22 * s), (x + f * 8 * s, hy - 30 * s), (x + f * 14 * s, hy - 22 * s)], fill=hexc("#3a3d46"))
+        cv.poly([(x, hy + 4 * s), (x + f * 8 * s, hy + 12 * s), (x + f * 14 * s, hy + 4 * s)], fill=hexc("#3a3d46"))
+    if running:   # exhaust puffs drifting back/up
+        for k in range(3):
+            ph = (t * 1.6 + k / 3) % 1
+            px, py = hx - f * (24 + 40 * ph) * s, hy - 20 * s - 60 * ph * s
+            cv.circle(px, py, (8 + 14 * ph) * s, fill=(200, 200, 210, int(150 * (1 - ph))))
+
+
+def draw_parrot(cv, x, y, s=1.0, t=0.0, face=1):
+    """small parrot sitting at (x, y) (feet), flapping now and then"""
+    f = face
+    flap = max(0.0, math.sin(t * 9)) if (t % 2.6) < 0.9 else 0.0
+    cv.ellipse(x - 14 * s, y - 46 * s, x + 14 * s, y - 4 * s, fill=hexc("#37b26c"))
+    cv.poly([(x - f * 6 * s, y - 10 * s), (x - f * 26 * s, y + 14 * s), (x - f * 14 * s, y - 2 * s)], fill=hexc("#3f7fd9"))
+    cv.circle(x + f * 4 * s, y - 50 * s, 12 * s, fill=hexc("#e2574c"))
+    cv.poly([(x + f * 12 * s, y - 54 * s), (x + f * 24 * s, y - 48 * s), (x + f * 12 * s, y - 42 * s)], fill=hexc("#ffd34d"))
+    cv.circle(x + f * 7 * s, y - 53 * s, 2.5 * s, fill=INK)
+    wing = [(x - f * 4 * s, y - 36 * s), (x - f * (18 + 10 * flap) * s, y - (34 + 26 * flap) * s), (x - f * 8 * s, y - 14 * s)]
+    cv.poly(wing, fill=hexc("#2a9a5a"))
