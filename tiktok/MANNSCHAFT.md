@@ -32,6 +32,16 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - **Vereinskasse:** grüne Geldkassette mit Nieten, gelbem Schloss und Etikett „VEREINSKASSE“, steht auf einer Holzkiste
 - **Bushaltestelle:** Mast mit gelb-grünem H-Schild (gehört zum Stürmer #9)
 
+## Folge 1 (veröffentlicht)
+- Datei: `tiktok/tag01_fc_schlammloch_gemini_v3.mp4` (0:53), Titelbild `tag01_thumbnail.png`, Beschreibung `tag01_beschreibung.md`
+- Ablauf: Tag 1 → Verein gegründet → 1 Follow = 1 Tribünenplatz → Tribüne aus 3 Klappstühlen → Willkommen beim FC Schlammloch (Logo) → Platz = Schlammloch → Flutlicht = Taschenlampe am Mast (Akku 3 %) → Kreisliga, ganz unten → Vorstellung von Vlad (Tor), Opa Jürgen (Abwehr), Bus-Verpasser in Flip-Flops (Sturm), Corgi (Maskottchen) → Ziel: Deutscher Meister → Sonntag 1. Spiel (ganzes Team) → Fans: 0 (traurig) → Folgen = Klappstuhl Nr. 1 → Vereinskasse 500 € + Kronkorken → 1 € pro Follower, 2 € pro Kommentar → Was tun mit dem Geld? (Flutlicht kaufen / Vereinshaus mieten / was ganz anderes) → Top-Kommentar entscheidet
+- Ohne Stadionjubel (die Variante mit Jubel, `gemini_v4`, wird nicht genutzt)
+
+## Thumbnail-Vorlage (für jede Folge gleich)
+- `node src/thumb.js <Tag> <Fans> <Kasse in €> <ausgabe.png>`, z. B. `node src/thumb.js 2 37 571 tag02_thumbnail.png`
+- Großer Spielfeld-Kasten „TAG X“, darunter orange „⚽ FC SCHLAMMLOCH“, der Trainer groß und lachend, unten zwei Kästen: **FANS** (rot bei 0, sonst grün) und **VEREINSKASSE** (grün, Betrag in €)
+- Alles Wichtige liegt im mittleren 3:4-Ausschnitt, der im TikTok-Profilraster sichtbar ist
+
 ## Stand nach Tag 1
 - Liga: Kreisliga. Ziel: Deutscher Meister (Bundesliga)
 - Tribüne: 3 Klappstühle (ohne Sitzkissen), Nr. 1–3, stehen außerhalb des Platzes

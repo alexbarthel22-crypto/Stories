@@ -155,6 +155,7 @@ def cheer(d=2.8):
 
 
 def build_sfx(segs, N):
+    # Stadionjubel (cheer) ist vorhanden, wird in Folge 1 aber bewusst NICHT genutzt (veroeffentlichte Fassung = gemini_v3)
     fx = np.zeros(N, np.float32)
 
     def put(at, snd):
@@ -168,7 +169,7 @@ def build_sfx(segs, N):
         L = lambda lt, snd: put(st + lt, snd)
         if k > 0: L(0, splat())
         sid = s['id']
-        if sid == 'intro': L(0.05, whoosh()); L(0.1, pop()); L(0.7, pop()); L(c[-1], cheer(max(1.5, (en - st) - c[-1] + 0.6)))
+        if sid == 'intro': L(0.05, whoosh()); L(0.1, pop()); L(0.7, pop())
         elif sid == 'follow': L(0.6, pop())
         elif sid == 'chairs':
             L(0.0, pop()); L(0.9, pop())
