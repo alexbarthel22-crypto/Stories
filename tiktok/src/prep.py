@@ -49,7 +49,7 @@ for p in rng.integers(0, N - 2000, int(total * 25)):
     drops[p:p + 300] += rng.standard_normal(300) * np.exp(-np.arange(300) / 40) * 0.022
 from sfx import build_sfx
 fx = build_sfx(out, N)
-from music import make_music
+from music2 import make_music
 mus = make_music(total, v)[:N]
 if len(mus) < N: mus = np.pad(mus, (0, N - len(mus)))
 mix = np.clip(v * 0.95 + rain + drops + fx + mus, -1, 1)
