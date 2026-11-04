@@ -77,7 +77,7 @@ function nameCard(x, y, num, name, sub, numBg) {
     ${box(24, 22, 126, 126, 'pitch', 8)}
     ${label(87, 112, num, 84, '#fff')}
     ${label(180, 92, name, 72, BROWN, 'start')}
-    <rect x="178" y="106" width="${textW(sub, 34) + 34}" height="50" rx="12" fill="#F28A2E" stroke="${BROWN}" stroke-width="6"/>
+    <rect x="178" y="106" width="${textW(sub, 34) * 1.18 + 44}" height="50" rx="12" fill="#F28A2E" stroke="${BROWN}" stroke-width="6"/>
     ${label(195, 142, sub, 34, '#fff', 'start')}</g>`;
 }
 

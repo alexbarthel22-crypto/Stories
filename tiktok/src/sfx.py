@@ -89,8 +89,9 @@ def _brass(f, d, vib=0.0):
     return _lp(x, 3) * env
 
 
-def sad_trombone():
-    notes = [(233, .32), (220, .32), (207.6, .32), (196, .9)]
+def sad_trombone(total=1.86):
+    k = total / 1.86
+    notes = [(233, .32 * k), (220, .32 * k), (207.6, .32 * k), (196, .9 * k)]
     out = []
     for i, (f, d) in enumerate(notes):
         out.append(_brass(f, d, vib=1.5 if i == 3 else 0.3))
@@ -147,18 +148,16 @@ def build_sfx(segs, N):
             L(0.0, pop()); L(0.9, pop())
             for x in (0.15, 0.45, 0.75): L(x + 0.1, clack())
         elif sid == 'welcome': L(0.0, whoosh()); L(0.05, pop())
-        elif sid == 'field':
-            L(0.1, pop())
-            for x in (0.5, 1.3, 2.0): L(x, squelch())
+        elif sid == 'field': L(0.1, pop())
         elif sid == 'light':
             L(0, flicker_buzz(en - st, lambda x: np.sin(x * 37) + np.sin(x * 13.3) > -0.6))
             L(0.5, pop()); L(1.4, pop())
         elif sid == 'league': L(0.1, pop()); L(0.8, pop())
         elif sid in ('vlad', 'opa', 'pichu'): L(0.1, pop())
-        elif sid == 'bus': L(0.1, pop()); L(0.35, bus_horn()); L(c[-1], pop())
+        elif sid == 'bus': L(0.1, pop()); L(c[-1], pop())
         elif sid == 'goal': L(0.0, pop()); L(0.6, fanfare()); L(1.0, pop())
         elif sid == 'sunday': L(0.0, pop()); L(0.6, whistle())
-        elif sid == 'fans': L(0.1, pop()); L(0.9, sad_trombone())
+        elif sid == 'fans': L(0.1, pop()); L(0.8, sad_trombone(max(0.5, (en - st) - 0.8 - 0.12)))
         elif sid == 'seat':
             L(0.0, pop()); L(0.6, click()); L(1.0, ding())
             for x in (1.3, 1.55, 1.8): L(x, pop())
@@ -173,4 +172,4 @@ def build_sfx(segs, N):
             L(0.0, pop())
             for x in c[2:5]: L(x, whoosh())
         elif sid == 'comment': L(0.0, ding()); L(0.6, pop())
-    return fx
+    return fx * 0.6

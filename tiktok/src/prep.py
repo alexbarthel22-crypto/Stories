@@ -49,18 +49,9 @@ for p in rng.integers(0, N - 2000, int(total * 25)):
     drops[p:p + 300] += rng.standard_normal(300) * np.exp(-np.arange(300) / 40) * 0.022
 from sfx import build_sfx
 fx = build_sfx(out, N)
-# leiser Musik-Teppich (gezupfte Akkorde)
-mus = np.zeros(N, np.float32); beat = 60 / 112
-chords = [[261.6, 329.6, 392.0], [220.0, 261.6, 329.6], [174.6, 220.0, 261.6], [196.0, 246.9, 293.7]]
-k = 0
-while k * beat / 2 < total:
-    bt = k * beat / 2
-    for j, fq in enumerate(chords[(k // 8) % 4]):
-        i = int((bt + j * 0.02) * SR); n = min(int(0.35 * SR), N - i)
-        if n <= 0: continue
-        tt = np.arange(n) / SR
-        mus[i:i + n] += ((np.sin(2 * np.pi * fq * tt) + 0.4 * np.sin(4 * np.pi * fq * tt)) * np.exp(-tt * 9) * 0.035).astype(np.float32)
-    k += 1
+from music import make_music
+mus = make_music(total, v)[:N]
+if len(mus) < N: mus = np.pad(mus, (0, N - len(mus)))
 mix = np.clip(v * 0.95 + rain + drops + fx + mus, -1, 1)
 o = wave.open('mix.wav', 'w'); o.setnchannels(1); o.setsampwidth(2); o.setframerate(SR)
 o.writeframes((mix[:int(total * SR)] * 32767).astype(np.int16).tobytes()); o.close()
