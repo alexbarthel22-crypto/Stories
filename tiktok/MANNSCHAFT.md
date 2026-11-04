@@ -50,5 +50,8 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1300, rechts nicht über x 940
 
 ## Stimme
-- Entwurf: espeak-ng mit MBROLA `mb-de6` (offline, kostenlos), Tempo 192
-- Die finale Stimme ist noch offen
+- Final: Gemini TTS (`gemini-3.8-flash-tts`), Stimme **Puck**
+- Regie: schneller TikTok-Creator, trocken-ironisch, Kunstpausen vor Pointen, „Fans: null“ traurig, Ziel und Folgen-Aufruf mit Energie
+- Ganzes Skript in **einem** Aufruf einsprechen, an den Pausen in Szenen schneiden, mit `atempo=0.85` auf das Referenztempo (ca. 150 Wörter pro Minute) bringen
+- Stimmanalyse der Referenzvideos: `audio/analyse.json`
+- Entwurfsstimme (kostenlos, offline): espeak-ng mit MBROLA `mb-de6`

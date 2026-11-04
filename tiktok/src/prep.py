@@ -1,7 +1,7 @@
 import json, wave, re
 import numpy as np
 
-FPS = 30; GAP = 0.15; TAIL = 0.9; SR = 44100
+FPS = 30; GAP = 0.22; TAIL = 0.9; SR = 44100
 segs = json.load(open('segs.json'))
 
 

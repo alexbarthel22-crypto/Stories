@@ -1,0 +1,15 @@
+{
+  "transkript_ref2": "Tag 1. Ich gründe einen Fußballverein. Jeder, der mir folgt, wird Fan und bekommt einen Platz auf der Tribüne. Willkommen beim SV Kuhwiese. Kreisklasse C, ein Platz voller Kuhfladen und genau eine Flutlichtlampe. Fans: null. Nur ich, der Präsident. Das ist die Mannschaft: Bernd im Sturm – hat Rücken. Oma Trude im Tor. Und Kevin – der sucht eigentlich nur den Bus. Platzwart ist Berta. Berta ist eine Kuh. Unser Ziel: die Bundesliga! Samstag ist unser erstes Spiel. Aber schau dir die Tribüne an: komplett leer. Folg jetzt, dann sitzt du am Samstag genau hier – mit Dauerkarte Nummer 1! Und ab heute entscheidet ihr. In der Vereinskasse sind 312 Euro. Neuer Stürmer? Neue Tribüne? Oder verkaufen wir Berta? Der Top-Kommentar entscheidet.",
+  "stimme": "Männlich, geschätzt 22–30 Jahre, mittlere bis leicht baritonale Stimmlage, jugendlicher Content-Creator-Sound, trocken, präsent, nah am Mikrofon.",
+  "tempo_woerter_pro_minute": 150,
+  "pausen": "Zwischen regulären Sätzen sehr knapp getaktet (ca. 0,2 bis 0,4 Sekunden); vor und nach Pointen sowie Seufzern gezielte dramaturgische Kunstpausen von 0,5 bis 0,8 Sekunden.",
+  "betonung_und_ton": "Energetischer Social-Media-Storyteller mit trocken-ironischem Unterton. Wechselt dynamisch zwischen übertriebenem Ehrgeiz ('die Bundesliga!') und deadpan resigniertem Abfallen der Tonhöhe bei ernüchternden Fakten ('Fans: null', 'hat Rücken'). Pointen werden betont trocken serviert, der Call-to-Action energisch und direkt.",
+  "aussprache": "Modernes, klares Hochdeutsch ohne hörbaren Dialekt; präzise Konsonanten, jugendliche TikTok-Diktion mit hoher Sprachverständlichkeit.",
+  "hintergrund": "Leiser, rhythmischer Lo-Fi-/Gamified-Hintergrundbeat sowie eingespielte Soundeffekte (u. a. Kuh-Muhen, Kassenklingeln, Stöhnen/Seufzer).",
+  "beste_gemini_stimme": "Puck",
+  "alternative_stimmen": [
+    "Orus",
+    "Zephyr"
+  ],
+  "tts_regieanweisung": "Sprich wie ein junger TikTok-Creator mit schnellem Grundtempo (ca. 150 WPM) und direkter Ansprache. Wechsle spielerisch zwischen begeisterter Aufbruchstimmung und trockenem, sarkastischem Deadpan-Humor. Setze vor absurden Pointen ('Berta ist eine Kuh', 'hat Rücken') eine kurze Kunstpause von rund einer halben Sekunde und senke die Stimme dabei leicht resigniert ab. Ziehe die Energie bei Zielen und Handlungsaufforderungen ('Bundesliga!', 'Folg jetzt!') deutlich an."
+}
