@@ -1,4 +1,4 @@
-"""Visuals: Alex ist heute ein Gaslighter (TikTok Folge 4). Aufbau wie Pick-me-Boy.
+"""Visuals: Alex ist heute ein Gaslighter (TikTok Folge 3). Aufbau wie Pick-me-Boy.
 Ton: typische Sätze zeigen, nicht verharmlosen; ehrlicher Moment am Ende.
 """
 import math, random
@@ -221,8 +221,8 @@ def sc_outro(c, S):
         emoji(c, "👇", 880, 1110 + math.sin(t * 8) * 12, 90 * pop(t, S.at(0, 0.6)) * out)
     if t >= a1:
         colors = ["#EC7FAE", "#3E5C9A", "#1F3A6B", "#4A2E6B", "#3E7BDA", "#8E5BE0", "#36B5C2", "#F07F4F", "#555A66"]
-        # TikTok-Reihenfolge: 1 Pick-me-Boy, 2 Emotional abhängig, 3 Merz, heute 4
-        prev = [("🌹", "FOLGE 1"), ("🥺", "FOLGE 2"), ("🎙️", "FOLGE 3"), ("🌀", "HEUTE ✅")]
+        # TikTok-Reihenfolge: 1 Pick-me-Boy, 2 Emotional abhängig, heute 3
+        prev = [("🌹", "FOLGE 1"), ("🥺", "FOLGE 2"), ("🌀", "HEUTE ✅")]
         for i in range(9):
             r, cc = i // 3, i % 3
             x, y = 260 + cc * 280, 500 + r * 230

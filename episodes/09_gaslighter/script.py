@@ -1,4 +1,4 @@
-"""TikTok Folge 4: Heute ist Alex ... ein Gaslighter. (Aufbau wie Pick-me-Boy, kurz gehalten)
+"""TikTok Folge 3: Heute ist Alex ... ein Gaslighter. (Aufbau wie Pick-me-Boy, kurz gehalten)
 Ton: typische Sätze wiedererkennbar machen, nicht verharmlosen; ernster Satz am Ende.
 Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.08.
 """

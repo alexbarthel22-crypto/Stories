@@ -94,7 +94,7 @@ Friedrich Merz 🎙️ Fliegt selbst zum Bäcker 🛩️🥐, jedes Thema endet 
 
 #parodie #friedrichmerz #kanzler #sauerland #comedy #satire #fürdich #fyp
 
-## TikTok Folge 4 – Gaslighter
+## TikTok Folge 3 – Gaslighter
 Cover: `episodes/09_gaslighter/thumbnail.png`
 Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung)
 
