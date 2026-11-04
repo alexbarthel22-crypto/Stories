@@ -1,7 +1,7 @@
 """TikTok Folge 3: Heute ist Alex ... Friedrich Merz (Parodie, jugendgerecht, unpolitisch).
 Belegte Fakten: Bundeskanzler; geboren in Brilon (Sauerland); Hobbypilot mit eigenem Flugzeug;
 2018 Selbsteinordnung "gehobene Mittelschicht" bei rund 1 Mio. € Jahreseinkommen.
-Netz-Gag: Vergleich mit Mr. Burns (Simpsons). Bewusst weggelassen: beleidigende Memes, Parteipolitik.
+Bewusst weggelassen: Mr. Burns, beleidigende/anzügliche Memes, Parteipolitik.
 Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.08.
 """
 
@@ -20,7 +20,6 @@ MOODS = {
     "jet": "übertrieben glamourös, die Pointe trocken",
     "mittel": "erst gespielt bescheiden, dann ungläubig und trocken",
     "speech": "übertrieben feierlich und langsam, dann trocken amüsiert",
-    "burns": "verschwörerisch amüsiert, das 'Ausgezeichnet' gespielt fies und genüsslich",
     "signs": "energisch wie ein Countdown, jedes Anzeichen mit Nachdruck",
     "outro": "freundlich, aufgedreht, direkt an die Zuschauer, auffordernd",
 }
@@ -65,10 +64,6 @@ SCENES = [
     dict(id="speech", bg="#8E5BE0", clock="15:00", title="DIE REDE", dark=True, lines=[
         ("Nachmittags hält er eine Rede. Sehr lang. Sehr ernst.", None),
         ("Nach zehn Minuten schlafen alle. Außer ihm.", None),
-    ]),
-    dict(id="burns", bg="#26345E", clock="20:00", title="IM INTERNET", dark=True, lines=[
-        ("Im Netz wird Merz oft mit Mister Burns von den Simpsons verglichen.", None),
-        ("Alex übt schon mal: Ausgezeichnet.", None),
     ]),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du Kanzler-Alex erkennst:", None),

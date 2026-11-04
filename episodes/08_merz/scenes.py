@@ -1,11 +1,11 @@
 """Visuals: Alex als Friedrich Merz (TikTok Folge 3). Parodie, jugendgerecht, unpolitisch.
-Dauerhaftes "PARODIE"-Label. Keine Logos, keine echten Fotos.
+Kein Parodie-Schild (auf Wunsch entfernt). Keine Logos, keine echten Fotos.
 """
 import math, random
 from alexlib import *
 
-# Kanzler-Alex: Alex' Gesicht + silbergraue Perücke, dezente Brille, dunkelblauer Anzug
-AL = alex(hair="#C9CDD3", hair_dark="#9AA0A8", glasses=True, frame="#A9A9B2",
+# Kanzler-Alex: Alex' Gesicht + Halbglatze mit grauem Haarkranz, dezente Brille, dunkelblauer Anzug
+AL = alex(hair_style="bald", hair="#C9CDD3", hair_dark="#9AA0A8", glasses=True, frame="#A9A9B2",
           top="#1F2A44", top_style="suit", tie="#7FB3E8", pants="#1F2A44", shoes="#2A2A2A")
 FEET, AH = 1665, 470
 TALL = AH * 1.12
@@ -15,6 +15,7 @@ INTRO = dict(icon="🎙️", bg="#1F3A6B", spec=AL, expr="smug", pose="hips", ha
 
 
 def parodie_label(c):
+    return  # Hinweis-Schild auf Wunsch entfernt
     c.save()
     c.translate(W - 150, 1830)
     rrect(c, -110, -26, 220, 52, 14); src(c, "#000000", 0.55); c.fill()

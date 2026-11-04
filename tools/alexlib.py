@@ -812,6 +812,30 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.move_to(-3, my + 0.8); c.curve_to(-1, my + 1.4, 1, my + 1.4, 3, my + 0.8); c.stroke()
 
     # Haare vorne
+    if hs == "bald":
+        # Halbglatze: kahler Oberkopf mit Glanz, Haarkranz an Seiten/hinten (über den Ohren)
+        c.save()
+        ellipse(c, 0, hy0, 17.6, 18.6); c.clip()
+        g = cairo.RadialGradient(-4, hy0 - 15, 0.5, -4, hy0 - 15, 9)
+        g.add_color_stop_rgba(0, 1, 1, 1, 0.55); g.add_color_stop_rgba(1, 1, 1, 1, 0)
+        ellipse(c, -4, hy0 - 14, 8, 4.5); c.set_source(g); c.fill()
+        c.restore()
+        for sx in (-1, 1):
+            c.move_to(sx * 16.4, hy0 + 7)
+            c.curve_to(sx * 19.2, hy0 + 6, sx * 19.9, hy0 + 1, sx * 19.5, hy0 - 3.5)
+            c.curve_to(sx * 19.1, hy0 - 7, sx * 17.4, hy0 - 8.6, sx * 15.6, hy0 - 7.8)
+            c.curve_to(sx * 16.6, hy0 - 5, sx * 16.6, hy0 - 1.5, sx * 15.8, hy0 + 1.5)
+            c.curve_to(sx * 15.6, hy0 + 3.5, sx * 15.8, hy0 + 5.5, sx * 16.4, hy0 + 7)
+            c.close_path()
+            _fill_line(c, hair, hy0 - 9, hy0 + 7, 0.7, 1.15, 0.9, 0.7)
+            c.set_line_width(0.45); src(c, shade(hair, 0.72))
+            c.move_to(sx * 17.2, hy0 - 6.5); c.curve_to(sx * 18.6, hy0 - 3, sx * 18.4, hy0 + 1, sx * 17.6, hy0 + 4.5); c.stroke()
+        # Stirnfalten
+        c.set_line_width(0.45); src(c, shade(skin, 0.75), 0.7)
+        for kk in range(2):
+            fy = hy0 - 9.5 - kk * 2.2
+            c.move_to(-5.5 + kk, fy); c.curve_to(-2, fy - 0.8, 2, fy - 0.8, 5.5 - kk, fy); c.stroke()
+    # Haare vorne
     if hs == "fem":
         g = cairo.LinearGradient(0, hy0 - 24, 0, hy0 + 22)
         g.add_color_stop_rgba(0, *rgb(shade(hair, 1.3))); g.add_color_stop_rgba(0.45, *rgb(hair))

@@ -90,6 +90,6 @@ Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung)
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-Friedrich Merz 🎙️ (Parodie) Fliegt selbst zum Bäcker 🛩️🥐, jedes Thema endet im Sauerland ⛰️ und die Rede dauert … ziemlich lang 😴 Kennst du jemanden, der auch so gern lange Reden hält? Markier sie oder ihn! 👇 Und was soll Alex morgen sein?
+Friedrich Merz 🎙️ Fliegt selbst zum Bäcker 🛩️🥐, jedes Thema endet im Sauerland ⛰️ und die Rede dauert … ziemlich lang 😴 Kennst du jemanden, der auch so gern lange Reden hält? Markier sie oder ihn! 👇 Und was soll Alex morgen sein?
 
 #parodie #friedrichmerz #kanzler #sauerland #comedy #satire #fürdich #fyp
