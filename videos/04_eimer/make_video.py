@@ -21,9 +21,9 @@ ZW = 2
 M = 400                             # pixels per metre (real proportions)
 FLOOR = 1460
 TABLE = (30, 400, FLOOR - 0.75 * M)  # 75 cm table
-BARREL = (722, 930, FLOOR - 0.42 * M - 0.72 * M)   # barrel (72 cm) on a 42 cm stand
+BARREL = (682, 890, FLOOR - 0.42 * M - 0.72 * M)   # barrel (72 cm) on a 42 cm stand
 STAND_TOP = FLOOR - 0.42 * M
-TAP = (680, STAND_TOP - 40)         # tap outlet
+TAP = (640, STAND_TOP - 40)         # tap outlet
 STOOL_TOP = TAP[1] + 40 + 0.21 * M
 FILL_SPOT = (TAP[0] + 2, STOOL_TOP)  # small bucket under the tap (bottom centre)
 BUCKETS = {"big": dict(cap=5, bw=0.23 * M, tw=0.30 * M, h=0.26 * M, home=(115, TABLE[2]), straws=3),
@@ -167,10 +167,11 @@ def draw_barrel(cv, t, stream_to=None):
     cv.ellipse(x0 - 4, top, x1 + 4, top + 46, fill=hexc("#8a5a36"))
     cv.ellipse(x0 + 12, top + 8, x1 - 12, top + 38, fill=hexc(DRINK_D))
     # label
-    cv.rect(cx - 74, top + 112, cx + 74, top + 196, fill=hexc("#f7f1e6"), r=10)
-    cv.text(cx, top + 142, "SANGRIA", 30, hexc(DRINK_D))
+    lx = cx - 20                     # label kept left of TikTok's icon column
+    cv.rect(lx - 56, top + 112, lx + 56, top + 190, fill=hexc("#f7f1e6"), r=10)
+    cv.text(lx, top + 140, "SANGRIA", 23, hexc(DRINK_D))
     for k, col in enumerate(("#f0a03c", "#ffd34d", "#e2574c")):
-        cv.circle(cx - 28 + k * 28, top + 174, 9, fill=hexc(col))
+        cv.circle(lx - 22 + k * 22, top + 168, 7, fill=hexc(col))
     # tap (brass) with lever
     opened = stream_to is not None
     ty = TAP[1]
@@ -445,7 +446,7 @@ def dario_track():
     """Dario walks to the bucket he works with: (time, x, y) keys"""
     keys = [(0.0, DARIO_HOME, FLOOR)]
     for (t0, t1, kind, src, dst, amt) in ACTIONS:
-        tx = 575 if kind == "fill" else (430 if kind == "pour" else 600)
+        tx = 535 if kind == "fill" else (430 if kind == "pour" else 560)
         keys += [(t0, keys[-1][1], FLOOR), (t0 + min(0.6, (t1 - t0) * 0.2), tx, FLOOR), (t1, tx, FLOOR)]
     keys += [(ACTIONS[-1][1] + 0.7, DARIO_HOME, FLOOR)]
     return keys
