@@ -75,12 +75,12 @@ const SCENES = {
     const ff = SEG.caps[SEG.caps.length - 1].t0 - SEG.start;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + busStop(900, 1560, 1.1) + place(busguy({blink: blinkAt(t, .2)}), 450, 1660, 1.45)) +
       popG(t, 0.1, 500, 320, nameCard(80, 240, '9', '???', 'STURM · BUS VERPASST')) +
-      popG(t, ff, 300, 1450, badge(300, 1450, 'FLIP-FLOPS', {bg: '#FF3FA4', fg: '#fff', fs: 46, rot: -6}));
+      popG(t, ff, 300, 1200, badge(300, 1200, 'FLIP-FLOPS', {bg: '#FF3FA4', fg: '#fff', fs: 46, rot: -6}));
   },
   pichu(t, d, m) {
     const hop = Math.abs(Math.sin(t * 6)) * 16;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(corgi({wag: Math.sin(t * 16), blink: blinkAt(t, .3)}), 560, 1250 - hop, 1.35)) +
-      popG(t, 0.1, 500, 320, nameCard(80, 240, '★', 'PICHU', 'MASKOTTCHEN · CORGI', '#FFD31A'));
+      popG(t, 0.1, 500, 320, nameCard(80, 240, '★', 'CORGI', 'MASKOTTCHEN', '#FFD31A'));
   },
   goal(t, d, m) {
     let beams = '';
@@ -128,7 +128,7 @@ const SCENES = {
         place(coach({mouth: m, blink: blinkAt(t)}), 250, 1560, 0.95)) +
       popG(t, 0.0, 520, 300, badge(520, 300, 'VEREINSKASSE', {fs: 60})) +
       popG(t, 0.9, 520, 450, bigText(520, 500, '500 €', '#6BF06B', 170)) +
-      popG(t, kg, 520, 620, badge(520, 620, '+ 1 KAUGUMMI', {bg: '#FF7EB6', fs: 54, rot: 3}));
+      popG(t, kg, 520, 620, badge(520, 620, '+ 1 KRONKORKEN', {bg: '#E8432E', fs: 54, rot: 3}));
   },
   rule(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
@@ -153,8 +153,8 @@ const SCENES = {
   },
   comment(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1680, 1.25)) +
-      popG(t, 0.0, 510, 420, commentCard(70, 300)) +
-      popG(t, 0.6, 520, 700, badge(520, 700, 'DU ENTSCHEIDEST!', {bg: '#FFD31A', fs: 52, rot: -2}));
+      `<g transform="translate(510 500) scale(${1 + 0.025 * Math.sin(t * 6)}) translate(-510 -500)">${popG(t, 0.0, 510, 500, commentCard(70, 300, t))}</g>` +
+      popG(t, 0.6, 520, 790, badge(520, 790, 'DU ENTSCHEIDEST!', {bg: '#FFD31A', fs: 52, rot: -2}));
   },
 };
 

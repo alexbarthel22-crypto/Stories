@@ -92,11 +92,10 @@
  },
  {
   "id": "pichu",
-  "say": "Unser Maskottchen: Pitschu. Ein Korgi.",
+  "say": "Unser Maskottchen: ein Corgi.",
   "cap": [
    "UNSER MASKOTTCHEN:",
-   "*PICHU.",
-   "EIN CORGI."
+   "EIN *CORGI."
   ]
  },
  {
@@ -137,11 +136,11 @@
  },
  {
   "id": "money",
-  "say": "In der Vereinskasse: fünfhundert Euro. Und ein Kaugummi.",
+  "say": "In der Vereinskasse: fünfhundert Euro. Und ein Kronkorken.",
   "cap": [
    "IN DER VEREINSKASSE:",
    "*500 EURO.",
-   "UND EIN *KAUGUMMI."
+   "UND EIN *KRONKORKEN."
   ]
  },
  {

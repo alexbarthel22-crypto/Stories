@@ -47,10 +47,8 @@ rain = np.convolve(noise, np.ones(6) / 6, 'same').astype(np.float32) * 0.013
 drops = np.zeros(N, np.float32)
 for p in rng.integers(0, N - 2000, int(total * 25)):
     drops[p:p + 300] += rng.standard_normal(300) * np.exp(-np.arange(300) / 40) * 0.022
-fx = np.zeros(N, np.float32)
-for o in out[1:]:
-    i = int(o['start'] * SR); n = int(0.09 * SR); tt = np.arange(n) / SR
-    fx[i:i + n] += 0.18 * np.sin(2 * np.pi * (500 + 3000 * tt) * tt) * np.exp(-tt * 35)
+from sfx import build_sfx
+fx = build_sfx(out, N)
 # leiser Musik-Teppich (gezupfte Akkorde)
 mus = np.zeros(N, np.float32); beat = 60 / 112
 chords = [[261.6, 329.6, 392.0], [220.0, 261.6, 329.6], [174.6, 220.0, 261.6], [196.0, 246.9, 293.7]]

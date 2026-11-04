@@ -102,7 +102,7 @@ function caption(text, t0, t) {
   });
   const len = text.replace(/[*!]/g, '').length;
   const fs = Math.min(112, 880 / (Math.max(len, 6) * 0.56));
-  const cx = 510, cy = 1290;
+  const cx = 510, cy = 1420;
   const plain = words.map(([w]) => w).join(' ');
   const main = words.map(([w, c]) => `<tspan fill="${c}">${w}</tspan>`).join(' ');
   const st = `text-anchor="middle" ${FONT} font-size="${fs}" stroke-linejoin="round" letter-spacing="1.5"`;
@@ -122,4 +122,21 @@ function mudWipe(lt) {
     s += `<circle cx="${x}" cy="${y}" r="${r}" fill="${i % 2 ? '#5A3B22' : '#6B4A30'}"/>`;
   }
   return s;
+}
+
+// Top-Kommentar: auffaellige rote Box mit Pokal, darin die Kommentar-Sprechblase
+function commentCard(x, y, t = 0) {
+  const w = 880, h = 400;
+  return `<g transform="translate(${x} ${y})">${box(0, 0, w, h, 'red', 11)}
+    <text x="70" y="102" text-anchor="middle" font-family="Noto Color Emoji" font-size="70">🏆</text>
+    ${label(130, 104, 'TOP-KOMMENTAR', 76, '#fff', 'start')}
+    ${box(34, 140, w - 68, 226, 'white', 8)}
+    <circle cx="118" cy="226" r="50" fill="#C9CED8" stroke="${BROWN}" stroke-width="6"/>
+    <circle cx="118" cy="212" r="18" fill="#fff"/><path d="M86 260 Q118 222 150 260" fill="#fff"/>
+    <text x="196" y="210" font-family="Inter" font-weight="700" font-size="36" fill="#8A7F78">dein Name</text>
+    ${label(196, 288, 'DEINE IDEE?', 66, BROWN, 'start')}
+    <text x="198" y="340" font-family="Inter" font-weight="700" font-size="30" fill="#A09890">Antworten</text>
+    <g transform="translate(770 240) scale(${1 + 0.12 * Math.max(0, Math.sin(t * 9))})">
+      <path d="M0 -14 c-22 -30 -64 -8 -46 24 l46 46 l46 -46 c18 -32 -24 -54 -46 -24z" fill="#E5483A" stroke="${BROWN}" stroke-width="6"/></g>
+    <text x="770" y="345" text-anchor="middle" font-family="Inter" font-weight="800" font-size="30" fill="#E5483A">999+</text></g>`;
 }

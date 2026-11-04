@@ -17,7 +17,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | 14 | Träumer *(Platzhalter-Name)* | Sturm | Locken, blaue Kopfhörer |
 
 - **Cheftrainer (Ich-Erzähler):** dunkle Haare mit Seitenscheitel, kurzer Vollbart, blaue Parka-Jacke
-- **Pichu (gesprochen „Pitschu“), Maskottchen:** Pembroke Corgi, rotgold mit weißer Brust, Schnauze, Blesse und Beinen, große Stehohren, langer Körper, kurzer Hals, kurze Beine, buschiger Schwanz, **kein Halsband**
+- **Maskottchen: ein Corgi** (im Video ohne Namen; intern „Pichu“), **Punktaugen**, Pembroke Corgi, rotgold mit weißer Brust, Schnauze, Blesse und Beinen, große Stehohren, langer Körper, kurzer Hals, kurze Beine, buschiger Schwanz, **kein Halsband**
 
 Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, Torwart grün.
 
@@ -36,7 +36,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Liga: Kreisliga. Ziel: Deutscher Meister (Bundesliga)
 - Tribüne: 3 Klappstühle (ohne Sitzkissen), Nr. 1–3, stehen außerhalb des Platzes
 - Flutlicht: Taschenlampe auf einem Holzmast, außerhalb des Platzes
-- Vereinskasse: 500 € und ein Kaugummi
+- Vereinskasse: 500 € und ein Kronkorken
 - Geld-Regel: Jeder Follower bringt 1 € in die Vereinskasse, jeder Kommentar 2 €
 - Fans: 0. Erstes Spiel: Sonntag
 - Offene Frage an die Community: Flutlicht kaufen, Vereinshaus mieten oder etwas ganz anderes? Der Top-Kommentar entscheidet
@@ -47,9 +47,10 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Boxen im Spielfeld-Look oder orange, dicke braune Kontur, harter Schatten
 - Fußball immer im Stil des ⚽-Emojis
 - Tor immer auf der Torlinie am Spielfeldrand, mit Fünfmeterraum, Strafraum und Elfmeterpunkt davor
-- TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1300, rechts nicht über x 940
+- Untertitel bei y 1420 (unter den Mündern), TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1450, rechts nicht über x 940
 
 ## Stimme
+- Soundeffekte: synthetisch in `src/sfx.py` (Schlamm-Platscher bei Schnitten, Flackern beim Flutlicht, Münzen, Kassenklingeln, Pfiff, Fanfare, trauriges Posaunen-„wah-wah“, Benachrichtigungs-Ding)
 - Final: Gemini TTS (`gemini-3.8-flash-tts`), Stimme **Puck**
 - Regie: schneller TikTok-Creator, trocken-ironisch, Kunstpausen vor Pointen, „Fans: null“ traurig, Ziel und Folgen-Aufruf mit Energie
 - Ganzes Skript in **einem** Aufruf einsprechen, an den Pausen in Szenen schneiden, mit `atempo=0.85` auf das Referenztempo (ca. 150 Wörter pro Minute) bringen

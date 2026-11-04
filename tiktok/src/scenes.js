@@ -153,19 +153,6 @@ function profileCard(x, y, fans, followed) {
     <g transform="translate(720 160) scale(0.38) translate(-300 -300)">${LOGO}</g></g>`;
 }
 
-function commentCard(x, y) {
-  return `<g transform="translate(${x} ${y})">
-    <rect x="8" y="10" width="900" height="250" rx="34" fill="#000" opacity=".5"/>
-    <rect x="0" y="0" width="900" height="250" rx="34" fill="#fff" stroke="#111" stroke-width="7"/>
-    <circle cx="90" cy="92" r="50" fill="#C9CED8" stroke="#111" stroke-width="5"/>
-    <circle cx="90" cy="78" r="18" fill="#fff"/><path d="M58 126 Q90 90 122 126" fill="#fff"/>
-    <text x="164" y="80" font-family="Inter" font-weight="700" font-size="38" fill="#888">dein Name</text>
-    <rect x="380" y="46" width="250" height="48" rx="14" fill="#FE2C55"/>
-    <text x="505" y="81" text-anchor="middle" ${FONT} font-size="30" fill="#fff">Top-Kommentar</text>
-    <text x="164" y="160" ${FONT} font-size="64" fill="#111">deine Idee?</text>
-    <text x="164" y="220" font-family="Inter" font-weight="700" font-size="32" fill="#999">♥ 0 · Antworten</text>
-    <path d="M820 70 c-20 -26 -56 -6 -40 20 l40 40 l40 -40 c16 -26 -20 -46 -40 -20z" fill="#FE2C55"/></g>`;
-}
 
 const ICON_BOOT = `<path d="M-70 -70 L-10 -70 L-6 0 Q40 6 70 30 Q80 60 50 60 L-70 60Z" fill="#222" stroke="#111" stroke-width="8" stroke-linejoin="round"/>
   <path d="M-50 70 v14 M-10 70 v14 M30 70 v14" stroke="#111" stroke-width="10" stroke-linecap="round"/><path d="M-60 -20 H-10 M-60 10 H0" stroke="#FFD31A" stroke-width="8"/>`;

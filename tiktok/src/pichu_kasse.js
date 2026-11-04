@@ -4,7 +4,6 @@ const CG = '#D9944C', CG2 = '#E8B077', CW = '#FFF8EC', CE = '#F2C2A8';
 
 function corgi(o = {}) {
   const tw = o.wag || 0;
-  const eyeR = o.blink ? 3 : 18;
   const leg = (x, top, len, col) => `
       <rect x="${x}" y="${top}" width="40" height="${len}" rx="14" fill="${col}" stroke="${K}" stroke-width="7"/>
       <ellipse cx="${x + 16}" cy="${top + len - 4}" rx="28" ry="12" fill="${CW}" stroke="${K}" stroke-width="7"/>`;
@@ -36,9 +35,8 @@ function corgi(o = {}) {
   <ellipse cx="16" cy="451" rx="5" ry="3" fill="#777"/>
   <path d="M48 478 Q78 490 104 478" stroke="${K}" stroke-width="6" fill="none" stroke-linecap="round"/>
   ${o.tongue === 0 ? '' : `<path d="M66 482 q4 32 22 28 q14 -4 6 -30z" fill="#F38BA0" stroke="${K}" stroke-width="5"/>`}
-  <circle cx="82" cy="404" r="${eyeR}" fill="#fff" stroke="${K}" stroke-width="6"/>
-  <circle cx="156" cy="400" r="${eyeR}" fill="#fff" stroke="${K}" stroke-width="6"/>
-  ${o.blink ? '' : `<circle cx="78" cy="407" r="9" fill="#5A3416"/><circle cx="152" cy="403" r="9" fill="#5A3416"/><circle cx="75" cy="403" r="3" fill="#fff"/><circle cx="149" cy="399" r="3" fill="#fff"/>`}
+  ${o.blink ? `<path d="M74 404 h16 M148 400 h16" stroke="#1A1A1A" stroke-width="5" stroke-linecap="round"/>`
+            : `<circle cx="82" cy="404" r="9" fill="#1A1A1A"/><circle cx="156" cy="400" r="9" fill="#1A1A1A"/>`}
   <ellipse cx="178" cy="448" rx="14" ry="8" fill="#F0A0A0" opacity=".7"/>`;
 }
 
@@ -62,12 +60,14 @@ function coin(x, y, r, two) {
     <text y="${r * 0.32}" text-anchor="middle" ${FONT} font-size="${r * 0.9}" fill="#3A2316">${two ? '2' : '1'}</text></g>`;
 }
 
-function gum(x, y, rot) {
-  return `<g transform="translate(${x} ${y}) rotate(${rot})">
-    <rect x="-70" y="-22" width="140" height="44" rx="10" fill="#FF7EB6" stroke="#3A2316" stroke-width="6"/>
-    <rect x="-38" y="-22" width="76" height="44" fill="#fff"/>
-    <rect x="-70" y="-22" width="140" height="44" rx="10" fill="none" stroke="#3A2316" stroke-width="6"/>
-    <text x="0" y="8" text-anchor="middle" ${FONT} font-size="17" fill="#E0407E">KAUGUMMI</text></g>`;
+function crownCap(x, y, s) {
+  let pts = '';
+  for (let i = 0; i < 42; i++) { const r = i % 2 ? 40 : 46, a = i / 42 * Math.PI * 2; pts += `${(Math.cos(a) * r).toFixed(1)},${(Math.sin(a) * r * 0.62).toFixed(1)} `; }
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+    <polygon points="${pts}" fill="#D9B13A" stroke="#3A2316" stroke-width="5" stroke-linejoin="round"/>
+    <ellipse cx="0" cy="-3" rx="32" ry="19" fill="#E5483A" stroke="#3A2316" stroke-width="4"/>
+    <ellipse cx="-10" cy="-9" rx="12" ry="5" fill="#fff" opacity=".55"/>
+    <text x="0" y="5" text-anchor="middle" ${FONT} font-size="16" fill="#fff">BIER</text></g>`;
 }
 
 function cashBox(cx, cy, s, open, t = 0) {
@@ -78,7 +78,7 @@ function cashBox(cx, cy, s, open, t = 0) {
   const money = open ? `
     ${banknote(-110, -110, -14, 100)}${banknote(10, -128, 4, 100)}${banknote(120, -104, 16, 50)}
     ${banknote(-60, -70, -6, 50)}${banknote(70, -66, 8, 50)}
-    ${gum(150, -40, -12)}` : '';
+    ${crownCap(150, -44, 0.9)}` : '';
   return `<g transform="translate(${cx} ${cy}) scale(${s})">
     ${lid}
     <rect x="-220" y="-50" width="440" height="40" rx="6" fill="#163B25" stroke="#3A2316" stroke-width="8"/>
