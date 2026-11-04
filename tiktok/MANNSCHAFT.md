@@ -5,7 +5,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | Nr. | Name | Position | Aussehen |
 |---|---|---|---|
 | 1 | **Vlad** | Tor | schwarze Haare, Augenklappe (links), grünes Torwarttrikot, Handschuhe |
-| 4 | **Opa Jürgen** | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock |
+| 4 | **Opa Jürgen** | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock, **Bierbauch** |
 | 3 | Iro *(Platzhalter-Name)* | Abwehr | grüner Irokese, Ohrring |
 | 5 | Bulldozer *(Platzhalter-Name)* | Abwehr | Glatze, roter Vollbart |
 | 6 | Hipster *(Platzhalter-Name)* | Mittelfeld | Dutt, eckige Brille |
@@ -34,4 +34,5 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Dauerregen, Untertitel Wort für Wort (Schrift Lilita One, weiß mit brauner Kontur, Schlüsselwörter gelb)
 - Boxen im Spielfeld-Look oder orange, dicke braune Kontur, harter Schatten
 - Fußball immer im Stil des ⚽-Emojis
+- Tor immer auf der Torlinie am Spielfeldrand, mit Fünfmeterraum, Strafraum und Elfmeterpunkt davor
 - TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1300, rechts nicht über x 940

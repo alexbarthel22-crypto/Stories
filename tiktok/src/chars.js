@@ -127,6 +127,9 @@ function player(o) {
   <path d="M214 358 Q250 392 286 358" fill="${trim}" stroke="${K}" stroke-width="6"/>
   <rect x="166" y="530" width="168" height="58" rx="6" fill="${o.shorts || '#1F3E66'}" stroke="${K}" stroke-width="7"/>
   <path d="M250 548 V588" stroke="${K}" stroke-width="6"/>
+  ${o.belly ? `<ellipse cx="250" cy="468" rx="116" ry="86" fill="${jersey}" stroke="${K}" stroke-width="8"/>
+    <path d="M178 430 Q190 400 222 392" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" opacity=".35"/>
+    <path d="M150 520 Q250 566 350 520" stroke="${K}" stroke-width="5" fill="none" opacity=".35"/>` : ''}
   <text x="250" y="500" text-anchor="middle" font-family="Lilita" font-size="90" fill="${trim}" stroke="${K}" stroke-width="7" paint-order="stroke">${o.num || ''}</text>
   ${o.front || ''}
   <defs><clipPath id="${id}"><circle cx="250" cy="225" r="140"/></clipPath></defs>
@@ -166,7 +169,7 @@ function vlad(o = {}) {
 // Opa Juergen: Verteidiger, 79
 function opa(o = {}) {
   return player(Object.assign({
-    jersey: '#2F7FD8', trim: '#FFD31A', num: '4', shorts: '#1F3E66', socks: '#fff', skin: '#F2CCA6', browCol: '#E8E8E8',
+    jersey: '#2F7FD8', trim: '#FFD31A', num: '4', shorts: '#1F3E66', socks: '#fff', skin: '#F2CCA6', browCol: '#E8E8E8', belly: true,
     hair: `<path d="M100 260 Q100 160 140 150 Q150 200 130 260Z" fill="#EDEDED"/><path d="M400 260 Q400 160 360 150 Q350 200 370 260Z" fill="#EDEDED"/>
            <path d="M200 120 q20 -10 40 0 M260 110 q20 -8 36 4" stroke="#D8B48E" stroke-width="5" fill="none"/>`,
     hairOver: `<path d="M240 86 q-6 -26 10 -32 q4 18 -10 32z" fill="#EDEDED" stroke="${K}" stroke-width="5"/>`,

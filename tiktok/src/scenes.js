@@ -45,8 +45,17 @@ function field(t, hz = 1060, o = {}) {
     const x = rnd(i + 40) * 1300 - 100, y = hz + 60 + rnd(i + 50) * (H - hz);
     s += `<ellipse cx="${x}" cy="${y}" rx="${50 + rnd(i) * 80}" ry="${12 + rnd(i + 2) * 12}" fill="#4F8A3E" opacity=".8"/>`;
   }
-  if (o.goal !== false) s += goalPost(o.goalX || 760, hz + 40, 0.9);
-  if (!o.touchY) s += `<path d="M-400 ${hz + 70} H1480" stroke="#E8E2D0" stroke-width="7" opacity=".45"/>`;
+  if (o.goal !== false) {
+    // Tor steht auf der Torlinie, davor Fuenfmeterraum, Strafraum, Elfmeterpunkt und Teilkreis
+    const gx = o.goalX || 760, gy = hz + 40;
+    s += `<g fill="none" stroke="#F0EDE0" stroke-width="7" stroke-linejoin="round" opacity=".85">
+      <path d="M-400 ${gy} H1480"/>
+      <path d="M${gx - 200} ${gy} L${gx - 214} ${gy + 46} L${gx + 214} ${gy + 46} L${gx + 200} ${gy}"/>
+      <path d="M${gx - 340} ${gy} L${gx - 380} ${gy + 130} L${gx + 380} ${gy + 130} L${gx + 340} ${gy}"/>
+      <path d="M${gx - 100} ${gy + 130} Q${gx} ${gy + 175} ${gx + 100} ${gy + 130}"/></g>
+      <ellipse cx="${gx}" cy="${gy + 92}" rx="9" ry="5" fill="#F0EDE0" opacity=".85"/>`;
+    s += goalPost(gx, gy, 0.9);
+  } else if (!o.touchY) s += `<path d="M-400 ${hz + 70} H1480" stroke="#E8E2D0" stroke-width="7" opacity=".45"/>`;
   // Pfuetzen mit Regenringen
   const puddles = o.puddles || [[180, hz + 260, 170, 30], [820, hz + 330, 200, 34], [520, hz + 600, 260, 46], [120, hz + 760, 200, 40], [900, hz + 700, 150, 30]];
   puddles.forEach((p, i) => {
@@ -124,9 +133,7 @@ function busStop(x, base, s) {
     <rect x="-10" y="-520" width="20" height="520" fill="#9A9A9A" stroke="#111" stroke-width="6"/>
     <circle cx="0" cy="-520" r="70" fill="#FFD31A" stroke="#2FB34A" stroke-width="14"/><circle cx="0" cy="-520" r="77" fill="none" stroke="#111" stroke-width="6"/>
     <text x="0" y="-492" text-anchor="middle" ${FONT} font-size="80" fill="#2FB34A">H</text>
-    <rect x="-90" y="-420" width="180" height="110" rx="8" fill="#fff" stroke="#111" stroke-width="6"/>
-    <text x="0" y="-380" text-anchor="middle" ${FONT} font-size="26" fill="#111">LETZTER BUS</text>
-    <text x="0" y="-336" text-anchor="middle" ${FONT} font-size="30" fill="#E8432E">WEG</text></g>`;
+</g>`;
 }
 
 // ---------- UI ----------

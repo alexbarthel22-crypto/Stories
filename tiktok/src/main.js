@@ -48,12 +48,11 @@ const SCENES = {
     for (let i = 0; i < 10; i++) splat += `<ellipse cx="${rnd(i + 70) * 1100}" cy="${1150 + rnd(i + 80) * 800}" rx="${20 + rnd(i) * 20}" ry="8" fill="#4A3828"/>`;
     return cam(1.15, px, 1150, field(t, 900, {puddles: pud, goalX: 640}) + splat +
         `<g transform="translate(600 1520) rotate(${t * 40})">${ballIcon(0, 0, 44)}<path d="M-30 18 q16 10 34 4 q-6 14 -24 10z M10 -30 q10 -4 14 4 q-4 6 -12 2z" fill="#6B4226"/></g>`) +
-      popG(t, 0.1, 540, 300, badge(540, 300, 'UNSER PLATZ', {fs: 70})) +
-      popG(t, 1.2, 540, 430, badge(540, 430, 'WASSERSTAND: HOCH', {bg: '#E8432E', fg: '#fff', fs: 44, rot: -2}));
+      popG(t, 0.1, 540, 300, badge(540, 300, 'UNSER PLATZ', {fs: 70}));;
   },
   light(t, d, m) {
     const z = 1.0 + 0.06 * (t / d);
-    return cam(z, 540, 960, field(t, 1080, {goalX: 780, touchY: 1260}) + flashMast(230, 1225, 330, t, true)) +
+    return cam(z, 540, 960, field(t, 1080, {goal: false, touchY: 1260}) + flashMast(230, 1225, 330, t, true)) +
       popG(t, 0.5, 640, 560, badge(640, 560, '1 TASCHENLAMPE', {bg: '#FFD31A', fs: 52, rot: -3})) +
       popG(t, 1.4, 640, 690, badge(640, 690, 'AKKU: 3 %', {bg: '#E8432E', fg: '#fff', fs: 42, rot: 2}));
   },
@@ -134,9 +133,10 @@ const SCENES = {
   rule(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
     let coins = '';
-    for (let i = 0; i < 8; i++) {
-      const t0 = 0.2 + i * 0.42, k = (t - t0) / 0.6;
-      if (k > 0 && k < 1) coins += coin(470 + rnd(i + 700) * 140, 520 + k * 380, 30, i % 3 === 2 && t > c[3]);
+    for (let i = 0; i < 14; i++) {
+      const t0 = c[0] + 0.15 + i * 0.36, k = (t - t0) / 0.6;
+      const two = t0 >= c[3];
+      if (k > 0 && k < 1) coins += coin(470 + rnd(i + 700) * 140, 520 + k * 380, two ? 36 : 30, two);
     }
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(540, 1180, 0.95) + cashBox(540, 1015, 0.8, true) + coins +
         place(coach({mouth: m, blink: blinkAt(t)}), 170, 1600, 0.85)) +
