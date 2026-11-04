@@ -409,63 +409,64 @@ TITLE_LINES = [(["DU", "BEFINDEST", "DICH"], "#fff6e6", -3), (["IN", "EINEM", "A
 
 
 def karaoke_title(frame, t):
-    """first sentence as big pills (channel style); every word pops up big when it is spoken"""
+    """whole first sentence visible from frame 0 (channel-style pills); the word being spoken pops up bigger"""
     t0, t1 = S[K["Du befindest"]], E[K["Du befindest"]]
     if t > t1 + 0.45:
         return
     words = [w for line, _, _ in TITLE_LINES for w in line]
     weights = [len(w) + 2 for w in words]
     tot = sum(weights)
-    starts, acc = [], t0 + 0.02
+    spans, acc = [], t0 + 0.02
     for wgt in weights:
-        starts.append(acc)
-        acc += (t1 - t0 - 0.1) * wgt / tot
+        d_ = (t1 - t0 - 0.1) * wgt / tot
+        spans.append((acc, acc + d_))
+        acc += d_
     fade = 1 - prog(t, t1 + 0.1, t1 + 0.45)
     i = 0
     for li, (line, bg, rot) in enumerate(TITLE_LINES):
-        base = 96 if li < 2 else 108
+        base = 84 if li < 2 else 96
         gap = 0.28 * base
-        while sum(font(base).getbbox(w)[2] for w in line) + gap * (len(line) - 1) > 690:
+        while sum(font(base).getbbox(w)[2] for w in line) + gap * (len(line) - 1) > 600:
             base -= 2
             gap = 0.28 * base
-        widths = [font(base).getbbox(w)[2] for w in line]
+        pops = []
+        for j in range(len(line)):
+            a_, b_ = spans[i + j]
+            p = prog(t, a_ - 0.04, b_ + 0.1)
+            pops.append(math.sin(math.pi * p) if 0 < p < 1 else 0.0)     # 0 -> 1 -> 0 while spoken
+        sizes = [base * (1 + 0.32 * ease_out_back(min(1, pp * 1.4)) * (pp > 0)) if pp > 0 else base for pp in pops]
+        widths = [font(int(sz)).getbbox(w)[2] for sz, w in zip(sizes, line)]
         tw = sum(widths) + gap * (len(line) - 1)
+        if tw > 680:            # keep the popped line clear of TikTok's side areas
+            k = 680 / tw
+            sizes = [sz * k if pp > 0 else sz for sz, pp in zip(sizes, pops)]
+            widths = [font(int(sz)).getbbox(w)[2] for sz, w in zip(sizes, line)]
+            tw = sum(widths) + gap * (len(line) - 1)
         padx, pady = 34, 20
+        hmax = max(sizes)
         Z = 2
-        PW, PH = int(tw + 2 * padx + 60), int(base + 2 * pady + 60)
+        x0, y0 = 30, 30
+        x1, y1 = x0 + tw + 2 * padx, y0 + base + 2 * pady
+        PW, PH = int(x1 + 40), int(y0 + hmax + 2 * pady + 60)
         tile = Image.new("RGBA", (PW * Z, PH * Z), (0, 0, 0, 0))
         d = ImageDraw.Draw(tile)
-        appear = ease_out_back(prog(t, starts[i] - 0.05, starts[i] + 0.2))
-        if appear <= 0.01:
-            i += len(line)
-            continue
-        x0, y0, x1, y1 = 30, 30, 30 + tw + 2 * padx, 30 + base + 2 * pady
-        d.rounded_rectangle([(x0 + 8) * Z, (y0 + 12) * Z, (x1 + 8) * Z, (y1 + 12) * Z], radius=(y1 - y0) // 3 * Z,
+        d.rounded_rectangle([(x0 + 8) * Z, (y0 + 12) * Z, (x1 + 8) * Z, (y1 + 12) * Z], radius=int((y1 - y0) / 3 * Z),
                             fill=(30, 20, 60, 90))
-        d.rounded_rectangle([x0 * Z, y0 * Z, x1 * Z, y1 * Z], radius=(y1 - y0) // 3 * Z, fill=hexc(bg))
+        d.rounded_rectangle([x0 * Z, y0 * Z, x1 * Z, y1 * Z], radius=int((y1 - y0) / 3 * Z), fill=hexc(bg))
         x = x0 + padx
         for j, w in enumerate(line):
-            p = prog(t, starts[i + j] - 0.04, starts[i + j] + 0.28)
-            if p > 0:
-                sc = min(1.0, ease_out_back(p) * 0.85 + 0.15) * (1 + 0.2 * math.sin(math.pi * min(1, p)))  # pop, settle
-                fs = max(8, int(base * sc * Z))
-                d.text(((x + widths[j] / 2) * Z, (y0 + (y1 - y0) / 2) * Z), w, font=font(fs), fill=hexc("#2b2140"),
-                       anchor="mm")
+            col = hexc("#c0392b") if pops[j] > 0.35 else hexc("#2b2140")
+            d.text(((x + widths[j] / 2) * Z, (y0 + (y1 - y0) / 2) * Z), w, font=font(int(sizes[j] * Z)), fill=col,
+                   anchor="mm")
             x += widths[j] + gap
         tile = tile.rotate(rot, resample=Image.BICUBIC, expand=True)
-        sc = min(appear, 1.03) * fade
-        if sc <= 0.01:
-            i += len(line)
-            continue
-        tile = tile.resize((max(1, int(tile.width / Z * sc)), max(1, int(tile.height / Z * sc))), Image.LANCZOS)
+        tile = tile.resize((max(1, tile.width // Z), max(1, tile.height // Z)), Image.LANCZOS)
         if fade < 1:
             tile.putalpha(tile.split()[3].point(lambda v: int(v * fade)))
         cy = 610 + li * 148
-        px, py = int(OUT_W / 2 - tile.width / 2), int(cy - tile.height / 2)
+        px, py = int(OUT_W / 2 - tile.width / 2), int(cy - (y0 + (y1 - y0) / 2) - (tile.height - PH) / 2)
         frame.paste(tile, (px, py), tile)
-        if sc > 0.6:
-            m = 30 * sc
-            log_ui("title line " + str(li), px + m, py + m, px + tile.width - m, py + tile.height - m)
+        log_ui("title line " + str(li), px + 30, py + 30, px + tile.width - 30, py + tile.height - 30)
         i += len(line)
 
 
