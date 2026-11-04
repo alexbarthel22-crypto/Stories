@@ -13,9 +13,18 @@ ev = [("pop", st("Dario will") + 0.2, 0.6), ("pop", st("Dario will") + 1.0, 0.6)
       ("pop", st("Kleiner Tipp"), 0.7), ("pop", st("Schreib deine"), 0.6), ("pop", st("Hier kommt"), 0.8),
       ("pop", st("Da nur noch") + 0.3, 0.7), ("ding", st("Eins plus drei"), 0.8),
       ("pop", st("Hättest"), 0.8), ("pop", st("Schreib's") + 0.4, 0.7), ("pop", st("Schreib's") + 2.0, 0.7)]
-for (t0, t1, kind, src, dst, amt) in mv.ACTIONS:   # soft pouring sound while liquid flows
-    a, b = (t0 + (t1 - t0) * 0.25, t0 + (t1 - t0) * 0.78) if kind == "fill" else (t0 + (t1 - t0) * 0.34, t0 + (t1 - t0) * 0.76)
-    ev.append(("rain", a, 0.35, b - a))
+for (t0, t1, kind, src, dst, amt) in mv.ACTIONS:
+    if kind == "fill":
+        a, b = t0 + (t1 - t0) * 0.25, t0 + (t1 - t0) * 0.78
+        ev += [("click", a - 0.05, 1.0), ("click", b, 0.9)]          # tap lever open / close
+    else:
+        a, b = t0 + (t1 - t0) * 0.34, t0 + (t1 - t0) * 0.76
+        ev.append(("whoosh", t0, 0.35))                               # bucket lifted
+    ev += [("rain", a, 0.35, b - a), ("glug", a + 0.05, 0.8), ("clink", t1 - 0.05, 0.8)]
+# transitions + finale
+ev += [("whoosh", st("Wie bekommt") - 0.15, 0.6), ("whoosh", st("Hier kommt") - 0.15, 0.6),
+       ("whoosh", st("Hättest") - 0.15, 0.6), ("tada", st("Eins plus drei") + 0.1, 0.9)]
+ev = [e for e in ev if not (e[0] == "ding" and abs(e[1] - st("Eins plus drei")) < 0.01)]
 mix(os.path.join(HERE, "voice.wav"), mv.END, ev, os.path.join(HERE, "mix.wav"),
     music_path=os.path.join(HERE, "..", "..", "assets", "music", "raetsel_theme.mp3"), music_db=-15.0)
 print("mix.wav", round(mv.END, 2), "s")

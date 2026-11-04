@@ -70,6 +70,44 @@ def click():
     return (x * 0.6 + tone(3200, 0.03, (1,), d=0.006) * 0.4) * 0.8
 
 
+def clink():
+    """glass/plastic bucket set down"""
+    out = sum(tone(f, 0.35, (1,), d=0.09) * g for f, g in ((2150, 0.5), (3310, 0.35), (5230, 0.2)))
+    n = int(0.02 * SR)
+    out[:n] += np.random.default_rng(5).standard_normal(n) * _env(n, 0.0005, 0.004) * 0.4
+    return out * 0.6
+
+
+def whoosh(dur=0.45):
+    n = int(dur * SR)
+    x = np.random.default_rng(9).standard_normal(n)
+    k = 14
+    x = np.convolve(x, np.ones(k) / k, mode="same")
+    env = np.sin(np.linspace(0, np.pi, n)) ** 2
+    return x * env * 0.9
+
+
+def tada():
+    out = np.zeros(int(1.6 * SR))
+    for i, m in enumerate((72, 76, 79, 84)):
+        place(out, tone(note(m), 0.9, (1, .4, .15), d=0.35) * 0.45, i * 0.09)
+    for m in (72, 76, 79, 84):
+        place(out, tone(note(m), 1.2, (1, .3, .1), d=0.6) * 0.3, 0.42)
+    return out
+
+
+def glug():
+    out = np.zeros(int(0.6 * SR))
+    rng = np.random.default_rng(4)
+    for i in range(5):
+        f = rng.uniform(170, 280)
+        n = int(0.07 * SR)
+        tt = np.arange(n) / SR
+        b = np.sin(2 * np.pi * (f + 900 * tt) * tt) * _env(n, 0.003, 0.025)
+        place(out, b * 0.7, i * 0.11 + rng.uniform(0, 0.03))
+    return out
+
+
 def tick():
     n = int(0.04 * SR)
     return np.random.default_rng(0).standard_normal(n) * _env(n, 0.001, 0.006) * 0.5 + \
@@ -131,7 +169,8 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
     fade = np.ones(n); fl = int(1.5 * SR); fade[-fl:] = np.linspace(1, 0, fl); fade[:int(0.3 * SR)] = np.linspace(0, 1, int(0.3 * SR))
     sfx = np.zeros(n)
     for kind, t, gain, *extra in events:
-        s = {"ding": ding, "pop": pop, "tick": tick, "click": click}.get(kind)
+        s = {"ding": ding, "pop": pop, "tick": tick, "click": click, "clink": clink, "whoosh": whoosh,
+             "tada": tada, "glug": glug}.get(kind)
         if kind == "rain":
             s = rain_noise(extra[0]); r = int(0.4 * SR)
             s[:r] *= np.linspace(0, 1, r); s[-r:] *= np.linspace(1, 0, r)

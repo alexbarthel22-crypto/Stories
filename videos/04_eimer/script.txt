@@ -1,6 +1,6 @@
 # Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden.
 # {emotion} am Zeilenanfang = Regieanweisung für diese Zeile (amused, surprised, ...).
-Dario will seinen Freunden genau vier Liter Monster White servieren.
+Dario will seinen Freunden genau vier Liter Sangria servieren.
 Das Getränk ist in einem großen Fass.
 Zum Abmessen hat er aber nur zwei Eimer: einen Fünf-Liter-Eimer und einen Drei-Liter-Eimer.
 Und die Eimer haben keine Markierungen.
