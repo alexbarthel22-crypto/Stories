@@ -13,7 +13,7 @@ ROLE_SAY = "emotional abhängig!"
 MOODS = {
     # Intro-Stimmungen 1:1 wie in Folge 1 (Pick-me-Boy)
     "intro_pre": "geheimnisvoll und spannend, wie vor einer großen Enthüllung, langgezogen",
-    "intro_role": "triumphierende, laute Enthüllung mit einem Augenzwinkern",
+    "intro_role": "ernst, ruhig und mitfühlend, ohne Lachen, ohne Ironie",
     "what": "erklärend und mitfühlend-amüsiert, das Zitat von Alex klammernd und weinerlich",
     "morning": "amüsiert, die Analyse übertrieben dramatisch wie ein Detektiv",
     "online": "zunehmend nervös und hektisch, die Pointe trocken",
