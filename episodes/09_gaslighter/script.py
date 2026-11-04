@@ -10,7 +10,7 @@ ROLE_TTS = "ein Gaslighter."
 ROLE_SAY = "ein Gaslighter!"
 
 MOODS = {
-    "intro_pre": "geheimnisvoll und spannend, wie vor einer großen Enthüllung, langgezogen",
+    "intro_pre": "geheimnisvoll und spannend, ruhig und flüssig, ohne Stocken; den Namen Alex deutsch aussprechen (kurzes A wie in Alexander)",
     "intro_role": "dramatische Enthüllung, eher ernst als lustig",
     "what": "erklärend und klar; das Zitat von Alex kühl und überzeugt",
     "forgot": "ungläubig, das Zitat von Alex lässig und selbstsicher",
