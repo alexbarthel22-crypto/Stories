@@ -15,9 +15,9 @@ function teamLine(t, base, s, m) {
 const SCENES = {
   intro(t, d, m) {
     const z = 1 + 0.35 * easeOut(t / (d * 0.75));
-    return cam(z, 540, 1180, field(t) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1290, 0.6)) +
-      popG(t, 0.05, 540, 330, badge(540, 330, 'TAG 1', {kind: 'pitch', fs: 150, pad: 120})) +
-      popG(t, 0.42, 540, 490, badge(540, 490, 'VEREIN GEGRÜNDET', {bg: '#FFD31A', fs: 52, ball: true}));
+    return cam(z, 540, 1030, field(t) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1290, 0.6)) +
+      popG(t, 0.05, 540, 440, badge(540, 440, 'TAG 1', {kind: 'pitch', fs: 150, pad: 120})) +
+      popG(t, 0.42, 540, 610, badge(540, 610, 'VEREIN GEGRÜNDET', {bg: '#FFD31A', fs: 52, ball: true}));
   },
   follow(t, d, m) {
     const z = 1.05 + 0.08 * (t / d);
