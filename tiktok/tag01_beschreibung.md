@@ -2,25 +2,24 @@
 
 ## Beschreibung (zum Kopieren)
 
-Tag 1: Ich gründe einen Fußballverein. Ziel: Deutscher Meister. ⚽🏆
-Problem: 0 Fans, 3 Klappstühle und eine Taschenlampe als Flutlicht. 🔦
+Ich gründe einen Verein und will Deutscher Meister werden. Mit 0 Fans. 😭⚽
 
-Jeder Follow = 1 Tribünenplatz und +1 € in die Vereinskasse.
-Jeder Kommentar = +2 €. 💶
+Jeder Follow = 1 Tribünenplatz + 1 € in die Kasse
+Jeder Kommentar = +2 €
 
-👇 Was machen wir mit den 500 € (und dem Kronkorken)?
-Flutlicht, Vereinshaus oder was ganz anderes? Der Top-Kommentar entscheidet!
+Kasse: 500 € und ein Kronkorken 💶
+Was machen wir damit? 👇 Top-Kommentar entscheidet!
 
-#fußball #fussball #kreisliga #fussballverein #bundesliga #fürdich #fyp #animation #corgi #fcschlammloch
+#fußball #kreisliga #fussballverein #fürdich #fyp #bundesliga #animation #fcschlammloch
 
-## Kürzere Alternative
+## Warum so
+- **Erste Zeile = Haken:** absurdes Ziel + harter Kontrast („Deutscher Meister … mit 0 Fans“). Nur diese Zeile ist ohne Aufklappen sichtbar.
+- **Klare Belohnung fürs Mitmachen:** Folgen und Kommentieren haben sichtbare Folgen in der Story (Platz auf der Tribüne, Geld in der Kasse). Das treibt Follows und Kommentare, die wichtigsten Signale für den Algorithmus.
+- **Offene Frage am Ende:** gibt jedem einen leichten Grund zu kommentieren.
+- **Hashtags:** wenige, passende. Breite Reichweite (#fürdich #fyp #fußball) plus Nische (#kreisliga #fussballverein), dazu ein eigener Serien-Hashtag (#fcschlammloch).
 
-0 Fans, 500 € und ein Kronkorken. Schaffen wir es aus der Kreisliga bis zur Meisterschaft? 🏆 Dein Kommentar entscheidet, was wir mit dem Geld machen 👇
-#fußball #kreisliga #fürdich #fyp #fcschlammloch
-
-## Tipps für die erste Folge
-- **Titelbild:** `tag01_thumbnail.png` als Cover auswählen
-- **Ersten Kommentar selbst anpinnen**, z. B.: „Klappstuhl Nr. 1 ist noch frei 👀 Wer holt ihn sich?“ Ein angepinnter Kommentar senkt die Hemmschwelle für andere.
-- **In der ersten Stunde auf Kommentare antworten.** Das zeigt dem Algorithmus Interaktion.
-- **Lautstärke der TikTok-Musik auf 0 lassen.** Das Video hat seine eigene Musik.
-- **Folge 2 mit dem Gewinner-Kommentar** eröffnen (Name und Kommentar einblenden). Das belohnt die Leute, die mitmachen.
+## Für den Start
+- **Cover:** `tag01_thumbnail.png`
+- **Ersten Kommentar selbst schreiben und anpinnen:** „Klappstuhl Nr. 1 ist noch frei 👀 Wer holt ihn sich?“
+- **In der ersten Stunde jeden Kommentar beantworten.**
+- **Folge 2 mit dem Gewinner-Kommentar eröffnen** (Name einblenden). Das belohnt die Leute, die mitmachen.

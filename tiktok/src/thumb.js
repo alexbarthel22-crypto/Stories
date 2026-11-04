@@ -17,11 +17,14 @@ const {chromium} = require('playwright');
       const a = -54 + i * 18;
       s += `<path d="M540 1100 L${540 + Math.tan(a * Math.PI / 180) * 1100 - 70} 0 L${540 + Math.tan(a * Math.PI / 180) * 1100 + 70} 0 Z" fill="#FFF3B0" opacity=".10"/>`;
     }
+    // Fussball liegt hinten links auf dem Platz
+    s += `<ellipse cx="190" cy="1176" rx="46" ry="11" fill="#000" opacity=".3"/>${ballIcon(190, 1140, 40)}
+      <path d="M152 1160 q20 10 40 4 q-8 12 -30 8z" fill="#6B4226"/>`;
     s += place(coach({mouth: 0.9}), 540, 1600, 1.45);
     s += rain(t, 110, 0.35);
     // TAG oben
     s += badge(540, 450, 'TAG ' + tag, {kind: 'pitch', fs: 200, pad: 110});
-    s += badge(540, 632, 'FC SCHLAMMLOCH', {kind: 'orange', fs: 58, ball: true});
+    s += badge(540, 632, 'FC SCHLAMMLOCH', {kind: 'orange', fs: 58});
     // Stat-Kaesten unten (oberhalb der Beschreibungszone)
     const fansCol = f === 0 ? 'red' : 'pitch';
     s += `<g transform="rotate(-4 300 1390)">${box(90, 1280, 420, 230, fansCol, 12)}
