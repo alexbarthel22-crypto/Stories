@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -20 500 760" width="500" height="760">
+  <style>
+    .bob { animation: bob 1.6s ease-in-out infinite; }
+    .eyes { animation: blink 4s infinite; transform-origin: 250px 215px; }
+    @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
+    @keyframes blink { 0%,94%,100% { transform: scaleY(1) } 97% { transform: scaleY(0.1) } }
+  </style>
+  <defs><linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A22"/><stop offset="1" stop-color="#4E3428"/></linearGradient>
+  <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E5426"/><stop offset="1" stop-color="#1D3A1A"/></linearGradient></defs>
+  <rect y="-20" width="500" height="760" fill="url(#wall)"/>
+  <rect y="40" width="500" height="20" fill="#6C6C6C" opacity="0.8"/>
+  <rect y="250" width="500" height="8" fill="#BFAE9A" opacity="0.3"/>
+  <rect y="430" width="500" height="8" fill="#BFAE9A" opacity="0.3"/>
+  <rect y="570" width="500" height="170" fill="url(#grass)"/>
+  <g stroke="#fff" opacity="0.25" stroke-width="2"><path d="M40 20 v60"/><path d="M60 300 v50"/><path d="M455 120 v70"/><path d="M440 500 v45"/><path d="M50 470 v55"/></g>
+  <defs><clipPath id="face"><circle cx="250" cy="225" r="140"/></clipPath></defs>
+  <ellipse cx="250" cy="702" rx="140" ry="20" fill="#000" opacity="0.3"/>
+  <g class="bob">
+  <!-- Beine & Schuhe -->
+  <rect x="200" y="590" width="36" height="96" fill="#2A2A2E" stroke="#111" stroke-width="7"/>
+  <rect x="264" y="590" width="36" height="96" fill="#2A2A2E" stroke="#111" stroke-width="7"/>
+  <ellipse cx="208" cy="690" rx="34" ry="15" fill="#1A1A1C" stroke="#111" stroke-width="6"/>
+  <ellipse cx="292" cy="690" rx="34" ry="15" fill="#1A1A1C" stroke="#111" stroke-width="6"/>
+  <!-- Arme -->
+  <path d="M175 385 L118 540" stroke="#111" stroke-width="44" stroke-linecap="round"/>
+  <path d="M175 385 L118 540" stroke="#2F7FD8" stroke-width="30" stroke-linecap="round"/>
+  <path d="M325 385 L382 540" stroke="#111" stroke-width="44" stroke-linecap="round"/>
+  <path d="M325 385 L382 540" stroke="#2F7FD8" stroke-width="30" stroke-linecap="round"/>
+  <circle cx="112" cy="556" r="22" fill="#F5D3AE" stroke="#111" stroke-width="7"/>
+  <circle cx="388" cy="556" r="22" fill="#F5D3AE" stroke="#111" stroke-width="7"/>
+  <!-- Jacke -->
+  <path d="M175 360 L325 360 Q340 362 340 380 L346 600 L154 600 L160 380 Q160 362 175 360 Z" fill="#2F7FD8" stroke="#111" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M250 360 V600" stroke="#111" stroke-width="7"/>
+  <path d="M254 360 V600 L340 600 L334 380 Q334 366 325 362 L254 362Z" fill="#2A70C2" opacity="0.6"/>
+  <rect x="157" y="462" width="186" height="18" fill="#1F3E66" stroke="#111" stroke-width="6"/>
+  <!-- Kapuzenkragen -->
+  <rect x="172" y="336" width="156" height="40" rx="18" fill="#1F3E66" stroke="#111" stroke-width="8"/>
+  <path d="M206 340 V372 M232 338 V374 M268 338 V374 M294 340 V372" stroke="#2F7FD8" stroke-width="9"/>
+  <!-- Tasche rechts mit Klett -->
+  <rect x="280" y="392" width="34" height="56" rx="6" fill="#2F7FD8" stroke="#111" stroke-width="6"/>
+  <path d="M284 408 H310 M284 424 H310" stroke="#111" stroke-width="5"/>
+  <!-- Band mit Anhänger -->
+  <path d="M212 372 Q214 420 232 466" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <rect x="216" y="462" width="34" height="22" rx="7" fill="#fff" stroke="#111" stroke-width="5"/>
+  <!-- Kopf -->
+  <circle cx="112" cy="235" r="24" fill="#F5D3AE" stroke="#111" stroke-width="7"/>
+  <circle cx="388" cy="235" r="24" fill="#F5D3AE" stroke="#111" stroke-width="7"/>
+  <circle cx="250" cy="225" r="140" fill="#F5D3AE"/>
+  <g clip-path="url(#face)">
+    <!-- Haare mit Seitenscheitel -->
+    <path d="M100 215 Q100 70 250 70 Q400 70 400 215 Q392 165 335 150 Q265 172 195 138 Q130 158 100 215 Z" fill="#2B1D16"/>
+    <path d="M195 138 Q225 118 245 98" stroke="#4A3428" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <!-- kurzer Vollbart -->
+    <path d="M110 240 Q122 330 180 352 Q250 382 320 352 Q378 330 390 240 Q380 300 330 310 Q300 292 250 292 Q200 292 170 310 Q120 300 110 240 Z" fill="#3A2A20"/>
+    <path d="M110 240 Q122 330 180 352 Q250 382 320 352 Q378 330 390 240" stroke="#2B1D16" stroke-width="6" fill="none"/>
+  </g>
+  <circle cx="250" cy="225" r="140" fill="none" stroke="#111" stroke-width="8"/>
+  <!-- Augenbrauen -->
+  <path d="M168 168 Q195 152 222 166" stroke="#2B1D16" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <path d="M278 166 Q305 152 332 168" stroke="#2B1D16" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <!-- Augen -->
+  <g class="eyes">
+    <circle cx="195" cy="215" r="36" fill="#fff" stroke="#111" stroke-width="8"/>
+    <circle cx="305" cy="215" r="36" fill="#fff" stroke="#111" stroke-width="8"/>
+    <circle cx="198" cy="217" r="12" fill="#111"/><circle cx="302" cy="217" r="12" fill="#111"/>
+  </g>
+  <!-- Wangen -->
+  <ellipse cx="148" cy="270" rx="22" ry="12" fill="#F0A0A0" opacity="0.7"/>
+  <ellipse cx="352" cy="270" rx="22" ry="12" fill="#F0A0A0" opacity="0.7"/>
+  <!-- Mund -->
+  <path d="M215 300 Q250 298 285 300 Q280 340 250 342 Q220 340 215 300 Z" fill="#8E1E1E" stroke="#111" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M234 332 Q250 320 266 332 Q258 340 250 340 Q242 340 234 332 Z" fill="#F38BA0"/>
+  </g>
+</svg>
