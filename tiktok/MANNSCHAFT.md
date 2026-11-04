@@ -33,7 +33,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - **Bushaltestelle:** Mast mit gelb-grünem H-Schild (gehört zum Stürmer #9)
 
 ## Folge 1 (veröffentlicht)
-- Datei: `tiktok/tag01_fc_schlammloch_frodo_v3.mp4` (0:52; Frodo statt Corgi, ohne Quak-Sound, ohne Kronkorken, Intro etwas schneller, „TAG 1“-Feld unterhalb des oberen Sicherheitsbereichs), Titelbild `tag01_thumbnail.png`, Beschreibung `tag01_beschreibung.md`
+- Datei: `tiktok/tag01_fc_schlammloch_frodo_v4.mp4` (0:52; Frodo statt Corgi, ohne Kronkorken; Intro: Weitwinkel auf Platz mit Tor, Kamera zoomt auf den Trainer, Fußball fliegt rein und trifft das „TAG 1“-Feld; Namenskarten direkt über den Figuren), Titelbild `tag01_thumbnail.png`, Beschreibung `tag01_beschreibung.md`
 - Ablauf: Tag 1 → Verein gegründet → 1 Follow = 1 Tribünenplatz → Tribüne aus 3 Klappstühlen → Willkommen beim FC Schlammloch (Logo) → Platz = Schlammloch → Flutlicht = Taschenlampe am Mast (Akku 3 %) → Kreisliga, ganz unten → Vorstellung von Vlad (Tor), Opa Jürgen (Abwehr), Bus-Verpasser in Flip-Flops (Sturm), Frodo der Frosch (Maskottchen) → Ziel: Deutscher Meister → Sonntag 1. Spiel (ganzes Team) → Fans: 0 (traurig) → Folgen = Klappstuhl Nr. 1 → Vereinskasse 500 € → 1 € pro Follower, 2 € pro Kommentar → Was tun mit dem Geld? (Flutlicht kaufen / Vereinshaus mieten / was ganz anderes) → Top-Kommentar entscheidet
 - Ohne Stadionjubel (die Variante mit Jubel, `gemini_v4`, wird nicht genutzt)
 
@@ -58,6 +58,8 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Fußball immer im Stil des ⚽-Emojis
 - Tor immer auf der Torlinie am Spielfeldrand, mit Fünfmeterraum, Strafraum und Elfmeterpunkt davor
 - Oberste Text-Boxen beginnen frühestens bei y ≈ 280 (oberer TikTok-Sicherheitsbereich)
+- Namenskarten und Info-Boxen sitzen nah am Geschehen (direkt über Kopf bzw. Objekt), nicht ganz oben am Bildrand
+- Intro jeder Folge: Weitwinkel auf den Platz mit Tor und Strafraum, der Trainer steht darauf; die Kamera zoomt während der ersten Szene auf ihn. Ein Fußball fliegt von unten links ins Bild, trifft das „TAG X“-Feld beim Erscheinen und springt oben rechts raus (mit Aufprall-Geräusch)
 - Untertitel bei y 1420 (unter den Mündern), TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1450, rechts nicht über x 940
 
 ## Stimme

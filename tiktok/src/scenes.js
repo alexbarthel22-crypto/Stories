@@ -16,7 +16,7 @@ function sky(t) {
     const x = ((rnd(i) * 1600 + t * (8 + i * 3)) % 1700) - 300, y = 120 + rnd(i + 9) * 520;
     clouds += `<ellipse cx="${x}" cy="${y}" rx="${260 + rnd(i + 3) * 160}" ry="${50 + rnd(i + 5) * 30}" fill="#232A3E" opacity="0.55"/>`;
   }
-  return `<rect x="-400" y="-400" width="${W + 800}" height="${H + 800}" fill="url(#skyG)"/>${clouds}`;
+  return `<rect x="-800" y="-900" width="${W + 1600}" height="${H + 1800}" fill="url(#skyG)"/>${clouds}`;
 }
 
 function treeline(y) {
@@ -38,9 +38,9 @@ function goalPost(x, y, s = 1) {
 
 function field(t, hz = 1060, o = {}) {
   let s = sky(t) + treeline(hz + 6);
-  s += `<rect x="-400" y="${hz}" width="${W + 800}" height="${H - hz + 400}" fill="#3F6B32"/>`;
+  s += `<rect x="-800" y="${hz}" width="${W + 1600}" height="${H - hz + 1200}" fill="#3F6B32"/>`;
   // Schlamm ueberall
-  s += `<path d="M-400 ${hz + 30} Q200 ${hz - 10} 600 ${hz + 40} Q900 ${hz + 10} 1480 ${hz + 30} L1480 ${H + 400} L-400 ${H + 400}Z" fill="#6B4A30"/>`;
+  s += `<path d="M-400 ${hz + 30} Q200 ${hz - 10} 600 ${hz + 40} Q900 ${hz + 10} 1480 ${hz + 30} L1480 ${H + 1200} L-400 ${H + 1200}Z" fill="#6B4A30"/>`;
   for (let i = 0; i < 14; i++) {
     const x = rnd(i + 40) * 1300 - 100, y = hz + 60 + rnd(i + 50) * (H - hz);
     s += `<ellipse cx="${x}" cy="${y}" rx="${50 + rnd(i) * 80}" ry="${12 + rnd(i + 2) * 12}" fill="#4F8A3E" opacity=".8"/>`;

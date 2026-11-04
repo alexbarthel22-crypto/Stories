@@ -181,7 +181,7 @@ def build_sfx(segs, N):
         L = lambda lt, snd: put(st + lt, snd)
         if k > 0: L(0, splat())
         sid = s['id']
-        if sid == 'intro': L(0.05, whoosh()); L(0.1, pop()); L(0.42, pop())
+        if sid == 'intro': L(0.0, whoosh()); L(0.3, thud()); L(0.3, pop()); L(0.6, pop())
         elif sid == 'follow': L(0.6, pop())
         elif sid == 'chairs':
             L(0.0, pop()); L(0.9, pop())

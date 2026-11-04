@@ -12,12 +12,25 @@ function teamLine(t, base, s, m) {
          place(corgi({wag: Math.sin(t * 14), blink: blinkAt(t, 1.7)}), 930, base, s * 0.8);
 }
 
+// Ball fliegt zu Beginn von unten links ins Bild, trifft bei t=0.3 das TAG-1-Feld und springt oben rechts raus
+function introBall(t) {
+  if (t > 0.8) return '';
+  let x, y, r;
+  if (t <= 0.3) { const k = t / 0.3; x = -120 + k * 900; y = 1250 - Math.sin(k * Math.PI / 2) * 950; r = 95 - k * 25; }
+  else { const k = (t - 0.3) / 0.5; x = 780 + k * 520; y = 300 - k * 560 + k * k * 120; r = 70; }
+  return `<g transform="translate(${x} ${y}) rotate(${t * 900})">${ballIcon(0, 0, r)}</g>`;
+}
+
 const SCENES = {
   intro(t, d, m) {
-    const z = 1 + 0.35 * easeOut(t / (d * 0.75));
-    return cam(z, 540, 1030, field(t) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1290, 0.6)) +
-      popG(t, 0.05, 540, 440, badge(540, 440, 'TAG 1', {kind: 'pitch', fs: 150, pad: 120})) +
-      popG(t, 0.42, 540, 610, badge(540, 610, 'VEREIN GEGRÜNDET', {bg: '#FFD31A', fs: 52, ball: true}));
+    // (introBall siehe unten)
+    // Start: weite Einstellung (Platz + Tor sofort erkennbar), dann Zoom auf den Trainer
+    const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k);
+    const z = 0.7 + 0.3 * e;
+    return cam(z, 540, 1060 - 30 * e, field(t, 1060, {goalX: 790}) + place(coach({mouth: m, blink: blinkAt(t)}), 470, 1290, 0.6)) +
+      `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${popG(t, 0.3, 540, 440, badge(540, 440, 'TAG 1', {kind: 'pitch', fs: 150, pad: 120}))}</g>` +
+      popG(t, 0.6, 540, 610, badge(540, 610, 'VEREIN GEGRÜNDET', {bg: '#FFD31A', fs: 52, ball: true})) +
+      introBall(t);
   },
   follow(t, d, m) {
     const z = 1.05 + 0.08 * (t / d);
@@ -58,30 +71,30 @@ const SCENES = {
   },
   league(t, d, m) {
     return cam(1.0 + 0.05 * t / d, 540, 960, field(t, 1080) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1660, 1.4)) +
-      popG(t, 0.1, 520, 300, badge(520, 300, 'KREISLIGA', {fs: 84})) +
-      popG(t, 0.8, 520, 440, badge(520, 440, 'GANZ UNTEN', {bg: '#E8432E', fg: '#fff', fs: 40}));
+      popG(t, 0.1, 520, 540, badge(520, 540, 'KREISLIGA', {fs: 84})) +
+      popG(t, 0.8, 520, 680, badge(520, 680, 'GANZ UNTEN', {bg: '#E8432E', fg: '#fff', fs: 40}));
   },
   vlad(t, d, m) {
     const b = Math.sin(t * 4) * 6;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 540}) + place(vlad({blink: blinkAt(t, .5)}), 540, 1660 + b, 1.55)) +
-      popG(t, 0.1, 500, 320, nameCard(80, 240, '1', 'VLAD', 'TOR · AUGENKLAPPE', '#2F7FD8'));
+      popG(t, 0.1, 500, 570, nameCard(80, 490, '1', 'VLAD', 'TOR · AUGENKLAPPE', '#2F7FD8'));
   },
   opa(t, d, m) {
     const b = Math.sin(t * 2) * 4;
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(opa({blink: blinkAt(t, .9)}), 520, 1240 + b, 1.2)) +
-      popG(t, 0.1, 500, 320, nameCard(80, 240, '4', 'OPA JÜRGEN', 'ABWEHR · 79 JAHRE'));
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(opa({blink: blinkAt(t, .9)}), 520, 1290 + b, 1.2)) +
+      popG(t, 0.1, 500, 410, nameCard(80, 330, '4', 'OPA JÜRGEN', 'ABWEHR · 79 JAHRE'));
   },
   bus(t, d, m) {
     const ff = SEG.caps[SEG.caps.length - 1].t0 - SEG.start;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + busStop(900, 1560, 1.1) + place(busguy({blink: blinkAt(t, .2)}), 450, 1660, 1.45)) +
-      popG(t, 0.1, 500, 320, nameCard(80, 240, '9', '???', 'STURM · BUS VERPASST')) +
+      popG(t, 0.1, 500, 610, nameCard(80, 530, '9', '???', 'STURM · BUS VERPASST')) +
       popG(t, ff, 300, 1200, badge(300, 1200, 'FLIP-FLOPS', {bg: '#FF3FA4', fg: '#fff', fs: 46, rot: -6}));
   },
   pichu(t, d, m) {
     const ph = (t * 1.6) % 1, hop = ph < 0.4 ? Math.sin(ph / 0.4 * Math.PI) * 90 : 0;
     const sq = ph >= 0.4 && ph < 0.55 ? Math.sin((ph - 0.4) / 0.15 * Math.PI) : 0;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(frog({blink: blinkAt(t, .3), squash: sq, mouth: t > 1.0 && t < 1.4}), 540, 1250 - hop, 1.15)) +
-      popG(t, 0.1, 500, 320, nameCard(80, 240, '★', 'FRODO', 'MASKOTTCHEN · FROSCH', '#FFD31A'));
+      popG(t, 0.1, 500, 640, nameCard(80, 560, '★', 'FRODO', 'MASKOTTCHEN · FROSCH', '#FFD31A'));
   },
   goal(t, d, m) {
     let beams = '';
@@ -109,8 +122,8 @@ const SCENES = {
     [440, 640, 840].forEach(x => c += place(chair({}), x, 1240, 0.62));
     const z = 1.0 + 0.1 * easeOut(t / d);
     return cam(z, 540, 1150, field(t, 1040, {goal: false, touchY: 1265}) + c + place(coach({mouth: m * 0.6, mood: 'sad', blink: blinkAt(t)}), 210, 1560, 0.85)) +
-      popG(t, 0.1, 520, 300, badge(520, 300, 'FANS', {fs: 60})) +
-      popG(t, 0.9, 520, 500, bigText(520, 570, '0', '#FF4A4A', 260)) +
+      popG(t, 0.1, 520, 430, badge(520, 430, 'FANS', {fs: 60})) +
+      popG(t, 0.9, 520, 620, bigText(520, 690, '0', '#FF4A4A', 260)) +
       popG(t, 2.0, 640, 1020, badge(640, 1020, 'LEER', {bg: '#E8432E', fg: '#fff', fs: 50, rot: -5}));
   },
   seat(t, d, m) {
@@ -145,10 +158,10 @@ const SCENES = {
   options(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1680, 1.15)) +
-      popG(t, 0.0, 520, 300, badge(520, 300, 'WAS TUN MIT DEM GELD?', {fs: 52})) +
-      popG(t, c[2], 190, 640, optionCard(190, 640, ICON_LIGHT, 'FLUTLICHT', 'KAUFEN?', -6)) +
-      popG(t, c[3], 480, 620, optionCard(480, 620, ICON_HOUSE, 'VEREINSHAUS', 'MIETEN?', 0)) +
-      popG(t, c[4], 770, 640, optionCard(770, 640, ICON_Q, 'WAS GANZ', 'ANDERES?', 6));
+      popG(t, 0.0, 520, 420, badge(520, 420, 'WAS TUN MIT DEM GELD?', {fs: 52})) +
+      popG(t, c[2], 190, 720, optionCard(190, 720, ICON_LIGHT, 'FLUTLICHT', 'KAUFEN?', -6)) +
+      popG(t, c[3], 480, 700, optionCard(480, 700, ICON_HOUSE, 'VEREINSHAUS', 'MIETEN?', 0)) +
+      popG(t, c[4], 770, 720, optionCard(770, 720, ICON_Q, 'WAS GANZ', 'ANDERES?', 6));
   },
   comment(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1680, 1.25)) +
