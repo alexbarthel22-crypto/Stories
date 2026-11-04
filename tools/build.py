@@ -27,6 +27,8 @@ def load(name):
 
 
 script = load("script")
+import alexlib as _alexlib
+_alexlib.SAFE_MODE = getattr(script, "SAFE_MODE", "default")
 scenes = load("scenes")
 tts = json.load(open(os.path.join(EP, "build", "tts.json")))
 sfx_meta = json.load(open(os.path.join(ROOT, "assets", "sfx", "sfx_meta.json")))

@@ -227,7 +227,18 @@ def background(c, color, t, rays=0.07, cx=W / 2, cy=1050, nrays=18, speed=0.04):
 SAFE_SCALE, SAFE_PIVOT = 0.9, (W / 2, 1720)
 
 
+# SAFE_MODE "strict": kompletter Inhalt in TikToks freier Zone
+# (oben 160 px, unten ~470 px, rechts ~140 px, links ~60 px frei bei 1080x1920)
+SAFE_MODE = "default"
+STRICT = dict(scale=0.75, x0=500 - 540 * 0.75, y0=160 - 60 * 0.75)
+SAFE_BOX = (60, 160, 940, 1450)   # x0, y0, x1, y1 der freien Zone
+
+
 def safe_zone(c):
+    if SAFE_MODE == "strict":
+        c.translate(STRICT["x0"], STRICT["y0"])
+        c.scale(STRICT["scale"], STRICT["scale"])
+        return
     px, py = SAFE_PIVOT
     c.translate(px, py)
     c.scale(SAFE_SCALE, SAFE_SCALE)
