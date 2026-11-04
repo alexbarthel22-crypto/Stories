@@ -92,10 +92,11 @@
  },
  {
   "id": "pichu",
-  "say": "Unser Maskottchen: ein Corgi.",
+  "say": "Unser Maskottchen: Frodo. Ein Frosch.",
   "cap": [
    "UNSER MASKOTTCHEN:",
-   "EIN *CORGI."
+   "*FRODO.",
+   "EIN *FROSCH."
   ]
  },
  {

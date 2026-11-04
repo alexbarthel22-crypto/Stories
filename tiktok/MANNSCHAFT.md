@@ -17,7 +17,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | 14 | Träumer *(Platzhalter-Name)* | Sturm | Locken, blaue Kopfhörer |
 
 - **Cheftrainer (Ich-Erzähler):** dunkle Haare mit Seitenscheitel, kurzer Vollbart, blaue Parka-Jacke
-- **Maskottchen: ein Corgi** (im Video ohne Namen; intern „Pichu“), **Punktaugen**, Pembroke Corgi, rotgold mit weißer Brust, Schnauze, Blesse und Beinen, große Stehohren, langer Körper, kurzer Hals, kurze Beine, buschiger Schwanz, **kein Halsband**
+- **Maskottchen: Frodo, ein süßer Frosch** – grün, sitzend, große Glubschaugen oben auf dem Kopf, rosa Bäckchen, hellgrüner Bauch, breites Lächeln; hüpft gern; Soundeffekt „Quak“. (Ersetzt den früheren Corgi.)
 
 Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, Torwart grün.
 
@@ -33,8 +33,8 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - **Bushaltestelle:** Mast mit gelb-grünem H-Schild (gehört zum Stürmer #9)
 
 ## Folge 1 (veröffentlicht)
-- Datei: `tiktok/tag01_fc_schlammloch_gemini_v3.mp4` (0:53), Titelbild `tag01_thumbnail.png`, Beschreibung `tag01_beschreibung.md`
-- Ablauf: Tag 1 → Verein gegründet → 1 Follow = 1 Tribünenplatz → Tribüne aus 3 Klappstühlen → Willkommen beim FC Schlammloch (Logo) → Platz = Schlammloch → Flutlicht = Taschenlampe am Mast (Akku 3 %) → Kreisliga, ganz unten → Vorstellung von Vlad (Tor), Opa Jürgen (Abwehr), Bus-Verpasser in Flip-Flops (Sturm), Corgi (Maskottchen) → Ziel: Deutscher Meister → Sonntag 1. Spiel (ganzes Team) → Fans: 0 (traurig) → Folgen = Klappstuhl Nr. 1 → Vereinskasse 500 € + Kronkorken → 1 € pro Follower, 2 € pro Kommentar → Was tun mit dem Geld? (Flutlicht kaufen / Vereinshaus mieten / was ganz anderes) → Top-Kommentar entscheidet
+- Datei: `tiktok/tag01_fc_schlammloch_frodo.mp4` (0:54, wie gemini_v3, aber mit Frodo statt Corgi), Titelbild `tag01_thumbnail.png`, Beschreibung `tag01_beschreibung.md`
+- Ablauf: Tag 1 → Verein gegründet → 1 Follow = 1 Tribünenplatz → Tribüne aus 3 Klappstühlen → Willkommen beim FC Schlammloch (Logo) → Platz = Schlammloch → Flutlicht = Taschenlampe am Mast (Akku 3 %) → Kreisliga, ganz unten → Vorstellung von Vlad (Tor), Opa Jürgen (Abwehr), Bus-Verpasser in Flip-Flops (Sturm), Frodo der Frosch (Maskottchen) → Ziel: Deutscher Meister → Sonntag 1. Spiel (ganzes Team) → Fans: 0 (traurig) → Folgen = Klappstuhl Nr. 1 → Vereinskasse 500 € + Kronkorken → 1 € pro Follower, 2 € pro Kommentar → Was tun mit dem Geld? (Flutlicht kaufen / Vereinshaus mieten / was ganz anderes) → Top-Kommentar entscheidet
 - Ohne Stadionjubel (die Variante mit Jubel, `gemini_v4`, wird nicht genutzt)
 
 ## Thumbnail-Vorlage (für jede Folge gleich)

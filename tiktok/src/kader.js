@@ -11,6 +11,6 @@ await p.evaluate(()=>{
  list.push([coach({}),'','CHEFTRAINER','ICH']); 
  list.forEach(([svg,n,name,pos],i)=>{const col=i%7,row=Math.floor(i/7);const x=118+col*227,y=row?1010:500;
    s+=place(svg,x,y,0.4)+label(x,y+50,name,28,'#fff')+label(x,y+84,(n?'#'+n+' · ':'')+pos,22,'#FFD31A');});
- s+=place(corgi({}),1480,990,0.3)+label(1480,1060,'CORGI',28,'#fff')+label(1480,1094,'MASKOTTCHEN',22,'#FFD31A');
+ s+=place(frog({}),1480,1000,0.3)+label(1480,1060,'FRODO',28,'#fff')+label(1480,1094,'MASKOTTCHEN',22,'#FFD31A');
  r.innerHTML=s;});
 await p.screenshot({path:process.argv[2]});await b.close();})();

@@ -63,7 +63,8 @@ function fullTeam(t, baseBack, baseFront, s, m, rolling) {
     [teamPlayer(6, t), 390], [busguy({blink: blinkAt(t, 2)}), 790], [teamPlayer(7, t), 910]];
   fr.forEach(([svg, x]) => front += place(svg, x, baseFront, s));
   front += place(coach({mouth: m, blink: blinkAt(t)}), 590, baseFront + 6, s * 1.1);
-  const dog = place(corgi({wag: Math.sin(t * 14), blink: blinkAt(t, 1.7)}), 500, baseFront + 120, 0.34);
+  const ph = (t * 1.4) % 1, hop = ph < 0.4 ? Math.sin(ph / 0.4 * Math.PI) * 40 : 0;
+  const dog = place(frog({blink: blinkAt(t, 1.7)}), 500, baseFront + 120 - hop, 0.3);
   return back + front + dog;
 }
 

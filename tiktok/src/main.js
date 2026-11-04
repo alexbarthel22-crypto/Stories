@@ -78,9 +78,10 @@ const SCENES = {
       popG(t, ff, 300, 1200, badge(300, 1200, 'FLIP-FLOPS', {bg: '#FF3FA4', fg: '#fff', fs: 46, rot: -6}));
   },
   pichu(t, d, m) {
-    const hop = Math.abs(Math.sin(t * 6)) * 16;
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(corgi({wag: Math.sin(t * 16), blink: blinkAt(t, .3)}), 560, 1250 - hop, 1.35)) +
-      popG(t, 0.1, 500, 320, nameCard(80, 240, '★', 'CORGI', 'MASKOTTCHEN', '#FFD31A'));
+    const ph = (t * 1.6) % 1, hop = ph < 0.4 ? Math.sin(ph / 0.4 * Math.PI) * 90 : 0;
+    const sq = ph >= 0.4 && ph < 0.55 ? Math.sin((ph - 0.4) / 0.15 * Math.PI) : 0;
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(frog({blink: blinkAt(t, .3), squash: sq, mouth: t > 1.0 && t < 1.4}), 540, 1250 - hop, 1.15)) +
+      popG(t, 0.1, 500, 320, nameCard(80, 240, '★', 'FRODO', 'MASKOTTCHEN · FROSCH', '#FFD31A'));
   },
   goal(t, d, m) {
     let beams = '';

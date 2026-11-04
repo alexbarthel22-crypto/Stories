@@ -154,6 +154,18 @@ def cheer(d=2.8):
     return (crowd * 0.55 + claps * 0.25 + wh * 0.05) * env * 1.1
 
 
+def croak():
+    """Kurzes Frosch-Quaken: zwei schnelle Pulsfolgen mit Formant."""
+    out = []
+    for f0, d in ((190, 0.16), (230, 0.2)):
+        t = _t(d)
+        puls = (np.sin(2 * np.pi * f0 * t) > 0.6).astype(float)
+        x = _lp(puls - puls.mean(), 6) * np.sin(2 * np.pi * 38 * t) ** 2
+        out.append(x * np.minimum(1, t / 0.01) * np.minimum(1, (t[-1] - t) / 0.03))
+        out.append(np.zeros(int(0.06 * SR)))
+    return np.concatenate(out) * 0.5
+
+
 def build_sfx(segs, N):
     # Stadionjubel (cheer) ist vorhanden, wird in Folge 1 aber bewusst NICHT genutzt (veroeffentlichte Fassung = gemini_v3)
     fx = np.zeros(N, np.float32)
@@ -180,7 +192,8 @@ def build_sfx(segs, N):
             L(0, flicker_buzz(en - st, lambda x: np.sin(x * 37) + np.sin(x * 13.3) > -0.6))
             L(0.5, pop()); L(1.4, pop())
         elif sid == 'league': L(0.1, pop()); L(0.8, pop())
-        elif sid in ('vlad', 'opa', 'pichu'): L(0.1, pop())
+        elif sid in ('vlad', 'opa'): L(0.1, pop())
+        elif sid == 'pichu': L(0.1, pop()); L(1.0, croak())
         elif sid == 'bus': L(0.1, pop()); L(c[-1], pop())
         elif sid == 'goal': L(0.0, pop()); L(0.6, fanfare()); L(1.0, pop())
         elif sid == 'sunday': L(0.0, pop()); L(0.6, whistle())

@@ -93,3 +93,33 @@ function cashBox(cx, cy, s, open, t = 0) {
     <circle cx="0" cy="148" r="9" fill="#3A2316"/><path d="M-4 150 L-6 172 L6 172 L4 150Z" fill="#3A2316"/>
   </g>`;
 }
+
+// Frodo, der Frosch (Maskottchen): sitzend, Frontansicht, Fuesse bei y=705
+const FG = '#6CC24A', FG2 = '#58A93A', FB = '#D8F5B0';
+function frog(o = {}) {
+  const bl = o.blink;
+  const sq = o.squash || 0; // Huepf-Stauchung
+  const eye = (cx) => `
+    <circle cx="${cx}" cy="350" r="64" fill="${FG}" stroke="${K}" stroke-width="8"/>
+    ${bl ? `<path d="M${cx - 30} 352 Q${cx} 372 ${cx + 30} 352" stroke="${K}" stroke-width="8" fill="none" stroke-linecap="round"/>`
+         : `<circle cx="${cx}" cy="352" r="44" fill="#fff" stroke="${K}" stroke-width="6"/>
+            <circle cx="${cx + 6}" cy="358" r="20" fill="#1A1A1A"/><circle cx="${cx + 13}" cy="350" r="7" fill="#fff"/>`}`;
+  return `
+  <ellipse cx="250" cy="702" rx="170" ry="18" fill="#000" opacity="0.3"/>
+  <g transform="translate(250 705) scale(${1 + sq * 0.08} ${1 - sq * 0.08}) translate(-250 -705)">
+    <ellipse cx="112" cy="640" rx="66" ry="50" fill="${FG2}" stroke="${K}" stroke-width="8"/>
+    <ellipse cx="388" cy="640" rx="66" ry="50" fill="${FG2}" stroke="${K}" stroke-width="8"/>
+    <ellipse cx="250" cy="590" rx="148" ry="112" fill="${FG}" stroke="${K}" stroke-width="8"/>
+    <ellipse cx="250" cy="618" rx="96" ry="74" fill="${FB}"/>
+    <path d="M200 600 q50 14 100 0 M210 636 q40 12 80 0" stroke="#B9E08E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    ${[170, 330].map(x => `<ellipse cx="${x}" cy="692" rx="52" ry="20" fill="${FG}" stroke="${K}" stroke-width="7"/>
+      <circle cx="${x - 34}" cy="690" r="10" fill="${FG}" stroke="${K}" stroke-width="5"/><circle cx="${x}" cy="700" r="10" fill="${FG}" stroke="${K}" stroke-width="5"/><circle cx="${x + 34}" cy="690" r="10" fill="${FG}" stroke="${K}" stroke-width="5"/>`).join('')}
+    <ellipse cx="250" cy="455" rx="172" ry="112" fill="${FG}" stroke="${K}" stroke-width="8"/>
+    ${eye(162)}${eye(338)}
+    <ellipse cx="146" cy="486" rx="26" ry="14" fill="#F59AAE" opacity=".8"/>
+    <ellipse cx="354" cy="486" rx="26" ry="14" fill="#F59AAE" opacity=".8"/>
+    <circle cx="230" cy="440" r="5" fill="${FG2}"/><circle cx="270" cy="440" r="5" fill="${FG2}"/>
+    ${o.mouth ? `<path d="M196 476 Q250 470 304 476 Q290 524 250 526 Q210 524 196 476 Z" fill="#B23A48" stroke="${K}" stroke-width="7"/><path d="M226 512 Q250 498 274 512 Q250 524 226 512Z" fill="#F38BA0"/>`
+              : `<path d="M180 474 Q250 532 320 474" stroke="${K}" stroke-width="9" fill="none" stroke-linecap="round"/>`}
+  </g>`;
+}
