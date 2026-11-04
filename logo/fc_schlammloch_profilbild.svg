@@ -42,7 +42,7 @@
     <path d="M338 228 q12 -6 18 4 q4 12 -8 12 q-12 -2 -10 -16z" fill="#6B4226" stroke="#111" stroke-width="4"/>
   </g>
   <!-- Schlamm vorne, Ball versinkt -->
-  <path d="M120 372 Q200 350 300 362 Q400 350 480 372 Q500 420 470 470 Q300 500 130 470 Q100 420 120 372 Z" fill="#6B4226" stroke="#111" stroke-width="9" stroke-linejoin="round" clip-path="url(#bin)"/>
+  <path d="M120 372 Q200 350 300 362 Q400 350 480 372 L520 600 L80 600 Z" fill="#6B4226" stroke="#111" stroke-width="9" stroke-linejoin="round" clip-path="url(#bin)"/>
   <path d="M210 362 Q220 400 212 420 Q206 432 214 438" stroke="#111" stroke-width="0" fill="none"/>
   <!-- fliegende Spritzer -->
   <g fill="#6B4226" stroke="#111" stroke-width="5">
@@ -52,7 +52,4 @@
   <path d="M170 430 Q220 418 260 428" stroke="#8A5A36" stroke-width="8" fill="none" stroke-linecap="round"/>
   <path d="M350 440 Q400 428 440 438" stroke="#8A5A36" stroke-width="8" fill="none" stroke-linecap="round"/>
   <circle cx="300" cy="300" r="206" fill="none" stroke="#111" stroke-width="12"/>
-  <!-- Banner -->
-  <path d="M110 462 L490 462 L470 492 L490 522 L110 522 L130 492 Z" fill="#FFD31A" stroke="#111" stroke-width="9" stroke-linejoin="round"/>
-  <text x="300" y="507" text-anchor="middle" font-family="Inter, Arial Black, sans-serif" font-weight="900" font-size="38" fill="#111" letter-spacing="4">MATSCH-ELF</text>
 </svg>
