@@ -194,35 +194,6 @@ function busguy(o = {}) {
   }, o));
 }
 
-// Pichu, der Corgi (Seitenansicht), Fuesse bei y=705
-function corgi(o = {}) {
-  const tw = o.wag || 0, tongue = o.tongue == null ? 1 : o.tongue;
-  return `
-  <ellipse cx="250" cy="702" rx="150" ry="16" fill="#000" opacity="0.3"/>
-  <g transform="rotate(${tw * 25} 380 560)"><path d="M370 560 q40 -30 50 -6 q-10 26 -50 20z" fill="#E8913A" stroke="${K}" stroke-width="7"/></g>
-  <rect x="150" y="610" width="34" height="90" rx="12" fill="#fff" stroke="${K}" stroke-width="7"/>
-  <rect x="320" y="610" width="34" height="90" rx="12" fill="#E8913A" stroke="${K}" stroke-width="7"/>
-  <ellipse cx="260" cy="580" rx="140" ry="76" fill="#E8913A" stroke="${K}" stroke-width="8"/>
-  <path d="M150 600 Q200 660 300 640 Q240 620 200 560Z" fill="#fff"/>
-  <rect x="190" y="616" width="34" height="88" rx="12" fill="#fff" stroke="${K}" stroke-width="7"/>
-  <rect x="286" y="616" width="34" height="88" rx="12" fill="#E8913A" stroke="${K}" stroke-width="7"/>
-  <path d="M110 400 L100 300 L170 370Z" fill="#E8913A" stroke="${K}" stroke-width="8" stroke-linejoin="round"/>
-  <path d="M220 380 L250 290 L270 390Z" fill="#E8913A" stroke="${K}" stroke-width="8" stroke-linejoin="round"/>
-  <path d="M116 380 L108 322 L150 368Z M232 378 L248 320 L258 382Z" fill="#F7B7A3"/>
-  <ellipse cx="180" cy="460" rx="100" ry="88" fill="#E8913A" stroke="${K}" stroke-width="8"/>
-  <path d="M110 470 Q120 540 190 540 Q160 500 180 440 Q150 470 110 470Z" fill="#fff"/>
-  <path d="M90 480 Q60 500 74 520 Q100 536 130 520 Q140 490 120 470Z" fill="#fff" stroke="${K}" stroke-width="7"/>
-  <ellipse cx="72" cy="496" rx="16" ry="12" fill="${K}"/>
-  ${tongue ? `<path d="M104 524 q6 30 22 26 q12 -4 4 -30z" fill="#F38BA0" stroke="${K}" stroke-width="5"/>` : ''}
-  <circle cx="150" cy="440" r="${o.blink ? 2 : 22}" fill="#fff" stroke="${K}" stroke-width="6"/>
-  <circle cx="146" cy="442" r="${o.blink ? 1 : 9}" fill="${K}"/>
-  <circle cx="214" cy="440" r="${o.blink ? 2 : 22}" fill="#fff" stroke="${K}" stroke-width="6"/>
-  <circle cx="210" cy="442" r="${o.blink ? 1 : 9}" fill="${K}"/>
-  <ellipse cx="120" cy="490" rx="14" ry="8" fill="#F0A0A0" opacity=".7"/>
-  <path d="M150 540 Q200 570 262 530 L268 560 Q200 600 146 566Z" fill="#2F7FD8" stroke="${K}" stroke-width="7"/>
-  <path d="M184 556 v22 M220 552 v24" stroke="#FFD31A" stroke-width="10"/>
-  <rect x="240" y="550" width="26" height="60" rx="6" fill="#2F7FD8" stroke="${K}" stroke-width="6" transform="rotate(-10 253 580)"/>`;
-}
 
 // Klappstuhl, Fuesse bei y=705
 function chair(o = {}) {

@@ -7,11 +7,6 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const easeOut = x => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
 function backOut(x) { x = clamp(x, 0, 1); const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); }
 function pop(t, t0, dur = 0.28) { return t < t0 ? 0 : backOut((t - t0) / dur); }
-function popG(t, t0, cx, cy, inner) {
-  const s = pop(t, t0);
-  if (s <= 0.001) return '';
-  return `<g transform="translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})">${inner}</g>`;
-}
 function rnd(i) { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
 
 // ---------- Hintergrund ----------
@@ -139,29 +134,8 @@ function busStop(x, base, s) {
 }
 
 // ---------- UI ----------
-function badge(cx, cy, text, o = {}) {
-  const fs = o.fs || 64, pad = o.pad || 34;
-  const w = text.length * fs * 0.66 + pad * 2, h = fs * 1.4;
-  const bg = o.bg || '#F3EBD8', fg = o.fg || '#111';
-  return `<g transform="rotate(${o.rot || 0} ${cx} ${cy})">
-    <rect x="${cx - w / 2 + 6}" y="${cy - h / 2 + 8}" width="${w}" height="${h}" rx="${o.r || 16}" fill="#111"/>
-    <rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${o.r || 16}" fill="${bg}" stroke="#111" stroke-width="7"/>
-    <text x="${cx}" y="${cy + fs * 0.36}" text-anchor="middle" ${FONT} font-size="${fs}" fill="${fg}" letter-spacing="1">${text}</text></g>`;
-}
 
-function bigText(cx, cy, text, col, fs) {
-  return `<text x="${cx}" y="${cy}" text-anchor="middle" ${FONT} font-size="${fs}" fill="${col}" stroke="#111" stroke-width="${fs / 7}" paint-order="stroke" stroke-linejoin="round">${text}</text>`;
-}
 
-function nameCard(x, y, num, name, sub, numBg = '#FFD31A') {
-  return `<g transform="translate(${x} ${y}) scale(1.3)">
-    <rect x="8" y="10" width="640" height="170" rx="22" fill="#111"/>
-    <rect x="0" y="0" width="640" height="170" rx="22" fill="#F7F3EA" stroke="#111" stroke-width="8"/>
-    <rect x="28" y="28" width="114" height="114" rx="18" fill="${numBg}" stroke="#111" stroke-width="7"/>
-    <text x="85" y="114" text-anchor="middle" ${FONT} font-size="80" fill="#111">${num}</text>
-    <text x="170" y="92" ${FONT} font-size="66" fill="#111">${name}</text>
-    <text x="172" y="140" ${FONT} font-size="34" fill="#2FA84A" letter-spacing="1">${sub}</text></g>`;
-}
 
 function profileCard(x, y, fans, followed) {
   return `<g transform="translate(${x} ${y})">
@@ -190,14 +164,6 @@ function commentCard(x, y) {
     <path d="M820 70 c-20 -26 -56 -6 -40 20 l40 40 l40 -40 c16 -26 -20 -46 -40 -20z" fill="#FE2C55"/></g>`;
 }
 
-function optionCard(cx, cy, icon, l1, l2, rot) {
-  return `<g transform="rotate(${rot} ${cx} ${cy})">
-    <rect x="${cx - 150 + 8}" y="${cy - 190 + 10}" width="300" height="380" rx="26" fill="#111"/>
-    <rect x="${cx - 150}" y="${cy - 190}" width="300" height="380" rx="26" fill="#F7F3EA" stroke="#111" stroke-width="8"/>
-    <g transform="translate(${cx} ${cy - 60})">${icon}</g>
-    <text x="${cx}" y="${cy + 100}" text-anchor="middle" ${FONT} font-size="40" fill="#111">${l1}</text>
-    <text x="${cx}" y="${cy + 150}" text-anchor="middle" ${FONT} font-size="40" fill="#111">${l2}</text></g>`;
-}
 const ICON_BOOT = `<path d="M-70 -70 L-10 -70 L-6 0 Q40 6 70 30 Q80 60 50 60 L-70 60Z" fill="#222" stroke="#111" stroke-width="8" stroke-linejoin="round"/>
   <path d="M-50 70 v14 M-10 70 v14 M30 70 v14" stroke="#111" stroke-width="10" stroke-linecap="round"/><path d="M-60 -20 H-10 M-60 10 H0" stroke="#FFD31A" stroke-width="8"/>`;
 const ICON_HOUSE = `<path d="M-90 -10 L0 -90 L90 -10Z" fill="#E8432E" stroke="#111" stroke-width="8" stroke-linejoin="round"/>
@@ -206,18 +172,3 @@ const ICON_HOUSE = `<path d="M-90 -10 L0 -90 L90 -10Z" fill="#E8432E" stroke="#1
 const ICON_Q = `<circle cx="0" cy="0" r="86" fill="#FFD31A" stroke="#111" stroke-width="8"/><text x="0" y="44" text-anchor="middle" ${FONT} font-size="130" fill="#111">?</text>`;
 
 // Untertitel: Woerter mit * gruen, mit ! rot
-function caption(text, t0, t) {
-  if (!text) return '';
-  const s = 0.75 + 0.25 * backOut((t - t0) / 0.18);
-  const words = text.split(' ').map(w => {
-    let col = '#fff';
-    if (w.startsWith('*')) { col = '#6BF06B'; w = w.slice(1); }
-    if (w.startsWith('!')) { col = '#FF4A4A'; w = w.slice(1); }
-    return `<tspan fill="${col}">${w}</tspan>`;
-  }).join(' ');
-  const len = text.replace(/[*!]/g, '').length;
-  const fs = Math.min(104, 980 / (Math.max(len, 6) * 0.74));
-  const cy = 1400;
-  return `<g transform="translate(540 ${cy}) scale(${s}) translate(-540 ${-cy})">
-    <text x="540" y="${cy}" text-anchor="middle" ${FONT} font-size="${fs}" stroke="#111" stroke-width="${fs / 5.5}" paint-order="stroke" stroke-linejoin="round" letter-spacing="1">${words}</text></g>`;
-}

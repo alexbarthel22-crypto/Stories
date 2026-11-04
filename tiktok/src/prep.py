@@ -43,10 +43,10 @@ env = [e if e > 0.08 else 0 for e in env]
 
 rng = np.random.default_rng(1)
 noise = rng.standard_normal(N).astype(np.float32)
-rain = np.convolve(noise, np.ones(6) / 6, 'same').astype(np.float32) * 0.05
+rain = np.convolve(noise, np.ones(6) / 6, 'same').astype(np.float32) * 0.018
 drops = np.zeros(N, np.float32)
 for p in rng.integers(0, N - 2000, int(total * 25)):
-    drops[p:p + 300] += rng.standard_normal(300) * np.exp(-np.arange(300) / 40) * 0.08
+    drops[p:p + 300] += rng.standard_normal(300) * np.exp(-np.arange(300) / 40) * 0.03
 fx = np.zeros(N, np.float32)
 for o in out[1:]:
     i = int(o['start'] * SR); n = int(0.09 * SR); tt = np.arange(n) / SR
@@ -74,5 +74,5 @@ s = open('logo.svg').read(); s = re.sub(r'^<svg[^>]*>', '', s).replace('</svg>',
 open('logo.js', 'w').write('const LOGO = ' + json.dumps(s) + ';\n')
 open('page.html', 'w').write('''<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}svg{display:block}</style></head>
 <body><svg id="root" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
-<script src="logo.js"></script><script src="chars.js"></script><script src="scenes.js"></script><script src="data.js"></script><script src="main.js"></script></body></html>''')
+<script src="logo.js"></script><script src="chars.js"></script><script src="scenes.js"></script><script src="style.js"></script><script src="team.js"></script><script src="data.js"></script><script src="main.js"></script></body></html>''')
 print('total', round(total, 2), 'frames', nf)
