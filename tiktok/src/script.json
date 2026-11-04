@@ -1,0 +1,20 @@
+[
+ {"id":"intro","say":"Tag eins. Ich gründe einen Fußballverein.","cap":["TAG EINS.","ICH GRÜNDE","EINEN *FUSSBALLVEREIN."]},
+ {"id":"follow","say":"Jeder, der mir folgt, bekommt einen Platz auf unserer Tribüne.","cap":["JEDER, DER","MIR *FOLGT,","BEKOMMT EINEN","*PLATZ AUF","UNSERER *TRIBÜNE."]},
+ {"id":"chairs","say":"Unsere Tribüne: drei Klappstühle.","cap":["UNSERE TRIBÜNE:","DREI *KLAPPSTÜHLE."]},
+ {"id":"welcome","say":"Willkommen beim FC Schlammloch!","cap":["WILLKOMMEN","BEIM FC","*SCHLAMMLOCH!"]},
+ {"id":"field","say":"Unser Platz? Ein einziges Schlammloch.","cap":["UNSER PLATZ?","EIN EINZIGES","*SCHLAMMLOCH."]},
+ {"id":"light","say":"Unser Flutlicht: eine Taschenlampe auf einem Mast.","cap":["UNSER *FLUTLICHT:","EINE *TASCHENLAMPE","AUF EINEM MAST."]},
+ {"id":"league","say":"Wir starten in der Kreisliga.","cap":["WIR STARTEN","IN DER *KREISLIGA."]},
+ {"id":"vlad","say":"Im Tor: Vlad. Mit Augenklappe.","cap":["IM TOR:","*VLAD.","MIT *AUGENKLAPPE."]},
+ {"id":"opa","say":"In der Abwehr: Opa Jürgen.","cap":["IN DER ABWEHR:","OPA *JÜRGEN."]},
+ {"id":"bus","say":"Im Sturm: einer, der den Bus nach Hause verpasst hat. In Flip-Flops.","cap":["IM STURM:","EINER, DER","DEN *BUS NACH","HAUSE *VERPASST HAT.","IN *FLIP-FLOPS."]},
+ {"id":"pichu","say":"Unser Maskottchen: Pitschu. Ein Korgi.","cap":["UNSER MASKOTTCHEN:","*PICHU.","EIN CORGI."]},
+ {"id":"goal","say":"Unser Ziel: Deutscher Meister in der Bundesliga!","cap":["UNSER ZIEL:","DEUTSCHER *MEISTER","IN DER *BUNDESLIGA!"]},
+ {"id":"sunday","say":"Am Sonntag ist unser erstes Spiel.","cap":["AM *SONNTAG","IST UNSER","*ERSTES SPIEL."]},
+ {"id":"fans","say":"Und unsere Fans? Null. Die Klappstühle sind leer.","cap":["UND UNSERE FANS?","!NULL.","DIE KLAPPSTÜHLE","SIND !LEER."]},
+ {"id":"seat","say":"Folg jetzt, und Klappstuhl Nummer eins gehört dir.","cap":["FOLG *JETZT,","UND KLAPPSTUHL","*NUMMER 1","GEHÖRT DIR."]},
+ {"id":"money","say":"In der Vereinskasse: fünfhundert Euro. Und ein Kaugummi.","cap":["IN DER VEREINSKASSE:","*500 EURO.","UND EIN *KAUGUMMI."]},
+ {"id":"options","say":"Mittelstürmer kaufen? Vereinshaus mieten? Oder was ganz anderes?","cap":["*MITTELSTÜRMER KAUFEN?","*VEREINSHAUS MIETEN?","ODER WAS","GANZ *ANDERES?"]},
+ {"id":"comment","say":"Der Top-Kommentar entscheidet.","cap":["DER *TOP-KOMMENTAR","*ENTSCHEIDET."]}
+]
