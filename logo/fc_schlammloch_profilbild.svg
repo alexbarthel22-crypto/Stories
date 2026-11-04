@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 680 680" width="680" height="680"><rect x="-40" y="-40" width="680" height="680" fill="#3A2A22"/>
   <defs>
-    <path id="btop" d="M76 300 A224 224 0 0 1 524 300"/>
+    <path id="btop" d="M73 300 A227 227 0 0 1 527 300"/>
     <path id="bbot" d="M58 300 A242 242 0 0 0 542 300"/>
     <clipPath id="bin"><circle cx="300" cy="300" r="200"/></clipPath>
     <clipPath id="bball"><circle cx="300" cy="300" r="88"/></clipPath>
@@ -8,7 +8,7 @@
   <circle cx="300" cy="300" r="286" fill="#111"/>
   <circle cx="300" cy="300" r="276" fill="#2F7FD8"/>
   <circle cx="300" cy="300" r="276" fill="none" stroke="#FFD31A" stroke-width="10" stroke-dasharray="2 22" stroke-linecap="round" opacity="0"/>
-  <text font-family="Inter, Arial Black, sans-serif" font-weight="900" font-size="46" fill="#fff" stroke="#111" stroke-width="9" paint-order="stroke" letter-spacing="3" text-anchor="middle"><textPath href="#btop" startOffset="50%">FC SCHLAMMLOCH</textPath></text>
+  <text font-family="Inter, Arial Black, sans-serif" font-weight="900" font-size="56" fill="#fff" stroke="#111" stroke-width="10" paint-order="stroke" letter-spacing="2" text-anchor="middle"><textPath href="#btop" startOffset="50%">FC SCHLAMMLOCH</textPath></text>
   <text x="44" y="314" font-family="Inter, Arial Black, sans-serif" font-weight="900" font-size="40" fill="#FFD31A" stroke="#111" stroke-width="7" paint-order="stroke" text-anchor="middle">★</text>
   <text x="556" y="314" font-family="Inter, Arial Black, sans-serif" font-weight="900" font-size="40" fill="#FFD31A" stroke="#111" stroke-width="7" paint-order="stroke" text-anchor="middle">★</text>
   <circle cx="300" cy="300" r="206" fill="#111"/>
@@ -29,14 +29,10 @@
     <g clip-path="url(#bball)" fill="#111">
       <path d="M300 222 L326 240 L316 268 L284 268 L274 240 Z"/>
       <path d="M206 250 L230 240 L240 262 L222 280 L206 276 Z"/>
+      <path d="M300 300 L322 316 L314 342 L286 342 L278 316 Z"/>
       <path d="M394 250 L370 240 L360 262 L378 280 L394 276 Z"/>
       <path d="M262 392 L270 362 L300 356 L330 362 L338 392 Z"/>
     </g>
-    <!-- Augen & Grinsen -->
-    <circle cx="272" cy="300" r="24" fill="#fff" stroke="#111" stroke-width="7"/>
-    <circle cx="328" cy="300" r="24" fill="#fff" stroke="#111" stroke-width="7"/>
-    <circle cx="276" cy="304" r="9" fill="#111"/><circle cx="324" cy="304" r="9" fill="#111"/>
-    <path d="M280 336 Q300 352 320 336" stroke="#111" stroke-width="6" fill="none" stroke-linecap="round"/>
     <!-- Schlammspritzer am Ball -->
     <path d="M244 336 q10 -12 22 -4 q8 10 -4 16 q-14 4 -18 -12z" fill="#6B4226" stroke="#111" stroke-width="4"/>
     <path d="M338 228 q12 -6 18 4 q4 12 -8 12 q-12 -2 -10 -16z" fill="#6B4226" stroke="#111" stroke-width="4"/>
