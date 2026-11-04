@@ -11,7 +11,7 @@ Vertikale Erklärvideos (1080×1920, 30 fps) im flachen Vektor-Look mit natürli
 | 5 | Die drei Türen im Kellergewölbe | `videos/05_tueren/video.mp4` | 0:57 |
 
 ## Kanal-Standard (für jedes neue Video)
-- Musik: immer `assets/music/raetsel_theme.mp3` (Lyria), 15 dB unter der Stimme
+- Musik: standardmäßig `assets/music/raetsel_theme.mp3` (Lyria), 15 dB unter der Stimme; Ausnahme Video #5: `assets/music/grusel_keller.mp3` (leicht gruselig, ebenfalls Lyria)
 - Stimme: Gemini TTS, Stimme „Puck“, `gemini-3.1-flash-tts-preview`, Tempo 1.12
 - Optik: flacher Vektor-Look, Blaue-Stunde-Skyline, Inter-ExtraBold-Pills, Fragen-Szene mit Denkpause, Outro „Hättest du's gewusst?“
 - `safecheck.py` muss „OK“ melden; Cover (`make_cover.py`) + `description.txt` ohne Spoiler

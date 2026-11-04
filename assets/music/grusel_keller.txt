@@ -1,0 +1,6 @@
+Gruselmusik (leicht, verspielt): grusel_keller.mp3 – verwendet in Video #5 (Kellergewölbe)
+Erzeugt am 2026-11-04 mit Google Lyria (Modell lyria-3.5) über die Gemini API, rein instrumental.
+Prompt: leicht gruselige, verspielte Halloween-Cartoon-Stimmung – Spieluhr, Pizzicato, tiefe Cello-Drones,
+Celesta, Cembalo, leises Ticken, Moll, ca. 90 BPM, ohne Gesang.
+Eigens generiert, kein Sample aus einer Musikbibliothek. Nutzung gemäß den Google-Nutzungsbedingungen
+für generative KI; Lyria-Audio enthält ein unhörbares SynthID-Wasserzeichen.

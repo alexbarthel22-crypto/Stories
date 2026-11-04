@@ -31,5 +31,5 @@ ev = [("bed", 0.0, 0.3, t5),                                # quiet torch crackl
       ("whoosh", t_end - 0.15, 0.6), ("pop", t_end, 0.8), ("pop", st("Schreib's") + 0.4, 0.7),
       ("pop", st("Schreib's") + 2.0, 0.7)]
 mix(os.path.join(HERE, "voice.wav"), mv.END, ev, os.path.join(HERE, "mix.wav"),
-    music_path=os.path.join(HERE, "..", "..", "assets", "music", "raetsel_theme.mp3"), music_db=-15.0)
+    music_path=os.path.join(HERE, "..", "..", "assets", "music", "grusel_keller.mp3"), music_db=-16.0)   # spooky track for this video
 print("mix.wav", round(mv.END, 2), "s")

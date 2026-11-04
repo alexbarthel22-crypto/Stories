@@ -43,59 +43,102 @@ def door_poly(k, inset=0):
     return pts
 
 
+# the world is larger than one screen: the opening shot shows the whole cellar, then zooms in
+WX0, WY0, WX1, WY1 = -270, -480, 1350, 2400
+
+
+def _paste_grad(img, x0, y0, x1, y1, stops):
+    g = vgradient(int((x1 - x0) * ZW), int((y1 - y0) * ZW), stops)
+    img.paste(g, (int((x0 - WX0) * ZW), int((y0 - WY0) * ZW)))
+
+
 def draw_world():
-    img = Image.new("RGB", (W * ZW, H * ZW))
-    img.paste(vgradient(W * ZW, WALL_BOTTOM * ZW, [(0, "#201b26"), (0.45, "#2f2836"), (1, "#3d3546")]), (0, 0))
-    cv = Canvas(img, 0, 0, ZW)
+    img = Image.new("RGB", (int((WX1 - WX0) * ZW), int((WY1 - WY0) * ZW)))
+    _paste_grad(img, WX0, WY0, WX1, WALL_BOTTOM, [(0, "#16121b"), (0.35, "#241f2b"), (1, "#3d3546")])
+    cv = Canvas(img, WX0, WY0, ZW)
     rng = np.random.default_rng(5)
-    # stone blocks
-    for row, y in enumerate(range(240, WALL_BOTTOM, 64)):
+    # stone blocks over the whole wall
+    for row, y in enumerate(range(-60, WALL_BOTTOM, 64)):
         off = (row % 2) * 60
-        for x in range(-120 + off, W + 120, 120):
+        for x in range(WX0 - 120 + off, WX1 + 120, 120):
             sh = rng.uniform(-0.06, 0.08)
             col = mix(hexc(STONE), (255, 255, 255), max(0, sh)) if sh > 0 else mix(hexc(STONE), (0, 0, 0), -sh)
+            if y < 200:
+                col = mix(col, (0, 0, 0), 0.35)
             cv.rect(x + 4, y + 4, x + 116, y + 60, fill=col, r=10)
-    # vaulted ceiling (arches + ribs)
-    for k, cx in enumerate((-60, 323, 617, 1140)):
-        cv.ellipse(cx - 330, -260, cx + 330, 520, fill=hexc("#2a2430"))
-    for cx in (175, 470, 765):
-        cv.arc(cx - 300, -200, cx + 300, 560, 180, 360, hexc(STONE_L), 26)
-    for x in (322, 617):
+    # vaulted ceiling: big arches and ribs
+    for cx in (-280, 28, 323, 617, 912, 1210):
+        cv.ellipse(cx - 330, -560, cx + 330, 520, fill=hexc("#1f1a25"))
+    for cx in (-125, 175, 470, 765, 1060):
+        cv.arc(cx - 300, -420, cx + 300, 560, 180, 360, hexc(STONE_L), 26)
+    for x in (-125, 28, 322, 617, 912, 1210):
         cv.rect(x - 22, 150, x + 22, WALL_BOTTOM, fill=hexc(STONE_D))
         cv.rect(x - 30, 140, x + 30, 175, fill=hexc(STONE_L), r=6)
-    # cobwebs
-    for (cx, cy, d) in ((0, 250, 1), (W, 250, -1)):
-        for r in (60, 110, 160):
+    # hanging chains
+    for cx, ln in ((-60, 380), (1150, 300), (470, 120)):
+        for k in range(int(ln / 22)):
+            y = -300 + k * 22
+            cv.ellipse(cx - 7, y, cx + 7, y + 26, outline=hexc("#6b707c"), width=4)
+    # cobwebs in the corners of the big view and above the doors
+    for (cx, cy, d, R) in ((WX0, -60, 1, 260), (WX1, -60, -1, 260), (0, 250, 1, 160), (W, 250, -1, 160)):
+        for r in (R * 0.35, R * 0.65, R):
             cv.arc(cx - r, cy - r, cx + r, cy + r, 0 if d > 0 else 90, 90 if d > 0 else 180, (220, 220, 230, 90), 3)
         for a in (0.15, 0.6, 1.1, 1.45):
-            cv.line([(cx, cy), (cx + d * math.cos(a) * 170, cy + math.sin(a) * 170)], (220, 220, 230, 90), 3, cap=False)
+            cv.line([(cx, cy), (cx + d * math.cos(a) * R * 1.05, cy + math.sin(a) * R * 1.05)], (220, 220, 230, 90), 3,
+                    cap=False)
+    # left alcove: wine rack with dusty bottles
+    rx0, rx1 = -245, 0
+    cv.rect(rx0, 600, rx1, WALL_BOTTOM, fill=hexc(WOOD_D))
+    for k in range(6):
+        y = 640 + k * 90
+        cv.rect(rx0, y + 70, rx1, y + 82, fill=hexc(WOOD))
+        for j in range(5):
+            bx = rx0 + 26 + j * 46
+            cv.ellipse(bx - 18, y + 30, bx + 18, y + 68, fill=hexc(["#2f5a3a", "#5a1d2a", "#3a3d46"][(j + k) % 3]))
+            cv.circle(bx, y + 49, 6, fill=hexc("#d9a441"))
+    # right alcove: barrel pyramid + crates
+    for (bx, by, r) in ((1130, WALL_BOTTOM - 70, 70), (1270, WALL_BOTTOM - 70, 70), (1200, WALL_BOTTOM - 200, 70)):
+        cv.circle(bx, by, r, fill=hexc(WOOD))
+        cv.circle(bx, by, r * 0.72, outline=hexc("#3a3d46"), width=8)
+        cv.circle(bx, by, r * 0.3, fill=hexc(WOOD_D))
+    for (x0, y0, w_) in ((1080, WALL_BOTTOM + 40, 120), (1210, WALL_BOTTOM + 10, 100)):
+        cv.rect(x0, y0, x0 + w_, y0 + w_ * 0.8, fill=hexc("#9a6a3a"))
+        cv.line([(x0, y0), (x0 + w_, y0 + w_ * 0.8)], hexc(WOOD_D), 6, cap=False)
+        cv.line([(x0 + w_, y0), (x0, y0 + w_ * 0.8)], hexc(WOOD_D), 6, cap=False)
     # doors: stone arch frame, wooden leaf drawn per frame (opening)
     for k in range(3):
         cv.poly(door_poly(k, -26), fill=hexc(STONE_L))
         cv.poly(door_poly(k, -12), fill=hexc("#6d6374"))
         cv.poly(door_poly(k, 0), fill=hexc("#140f18"))
-        # number plaque
         cx = DOOR_X[k]
         cv.rect(cx - 34, DOOR_RECT_TOP - DOOR_W / 2 - 92, cx + 34, DOOR_RECT_TOP - DOOR_W / 2 - 34, fill=hexc("#b8902f"), r=8)
         cv.text(cx, DOOR_RECT_TOP - DOOR_W / 2 - 63, str(k + 1), 40, hexc("#2b1d14"))
-    # floor (perspective flagstones)
-    floor = vgradient(W * ZW, (H - WALL_BOTTOM) * ZW, [(0, "#4f4652"), (1, "#2a2430")])
-    img.paste(floor, (0, WALL_BOTTOM * ZW))
-    cv = Canvas(img, 0, 0, ZW)
+    # floor (perspective flagstones), deeper towards the viewer
+    _paste_grad(img, WX0, WALL_BOTTOM, WX1, WY1, [(0, "#4f4652"), (0.4, "#3a3340"), (1, "#1c1820")])
+    cv = Canvas(img, WX0, WY0, ZW)
     y, step = WALL_BOTTOM, 26
-    while y < H:
-        cv.rect(0, y, W, y + 3, fill=hexc("#3a3340"))
+    while y < WY1:
+        cv.rect(WX0, y, WX1, y + 3, fill=hexc("#3a3340"))
         y += step
         step *= 1.22
-    for k in range(-8, 9):
-        cv.line([(W / 2 + k * 70, WALL_BOTTOM), (W / 2 + k * 260, H)], hexc("#3a3340"), 3, cap=False)
-    cv.rect(0, WALL_BOTTOM - 6, W, WALL_BOTTOM + 6, fill=hexc(STONE_D))
-    # puddle + old barrel
+    for k in range(-12, 13):
+        cv.line([(W / 2 + k * 70, WALL_BOTTOM), (W / 2 + k * 330, WY1)], hexc("#3a3340"), 3, cap=False)
+    cv.rect(WX0, WALL_BOTTOM - 6, WX1, WALL_BOTTOM + 6, fill=hexc(STONE_D))
+    # puddle, old barrel, straw, bucket, broom
     cv.ellipse(600, 1330, 820, 1370, fill=(120, 140, 170, 60))
+    cv.ellipse(-150, 1900, 150, 1960, fill=(120, 140, 170, 50))
     cv.ellipse(930, 1000, 1080, WALL_BOTTOM + 10, fill=hexc(WOOD_D))
     cv.rect(935, 1010, 1075, WALL_BOTTOM, fill=hexc(WOOD))
     for yy in (1040, 1140):
         cv.rect(930, yy - 8, 1080, yy + 8, fill=hexc("#3a3d46"))
+    for _ in range(40):
+        x, y = rng.uniform(WX0, WX1), rng.uniform(1500, WY1 - 50)
+        a = rng.uniform(0, 3.14)
+        cv.line([(x, y), (x + math.cos(a) * 26, y + math.sin(a) * 6)], hexc("#b89a5a"), 3, cap=False)
+    cv.poly([(-200, 1650), (-120, 1650), (-130, 1740), (-190, 1740)], fill=hexc("#6b707c"))
+    cv.arc(-205, 1610, -115, 1700, 180, 360, hexc("#3a3d46"), 5)
+    cv.line([(1230, 1450), (1310, 1880)], hexc(WOOD), 10)
+    cv.poly([(1290, 1860), (1340, 1860), (1350, 1960), (1270, 1960)], fill=hexc("#b89a5a"))
     return img
 
 
@@ -114,12 +157,13 @@ def world():
 
 def render_world_frame(cam, actors):
     cx, cy, vh = cam
-    vh = min(vh, H)
+    vh = min(vh, WY1 - WY0)
     vw = vh * OUT_W / OUT_H
-    cx = clamp(cx, vw / 2, W - vw / 2)
-    cy = clamp(cy, vh / 2, H - vh / 2)
+    cx = clamp(cx, WX0 + vw / 2, WX1 - vw / 2)
+    cy = clamp(cy, WY0 + vh / 2, WY1 - vh / 2)
     box = (cx - vw / 2, cy - vh / 2, cx + vw / 2, cy + vh / 2)
-    crop = world().crop(tuple(int(round(v * ZW)) for v in box))
+    crop = world().crop((int(round((box[0] - WX0) * ZW)), int(round((box[1] - WY0) * ZW)),
+                         int(round((box[2] - WX0) * ZW)), int(round((box[3] - WY0) * ZW))))
     cv = Canvas(crop, box[0], box[1], ZW)
     actors(cv)
     return crop.resize((OUT_W, OUT_H), Image.LANCZOS), (box, vh / OUT_H)
@@ -131,6 +175,7 @@ def w2s(x, y, view):
 
 
 FULL = (W / 2, H / 2, H)
+BIG = (W / 2, (WY0 + WY1) / 2, WY1 - WY0)     # the whole cellar
 
 
 def cam_door(k):
@@ -153,6 +198,46 @@ def st(key):
 
 
 # ------------------------------------------------------------------ props per frame
+def cellar_life(cv, t):
+    """small, slow details that make the big cellar feel alive"""
+    # chandelier with flickering candles
+    cx, cy = 540, -170
+    cv.line([(cx, -480), (cx, cy)], hexc("#3a3d46"), 5, cap=False)
+    cv.ellipse(cx - 150, cy - 18, cx + 150, cy + 18, outline=hexc("#6b707c"), width=8)
+    for i in range(5):
+        x = cx - 120 + i * 60
+        cv.rect(x - 7, cy - 52, x + 7, cy - 12, fill=hexc("#efe6d2"))
+        fl = 0.8 + 0.2 * math.sin(t * 12 + i * 1.7)
+        cv.circle(x, cy - 66, 22 * fl, fill=(255, 190, 100, 40))
+        cv.poly([(x - 6, cy - 54), (x + 6, cy - 54), (x + 2 * math.sin(t * 10 + i), cy - 54 - 20 * fl)], fill=hexc("#ffd07a"))
+    # spider going up and down on its thread
+    sy = -260 + 120 * (0.5 + 0.5 * math.sin(t * 0.9))
+    cv.line([(1150, -480), (1150, sy)], (220, 220, 230, 140), 2, cap=False)
+    cv.circle(1150, sy + 10, 12, fill=hexc("#1d1a24"))
+    for k in range(4):
+        for d in (-1, 1):
+            cv.line([(1150, sy + 10), (1150 + d * 20, sy + 2 + k * 6), (1150 + d * 26, sy + 14 + k * 6)],
+                    hexc("#1d1a24"), 3, cap=False)
+    # water drop falling into the puddle
+    ph = (t * 0.7) % 1
+    dy = 230 + (1330 - 230) * ph ** 2
+    if ph < 0.93:
+        cv.ellipse(706, dy - 9, 714, dy + 6, fill=(170, 200, 235, 200))
+    else:
+        r = 10 + (ph - 0.93) * 700
+        cv.ellipse(710 - r, 1345 - r * 0.25, 710 + r, 1345 + r * 0.25, outline=(170, 200, 235, 160), width=3)
+    # a rat scurrying across the front floor now and then
+    rp = (t % 9.0) / 9.0
+    if rp < 0.35:
+        rx = WX0 - 60 + (WX1 - WX0 + 120) * (rp / 0.35)
+        ry = 1720 + 4 * math.sin(t * 30)
+        cv.ellipse(rx - 34, ry - 18, rx + 34, ry + 14, fill=hexc("#5d5664"))
+        cv.circle(rx + 34, ry - 6, 14, fill=hexc("#5d5664"))
+        cv.circle(rx + 30, ry - 20, 7, fill=hexc("#e98aa0"))
+        cv.circle(rx + 40, ry - 8, 2.5, fill=hexc("#ffffff"))
+        cv.line([(rx - 34, ry), (rx - 80, ry - 10 + 8 * math.sin(t * 20))], hexc("#e98aa0"), 3)
+
+
 def torches(cv, t):
     for i, x in enumerate(TORCH_X):
         y = 640
@@ -285,12 +370,13 @@ def scene_story(t):
     t0, t1, t2, t3, t4 = st("Du befindest"), st("Drei alte"), st("Hinter der ersten"), st("Hinter der zweiten"), \
         st("Und hinter der dritten")
     t5 = st("Durch welche")
-    cam = keyframes(t, [(t0, (540, 1150, 1300)), (t1 - 0.1, (540, 1050, 1500)), (t1 + 0.5, FULL), (t2, FULL),
+    cam = keyframes(t, [(t0, BIG), (t0 + 0.25, BIG), (t1 - 0.15, (540, 1150, 1300)), (t1 + 0.55, FULL), (t2, FULL),
                         (t2 + 0.5, cam_door(0)), (t3 - 0.1, cam_door(0)), (t3 + 0.5, cam_door(1)), (t4 - 0.1, cam_door(1)),
                         (t4 + 0.5, cam_door(2)), (t5 - 0.4, cam_door(2)), (t5, FULL)])
     opened = [open_amount(t, t2 + 0.5, t3 - 0.1), open_amount(t, t3 + 0.5, t4 - 0.1), open_amount(t, t4 + 0.5, t5 - 0.2)]
 
     def actors(cv):
+        cellar_life(cv, t)
         torches(cv, t)
         draw_doors(cv, t, opened)
         if t < t2 + 0.3:
@@ -318,54 +404,69 @@ def scene_story(t):
     return frame
 
 
-TITLE_LINES = [["DU", "BEFINDEST", "DICH"], ["IN", "EINEM", "ALTEN"], ["KELLERGEWÖLBE"]]
+TITLE_LINES = [(["DU", "BEFINDEST", "DICH"], "#fff6e6", -3), (["IN", "EINEM", "ALTEN"], "#ffd34d", 2),
+               (["KELLERGEWÖLBE"], "#ffd34d", -2)]
 
 
 def karaoke_title(frame, t):
-    """the first sentence big in the middle; each word grows while it is spoken"""
+    """first sentence as big pills (channel style); every word pops up big when it is spoken"""
     t0, t1 = S[K["Du befindest"]], E[K["Du befindest"]]
     if t > t1 + 0.45:
         return
-    words = [w for line in TITLE_LINES for w in line]
+    words = [w for line, _, _ in TITLE_LINES for w in line]
     weights = [len(w) + 2 for w in words]
     tot = sum(weights)
-    spans, acc = [], t0 + 0.05
+    starts, acc = [], t0 + 0.02
     for wgt in weights:
-        d = (t1 - t0 - 0.1) * wgt / tot
-        spans.append((acc, acc + d))
-        acc += d
+        starts.append(acc)
+        acc += (t1 - t0 - 0.1) * wgt / tot
     fade = 1 - prog(t, t1 + 0.1, t1 + 0.45)
-    layer = Image.new("RGBA", frame.size, (0, 0, 0, 0))
-    d = ImageDraw.Draw(layer)
-    base, gap, max_w = 84, 26, 790          # line width limit keeps the title clear of TikTok's side areas
     i = 0
-    for li, line in enumerate(TITLE_LINES):
-        cy = 760 + li * 118
-        acts, spokens = [], []
+    for li, (line, bg, rot) in enumerate(TITLE_LINES):
+        base = 96 if li < 2 else 108
+        gap = 0.28 * base
+        while sum(font(base).getbbox(w)[2] for w in line) + gap * (len(line) - 1) > 690:
+            base -= 2
+            gap = 0.28 * base
+        widths = [font(base).getbbox(w)[2] for w in line]
+        tw = sum(widths) + gap * (len(line) - 1)
+        padx, pady = 34, 20
+        Z = 2
+        PW, PH = int(tw + 2 * padx + 60), int(base + 2 * pady + 60)
+        tile = Image.new("RGBA", (PW * Z, PH * Z), (0, 0, 0, 0))
+        d = ImageDraw.Draw(tile)
+        appear = ease_out_back(prog(t, starts[i] - 0.05, starts[i] + 0.2))
+        if appear <= 0.01:
+            i += len(line)
+            continue
+        x0, y0, x1, y1 = 30, 30, 30 + tw + 2 * padx, 30 + base + 2 * pady
+        d.rounded_rectangle([(x0 + 8) * Z, (y0 + 12) * Z, (x1 + 8) * Z, (y1 + 12) * Z], radius=(y1 - y0) // 3 * Z,
+                            fill=(30, 20, 60, 90))
+        d.rounded_rectangle([x0 * Z, y0 * Z, x1 * Z, y1 * Z], radius=(y1 - y0) // 3 * Z, fill=hexc(bg))
+        x = x0 + padx
         for j, w in enumerate(line):
-            a, b = spans[i + j]
-            acts.append(smooth(prog(t, a - 0.06, a + 0.08)) * (1 - smooth(prog(t, b, b + 0.15))))
-            spokens.append(t >= a)
-        sizes = [base * (1 + 0.3 * ac) for ac in acts]
-        widths = [font(int(sz)).getbbox(w)[2] for sz, w in zip(sizes, line)]
-        total_w = sum(widths) + gap * (len(line) - 1)
-        k = min(1.0, max_w / total_w)
-        sizes = [sz * k for sz in sizes]
-        widths = [wd * k for wd in widths]
-        total_w = sum(widths) + gap * k * (len(line) - 1)
-        x = OUT_W / 2 - total_w / 2
-        for j, w in enumerate(line):
-            sz = max(10, int(sizes[j]))
-            act, spoken = acts[j], spokens[j]
-            col = (255, 211, 77, int(255 * fade)) if act > 0.3 else ((255, 255, 255, int(255 * fade)) if spoken else
-                                                                      (255, 255, 255, int(130 * fade)))
-            cxw = x + widths[j] / 2
-            d.text((cxw, cy), w, font=font(sz), fill=col, anchor="mm", stroke_width=max(4, sz // 13),
-                   stroke_fill=(20, 16, 36, int(255 * fade)))
-            log_ui("title:" + w, cxw - widths[j] / 2, cy - sz * 0.55, cxw + widths[j] / 2, cy + sz * 0.55)
-            x += widths[j] + gap * k
+            p = prog(t, starts[i + j] - 0.04, starts[i + j] + 0.28)
+            if p > 0:
+                sc = min(1.0, ease_out_back(p) * 0.85 + 0.15) * (1 + 0.2 * math.sin(math.pi * min(1, p)))  # pop, settle
+                fs = max(8, int(base * sc * Z))
+                d.text(((x + widths[j] / 2) * Z, (y0 + (y1 - y0) / 2) * Z), w, font=font(fs), fill=hexc("#2b2140"),
+                       anchor="mm")
+            x += widths[j] + gap
+        tile = tile.rotate(rot, resample=Image.BICUBIC, expand=True)
+        sc = min(appear, 1.03) * fade
+        if sc <= 0.01:
+            i += len(line)
+            continue
+        tile = tile.resize((max(1, int(tile.width / Z * sc)), max(1, int(tile.height / Z * sc))), Image.LANCZOS)
+        if fade < 1:
+            tile.putalpha(tile.split()[3].point(lambda v: int(v * fade)))
+        cy = 610 + li * 148
+        px, py = int(OUT_W / 2 - tile.width / 2), int(cy - tile.height / 2)
+        frame.paste(tile, (px, py), tile)
+        if sc > 0.6:
+            m = 30 * sc
+            log_ui("title line " + str(li), px + m, py + m, px + tile.width - m, py + tile.height - m)
         i += len(line)
-    frame.paste(layer, (0, 0), layer)
 
 
 def door_icon(cv, x, y, s, n, open_=0.0):
@@ -424,6 +525,7 @@ def scene_solution(t):
     walk = prog(t, out + 0.6, t_end - 0.3)
 
     def actors(cv):
+        cellar_life(cv, t)
         torches(cv, t)
         draw_doors(cv, t, opened, starved=True)
         if t >= out + 0.4:
