@@ -83,3 +83,13 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 emotional abhängig 🥺📱 Sie schreibt „ok“ statt „okay“ – und Alex analysiert eine Stunde lang 🔎 Welches Anzeichen kennst du? 👇 Kennst du jemanden, der gerade emotional abhängig ist, aber auch alleine wertvoll ist? Markier sie oder ihn! 🤍 Und was soll Alex morgen sein?
 
 #emotionalabhängig #beziehung #overthinking #relatable #selbstwert #dating #comedy #fürdich #fyp
+
+## TikTok Folge 3 – Friedrich Merz (Parodie)
+Cover: `episodes/08_merz/thumbnail.png`
+Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung)
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+Friedrich Merz 🎙️ (Parodie) Fliegt selbst zum Bäcker 🛩️🥐, jedes Thema endet im Sauerland ⛰️ und die Rede dauert … ziemlich lang 😴 Kennst du jemanden, der auch so gern lange Reden hält? Markier sie oder ihn! 👇 Und was soll Alex morgen sein?
+
+#parodie #friedrichmerz #kanzler #sauerland #comedy #satire #fürdich #fyp
