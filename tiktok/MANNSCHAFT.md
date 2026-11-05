@@ -59,7 +59,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Tor immer auf der Torlinie am Spielfeldrand, mit Fünfmeterraum, Strafraum und Elfmeterpunkt davor
 - Oberste Text-Boxen beginnen frühestens bei y ≈ 280 (oberer TikTok-Sicherheitsbereich)
 - Namenskarten und Info-Boxen sitzen nah am Geschehen (direkt über Kopf bzw. Objekt), nicht ganz oben am Bildrand
-- Intro jeder Folge: euphorisch gesprochen „Tag X! Ich gründe einen Fußballverein!“, darunter die orange Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“ (Tag 1: „⚽ VEREIN GEGRÜNDET“). Weitwinkel auf den Platz mit Tor und Strafraum, der Trainer steht darauf; die Kamera zoomt während der ersten Szene auf ihn. Ein Fußball fliegt von unten links ins Bild, trifft das „TAG X“-Feld beim Erscheinen und springt oben rechts raus (mit Aufprall-Geräusch)
+- Intro jeder Folge: euphorisch gesprochen „Tag X! Ich gründe einen Fußballverein!“, darunter die orange Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“ (Tag 1: „⚽ VEREIN GEGRÜNDET“). Weitwinkel auf den Platz mit Tor und Strafraum, der Trainer steht darauf; die Kamera zoomt während der ersten Szene auf ihn. Ein Fußball fliegt von unten links ins Bild, trifft das „TAG X“-Feld (ab Tag 2 ist es ab Sekunde 0 sichtbar) und springt oben rechts raus (mit Aufprall-Geräusch)
 - Untertitel bei y 1420 (unter den Mündern), TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1450, rechts nicht über x 940
 
 ## Stimme
@@ -72,7 +72,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Entwurfsstimme (kostenlos, offline): espeak-ng mit MBROLA `mb-de6`
 
 ## Folge 2 (Tag 2)
-- Datei: `tiktok/tag02_fc_schlammloch_v9.mp4` (0:53; neue Stimme Fenrir, euphorisch; die 3 Fans sitzen schon im Intro im Hintergrund; komplette Sprache in EINEM Gemini-Aufruf für eine einheitliche Stimme), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
+- Datei: `tiktok/tag02_fc_schlammloch_v10.mp4` (0:53; „TAG 2“ ab Sekunde 0 sichtbar; neue Stimme Fenrir, euphorisch; die 3 Fans sitzen schon im Intro im Hintergrund; komplette Sprache in EINEM Gemini-Aufruf für eine einheitliche Stimme), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
 - Die ersten drei Fans sitzen auf Klappstuhl 1–3 (Cartoon-Figuren mit Schal, keine echten Fotos):
   - Stuhl 1: **Eike** (@eikemzz) – rote Cap, graues Hoodie
   - Stuhl 2: **Tobi** (@tobiii1911) – braune Locken, oranges Hoodie

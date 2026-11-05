@@ -25,7 +25,7 @@ const SCENES = {
   intro(t, d, m) {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
     return cam(z, 540, 1060 - 30 * e, field(t, 1060, {goalX: 790}) + [130, 215, 300].map((x, i) => place(seatedFan(i, t), x, 1092, 0.17)).join('') + place(coach({mouth: m, blink: blinkAt(t)}), 470, 1290, 0.6)) +
-      `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${popG(t, 0.3, 540, 440, badge(540, 440, 'TAG 2', {kind: 'pitch', fs: 150, pad: 120}))}</g>` +
+      `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${badge(540, 440, 'TAG 2', {kind: 'pitch', fs: 150, pad: 120})}</g>` +
       popG(t, 0.55, 540, 640, twoLineBadge(540, 640, 'ICH GRÜNDE EINEN', 'FUSSBALLVEREIN', 52)) +
       introBall(t);
   },
