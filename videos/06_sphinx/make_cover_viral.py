@@ -17,18 +17,19 @@ def cover():
     t = 1.0
     pal = mv._pal_mix("evening", "golden", 0.45)
 
-    def actors(cv):
-        mv.ground_actors(cv, t)
+    def main(cv, box):
         mv.sphinx_eyes(cv, 1.0, 0.2)
+        mv.sand_wind(cv, t)
 
-    img, view = mv.render_world_frame((470, 1060, 1150), actors, pal, t)
+    img, _ = mv.render_scene((470, 1050, 1150), t, pal, {"far": mv.far_actors(t), "mid": mv.mid_actors(t),
+                                                         "main": main, "fg": mv.fg_actors(t, 1.0)})
     shade = vgradient(OUT_W, OUT_H, [(0, "#120c22"), (1, "#120c22")])
     mask = vgradient(OUT_W, OUT_H, [(0, "#b4b4b4"), (0.22, "#707070"), (0.33, "#000000"), (1, "#000000")]).convert("L")
     img = Image.composite(shade, img, mask)
-    pill(img, OUT_W / 2, 270, "99% SCHEITERN HIER", 48, bg="#e2574c", fg="#ffffff", pad=(26, 12), rot=-2)
+    mv.pill3d(img, OUT_W / 2, 280, "99% SCHEITERN HIER", 50, bg="#e2574c", fg="#ffffff", rot=-2)
     l1 = "DAS RÄTSEL DER SPHINX"
-    pill(img, OUT_W / 2 - 10, 410, l1, fit(l1, 900, 84), bg="#ffd34d", rot=-2)
-    pill(img, OUT_W / 2, 1380, "4 → 2 → 3 BEINE ?", 64, bg="#fff6e6", rot=2, border="#1d1b33")
+    mv.pill3d(img, OUT_W / 2, 420, l1, 84, bg="#ffd34d", rot=-2, max_w=860)
+    mv.pill3d(img, OUT_W / 2, 1380, "4 → 2 → 3 BEINE ?", 66, bg="#fff6e6", rot=2)
     return img
 
 

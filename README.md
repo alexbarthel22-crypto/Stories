@@ -9,7 +9,7 @@ Vertikale Erklärvideos (1080×1920, 30 fps) im flachen Vektor-Look mit natürli
 | 3 | Nils und die drei Lichtschalter | `videos/03_lichtschalter/video.mp4` | 1:00 |
 | 4 | Dario und die zwei Eimer (4 Liter) | `videos/04_eimer/video.mp4` | 0:58 |
 | 5 | Die drei Türen im Kellergewölbe | `videos/05_tueren/video.mp4` | 0:57 |
-| 6 | Das Rätsel der Sphinx (altes Ägypten) | `videos/06_sphinx/video.mp4` | 0:43 |
+| 6 | Das Rätsel der Sphinx (altes Ägypten, 2.5D-Parallax-Look) | `videos/06_sphinx/video.mp4` | 0:43 |
 
 ## Kanal-Standard (für jedes neue Video)
 - Musik: standardmäßig `assets/music/raetsel_theme.mp3` (Lyria), 15 dB unter der Stimme; Ausnahme Video #5: `assets/music/grusel_keller.mp3` (leicht gruselig, ebenfalls Lyria)

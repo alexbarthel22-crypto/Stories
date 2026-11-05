@@ -1,29 +1,30 @@
 """Rätsel #6 – Das Rätsel der Sphinx (Morgen vier, Mittag zwei, Abend drei Beine).
 
+2.5D look: four parallax depth layers (far / mid / main / foreground) with baked volume shading,
+time-of-day sky with god rays and stars, heat haze, bloom, depth-of-field blur and camera drift.
+
 usage:  python3 make_video.py            -> renders video.mp4 (needs timing.json + mix.wav)
         python3 make_video.py --stills t1 t2 ...  -> preview stills in ./stills
 """
 import json, math, os, subprocess, sys
 from multiprocessing import Pool
 import numpy as np
-from PIL import Image, ImageEnhance, ImageDraw
+from PIL import Image, ImageEnhance, ImageDraw, ImageFilter, ImageChops
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "engine"))
 from toolkit import *  # noqa
+from toolkit import _shade
 from animals import draw_baby, draw_cane
 
 CACHE = os.path.join(HERE, "cache")
 os.makedirs(CACHE, exist_ok=True)
 
-# ------------------------------------------------------------------ world (bigger than one screen)
 W, H = OUT_W, OUT_H
-ZW = 2
-WX0, WY0, WX1, WY1 = -270, -480, 1350, 2400
+WX0, WY0, WX1, WY1 = -420, -520, 1520, 2560
 HORIZON = 1060
-PATH_Y = 1440                    # where people walk (feet), above TikTok's caption area
-SAND, SAND_D, SAND_L = "#e3b067", "#c48a45", "#f2cf8e"
-STONE, STONE_D = "#d9a35e", "#b07a3c"
+PATH_Y = 1440
+REF = (540.0, 1000.0, 1920.0)            # camera where all layers line up exactly
 GOLD, LAPIS = "#e0b64a", "#2f5aa8"
 
 ADULT = Style(205, "#c98c62", "#1d1712", "#2f8f83", "#e9e0cc", hair_style="quiff", shoes="#7a4f2e",
@@ -31,249 +32,457 @@ ADULT = Style(205, "#c98c62", "#1d1712", "#2f8f83", "#e9e0cc", hair_style="quiff
 OLD = Style(205, "#e9b48f", "#e6e6e6", "#7a5c3a", "#4a4a5a", hair_style="short", beard=True, glasses=True,
             shoes="#3a2c22", accent="#5a4228")
 
-# sky palettes: (top, middle, horizon), sun colour, landscape tint (rgba)
+# sky stops (top, middle, horizon), sun colour, landscape tint rgba, star amount
 PALETTES = {
-    "golden":  (("#3d4f9a", "#e8916a", "#ffd08a"), "#ffe2a0", (255, 170, 90, 22)),
-    "morning": (("#7d9fdc", "#f4aab0", "#ffe0b0"), "#fff0c8", (255, 190, 200, 28)),
-    "noon":    (("#2f86d6", "#7ec4ee", "#dff2fb"), "#fffbe6", (255, 255, 255, 0)),
-    "evening": (("#241a4a", "#b34f6a", "#ff9a4a"), "#ffb36b", (110, 50, 140, 60)),
+    "golden":  (("#3d4f9a", "#e8916a", "#ffd08a"), "#ffe2a0", (255, 170, 90, 22), 0.0),
+    "morning": (("#7d9fdc", "#f4aab0", "#ffe0b0"), "#fff0c8", (255, 190, 200, 26), 0.0),
+    "noon":    (("#2f86d6", "#7ec4ee", "#dff2fb"), "#fffbe6", (255, 255, 255, 0), 0.0),
+    "evening": (("#1d1640", "#a8476a", "#ff9a4a"), "#ffb36b", (110, 50, 140, 58), 0.45),
+    "night":   (("#060a24", "#141c48", "#2e3566"), "#f4f1d0", (30, 40, 110, 120), 1.0),
 }
 
 
 def _pal_mix(a, b, f):
-    (sa, suna, ta), (sb, sunb, tb) = PALETTES[a], PALETTES[b]
+    (sa, suna, ta, na), (sb, sunb, tb, nb) = PALETTES[a], PALETTES[b]
     stops = tuple(mix(hexc(x), hexc(y), f) for x, y in zip(sa, sb))
     sun = mix(hexc(suna), hexc(sunb), f)
     tint = tuple(int(round(p + (q - p) * f)) for p, q in zip(ta, tb))
-    return stops, sun, tint
+    return stops, sun, tint, na + (nb - na) * f
 
 
-def _grad(img_w, img_h, stops):
-    ys = np.linspace(0, 1, img_h)
-    pos = [s[0] for s in stops]
-    rgb = np.array([s[1] for s in stops], float)
-    col = np.stack([np.interp(ys, pos, rgb[:, c]) for c in range(3)], 1)
-    return Image.fromarray(np.repeat(col[:, None, :], img_w, axis=1).astype(np.uint8), "RGB")
+class BCanvas(Canvas):
+    """Canvas that alpha-blends semi-transparent shapes on RGBA images (PIL would replace the pixels)"""
+
+    def _blend(self, name, pts, pad, *a, **kw):
+        col = kw.get("fill") if kw.get("fill") is not None else kw.get("outline")
+        if col is None and len(a) and isinstance(a[-1], tuple):
+            col = a[-1]
+        if self.img.mode != "RGBA" or col is None or len(col) < 4 or col[3] >= 255:
+            return getattr(Canvas, name)(self, *a, **kw)
+        q = [self.p(*p) for p in pts]
+        pd = pad * self.s + 3
+        x0 = max(0, int(min(p[0] for p in q) - pd)); y0 = max(0, int(min(p[1] for p in q) - pd))
+        x1 = min(self.img.width, int(max(p[0] for p in q) + pd) + 1)
+        y1 = min(self.img.height, int(max(p[1] for p in q) + pd) + 1)
+        if x1 <= x0 or y1 <= y0:
+            return
+        ov = Image.new("RGBA", (x1 - x0, y1 - y0), (0, 0, 0, 0))
+        getattr(Canvas, name)(Canvas(ov, self.ox + x0 / self.s, self.oy + y0 / self.s, self.s), *a, **kw)
+        self.img.alpha_composite(ov, (x0, y0))
+
+    def rect(self, x0, y0, x1, y1, **kw):
+        self._blend("rect", [(x0, y0), (x1, y1)], kw.get("width", 1), x0, y0, x1, y1, **kw)
+
+    def circle(self, x, y, r, **kw):
+        self._blend("circle", [(x - r, y - r), (x + r, y + r)], kw.get("width", 1), x, y, r, **kw)
+
+    def ellipse(self, x0, y0, x1, y1, **kw):
+        self._blend("ellipse", [(x0, y0), (x1, y1)], kw.get("width", 1), x0, y0, x1, y1, **kw)
+
+    def line(self, pts, fill, width=1, joint="curve", cap=True):
+        self._blend("line", pts, width, pts, fill, width, joint, cap)
+
+    def poly(self, pts, **kw):
+        self._blend("poly", pts, kw.get("width", 1), pts, **kw)
+
+    def pieslice(self, x0, y0, x1, y1, a0, a1, fill):
+        self._blend("pieslice", [(x0, y0), (x1, y1)], 1, x0, y0, x1, y1, a0, a1, fill)
+
+    def arc(self, x0, y0, x1, y1, a0, a1, fill, width=1):
+        self._blend("arc", [(x0, y0), (x1, y1)], width, x0, y0, x1, y1, a0, a1, fill, width)
 
 
-def draw_pyramid(cv, apex, x0, x1, base):
+# ------------------------------------------------------------------ volume shading (baked "3D")
+def fblur(a, sigma):
+    """float gaussian approximation (3 box blurs, no 8-bit banding)"""
+    r = max(1, int(sigma * 0.9))
+    for ax in (0, 1):
+        for _ in range(3):
+            pad = [(0, 0), (0, 0)]
+            pad[ax] = (r + 1, r)
+            c = np.cumsum(np.pad(a, pad, mode="edge"), axis=ax, dtype=np.float64)
+            a = ((np.take(c, range(2 * r + 1, c.shape[ax]), axis=ax) -
+                  np.take(c, range(0, c.shape[ax] - 2 * r - 1), axis=ax)) / (2 * r + 1)).astype(np.float32)
+    return a
+
+
+def shaded_part(bbox, draw_fn, z, soft=16, k=1.4, ao=0.28, light=(-0.55, -0.83), spec=0.0):
+    """draws a part on its own layer and lights it like a rounded 3D body (height = blurred alpha)"""
+    x0, y0, x1, y1 = bbox
+    im = Image.new("RGBA", (int((x1 - x0) * z), int((y1 - y0) * z)), (0, 0, 0, 0))
+    draw_fn(BCanvas(im, x0, y0, z))
+    h = fblur(np.asarray(im.split()[3], np.float32) / 255, soft * z)
+    gy, gx = np.gradient(h)
+    sh = -(gx * light[0] + gy * light[1]) * soft * z * k
+    f = 1 + np.clip(sh, -0.45, 0.45)
+    f *= 1 - ao * np.clip(1 - h * 1.6, 0, 1)
+    rgb = np.asarray(im, np.float32).copy()
+    rgb[..., :3] *= f[..., None]
+    if spec:
+        hl = np.clip(sh - 0.25, 0, 1) * spec * 255
+        rgb[..., :3] += hl[..., None]
+    im = Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8), "RGBA")
+    return im, (x0, y0)
+
+
+def paste_part(layer_img, z, part):
+    im, (x0, y0) = part
+    layer_img.alpha_composite(im, (int(round((x0 - WX0) * z)), int(round((y0 - WY0) * z))))
+
+
+def vgrad_poly(cv, pts, c_top, c_bot, y0, y1):
+    """polygon filled with a vertical gradient"""
+    mask = Image.new("L", cv.img.size, 0)
+    ImageDraw.Draw(mask).polygon([cv.p(*p) for p in pts], fill=255)
+    a, b = cv.p(0, y0)[1], cv.p(0, y1)[1]
+    ys = np.clip((np.arange(cv.img.size[1]) - a) / max(1, b - a), 0, 1)
+    g = np.zeros((cv.img.size[1], 1, 3), np.float32)
+    for c in range(3):
+        g[:, 0, c] = c_top[c] + (c_bot[c] - c_top[c]) * ys
+    grad = Image.fromarray(np.repeat(g, cv.img.size[0], axis=1).astype(np.uint8), "RGB").convert("RGBA")
+    cv.img.paste(grad, (0, 0), mask)
+
+
+# ------------------------------------------------------------------ layer: FAR (pyramids, dunes)
+def draw_pyramid(cv, apex, x0, x1, base, seed):
     split = x0 + (x1 - x0) * 0.62
-    cv.poly([apex, (x0, base), (split, base)], fill=hexc("#ecc681"))
-    cv.poly([apex, (split, base), (x1, base)], fill=hexc("#b9874a"))
-    for k in range(1, 9):     # stone courses
-        y = apex[1] + (base - apex[1]) * k / 9
+    vgrad_poly(cv, [apex, (x0, base), (split, base)], hexc("#fbe2a6"), hexc("#d9a862"), apex[1], base)
+    vgrad_poly(cv, [apex, (split, base), (x1, base)], hexc("#c99350"), hexc("#94622f"), apex[1], base)
+    rng = np.random.default_rng(seed)
+    n = 14
+    for k in range(1, n):
+        y = apex[1] + (base - apex[1]) * k / n
         f = (y - apex[1]) / (base - apex[1])
         xl, xr = apex[0] + (x0 - apex[0]) * f, apex[0] + (x1 - apex[0]) * f
         xs = apex[0] + (split - apex[0]) * f
-        cv.line([(xl, y), (xs, y)], hexc("#d8ad68"), 2, cap=False)
-        cv.line([(xs, y), (xr, y)], hexc("#a6763d"), 2, cap=False)
-    cv.poly([apex, (apex[0] - (apex[0] - x0) * 0.08, apex[1] + (base - apex[1]) * 0.08),
-             (apex[0] + (x1 - apex[0]) * 0.08, apex[1] + (base - apex[1]) * 0.08)], fill=hexc(GOLD))   # golden capstone
+        cv.line([(xl, y), (xs, y)], (150, 100, 50, 90), 2, cap=False)
+        cv.line([(xs, y), (xr, y)], (70, 40, 20, 90), 2, cap=False)
+        for _ in range(int(6 * f) + 1):      # block joints
+            xx = rng.uniform(xl + 6, xr - 6)
+            yy0 = y - (base - apex[1]) / n
+            cv.line([(xx, yy0 + 2), (xx, y - 2)], (90, 55, 25, 70), 2, cap=False)
+    for _ in range(60):                      # weathering speckles
+        f = rng.uniform(0.15, 1)
+        y = apex[1] + (base - apex[1]) * f
+        xl, xr = apex[0] + (x0 - apex[0]) * f, apex[0] + (x1 - apex[0]) * f
+        cv.circle(rng.uniform(xl + 8, xr - 8), y, rng.uniform(2, 5), fill=(90, 55, 25, 60))
+    cap = 0.085
+    cv.poly([apex, (apex[0] - (apex[0] - x0) * cap, apex[1] + (base - apex[1]) * cap),
+             (apex[0] + (split - apex[0]) * cap, apex[1] + (base - apex[1]) * cap)], fill=hexc("#ffe27a"))
+    cv.poly([apex, (apex[0] + (split - apex[0]) * cap, apex[1] + (base - apex[1]) * cap),
+             (apex[0] + (x1 - apex[0]) * cap, apex[1] + (base - apex[1]) * cap)], fill=hexc("#c99a2e"))
+    cv.ellipse(x0 - 30, base - 14, x1 + 40, base + 16, fill=(110, 70, 30, 70))   # contact shadow
 
 
-def draw_sphinx(cv):
-    OL = hexc("#6e4524")
-    BODY, BODY_D, BODY_L = hexc("#c4823f"), hexc("#a3672f"), hexc("#d99a55")
-    # plinth
-    cv.rect(-80, 1240, 680, 1336, fill=hexc("#b98447"), outline=OL, width=4)
-    for x in range(-80, 680, 95):
-        cv.rect(x, 1240, x + 4, 1336, fill=hexc("#94622f"))
-    cv.rect(-80, 1286, 680, 1291, fill=hexc("#94622f"))
-    cv.rect(-95, 1226, 695, 1246, fill=hexc("#d9a866"), outline=OL, width=4)
-    # lion body in profile (facing right)
-    cv.line([(-30, 1190), (-110, 1150), (-120, 1100), (-95, 1080)], OL, 26)          # tail
-    cv.line([(-30, 1190), (-110, 1150), (-120, 1100), (-95, 1080)], BODY_D, 16)
-    cv.ellipse(-70, 1070, 260, 1232, fill=BODY, outline=OL, width=4)                 # haunch
-    cv.rect(40, 1095, 480, 1230, fill=BODY, outline=OL, width=4, r=50)               # back + belly
-    cv.ellipse(-60, 1120, 200, 1232, fill=BODY_D, outline=OL, width=4)               # folded hind leg
-    cv.rect(60, 1196, 250, 1230, fill=BODY_D, outline=OL, width=4, r=16)             # hind paw
-    cv.rect(70, 1102, 400, 1118, fill=BODY_L, r=8)                                   # light on the back
-    for k in range(4):                                                               # ribs/muscle lines
-        cv.arc(180 + k * 50, 1120, 230 + k * 50, 1200, 200, 300, OL, 3)
-    cv.rect(360, 1040, 540, 1230, fill=BODY, outline=OL, width=4, r=40)              # chest
-    for k, dy in enumerate((0, 20)):                                                 # stretched front legs
-        x1 = 690 - k * 26
-        cv.rect(420 - k * 20, 1180 + dy, x1, 1214 + dy, fill=BODY_D if k == 0 else BODY, outline=OL, width=4, r=16)
-        for j in range(3):
-            cv.line([(x1 - 34 + j * 11, 1186 + dy), (x1 - 34 + j * 11, 1208 + dy)], OL, 3, cap=False)
-    # nemes headdress: dome + lappets down to the shoulders, gold/blue stripes
-    hx, hy = 470, 985
-    cv.poly([(hx - 74, hy - 70), (hx + 74, hy - 70), (hx + 112, hy + 110), (hx + 112, hy + 150),
-             (hx - 112, hy + 150), (hx - 112, hy + 110)], fill=hexc(GOLD), outline=OL, width=4)
-    for k in range(7):                                                               # stripes on the lappets
-        y = hy - 40 + k * 26
-        f = (y - (hy - 70)) / 180
-        xo = 74 + (112 - 74) * min(1, f)
-        cv.line([(hx - xo + 4, y), (hx - 50, y)], hexc(LAPIS), 11, cap=False)
-        cv.line([(hx + 50, y), (hx + xo - 4, y)], hexc(LAPIS), 11, cap=False)
-    cv.pieslice(hx - 78, hy - 150, hx + 78, hy - 10, 180, 360, fill=hexc(GOLD))
-    cv.arc(hx - 78, hy - 150, hx + 78, hy - 10, 180, 360, OL, 4)
-    for k in range(1, 4):
-        cv.arc(hx - 78 + k * 6, hy - 150 + k * 12, hx + 78 - k * 6, hy - 10, 200, 340, hexc(LAPIS), 9)
-    # face
-    cv.ellipse(hx - 54, hy - 84, hx + 54, hy + 66, fill=hexc("#dca765"), outline=OL, width=4)
-    cv.rect(hx - 64, hy - 88, hx + 64, hy - 72, fill=hexc(LAPIS), outline=OL, width=3, r=6)   # headband
-    cv.poly([(hx - 7, hy - 104), (hx + 7, hy - 104), (hx + 10, hy - 76), (hx - 10, hy - 76)], fill=hexc(GOLD),
-            outline=OL, width=3)                                                                 # uraeus
-    cv.circle(hx, hy - 108, 8, fill=hexc(GOLD), outline=OL, width=3)
-    for ex in (hx - 23, hx + 23):
-        cv.line([(ex - 17, hy - 30), (ex + 15, hy - 33)], hexc("#3a2a1e"), 6)            # brows
-        cv.ellipse(ex - 14, hy - 20, ex + 14, hy - 5, fill=hexc("#ffffff"))
-        cv.circle(ex + 1, hy - 12, 6, fill=hexc("#22243a"))
-        tail = ex + 24 if ex > hx else ex - 24
-        cv.line([(ex - 14 if ex > hx else ex + 14, hy - 12), (tail, hy - 16)], hexc("#22243a"), 4, cap=False)  # kohl
-    cv.poly([(hx - 6, hy - 6), (hx + 6, hy - 6), (hx + 12, hy + 20), (hx - 12, hy + 20)], fill=hexc("#c58f4f"))
-    cv.ellipse(hx - 20, hy + 30, hx + 20, hy + 42, fill=hexc("#9c5634"))
-    # ceremonial beard
-    cv.rect(hx - 13, hy + 62, hx + 13, hy + 118, fill=hexc(GOLD), outline=OL, width=3, r=6)
-    for k in range(4):
-        cv.rect(hx - 11, hy + 70 + k * 12, hx + 11, hy + 75 + k * 12, fill=hexc(LAPIS))
+def new_layer(z):
+    img = Image.new("RGBA", (int((WX1 - WX0) * z), int((WY1 - WY0) * z)), (0, 0, 0, 0))
+    return img, BCanvas(img, WX0, WY0, z)
 
 
-def draw_column(cv, x, top, bottom, w=110):
-    cv.rect(x - w / 2, top + 60, x + w / 2, bottom, fill=hexc("#e2c08a"))
-    cv.rect(x - w / 2, top + 60, x - w / 2 + 18, bottom, fill=hexc("#c9a36a"))
-    cv.poly([(x - w * 0.75, top + 60), (x + w * 0.75, top + 60), (x + w * 0.55, top), (x - w * 0.55, top)], fill=hexc("#cfa35e"))
-    for k in range(3):                       # painted bands
-        y = top + 120 + k * 22
-        cv.rect(x - w / 2, y, x + w / 2, y + 10, fill=hexc([LAPIS, "#c0392b", GOLD][k]))
-    rng = np.random.default_rng(abs(int(x)))
-    for r in range(8):                       # hieroglyphs
-        y = top + 210 + r * 70
-        kind = int(rng.integers(0, 4))
-        cx = x + (r % 2) * 10 - 5
-        col = hexc("#6b4a28")
-        if kind == 0:
-            cv.ellipse(cx - 16, y - 10, cx + 16, y + 10, outline=col, width=4)
-            cv.circle(cx, y, 4, fill=col)
-        elif kind == 1:
-            cv.line([(cx - 16, y + 10), (cx, y - 14), (cx + 16, y + 10)], col, 4)
-        elif kind == 2:
-            cv.line([(cx - 14, y), (cx + 14, y)], col, 4)
-            cv.line([(cx, y - 14), (cx, y + 14)], col, 4)
-        else:
-            cv.circle(cx, y - 6, 8, outline=col, width=4)
-            cv.line([(cx, y + 2), (cx, y + 16)], col, 4)
-    cv.rect(x - w * 0.6, bottom - 20, x + w * 0.6, bottom, fill=hexc("#c9a36a"))
+def draw_far(z):
+    img, cv = new_layer(z)
+    pts = [(x, HORIZON - 70 - 40 * math.sin(x / 260 + 1) - 16 * math.sin(x / 90)) for x in range(WX0, WX1 + 20, 20)]
+    vgrad_poly(cv, pts + [(WX1, HORIZON + 120), (WX0, HORIZON + 120)], hexc("#e9b978"), hexc("#d29a55"), HORIZON - 130,
+               HORIZON)
+    draw_pyramid(cv, (1300, 870), 1170, 1440, HORIZON + 8, 3)
+    draw_pyramid(cv, (1040, 770), 850, 1230, HORIZON + 8, 2)
+    draw_pyramid(cv, (640, 590), 290, 990, HORIZON + 10, 1)
+    draw_pyramid(cv, (-210, 900), -330, -70, HORIZON + 8, 4)
+    pts = [(x, HORIZON - 22 - 14 * math.sin(x / 150) - 6 * math.sin(x / 47)) for x in range(WX0, WX1 + 20, 20)]
+    vgrad_poly(cv, pts + [(WX1, HORIZON + 120), (WX0, HORIZON + 120)], hexc("#e7b46d"), hexc("#d9a35e"), HORIZON - 40,
+               HORIZON + 40)
+    return img.filter(ImageFilter.GaussianBlur(0.9 * z))
 
 
-def draw_world():
-    """landscape without the sky (transparent sky, drawn per frame by time of day)"""
-    img = Image.new("RGBA", (int((WX1 - WX0) * ZW), int((WY1 - WY0) * ZW)), (0, 0, 0, 0))
-    cv = Canvas(img, WX0, WY0, ZW)
-    rng = np.random.default_rng(6)
-    # far dunes
-    pts = [(x, HORIZON - 30 - 30 * math.sin(x / 210) - 14 * math.sin(x / 70)) for x in range(WX0, WX1 + 20, 20)]
-    cv.poly(pts + [(WX1, HORIZON + 80), (WX0, HORIZON + 80)], fill=hexc("#dba862"))
-    # pyramids
-    draw_pyramid(cv, (1230, 860), 1100, 1360, HORIZON)
-    draw_pyramid(cv, (1010, 760), 820, 1200, HORIZON)
-    draw_pyramid(cv, (640, 590), 290, 990, HORIZON)
-    # ground
-    cv.rect(WX0, HORIZON, WX1, WY1, fill=hexc(SAND))
+# ------------------------------------------------------------------ layer: MID (ground, Nile, obelisks, ruins)
+def draw_obelisk(cv, x, top, base):
+    vgrad_poly(cv, [(x - 18, base), (x, base), (x, top + 30), (x - 12, top + 30)], hexc("#f0cf91"), hexc("#d6aa66"),
+               top, base)
+    vgrad_poly(cv, [(x, base), (x + 18, base), (x + 12, top + 30), (x, top + 30)], hexc("#c49a5c"), hexc("#a3793f"),
+               top, base)
+    cv.poly([(x - 12, top + 30), (x, top + 30), (x, top)], fill=hexc("#ffe27a"))
+    cv.poly([(x, top + 30), (x + 12, top + 30), (x, top)], fill=hexc("#c99a2e"))
     for k in range(6):
-        y = HORIZON + 40 + k * 70
-        pts = [(x, y + 16 * math.sin(x / (120 + k * 30) + k)) for x in range(WX0, WX1 + 20, 20)]
-        cv.line(pts, hexc("#d6a159"), 6, cap=False)
-    # Nile with reeds and palms
-    cv.poly([(WX0, HORIZON + 30), (760, HORIZON + 34), (820, HORIZON + 62), (WX0, HORIZON + 70)], fill=hexc("#3f87c2"))
-    for _ in range(25):
-        x = rng.uniform(WX0, 760)
-        cv.rect(x, HORIZON + 44 + rng.uniform(0, 14), x + rng.uniform(20, 60), HORIZON + 47 + rng.uniform(0, 14),
-                fill=(255, 255, 255, 110))
-    # obelisk
-    cv.poly([(985, 1180), (1015, 1180), (1010, 900), (990, 900)], fill=hexc("#e2bd7c"))
-    cv.poly([(990, 900), (1010, 900), (1000, 870)], fill=hexc(GOLD))
-    cv.poly([(1000, 1180), (1015, 1180), (1010, 900), (1000, 900)], fill=hexc("#c49a5c"))
-    back = img
-    img = Image.new("RGBA", back.size, (0, 0, 0, 0))
-    cv = Canvas(img, WX0, WY0, ZW)
-    # temple columns at the far sides (visible in the wide shot)
-    for x in (-120, 1200):
-        draw_column(cv, x, 300, 1500, 130)
-    cv.rect(-270, 270, 10, 310, fill=hexc("#cfa35e"))
-    cv.rect(1070, 270, 1350, 310, fill=hexc("#cfa35e"))
-    # sphinx
-    draw_sphinx(cv)
-    # foreground: path, stones, scattered rocks
-    pts = [(x, PATH_Y - 30 + 10 * math.sin(x / 160)) for x in range(WX0, WX1 + 20, 20)]
-    cv.poly(pts + [(WX1, PATH_Y + 60), (WX0, PATH_Y + 60)], fill=hexc(SAND_L))
-    for x in range(-240, 1340, 110):
-        cv.ellipse(x, PATH_Y + 40 + (x % 3) * 6, x + 80, PATH_Y + 66 + (x % 3) * 6, fill=hexc("#e5be7c"))
-    for _ in range(40):
-        x, y = rng.uniform(WX0, WX1), rng.uniform(PATH_Y + 90, WY1 - 40)
-        r = rng.uniform(8, 26)
+        y = top + 60 + k * 34
+        cv.line([(x - 9, y), (x - 3, y + 10)], (110, 70, 35, 160), 2)
+        cv.circle(x - 7, y + 20, 3, fill=(110, 70, 35, 160))
+    cv.ellipse(x - 40, base - 8, x + 60, base + 10, fill=(110, 70, 30, 80))
+
+
+def draw_mid(z):
+    img, cv = new_layer(z)
+    vgrad_poly(cv, [(WX0, HORIZON), (WX1, HORIZON), (WX1, WY1), (WX0, WY1)], hexc("#d9a35e"), hexc("#f0c27c"), HORIZON,
+               1500)
+    rng = np.random.default_rng(7)
+    for k in range(9):
+        y = HORIZON + 26 + k * k * 9
+        pts = [(x, y + (5 + k * 2) * math.sin(x / (90 + k * 25) + k * 1.7)) for x in range(WX0, WX1 + 20, 20)]
+        cv.line(pts, (190, 130, 70, 70), 3 + k * 0.6, cap=False)
+    pts_top = [(x, HORIZON + 40 + 6 * math.sin(x / 140)) for x in range(WX0, WX1 + 20, 20)]
+    pts_bot = [(x, HORIZON + 86 + 8 * math.sin(x / 120 + 1)) for x in range(WX1, WX0 - 20, -20)]
+    cv.poly([(x, y - 6) for x, y in pts_top] + [(x, y + 8) for x, y in pts_bot], fill=hexc("#5e9a4c"))
+    vgrad_poly(cv, pts_top + pts_bot, hexc("#2d6fae"), hexc("#4f9ad4"), HORIZON + 40, HORIZON + 90)
+    for _ in range(90):
+        x = rng.uniform(WX0, WX1)
+        y = HORIZON + (38 if rng.random() < 0.5 else 92) + rng.uniform(-3, 3)
+        cv.line([(x, y), (x + rng.uniform(-4, 4), y - rng.uniform(10, 26))], hexc("#4f8a3c"), 3)
+    draw_obelisk(cv, 1010, 880, 1190)
+    draw_obelisk(cv, 1090, 940, 1190)
+    for x, hgt in ((1180, 210), (1260, 140), (1340, 240), (1420, 90)):     # temple ruins
+        cv.rect(x - 22, 1200 - hgt, x + 22, 1200, fill=hexc("#e8c48a"))
+        cv.rect(x + 6, 1200 - hgt, x + 22, 1200, fill=hexc("#c79d62"))
+        cv.rect(x - 30, 1200 - hgt - 12, x + 30, 1200 - hgt, fill=hexc("#d8b071"))
+    cv.ellipse(1140, 1188, 1460, 1214, fill=(110, 70, 30, 80))
+    return img
+
+
+# ------------------------------------------------------------------ layer: MAIN (sphinx, plinth, near ground)
+SPHINX_BBOX = (-200, 780, 760, 1360)
+GLYPHS = [(x, 1290) for x in range(-30, 650, 85)]
+
+
+def draw_glyph(cv, x, y, kind, col):
+    if kind == 0:
+        cv.ellipse(x - 18, y - 11, x + 18, y + 11, outline=col, width=4)
+        cv.circle(x, y, 5, fill=col)
+    elif kind == 1:
+        cv.line([(x - 16, y + 12), (x, y - 14), (x + 16, y + 12)], col, 4)
+    elif kind == 2:
+        cv.circle(x, y - 6, 9, outline=col, width=4)
+        cv.line([(x, y + 3), (x, y + 18)], col, 4)
+        cv.line([(x - 9, y + 8), (x + 9, y + 8)], col, 4)
+    else:
+        cv.line([(x - 16, y - 8), (x - 4, y + 10), (x + 6, y - 6), (x + 16, y + 10)], col, 4)
+
+
+def sphinx_parts(z):
+    BODY, BODY_D = hexc("#c98a45"), hexc("#a96d33")
+    bb = SPHINX_BBOX
+    hx, hy = 470, 985
+    parts = [shaded_part(bb, lambda cv: cv.line([(-30, 1190), (-110, 1150), (-125, 1100), (-95, 1078)], BODY_D, 18),
+                         z, soft=5)]
+
+    def body(cv):
+        cv.ellipse(-70, 1066, 270, 1232, fill=BODY)
+        cv.rect(40, 1092, 480, 1230, fill=BODY, r=56)
+    parts.append(shaded_part(bb, body, z, soft=30, k=1.6))
+    parts.append(shaded_part(bb, lambda cv: cv.ellipse(-60, 1120, 200, 1232, fill=BODY_D), z, soft=16))
+    parts.append(shaded_part(bb, lambda cv: cv.rect(60, 1192, 260, 1230, fill=BODY_D, r=17), z, soft=8))
+    parts.append(shaded_part(bb, lambda cv: cv.rect(360, 1036, 545, 1230, fill=BODY, r=44), z, soft=24))
+    parts.append(shaded_part(bb, lambda cv: cv.rect(420, 1178, 700, 1214, fill=BODY_D, r=17), z, soft=8))
+    parts.append(shaded_part(bb, lambda cv: cv.rect(400, 1196, 676, 1232, fill=BODY, r=17), z, soft=8, spec=0.4))
+
+    def nemes(cv):
+        cv.poly([(hx - 76, hy - 70), (hx + 76, hy - 70), (hx + 114, hy + 110), (hx + 114, hy + 150),
+                 (hx - 114, hy + 150), (hx - 114, hy + 110)], fill=hexc(GOLD))
+        cv.pieslice(hx - 80, hy - 152, hx + 80, hy - 8, 180, 360, fill=hexc(GOLD))
+        for k in range(7):
+            y = hy - 40 + k * 26
+            f = (y - (hy - 70)) / 180
+            xo = 76 + (114 - 76) * min(1, f)
+            cv.line([(hx - xo + 2, y), (hx - 50, y)], hexc(LAPIS), 11, cap=False)
+            cv.line([(hx + 50, y), (hx + xo - 2, y)], hexc(LAPIS), 11, cap=False)
+        for k in range(1, 4):
+            cv.arc(hx - 80 + k * 6, hy - 152 + k * 12, hx + 80 - k * 6, hy - 8, 200, 340, hexc(LAPIS), 9)
+    parts.append(shaded_part(bb, nemes, z, soft=22, k=1.5, spec=0.5))
+    parts.append(shaded_part(bb, lambda cv: cv.ellipse(hx - 54, hy - 84, hx + 54, hy + 66, fill=hexc("#dca765")), z,
+                             soft=20, k=1.6, spec=0.35))
+
+    def details(cv):
+        cv.rect(hx - 64, hy - 88, hx + 64, hy - 72, fill=hexc(LAPIS), r=6)
+        cv.poly([(hx - 7, hy - 104), (hx + 7, hy - 104), (hx + 10, hy - 76), (hx - 10, hy - 76)], fill=hexc(GOLD))
+        cv.circle(hx, hy - 108, 8, fill=hexc(GOLD))
+        for ex in (hx - 23, hx + 23):
+            cv.line([(ex - 17, hy - 30), (ex + 15, hy - 33)], hexc("#3a2a1e"), 6)
+            cv.ellipse(ex - 14, hy - 20, ex + 14, hy - 5, fill=hexc("#f6efe2"))
+            cv.circle(ex + 1, hy - 12, 6, fill=hexc("#22243a"))
+            cv.circle(ex + 3, hy - 14, 2, fill=hexc("#ffffff"))
+            tail = ex + 24 if ex > hx else ex - 24
+            cv.line([(ex - 14 if ex > hx else ex + 14, hy - 12), (tail, hy - 16)], hexc("#22243a"), 4, cap=False)
+        cv.poly([(hx - 6, hy - 6), (hx + 6, hy - 6), (hx + 12, hy + 20), (hx - 12, hy + 20)], fill=hexc("#c58f4f"))
+        cv.ellipse(hx - 20, hy + 30, hx + 20, hy + 42, fill=hexc("#9c5634"))
+        cv.rect(hx - 13, hy + 62, hx + 13, hy + 118, fill=hexc(GOLD), r=6)
+        for k in range(4):
+            cv.rect(hx - 11, hy + 70 + k * 12, hx + 11, hy + 75 + k * 12, fill=hexc(LAPIS))
+        for k in range(4):
+            cv.arc(180 + k * 50, 1118, 230 + k * 50, 1200, 200, 300, (110, 69, 36, 150), 3)
+        for dy, x1 in ((0, 700), (18, 676)):
+            for j in range(3):
+                cv.line([(x1 - 34 + j * 11, 1184 + dy), (x1 - 34 + j * 11, 1208 + dy)], (110, 69, 36, 200), 3, cap=False)
+        for k in range(14):
+            rng = np.random.default_rng(k)
+            x, y = rng.uniform(0, 470), rng.uniform(1100, 1220)
+            cv.line([(x, y), (x + rng.uniform(-14, 14), y + rng.uniform(6, 18))], (110, 69, 36, 110), 2)
+    parts.append(shaded_part(bb, details, z, soft=2, k=0.6, ao=0.0))
+    return parts
+
+
+def draw_main(z):
+    img, cv = new_layer(z)
+    lip = [(x, 1286 + 14 * math.sin(x / 210 + 0.6) + 6 * math.sin(x / 63)) for x in range(WX0, WX1 + 20, 20)]
+    vgrad_poly(cv, lip + [(WX1, WY1), (WX0, WY1)], hexc("#efc581"), hexc("#e2ae66"), 1280, 2100)
+    cv.line(lip, (255, 236, 196, 170), 5, cap=False)
+    sh, scv = new_layer(z)
+    scv.poly([(-90, 1336), (700, 1336), (900, 1400), (-40, 1400)], fill=(90, 50, 25, 120))
+    img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(14 * z)))
+    # plinth as a 3D block
+    vgrad_poly(cv, [(-90, 1246), (690, 1246), (690, 1338), (-90, 1338)], hexc("#c48d4e"), hexc("#a26c34"), 1246, 1338)
+    cv.poly([(-90, 1246), (-70, 1226), (710, 1226), (690, 1246)], fill=hexc("#e0b06e"))
+    cv.poly([(690, 1246), (710, 1226), (710, 1318), (690, 1338)], fill=hexc("#8e5d2c"))
+    for x in range(-90, 690, 98):
+        cv.line([(x, 1248), (x, 1336)], (110, 69, 36, 140), 3, cap=False)
+    cv.line([(-90, 1268), (690, 1268)], (110, 69, 36, 110), 2, cap=False)
+    for i, (x, y) in enumerate(GLYPHS):
+        draw_glyph(cv, x + 40, y + 6, i % 4, (110, 69, 36, 210))
+    for part in sphinx_parts(z):
+        paste_part(img, z, part)
+    pts = [(x, PATH_Y - 34 + 10 * math.sin(x / 160)) for x in range(WX0, WX1 + 20, 20)]
+    vgrad_poly(cv, pts + [(WX1, PATH_Y + 64), (WX0, PATH_Y + 64)], hexc("#f7dca4"), hexc("#efcb8a"), PATH_Y - 40,
+               PATH_Y + 64)
+    for x in range(-400, 1520, 105):
+        y = PATH_Y + 44 + (x % 3) * 6
+        cv.ellipse(x, y, x + 78, y + 24, fill=hexc("#dcb06d"))
+        cv.ellipse(x + 6, y - 2, x + 70, y + 14, fill=hexc("#ebc786"))
+    rng = np.random.default_rng(6)
+    for _ in range(70):
+        x, y = rng.uniform(WX0, WX1), rng.uniform(PATH_Y + 100, WY1 - 40)
+        r = rng.uniform(6, 22) * (0.6 + (y - PATH_Y) / 900)
+        cv.ellipse(x - r * 1.2, y + r * 0.2, x + r * 1.4, y + r * 0.8, fill=(120, 75, 35, 70))
         cv.ellipse(x - r, y - r * 0.6, x + r, y + r * 0.6, fill=hexc("#c48a45"))
-        cv.ellipse(x - r * 0.7, y - r * 0.6, x + r * 0.5, y + r * 0.1, fill=hexc("#d9a35e"))
-    # stone tablet with hieroglyphs (foreground right)
-    cv.rect(1060, 1560, 1250, 1840, fill=hexc("#cfa35e"), r=20)
-    for r_ in range(4):
-        for c_ in range(3):
-            x, y = 1095 + c_ * 55, 1610 + r_ * 55
-            cv.circle(x, y, 10, outline=hexc("#6b4a28"), width=4)
-    return back, img
+        cv.ellipse(x - r * 0.7, y - r * 0.6, x + r * 0.5, y + r * 0.1, fill=hexc("#dfac68"))
+    return img
 
 
-_WORLD = None
+# ------------------------------------------------------------------ layer: FOREGROUND (columns, big rocks)
+COLS = (-170, 1250)
 
 
-def world():
-    global _WORLD
-    if _WORLD is None:
-        p1, p2 = os.path.join(CACHE, "world_back.png"), os.path.join(CACHE, "world_front.png")
-        if not os.path.exists(p2):
-            bk, fr = draw_world()
-            bk.save(p1)
-            fr.save(p2)
-        _WORLD = (Image.open(p1).convert("RGBA"), Image.open(p2).convert("RGBA"))
-    return _WORLD
+def draw_fg(z):
+    img, cv = new_layer(z)
+    for cx in COLS:
+        w, top, bot = 150, 250, 1900
+        n = 30
+        for i in range(n):                         # cylindrical shading
+            a = -math.pi / 2 + math.pi * (i + 0.5) / n
+            lit = 0.55 + 0.45 * max(0, math.cos(a + 0.6))
+            c = tuple(int(v * lit) for v in hexc("#f0cd92"))
+            x0 = cx - w / 2 + w * i / n
+            cv.rect(x0, top + 70, x0 + w / n + 1, bot, fill=c)
+        for k in range(4):
+            y = top + 140 + k * 26
+            for i in range(n):
+                a = -math.pi / 2 + math.pi * (i + 0.5) / n
+                lit = 0.55 + 0.45 * max(0, math.cos(a + 0.6))
+                c = tuple(int(v * lit) for v in hexc([LAPIS, "#c0392b", GOLD, "#3f8a4c"][k]))
+                x0 = cx - w / 2 + w * i / n
+                cv.rect(x0, y, x0 + w / n + 1, y + 12, fill=c)
+        cv.poly([(cx - w * 0.8, top + 70), (cx + w * 0.8, top + 70), (cx + w * 0.62, top), (cx - w * 0.62, top)],
+                fill=hexc("#d6a862"))
+        for k in range(-3, 4):
+            cv.line([(cx + k * w * 0.2, top + 68), (cx + k * w * 0.14, top + 4)], (130, 85, 40, 140), 4)
+        for r in range(9):
+            draw_glyph(cv, cx + (r % 2) * 14 - 7, top + 280 + r * 92, r % 4, (110, 69, 36, 200))
+        tx = cx + (w / 2 + 16 if cx < 540 else -w / 2 - 16)
+        cv.rect(tx - 8, 760, tx + 8, 840, fill=hexc("#5a3a20"))
+        cv.poly([(tx - 22, 740), (tx + 22, 740), (tx + 10, 770), (tx - 10, 770)], fill=hexc("#8a5a2c"))
+    cv.rect(-420, 200, 20, 252, fill=hexc("#d8b071"))
+    cv.rect(1060, 200, 1520, 252, fill=hexc("#d8b071"))
+    for x0 in (-420, 1060):                            # lintel with winged sun
+        cx = x0 + 220
+        cv.line([(cx - 120, 226), (cx - 20, 226)], hexc(LAPIS), 10)
+        cv.line([(cx + 20, 226), (cx + 120, 226)], hexc(LAPIS), 10)
+        cv.circle(cx, 226, 18, fill=hexc(GOLD))
+    for x, y, r in ((-150, 2000, 160), (60, 2120, 120), (1150, 2050, 170), (920, 2160, 110)):
+        cv.ellipse(x - r * 1.2, y - r * 0.55, x + r * 1.2, y + r * 0.6, fill=hexc("#b07a3c"))
+        cv.ellipse(x - r, y - r * 0.6, x + r * 0.8, y + r * 0.2, fill=hexc("#cf9b55"))
+    return img.filter(ImageFilter.GaussianBlur(2.2 * z))
 
 
-def render_world_frame(cam, actors, pal, t):
-    """cam=(cx, cy, viewH); pal=(stops, sun, tint) for the current time of day"""
+LAYERS = [("far", 0.45, 1, draw_far), ("mid", 0.78, 2, draw_mid), ("main", 1.0, 2, draw_main), ("fg", 1.35, 1, draw_fg)]
+_L = {}
+
+
+def layer(name):
+    if name not in _L:
+        nm, f, z, fn = next(x for x in LAYERS if x[0] == name)
+        p = os.path.join(CACHE, f"layer_{name}.png")
+        if not os.path.exists(p):
+            fn(z).save(p)
+        _L[name] = Image.open(p).convert("RGBA")
+    return _L[name]
+
+
+def layer_box(cam, f):
     cx, cy, vh = cam
-    vh = min(vh, WY1 - WY0)
-    vw = vh * OUT_W / OUT_H
-    cx = clamp(cx, WX0 + vw / 2, WX1 - vw / 2)
-    cy = clamp(cy, WY0 + vh / 2, WY1 - vh / 2)
-    box = (cx - vw / 2, cy - vh / 2, cx + vw / 2, cy + vh / 2)
-    pb = (int(round((box[0] - WX0) * ZW)), int(round((box[1] - WY0) * ZW)),
-          int(round((box[2] - WX0) * ZW)), int(round((box[3] - WY0) * ZW)))
-    stops, sun, tint = pal
-    # sky: gradient from the top of the world to the horizon
-    sky_h = int((HORIZON - WY0) * ZW)
-    g = _grad(1, sky_h, [(0, stops[0]), (0.55, stops[1]), (1.0, stops[2])])
-    col = np.asarray(g)[:, 0, :]
-    rows = np.clip(np.arange(pb[1], pb[3]), 0, sky_h - 1)
-    sky = np.repeat(col[rows][:, None, :], pb[2] - pb[0], axis=1)
-    crop = Image.fromarray(sky.astype(np.uint8), "RGB")
-    cv = Canvas(crop, box[0], box[1], ZW)
-    sky_actors(cv, t, sun)
-    back, front = world()
-    land = back.crop(pb)
-    crop.paste(land, (0, 0), land)
-    cv = Canvas(crop, box[0], box[1], ZW)
-    back_actors(cv, t)
-    land = front.crop(pb)
-    crop.paste(land, (0, 0), land)
-    if tint[3] > 0:
-        ov = Image.new("RGB", crop.size, tint[:3])
-        crop = Image.blend(crop, ov, tint[3] / 255)
-        cv = Canvas(crop, box[0], box[1], ZW)
-    actors(cv)
-    return crop.resize((OUT_W, OUT_H), Image.LANCZOS), (box, vh / OUT_H)
+    lx = REF[0] + (cx - REF[0]) * f
+    ly = REF[1] + (cy - REF[1]) * f
+    lv = min(REF[2] + (vh - REF[2]) * f, WY1 - WY0)
+    lw = lv * OUT_W / OUT_H
+    lx = clamp(lx, WX0 + lw / 2, WX1 - lw / 2)
+    ly = clamp(ly, WY0 + lv / 2, WY1 - lv / 2)
+    return (lx - lw / 2, ly - lv / 2, lx + lw / 2, ly + lv / 2)
 
 
-def w2s(x, y, view):
-    box, k = view
+def w2s(x, y, box):
+    k = (box[3] - box[1]) / OUT_H
     return (x - box[0]) / k, (y - box[1]) / k
 
 
-FULL = (W / 2, H / 2, H)
-BIG = (540, 1080, 2300)
-CAM_SPHINX = (430, 1080, 1250)
-CAM_FACE = (470, 1000, 900)
-CAM_PATH = (520, 1180, 1350)
+_VIG = None
+
+
+def post_fx(frame):
+    global _VIG
+    small = frame.resize((OUT_W // 8, OUT_H // 8), Image.BILINEAR)
+    bright = small.point(lambda v: max(0, v - 205) * 3)
+    bloom = bright.filter(ImageFilter.GaussianBlur(5)).resize(frame.size, Image.BILINEAR)
+    frame = ImageChops.add(frame, bloom.point(lambda v: int(v * 0.3)))
+    frame = ImageEnhance.Color(frame).enhance(1.08)
+    frame = ImageEnhance.Contrast(frame).enhance(1.04)
+    if _VIG is None:
+        _VIG = Image.fromarray((vignette(frame, 0.32)[..., 0] * 255).astype(np.uint8), "L")
+    return Image.composite(frame, Image.new("RGB", frame.size, (20, 10, 30)), _VIG)
+
+
+def render_scene(cam, t, pal, actors=None, haze=True):
+    """actors: dict layer_name -> fn(cv, box) drawing animated things on that depth layer"""
+    actors = actors or {}
+    stops, sun, tint, stars = pal
+    sb = layer_box(cam, 0.2)                     # sky at half resolution, parallax 0.2
+    sw, shh = OUT_W // 2, OUT_H // 2
+    ys = sb[1] + (np.arange(shh) + 0.5) * (sb[3] - sb[1]) / shh
+    u = np.clip((ys - (WY0 + 300)) / (HORIZON - (WY0 + 300)), 0, 1)
+    col = np.stack([np.interp(u, [0, 0.55, 1], [stops[0][c], stops[1][c], stops[2][c]]) for c in range(3)], 1)
+    sky = Image.fromarray(np.repeat(col[:, None, :], sw, axis=1).astype(np.uint8), "RGB").convert("RGBA")
+    sky_actors(BCanvas(sky, sb[0], sb[1], shh / (sb[3] - sb[1])), t, sun, stars)
+    frame = sky.resize((OUT_W, OUT_H), Image.BILINEAR)
+    boxes = {}
+    for name, f, z, _ in LAYERS:
+        box = layer_box(cam, f)
+        boxes[name] = box
+        pb = (int(round((box[0] - WX0) * z)), int(round((box[1] - WY0) * z)),
+              int(round((box[2] - WX0) * z)), int(round((box[3] - WY0) * z)))
+        crop = layer(name).crop(pb)
+        if name in actors:
+            actors[name](BCanvas(crop, box[0], box[1], z), box)
+        im = crop.resize((OUT_W, OUT_H), Image.BILINEAR if z == 1 else Image.LANCZOS)
+        if name == "far":                        # aerial perspective
+            hz = Image.new("RGBA", im.size, tuple(stops[2]) + (255,))
+            hz.putalpha(im.split()[3].point(lambda v: int(v * 0.28)))
+            im.alpha_composite(hz)
+        frame.alpha_composite(im)
+    frame = frame.convert("RGB")
+    if tint[3] > 0:
+        frame = Image.blend(frame, Image.new("RGB", frame.size, tint[:3]), tint[3] / 255)
+    if haze:                                     # heat shimmer around the horizon
+        hy = int(w2s(0, HORIZON, boxes["mid"])[1])
+        a = np.asarray(frame).copy()
+        for y in range(max(0, hy - 70), min(OUT_H, hy + 40)):
+            s = int(round(2.4 * math.sin(y * 0.21 + t * 7) * (1 - abs(y - hy) / 70)))
+            if s:
+                a[y] = np.roll(a[y], s, axis=0)
+        frame = Image.fromarray(a)
+    return post_fx(frame), boxes
 
 
 # ------------------------------------------------------------------ timing
@@ -283,7 +492,7 @@ KEYS = ["WARTE", "Im alten", "Wer vorbei", "Was geht", "PAUSE", "Kleiner Tipp", 
 S, E = anchors(TIM, KEYS)
 K = {k: i for i, k in enumerate(KEYS)}
 END = E[-1] + 2.4
-XFADE = 0.25
+XFADE = 0.3
 
 
 def st(key):
@@ -309,11 +518,10 @@ T_EVENING = word_time("Was geht", "Abend", 0.2)
 def palette_at(t):
     keys = [(0.0, "golden"), (T_MORNING - 0.3, "golden"), (T_MORNING + 0.3, "morning"), (T_NOON - 0.3, "morning"),
             (T_NOON + 0.3, "noon"), (T_EVENING - 0.3, "noon"), (T_EVENING + 0.3, "evening"), (st("PAUSE"), "evening"),
-            (st("Hier kommt"), "golden"), (st("Am Morgen") - 0.2, "golden"), (st("Am Morgen") + 0.4, "morning"),
-            (st("Am Mittag") - 0.2, "morning"), (st("Am Mittag") + 0.4, "noon"), (st("Und am Abend") - 0.2, "noon"),
-            (st("Und am Abend") + 0.4, "evening"), (st("Hättest") - 0.1, "evening"), (st("Hättest") + 0.4, "golden")]
-    if t <= keys[0][0]:
-        return _pal_mix(keys[0][1], keys[0][1], 0)
+            (st("PAUSE") + 0.6, "night"), (st("Hier kommt") - 0.2, "night"),
+            (st("Hier kommt") + 0.5, "golden"), (st("Am Morgen") - 0.2, "golden"), (st("Am Morgen") + 0.5, "morning"),
+            (st("Am Mittag") - 0.2, "morning"), (st("Am Mittag") + 0.5, "noon"), (st("Und am Abend") - 0.2, "noon"),
+            (st("Und am Abend") + 0.5, "evening"), (st("Hättest") - 0.1, "evening"), (st("Hättest") + 0.5, "golden")]
     for (t0, a), (t1, b) in zip(keys, keys[1:]):
         if t <= t1:
             return _pal_mix(a, b, smooth(prog(t, t0, t1)))
@@ -322,62 +530,172 @@ def palette_at(t):
 
 def sun_pos(t):
     """sun travels with the time of day (morning low left, noon high, evening low right)"""
-    if st("Was geht") <= t < st("PAUSE") + 0.3:
+    if st("Was geht") <= t < st("PAUSE"):
         tt = prog(t, T_MORNING - 0.3, T_EVENING + 0.3)
     elif st("Am Morgen") - 0.3 <= t < st("Hättest"):
-        tt = prog(t, st("Am Morgen") - 0.2, st("Und am Abend") + 0.4)
+        tt = prog(t, st("Am Morgen") - 0.2, st("Und am Abend") + 0.5)
+    elif st("PAUSE") <= t < st("Hier kommt"):
+        return (180, 420)                       # moon
     else:
-        return (900, 760)
-    x = 80 + 900 * tt
-    y = 980 - 700 * math.sin(math.pi * tt)
-    return (x, y)
+        return (930, 720)
+    return (60 + 960 * tt, 1000 - 720 * math.sin(math.pi * tt))
 
 
-# ------------------------------------------------------------------ animated details
-def sky_actors(cv, t, sun):
+def shake(t):
+    a = 16 * math.exp(-t * 6) if t < 0.8 else 0.0
+    tr = st("Was geht")
+    if tr - 0.2 < t < tr + 1.4:
+        a += 7 * math.sin(math.pi * prog(t, tr - 0.2, tr + 1.4))
+    return (a * math.sin(t * 71), a * math.cos(t * 59))
+
+
+def drift(cam, t, amp=1.0):
+    """slow handheld drift + breathing zoom so the parallax is always alive"""
+    cx, cy, vh = cam
+    sx, sy = shake(t)
+    k = vh / 1920
+    return (cx + amp * k * (14 * math.sin(t * 0.43) + 6 * math.sin(t * 1.1)) + sx * k,
+            cy + amp * k * (8 * math.sin(t * 0.31 + 1)) + sy * k,
+            vh * (1 + 0.012 * math.sin(t * 0.5)))
+
+
+# ------------------------------------------------------------------ animated details per layer
+_R = np.random.default_rng(42)
+_STARS = [(_R.uniform(WX0, WX1), _R.uniform(WY0 + 150, HORIZON - 200), _R.uniform(1.2, 3.2)) for _ in range(140)]
+
+
+def sky_actors(cv, t, sun, stars):
+    if stars > 0.02:
+        for i, (x, y, r) in enumerate(_STARS):
+            tw = 0.6 + 0.4 * math.sin(t * 3 + i * 1.7)
+            cv.circle(x, y, r * 1.2, fill=(255, 250, 230, int(220 * stars * tw)))
     sx, sy = sun_pos(t)
-    for k in range(5, 0, -1):
-        cv.circle(sx, sy, 60 + k * 26, fill=sun + (14,))
-    cv.circle(sx, sy, 62, fill=sun)
-    for i, (cx, cy, s) in enumerate(((150, 260, 0.8), (700, 420, 0.6), (1100, 200, 0.7))):   # drifting clouds
-        x = (cx + t * 12 * (1 + i * 0.3)) % 1900 - 400
-        col = (255, 245, 235, 150)
-        cv.rect(x - 160 * s, cy - 24 * s, x + 160 * s, cy + 24 * s, fill=col, r=24 * s)
-        cv.rect(x - 80 * s, cy - 60 * s, x + 70 * s, cy + 10 * s, fill=col, r=36 * s)
-    for i in range(3):                                                                     # ibis birds
-        x = (i * 380 + t * 55) % 1800 - 300
-        y = 520 + i * 60 + 12 * math.sin(t * 1.5 + i)
-        w = 14 * math.sin(t * 9 + i)
-        cv.line([(x - 18, y - w), (x, y), (x + 18, y - w)], hexc("#2b2140"), 4)
+    night = stars > 0.7
+    if not night:                                # god rays
+        for i in range(12):
+            a = i / 12 * 2 * math.pi + t * 0.05
+            da = 0.07 + 0.03 * math.sin(t + i)
+            L = 1400
+            cv.poly([(sx, sy), (sx + math.cos(a - da) * L, sy + math.sin(a - da) * L),
+                     (sx + math.cos(a + da) * L, sy + math.sin(a + da) * L)],
+                    fill=tuple(sun) + (int(16 + 8 * math.sin(t * 0.7 + i)),))
+    for k in range(6, 0, -1):
+        cv.circle(sx, sy, 60 + k * 22, fill=tuple(sun) + (9,))
+    if night:
+        cv.circle(sx, sy, 58, fill=hexc("#f4f1d0"))
+        for dx, dy, r in ((-18, -10, 10), (14, 12, 8), (6, -24, 6)):
+            cv.circle(sx + dx, sy + dy, r, fill=hexc("#dcd6b0"))
+    else:
+        cv.circle(sx, sy, 64, fill=tuple(sun))
+        cv.circle(sx - 14, sy - 14, 40, fill=tuple(min(255, c + 20) for c in sun))
+    for i, (cx, cy, s) in enumerate(((150, 160, 0.9), (720, 330, 0.7), (1150, 120, 0.8), (-200, 380, 0.6))):
+        x = (cx + t * 14 * (1 + i * 0.3)) % 2100 - 450
+        top = (255, 248, 240, int(200 * (1 - stars * 0.7)))
+        bot = (230, 200, 200, int(190 * (1 - stars * 0.7)))
+        cv.rect(x - 170 * s, cy - 10 * s, x + 170 * s, cy + 34 * s, fill=bot, r=24 * s)
+        for dx, dy, r in ((-90, 0, 50), (-20, -30, 70), (60, -6, 56), (120, 10, 40)):
+            cv.circle(x + dx * s, cy + dy * s + 8 * s, r * s, fill=bot)
+            cv.circle(x + dx * s, cy + dy * s, r * s * 0.95, fill=top)
 
 
-def back_actors(cv, t):
-    # camel caravan along the far dunes
-    for i in range(4):
-        x = 1300 - ((t * 22 + i * 60) % 1700)
-        y = HORIZON - 34 + 3 * math.sin(t * 4 + i)
-        col = hexc("#8a5a36")
-        cv.ellipse(x - 26, y - 34, x + 26, y - 8, fill=col)
-        cv.circle(x - 6, y - 36, 12, fill=col)
-        cv.line([(x - 24, y - 22), (x - 40, y - 46), (x - 46, y - 44)], col, 7)
-        for lx in (x - 16, x - 4, x + 8, x + 18):
-            cv.line([(lx, y - 10), (lx + 3 * math.sin(t * 6 + lx), y + 12)], col, 4)
-    # palms by the Nile (swaying)
-    for px, hgt in ((80, 210), (170, 170), (700, 190), (770, 150)):
-        base = HORIZON + 40
-        top = (px + 10 * math.sin(t * 1.3 + px), base - hgt)
-        cv.line([(px, base), (px + 4, base - hgt * 0.5), top], hexc("#7a4f2e"), 10)
-        for a in range(6):
-            ang = math.pi + a * math.pi / 5 + 0.08 * math.sin(t * 2 + a)
-            cv.line([top, (top[0] + math.cos(ang) * 90, top[1] + math.sin(ang) * 40 + 30)], hexc("#3f8a4c"), 12)
+def far_actors(t):
+    def fn(cv, box):
+        for i in range(5):                     # camel caravan with riders on the far dune ridge
+            x = 1500 - ((t * 26 + i * 70) % 2100)
+            y = HORIZON - 70 - 40 * math.sin(x / 260 + 1) - 16 * math.sin(x / 90) + 4 + 2 * math.sin(t * 5 + i)
+            col = (110, 70, 40, 255)
+            cv.ellipse(x - 22, y - 30, x + 22, y - 8, fill=col)
+            cv.circle(x - 4, y - 32, 9, fill=col)
+            cv.line([(x - 20, y - 20), (x - 34, y - 40), (x - 40, y - 38)], col, 6)
+            for lx in (x - 14, x - 3, x + 8, x + 16):
+                cv.line([(lx, y - 10), (lx + 3 * math.sin(t * 7 + lx), y + 10)], col, 3)
+            if i % 2 == 0:
+                cv.line([(x - 2, y - 40), (x - 2, y - 56)], (60, 40, 70, 255), 6)
+                cv.circle(x - 2, y - 60, 5, fill=(240, 230, 220, 255))
+        bx = 140 + (t * 9) % 260               # workers dragging a stone block
+        by = HORIZON + 4
+        cv.rect(bx, by - 22, bx + 34, by, fill=(225, 190, 130, 255))
+        for k in range(4):
+            wx = bx - 24 - k * 16
+            lean = 4 * math.sin(t * 6 + k)
+            cv.line([(wx, by), (wx + 4 + lean, by - 20)], (90, 60, 40, 255), 4)
+            cv.circle(wx + 5 + lean, by - 24, 4, fill=(90, 60, 40, 255))
+        cv.line([(bx, by - 12), (bx - 80, by - 18)], (90, 60, 40, 200), 2)
+        for i in range(7):                     # bird flock in V formation
+            j = i - 3
+            x = (t * 60 + 200) % 2300 - 500 - abs(j) * 26
+            y = 430 + j * 18 + 8 * math.sin(t * 1.3)
+            w = 9 * math.sin(t * 10 + i)
+            cv.line([(x - 12, y - w), (x, y), (x + 12, y - w)], (45, 35, 70, 230), 3)
+        a = t * 0.6                            # circling falcon
+        fx, fy = 860 + 160 * math.cos(a), 520 + 50 * math.sin(a)
+        w = 6 * math.sin(t * 4)
+        cv.line([(fx - 26, fy - w), (fx, fy + 4), (fx + 26, fy - w)], (60, 40, 40, 255), 4)
+        g = max(0, math.sin(t * 1.7)) ** 8     # capstone glint
+        if g > 0.05:
+            for ang in (0, math.pi / 2):
+                cv.line([(640 - 30 * g * math.cos(ang), 600 - 30 * g * math.sin(ang)),
+                         (640 + 30 * g * math.cos(ang), 600 + 30 * g * math.sin(ang))], (255, 255, 230, int(255 * g)), 3)
+    return fn
 
 
-def ground_actors(cv, t):
-    # blowing sand
-    for i in range(30):
-        x = (i * 97 + t * 160) % 1700 - 300
-        y = PATH_Y - 60 + (i * 53) % 260 + 8 * math.sin(t * 3 + i)
-        cv.circle(x, y, 2.5, fill=(255, 235, 190, 150))
+def mid_actors(t):
+    def fn(cv, box):
+        for i in range(50):                    # water sparkle
+            x = (i * 53 + t * 30) % 1940 + WX0
+            y = HORIZON + 50 + (i * 17) % 34
+            a = max(0, math.sin(t * 3 + i * 2.3))
+            cv.rect(x, y, x + 18 + (i % 3) * 8, y + 2.5, fill=(255, 255, 255, int(170 * a)))
+        for i, (x0, sp, s) in enumerate(((-300, 18, 1.0), (900, -12, 0.75))):     # feluccas
+            x = (x0 + t * sp - WX0) % 2100 + WX0
+            y = HORIZON + 66 + 2 * math.sin(t * 2 + i)
+            cv.poly([(x - 40 * s, y - 8 * s), (x + 44 * s, y - 8 * s), (x + 30 * s, y + 6 * s), (x - 28 * s, y + 6 * s)],
+                    fill=hexc("#6b4126"))
+            cv.line([(x, y - 8 * s), (x + 2 * s, y - 92 * s)], hexc("#4a2c18"), 4 * s)
+            sw = 4 * math.sin(t * 1.4 + i)
+            cv.poly([(x + 2 * s, y - 90 * s), (x - 38 * s + sw, y - 14 * s), (x + 30 * s + sw, y - 16 * s)],
+                    fill=hexc("#f6efe2"))
+            cv.poly([(x + 2 * s, y - 90 * s), (x + 30 * s + sw, y - 16 * s), (x + 8 * s, y - 16 * s)],
+                    fill=hexc("#d9cfbd"))
+            cv.ellipse(x - 50 * s, y + 4 * s, x + 54 * s, y + 10 * s, fill=(255, 255, 255, 80))
+        c = (t % 9) / 9                        # crocodile surfacing now and then
+        if 0.2 < c < 0.6:
+            a = math.sin(math.pi * (c - 0.2) / 0.4)
+            x = 300 + c * 80
+            cv.ellipse(x - 30, HORIZON + 70, x + 30, HORIZON + 78, fill=(50, 90, 50, int(220 * a)))
+            for dx in (-10, 8):
+                cv.circle(x + dx, HORIZON + 69, 4, fill=(60, 100, 60, int(255 * a)))
+        for px, hgt in ((40, 230), (130, 180), (760, 210), (840, 160), (1240, 200), (-300, 220)):   # palms
+            base = HORIZON + 44
+            top = (px + 8 * math.sin(t * 1.3 + px), base - hgt)
+            cv.line([(px, base), (px + 6, base - hgt * 0.5), top], hexc("#6b4126"), 11)
+            for k in range(6):
+                yy = base - hgt * (0.15 + k * 0.14)
+                cv.line([(px - 6, yy), (px + 8, yy - 6)], hexc("#4f301b"), 3)
+            for a in range(7):
+                ang = math.pi + a * math.pi / 6 + 0.1 * math.sin(t * 2 + a + px)
+                tip = (top[0] + math.cos(ang) * 100, top[1] + math.sin(ang) * 46 + 36)
+                mid = ((top[0] + tip[0]) / 2, (top[1] + tip[1]) / 2 - 18)
+                cv.line([top, mid, tip], hexc("#2f7340"), 13)
+                cv.line([top, mid, tip], hexc("#4ea05c"), 6)
+            for d in (-8, 4, 14):
+                cv.circle(top[0] + d, top[1] + 10, 6, fill=hexc("#a3541e"))
+    return fn
+
+
+def dust_falling(cv, t, t0):
+    if not (t0 < t < t0 + 2.6):
+        return
+    for i in range(36):
+        rng = np.random.default_rng(i)
+        x = rng.uniform(380, 560)
+        d = t - t0 - rng.uniform(0, 1.2)
+        if d < 0 or d > 1.6:
+            continue
+        y = 900 + rng.uniform(0, 140) + 260 * d * d
+        if y > 1240:
+            continue
+        cv.circle(x + 10 * math.sin(d * 4 + i), y, rng.uniform(2, 4), fill=(240, 210, 160, int(220 * (1 - d / 1.6))))
 
 
 def sphinx_eyes(cv, glow, t):
@@ -385,255 +703,450 @@ def sphinx_eyes(cv, glow, t):
         return
     hx, hy = 470, 985
     p = 0.75 + 0.25 * math.sin(t * 8)
-    for ex in (hx - 22, hx + 22):
-        for k in range(4, 0, -1):
-            cv.circle(ex + 2, hy - 11, (8 + k * 9) * p, fill=(255, 220, 90, int(45 * glow)))
-        cv.ellipse(ex - 13, hy - 18, ex + 13, hy - 4, fill=(255, 236, 140, int(255 * glow)))
+    for ex in (hx - 23, hx + 23):
+        for k in range(3, 0, -1):
+            cv.circle(ex + 1, hy - 12, (8 + k * 8) * p, fill=(255, 220, 90, int(80 * glow)))
+        cv.ellipse(ex - 14, hy - 20, ex + 14, hy - 5, fill=(255, 240, 150, int(255 * glow)))
+    for i, (x, y) in enumerate(GLYPHS):        # glyphs on the plinth light up one after another
+        a = glow * clamp((t - st("Was geht") - i * 0.18) * 2)
+        if a > 0.02:
+            for k in range(3, 0, -1):
+                cv.circle(x + 40, y + 6, 10 + k * 5, fill=(255, 210, 90, int(16 * a)))
+            draw_glyph(cv, x + 40, y + 6, i % 4, (255, 236, 150, int(255 * a)))
 
 
-# ------------------------------------------------------------------ overlays
-def karaoke_pills(frame, t, lines, seg_key, cy0, dy, max_w=660, shake_words=()):
-    """whole sentence visible from frame 0; the spoken word pops, turns red and glows"""
+def sand_wind(cv, t, y0=PATH_Y - 120, n=40, big=False):
+    for i in range(n):
+        x = (i * 97 + t * (180 + (i % 5) * 30)) % 2000 + WX0
+        y = y0 + (i * 53) % 300 + 10 * math.sin(t * 3 + i)
+        cv.circle(x, y, (4 if big else 2.2) + (i % 3), fill=(255, 235, 190, 140))
+    for k in range(3):                         # wind streaks
+        x = (k * 700 + t * 420) % 2400 + WX0
+        y = y0 + 60 + k * 70
+        cv.line([(x, y), (x + 140, y - 6), (x + 260, y)], (255, 240, 210, 70), 3)
+
+
+def scarab(cv, t):
+    x = 760 - (t * 22) % 900
+    y = 1342 + 2 * math.sin(t * 9)
+    cv.ellipse(x - 12, y - 10, x + 12, y + 4, fill=hexc("#1f5d6b"))
+    cv.ellipse(x - 8, y - 9, x + 2, y - 3, fill=(140, 220, 230, 180))
+    cv.circle(x - 13, y - 3, 5, fill=hexc("#16424c"))
+    for k in range(3):
+        dx = -6 + k * 7
+        cv.line([(x + dx, y + 2), (x + dx + 4 * math.sin(t * 20 + k), y + 7)], hexc("#16424c"), 2)
+
+
+def torches(cv, t, k=1.0):
+    for cx in COLS:
+        tx = cx + (75 + 16 if cx < 540 else -75 - 16)
+        for r in range(5, 0, -1):
+            cv.circle(tx, 712, 26 + r * 22 * k, fill=(255, 170, 60, int(16 * k)))
+        for j in range(3):
+            fl = 1 + 0.25 * math.sin(t * 17 + j * 2.1 + cx)
+            hh = (70 - j * 18) * fl
+            ww = 24 - j * 6
+            col = [(255, 120, 30, 240), (255, 190, 60, 240), (255, 245, 180, 250)][j]
+            cv.poly([(tx - ww, 742), (tx + ww, 742), (tx + 4 * math.sin(t * 11 + j), 742 - hh)], fill=col)
+
+
+def fg_actors(t, torch=1.0):
+    def fn(cv, box):
+        torches(cv, t, torch)
+        sand_wind(cv, t, y0=1500, n=18, big=True)
+    return fn
+
+
+def char_shadow(cv, x, w=70):
+    cv.ellipse(x - w, PATH_Y - 10, x + w, PATH_Y + 12, fill=(90, 50, 25, 90))
+
+
+def poof(cv, x, t, t0, dur=0.6):
+    p = prog(t, t0 - dur / 2, t0 + dur / 2)
+    if not 0 < p < 1:
+        return
+    a = math.sin(math.pi * p)
+    for i in range(22):
+        ang = i / 22 * 2 * math.pi + p * 5
+        r = 40 + 120 * p
+        cv.circle(x + math.cos(ang) * r, PATH_Y - 150 + math.sin(ang) * r * 0.9, 16 + 10 * a,
+                  fill=(255, 236, 190, int(200 * a)))
+    for k in range(8):
+        ang = k / 8 * 2 * math.pi + p * 2
+        cv.line([(x + math.cos(ang) * 30, PATH_Y - 150 + math.sin(ang) * 30),
+                 (x + math.cos(ang) * (90 + 90 * p), PATH_Y - 150 + math.sin(ang) * (90 + 90 * p))],
+                (255, 250, 210, int(230 * a)), 5)
+
+
+# ------------------------------------------------------------------ 3D text pills
+def _pill_tile(words, base, bg, fg, pops=None, depth=12, Z=2):
+    """extruded glossy pill with words; returns (tile at Z x, unrotated) and the pill box in 1x tile coords"""
+    pops = pops or [0.0] * len(words)
+    gap = 0.28 * base
+    sizes = [base * (1 + 0.28 * pp) for pp in pops]
+    widths = [font(int(sz)).getbbox(w)[2] for sz, w in zip(sizes, words)]
+    tw = sum(widths) + gap * (len(words) - 1)
+    padx, pady = 0.42 * base, 0.24 * base
+    x0, y0 = 30, 30
+    x1, y1 = x0 + tw + 2 * padx, y0 + base + 2 * pady
+    PW, PH = int(x1 + 40), int(y1 + depth + 50)
+    tile = Image.new("RGBA", (PW * Z, PH * Z), (0, 0, 0, 0))
+    d = ImageDraw.Draw(tile, "RGBA")
+    rad = int((y1 - y0) / 2.6 * Z)
+    d.rounded_rectangle([(x0 + 10) * Z, (y0 + depth + 14) * Z, (x1 + 10) * Z, (y1 + depth + 14) * Z], radius=rad,
+                        fill=(20, 12, 40, 90))
+    side = _shade(hexc(bg), 0.42)
+    for k in range(depth, 0, -1):            # extrusion
+        d.rounded_rectangle([x0 * Z, (y0 + k) * Z, x1 * Z, (y1 + k) * Z], radius=rad, fill=side)
+    d.rounded_rectangle([x0 * Z, y0 * Z, x1 * Z, y1 * Z], radius=rad, fill=hexc(bg), outline=hexc("#1d1b33"),
+                        width=4 * Z)
+    d.rounded_rectangle([(x0 + 10) * Z, (y0 + 6) * Z, (x1 - 10) * Z, (y0 + (y1 - y0) * 0.42) * Z], radius=rad,
+                        fill=(255, 255, 255, 55))   # gloss
+    x = x0 + padx
+    cy = (y0 + (y1 - y0) / 2) * Z
+    for j, w in enumerate(words):
+        cxw = (x + widths[j] / 2) * Z
+        pp = pops[j]
+        if pp > 0.05 and len(words) > 1:     # capsule highlight that stays inside the round pill
+            hl = (255, 255, 255) if bg == "#ffd34d" else (255, 211, 77)
+            hh = ((y1 - y0) / 2 - 7) * Z
+            hw = widths[j] / 2 * Z + hh * 0.55
+            lx, rx = max(cxw - hw, (x0 + 7) * Z), min(cxw + hw, (x1 - 7) * Z)
+            col = tuple(int(c0 + (c1 - c0) * min(1, pp * 1.6)) for c0, c1 in zip(hexc(bg), hl))
+            d.rounded_rectangle([lx, cy - hh, rx, cy + hh], radius=int(hh), fill=col)
+        col = (hexc("#ffe46b") if bg == "#e2574c" else hexc("#d62828")) if pp > 0.3 else hexc(fg)
+        d.text((cxw + 3 * Z, cy + 4 * Z), w, font=font(int(sizes[j] * Z)), fill=(0, 0, 0, 60), anchor="mm")
+        d.text((cxw, cy), w, font=font(int(sizes[j] * Z)), fill=col, anchor="mm",
+               stroke_width=int(2 * Z * pp), stroke_fill=hexc("#1d1b33"))
+        x += widths[j] + gap
+    return tile, (x0, y0, x1, y1)
+
+
+def pill3d(img, cx, cy, text, size, bg="#fff6e6", fg="#2b2140", rot=0.0, scale=1.0, depth=10, max_w=860):
+    if scale <= 0.01:
+        return
+    while font(size).getbbox(text)[2] + 0.84 * size > max_w and size > 24:
+        size -= 2
+    tile, (x0, y0, x1, y1) = _pill_tile([text], size, bg, fg, depth=depth)
+    if rot:
+        tile = tile.rotate(rot, resample=Image.BICUBIC, expand=True)
+    k = scale / 2
+    tile = tile.resize((max(1, int(tile.width * k)), max(1, int(tile.height * k))), Image.LANCZOS)
+    img.paste(tile, (int(cx - tile.width / 2), int(cy - tile.height / 2)), tile)
+    if scale > 0.6:
+        pw, ph = (x1 - x0) * scale, (y1 - y0 + depth) * scale
+        log_ui("pill:" + text, cx - pw / 2, cy - ph / 2, cx + pw / 2, cy + ph / 2)
+
+
+def burst(img, cx, cy, a, t, r0=170, r1=430, col=(255, 222, 90)):
+    if a <= 0.02:
+        return
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay, "RGBA")
+    n = 18
+    for i in range(n):
+        ang = i / n * 2 * math.pi + t * 0.8
+        da = 0.06
+        rr = r1 * (0.75 + 0.25 * ((i * 7) % 3) / 2)
+        d.polygon([(cx + math.cos(ang - da) * r0, cy + math.sin(ang - da) * r0 * 0.6),
+                   (cx + math.cos(ang) * rr, cy + math.sin(ang) * rr * 0.6),
+                   (cx + math.cos(ang + da) * r0, cy + math.sin(ang + da) * r0 * 0.6)], fill=col + (int(200 * a),))
+    img.paste(lay, (0, 0), lay)
+
+
+def karaoke(frame, t, lines, seg_key, ys):
+    """whole sentence visible from frame 0; the spoken word grows, changes colour and gets a highlight"""
     t0, t1 = S[K[seg_key]], E[K[seg_key]]
-    words = [w for line, _, _, _ in lines for w in line]
+    words = [w for line, *_ in lines for w in line]
     weights = [len(w) + 2 for w in words]
     tot = sum(weights)
     spans, acc = [], t0 + 0.02
     for wgt in weights:
-        d_ = (t1 - t0 - 0.06) * wgt / tot
-        spans.append((acc, acc + d_))
-        acc += d_
+        dd = (t1 - t0 - 0.06) * wgt / tot
+        spans.append((acc, acc + dd))
+        acc += dd
     fade = 1 - prog(t, t1 + 0.15, t1 + 0.5)
     if fade <= 0.01:
         return
     i = 0
-    for li, (line, bg, fg, rot) in enumerate(lines):
-        base = 92 if li else 120
-        gap = 0.28 * base
-        while sum(font(base).getbbox(w)[2] for w in line) + gap * (len(line) - 1) > max_w - 90:
-            base -= 2
-            gap = 0.28 * base
+    for li, (line, bg, fg, rot, base) in enumerate(lines):
         pops = []
         for j in range(len(line)):
             a_, b_ = spans[i + j]
             p = prog(t, a_ - 0.03, b_ + 0.08)
             pops.append(math.sin(math.pi * p) if 0 < p < 1 else 0.0)
-        sizes = [base * (1 + 0.3 * pp) for pp in pops]
-        widths = [font(int(sz)).getbbox(w)[2] for sz, w in zip(sizes, line)]
-        tw = sum(widths) + gap * (len(line) - 1)
-        if tw > max_w - 70:
-            k = (max_w - 70) / tw
-            sizes = [sz * k if pp > 0 else sz for sz, pp in zip(sizes, pops)]
-            widths = [font(int(sz)).getbbox(w)[2] for sz, w in zip(sizes, line)]
-            tw = sum(widths) + gap * (len(line) - 1)
-        padx, pady, Z = 34, 20, 2
-        x0, y0 = 40, 40
-        x1, y1 = x0 + tw + 2 * padx, y0 + base + 2 * pady
-        PW, PH = int(x1 + 50), int(y1 + 60)
-        tile = Image.new("RGBA", (PW * Z, PH * Z), (0, 0, 0, 0))
-        d = ImageDraw.Draw(tile)
-        d.rounded_rectangle([(x0 + 8) * Z, (y0 + 12) * Z, (x1 + 8) * Z, (y1 + 12) * Z], radius=int((y1 - y0) / 3 * Z),
-                            fill=(30, 20, 60, 110))
-        d.rounded_rectangle([x0 * Z, y0 * Z, x1 * Z, y1 * Z], radius=int((y1 - y0) / 3 * Z), fill=hexc(bg),
-                            outline=hexc("#1d1b33"), width=5 * Z)
-        x = x0 + padx
-        for j, w in enumerate(line):
-            cxw, cyw = (x + widths[j] / 2) * Z, (y0 + (y1 - y0) / 2) * Z
-            if pops[j] > 0.05:      # highlighter box behind the spoken word
-                hl = {"#e2574c": (120, 16, 16), "#ffd34d": (255, 255, 255)}.get(bg, (255, 211, 77))
-                hw, hh = widths[j] / 2 + 12, sizes[j] * 0.62
-                k_ = min(1, pops[j] * 1.6)
-                hl = tuple(int(c0 + (c1 - c0) * k_) for c0, c1 in zip(hexc(bg), hl))
-                d.rounded_rectangle([cxw - hw * Z, cyw - hh * Z, cxw + hw * Z, cyw + hh * Z], radius=int(14 * Z),
-                                    fill=hl)
-            col = hexc("#d62828") if pops[j] > 0.3 and bg != "#e2574c" else hexc(fg)
-            if pops[j] > 0.3 and bg == "#e2574c":
-                col = hexc("#ffe46b")
-            d.text((cxw, cyw), w, font=font(int(sizes[j] * Z)), fill=col, anchor="mm",
-                   stroke_width=int(2 * Z * pops[j]), stroke_fill=hexc("#1d1b33"))
-            x += widths[j] + gap
+        b = base
+        while True:
+            tile, box = _pill_tile(line, b, bg, fg, pops)
+            if box[2] - box[0] <= 780 or b < 40:
+                break
+            b -= 3
+        single = len(line) == 1
+        sc = (1 + 0.12 * pops[0]) if single else 1.0
+        if li == 0 and t < 0.35:             # slam-in of WARTE at the very start
+            sc *= 1 + 0.22 * (1 - ease_out_back(prog(t, 0, 0.35)))
+        if single:
+            burst(frame, OUT_W / 2, ys[li], max(pops[0], 1 - prog(t, 0.0, 0.7)) * fade, t)
         tile = tile.rotate(rot, resample=Image.BICUBIC, expand=True)
-        tile = tile.resize((max(1, tile.width // Z), max(1, tile.height // Z)), Image.LANCZOS)
+        k = sc / 2
+        tile = tile.resize((max(1, int(tile.width * k)), max(1, int(tile.height * k))), Image.LANCZOS)
         if fade < 1:
             tile.putalpha(tile.split()[3].point(lambda v: int(v * fade)))
-        shake = 0
-        if any(w in shake_words for w in line) and pops[0] > 0.05:
-            shake = 10 * math.sin(t * 75) * pops[0]
-        cy = cy0 + li * dy
-        px = int(OUT_W / 2 - tile.width / 2 + shake)
-        py = int(cy - tile.height / 2)
+        sh = 12 * math.sin(t * 75) * pops[0] if single and pops[0] > 0.05 else 0
+        px, py = int(OUT_W / 2 - tile.width / 2 + sh), int(ys[li] - tile.height / 2)
         frame.paste(tile, (px, py), tile)
-        log_ui("karaoke " + str(li), px + 40, py + 40, px + tile.width - 40, py + tile.height - 40)
+        bw, bh = (box[2] - box[0]) * sc, (box[3] - box[1] + 12) * sc
+        if fade > 0.5:
+            log_ui("karaoke " + str(li), OUT_W / 2 - bw / 2 + sh, ys[li] - bh / 2, OUT_W / 2 + bw / 2 + sh, ys[li] + bh / 2)
         i += len(line)
 
 
-INTRO_LINES = [(["WARTE!"], "#e2574c", "#ffffff", -3), (["DIESES", "RÄTSEL", "KANN"], "#fff6e6", "#2b2140", 2),
-               (["NIEMAND", "LÖSEN!"], "#ffd34d", "#2b2140", -2)]
+INTRO_LINES = [(["WARTE!"], "#e2574c", "#ffffff", -3, 172),
+               (["DIESES", "RÄTSEL", "KANN"], "#fff6e6", "#2b2140", 2, 92),
+               (["NIEMAND", "LÖSEN!"], "#ffd34d", "#2b2140", -2, 104)]
 
 
-def legs_pill(frame, t, ts, y, label, n, bg):
-    sc = ease_out_back(prog(t, ts, ts + 0.3))
-    pill(frame, OUT_W / 2, y, f"{label}:  {n} BEINE", 54, bg=bg, scale=sc, rot=(-2 if n != 2 else 2),
-         border="#1d1b33")
+def legs_pill(frame, t, ts, y, label, n, bg, rot):
+    if t < ts:
+        return
+    pill3d(frame, OUT_W / 2, y, f"{label}:  {n} BEINE", 58, bg=bg, scale=ease_out_back(prog(t, ts, ts + 0.3)), rot=rot)
 
 
 # ------------------------------------------------------------------ scenes
+BIG = (540, 1090, 2300)
+CAM_SPHINX = (430, 1070, 1250)
+CAM_FACE = (470, 1010, 880)
+
+
 def scene_story(t):
     t0, t1, t2, t3 = st("WARTE"), st("Im alten"), st("Wer vorbei"), st("Was geht")
-    t_end = st("PAUSE")
-    cam = keyframes(t, [(t0, BIG), (t1 - 0.1, BIG), (t1 + 1.6, CAM_SPHINX), (t2 - 0.1, CAM_SPHINX),
-                        (t2 + 1.0, (450, 1030, 1050)), (t3, (450, 1030, 1050)), (t3 + 0.8, CAM_FACE)])
+    big = (BIG[0], BIG[1], BIG[2] - 120 * prog(t, 0, t1))
+    cam = keyframes(t, [(t0, big), (t1 - 0.05, (540, 1090, 2180)), (t1 + 1.8, CAM_SPHINX), (t2 - 0.1, (440, 1070, 1180)),
+                        (t2 + 1.1, (450, 1040, 1040)), (t3, (455, 1035, 1000)), (t3 + 0.9, CAM_FACE),
+                        (st("PAUSE"), (470, 1020, 820))])
+    cam = drift(cam, t)
     glow = smooth(prog(t, t3 - 0.2, t3 + 0.4))
-    pal = palette_at(t)
 
-    def actors(cv):
-        ground_actors(cv, t)
+    def main(cv, box):
         sphinx_eyes(cv, glow, t)
+        dust_falling(cv, t, t3 - 0.1)
+        scarab(cv, t)
+        sand_wind(cv, t)
 
-    frame, view = render_world_frame(cam, actors, pal, t)
-    if t < t1 + 0.6:       # darken behind the opening text
-        dark = 0.38 * (1 - prog(t, t1, t1 + 0.6))
-        frame = Image.blend(frame, Image.new("RGB", frame.size, (15, 10, 30)), dark)
-        if t < 0.18:       # impact flash on "WARTE!"
-            frame = Image.blend(frame, Image.new("RGB", frame.size, (255, 250, 230)), 0.35 * (1 - t / 0.18))
-    karaoke_pills(frame, t, INTRO_LINES, "WARTE", 760, 175, shake_words=("WARTE!",))
+    frame, boxes = render_scene(cam, t, palette_at(t), {"far": far_actors(t), "mid": mid_actors(t), "main": main,
+                                                        "fg": fg_actors(t, 0.6)})
+    if t < t1 + 0.6:       # darken behind the opening text + impact flash
+        frame = Image.blend(frame, Image.new("RGB", frame.size, (15, 10, 30)), 0.32 * (1 - prog(t, t1, t1 + 0.6)))
+        if t < 0.22:
+            frame = Image.blend(frame, Image.new("RGB", frame.size, (255, 250, 230)), 0.45 * (1 - t / 0.22))
+    karaoke(frame, t, INTRO_LINES, "WARTE", [590, 860, 1010])
     if t1 + 0.3 <= t < t2 + 0.2:
-        pill(frame, OUT_W / 2, 330, "ALTES ÄGYPTEN", 64, bg="#ffd34d", rot=-2, border="#1d1b33",
-             scale=ease_out_back(prog(t, t1 + 0.3, t1 + 0.65)))
-        sx, sy = w2s(470, 830, view)
-        pill(frame, clamp(sx, 200, 820), max(sy, 470), "DIE SPHINX", 48, bg="#fff6e6", border="#1d1b33",
-             scale=ease_out_back(prog(t, t1 + 1.2, t1 + 1.5)))
+        pill3d(frame, OUT_W / 2, 330, "ALTES ÄGYPTEN", 68, bg="#ffd34d", rot=-2,
+               scale=ease_out_back(prog(t, t1 + 0.3, t1 + 0.65)))
+        sx, sy = w2s(470, 820, boxes["main"])
+        pill3d(frame, clamp(sx, 220, 800), clamp(sy, 480, 1300), "DIE SPHINX", 50, bg="#fff6e6",
+               scale=ease_out_back(prog(t, t1 + 1.3, t1 + 1.6)))
     if t2 <= t < t3:
-        pill(frame, OUT_W / 2, 330, "NUR WER DAS RÄTSEL LÖST,", 46, bg="#fff6e6", border="#1d1b33", rot=-2,
-             scale=ease_out_back(prog(t, t2, t2 + 0.3)))
-        pill(frame, OUT_W / 2, 440, "DARF VORBEI", 64, bg="#e2574c", fg="#ffffff", border="#1d1b33", rot=2,
-             scale=ease_out_back(prog(t, t2 + 0.25, t2 + 0.55)))
+        pill3d(frame, OUT_W / 2, 320, "NUR WER DAS RÄTSEL LÖST,", 48, bg="#fff6e6", rot=-2,
+               scale=ease_out_back(prog(t, t2, t2 + 0.3)))
+        pill3d(frame, OUT_W / 2, 440, "DARF VORBEI", 68, bg="#e2574c", fg="#ffffff", rot=2,
+               scale=ease_out_back(prog(t, t2 + 0.25, t2 + 0.55)))
     if t3 <= t:
-        legs_pill(frame, t, T_MORNING - 0.1, 1180, "MORGEN", 4, "#ffd9a0")
-        legs_pill(frame, t, T_NOON - 0.1, 1300, "MITTAG", 2, "#fff6e6")
-        legs_pill(frame, t, T_EVENING - 0.1, 1420, "ABEND", 3, "#f4aab0")
-        pill(frame, OUT_W / 2, 330, "WAS IST DAS?", 70, bg="#ffd34d", border="#1d1b33", rot=-2,
-             scale=ease_out_back(prog(t, t3, t3 + 0.35)))
+        pill3d(frame, OUT_W / 2, 330, "WAS IST DAS?", 74, bg="#ffd34d", rot=-2,
+               scale=ease_out_back(prog(t, t3, t3 + 0.35)))
+        legs_pill(frame, t, T_MORNING - 0.1, 1110, "MORGEN", 4, "#ffd9a0", -2)
+        legs_pill(frame, t, T_NOON - 0.1, 1240, "MITTAG", 2, "#fff6e6", 2)
+        legs_pill(frame, t, T_EVENING - 0.1, 1370, "ABEND", 3, "#f4aab0", -2)
     return frame
 
 
 Q_Y = 860
 
 
-def sun_icon(cv, x, y, kind, s=1.0):
+def sun_icon(img, x, y, kind, t, s=1.2):
+    S2 = 2
+    sz = int(300 * s)
+    lay = Image.new("RGBA", (sz * S2, sz * S2), (0, 0, 0, 0))
+    cv = BCanvas(lay, -150, -150, s * S2)
+    glow = (255, 210, 90) if kind != "moon" else (210, 220, 255)
+    for k in range(5, 0, -1):
+        cv.circle(0, 0, 40 + k * 14, fill=glow + (22,))
     if kind == "moon":
-        cv.circle(x, y, 34 * s, fill=hexc("#ffe3a0"))
-        cv.circle(x + 14 * s, y - 10 * s, 30 * s, fill=hexc("#1c2b4f"))
-        return
-    col = hexc("#ffd34d") if kind == "sun" else hexc("#ffb36b")
-    for i in range(10):
-        a = i / 10 * 2 * math.pi
-        cv.line([(x + math.cos(a) * 42 * s, y + math.sin(a) * 42 * s), (x + math.cos(a) * 56 * s, y + math.sin(a) * 56 * s)],
-                col, 6 * s)
-    cv.circle(x, y, 32 * s, fill=col)
-    if kind == "rise":
-        cv.rect(x - 70 * s, y + 4 * s, x + 70 * s, y + 70 * s, fill=hexc("#1c2b4f"))
+        cv.circle(0, 0, 44, fill=hexc("#f4f1d0"))
+        cv.circle(-12, -10, 26, fill=hexc("#fffbe8"))
+        cv.circle(24, -16, 40, fill=(0, 0, 0, 0))
+        m = Image.new("L", lay.size, 0)
+        ImageDraw.Draw(m).ellipse([(150 - 16) * s * S2, (150 - 58) * s * S2, (150 + 64) * s * S2, (150 + 24) * s * S2],
+                                  fill=255)
+        al = ImageChops.subtract(lay.split()[3], m)
+        glow_l = Image.new("RGBA", lay.size, (0, 0, 0, 0))
+        gcv = BCanvas(glow_l, -150, -150, s * S2)
+        for k in range(5, 0, -1):
+            gcv.circle(0, 0, 40 + k * 14, fill=glow + (18,))
+        lay.putalpha(al)
+        glow_l.alpha_composite(lay)
+        lay = glow_l
+    else:
+        col = hexc("#ffd34d") if kind == "sun" else hexc("#ffb36b")
+        for i in range(12):
+            a = i / 12 * 2 * math.pi + t * 0.8
+            L = 66 + 8 * math.sin(t * 4 + i)
+            cv.poly([(math.cos(a - 0.13) * 46, math.sin(a - 0.13) * 46), (math.cos(a) * L, math.sin(a) * L),
+                     (math.cos(a + 0.13) * 46, math.sin(a + 0.13) * 46)], fill=col)
+        cv.circle(0, 0, 42, fill=col)
+        cv.circle(-12, -12, 22, fill=tuple(min(255, c + 30) for c in col))
+        if kind == "rise":               # half sun over the horizon line
+            ImageDraw.Draw(lay).rectangle([0, int((150 + 12) * s * S2), lay.width, lay.height], fill=(0, 0, 0, 0))
+            cv.line([(-90, 12), (90, 12)], hexc("#ffe2a0"), 6)
+    lay = lay.resize((sz, sz), Image.LANCZOS)
+    img.paste(lay, (int(x - sz / 2), int(y - sz / 2)), lay)
 
 
 def scene_question(t):
     t0, t_pause, t_tip, t_cm = st("Was geht"), st("PAUSE"), st("Kleiner Tipp"), st("Schreib deine")
-    img = vgradient(OUT_W, OUT_H, [(0, "#14213d"), (1, "#2b3f74")])
-    cv = Canvas(img)
-    rng = np.random.default_rng(1)
-    for _ in range(70):
-        x, y = rng.uniform(0, OUT_W), rng.uniform(0, OUT_H)
-        tw = 0.5 + 0.5 * math.sin(t * 3 + x)
-        cv.circle(x, y, 2 + 2 * tw, fill=(255, 255, 255, int(80 + 100 * tw)))
+    p = prog(t, t_pause, st("Hier kommt"))
+    cam = drift((450 + 30 * p, 1040, 1500 - 200 * p), t)
+
+    def main(cv, box):
+        sphinx_eyes(cv, 0.8, t)
+        sand_wind(cv, t)
+
+    img, _ = render_scene(cam, t, palette_at(t), {"far": far_actors(t), "mid": mid_actors(t), "main": main,
+                                                  "fg": fg_actors(t, 1.0)}, haze=False)
+    img = Image.blend(img, Image.new("RGB", img.size, (10, 14, 40)), 0.42)
     for k, (kind, lab, n) in enumerate((("rise", "MORGEN", 4), ("sun", "MITTAG", 2), ("moon", "ABEND", 3))):
         x = 230 + k * 300
-        sun_icon(cv, x, Q_Y + 60, kind, 1.2)
-        pill(img, x, Q_Y + 190, lab, 40, bg="#fff6e6", pad=(18, 9))
-        pill(img, x, Q_Y + 300, str(n), 96, bg="#ffd34d", pad=(30, 8), rot=(-4, 3, -3)[k])
-    pill(img, OUT_W / 2, 360, "WAS GEHT AUF", 84, bg="#fff6e6", rot=-3, scale=ease_out_back(prog(t, t0, t0 + 0.35)))
-    pill(img, OUT_W / 2, 510, "4, 2 UND 3 BEINEN?", 76, bg="#ffd34d", rot=2,
-         scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.55)))
+        bob = 8 * math.sin(t * 2.2 + k)
+        sun_icon(img, x, Q_Y + 50 + bob, kind, t)
+        pill3d(img, x, Q_Y + 200, lab, 40, bg="#fff6e6", depth=6)
+        pill3d(img, x, Q_Y + 320 + bob * 0.5, str(n), 100, bg="#ffd34d", rot=(-4, 3, -3)[k], depth=12)
+    pill3d(img, OUT_W / 2, 360, "WAS GEHT AUF", 86, bg="#fff6e6", rot=-3, scale=ease_out_back(prog(t, t0, t0 + 0.35)))
+    pill3d(img, OUT_W / 2, 510, "4, 2 UND 3 BEINEN?", 78, bg="#ffd34d", rot=2,
+           scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.55)))
     if t_pause - 0.2 < t < t_tip:
+        d = ImageDraw.Draw(img, "RGBA")
         for i in range(3):
             ph = (t * 3 - i * 0.35) % 2
             a = clamp(1 - abs(ph - 0.5) * 2) if ph < 1 else 0
-            cv.circle(OUT_W / 2 - 70 + i * 70, 700, 18 + 10 * a, fill=(255, 255, 255, int(120 + 135 * a)))
+            r = 18 + 10 * a
+            cx = OUT_W / 2 - 70 + i * 70
+            d.ellipse([cx - r, 690 - r, cx + r, 690 + r], fill=(255, 255, 255, int(120 + 135 * a)))
     if t > t_tip:
-        pill(img, OUT_W / 2, 680, "TIPP: EIN GANZES LEBEN", 56, bg="#c5def5", rot=-2,
-             scale=ease_out_back(prog(t, t_tip, t_tip + 0.35)))
+        pill3d(img, OUT_W / 2, 680, "TIPP: DU KENNST ES GUT!", 58, bg="#c5def5", rot=-2,
+               scale=ease_out_back(prog(t, t_tip, t_tip + 0.35)))
     if t > t_cm:
-        pill(img, OUT_W / 2, 1420, "SCHREIB'S IN DIE KOMMENTARE", 40, bg="#ffffff",
-             scale=ease_out_back(prog(t, t_cm, t_cm + 0.35)))
+        pill3d(img, OUT_W / 2, 1420, "SCHREIB'S IN DIE KOMMENTARE", 42, bg="#ffffff",
+               scale=ease_out_back(prog(t, t_cm, t_cm + 0.35)))
     return img
+
+
+def life_x(t):
+    a1, a2, a3, te = st("Am Morgen"), st("Am Mittag"), st("Und am Abend"), st("Hättest")
+    if t < a2:
+        return 0 + 200 * prog(t, a1, a2)
+    if t < a3:
+        return 200 + 380 * prog(t, a2, a3)
+    return 580 + 200 * prog(t, a3, te)
 
 
 def scene_solution(t):
     t0, tm, a1, a2, a3, t_end = st("Hier kommt"), st("Es ist der"), st("Am Morgen"), st("Am Mittag"), \
         st("Und am Abend"), st("Hättest")
-    cam = keyframes(t, [(t0, FULL), (tm, FULL), (a1, CAM_PATH)])
-    pal = palette_at(t)
+    reveal = (540, 1080, 1800)
+    xs = (life_x(t - 0.35) + life_x(t) + life_x(t + 0.35)) / 3
+    track = (clamp(xs + 120, 300, 740), 1110, 1450)
+    if t < a1:
+        cam = keyframes(t, [(t0, (470, 1040, 1100)), (tm, reveal)])
+    else:
+        f = smooth(prog(t, a1, a1 + 0.9))
+        cam = tuple(p + (q - p) * f for p, q in zip(reveal, track))
+    cam = drift(cam, t, 0.6)
 
-    def actors(cv):
-        ground_actors(cv, t)
-        if tm <= t < a1:      # the human, standing proud
-            draw_person(cv, 760, PATH_Y, ADULT, face=-1, h=300, wave=t * 8, blink=(t % 3) < 0.12)
-        if a1 <= t < a2 + 0.2:
-            p = prog(t, a1, a2)
-            draw_baby(cv, 150 + 640 * p, PATH_Y, 1.6, phase=t * 9)
-        if a2 <= t < a3 + 0.2:
-            p = prog(t, a2, a3)
-            draw_person(cv, 150 + 700 * p, PATH_Y, ADULT, face=1, h=300, phase=t * 10, blink=(t % 3) < 0.12)
-        if a3 <= t < t_end + 0.3:
-            p = prog(t, a3, t_end)
-            x = 150 + 520 * p
-            hand = draw_person(cv, x, PATH_Y, OLD, face=1, h=285, lean=16, phase=t * 6,
-                               reach=(x + 70, PATH_Y - 120))
-            draw_cane(cv, hand, (x + 82 + 6 * math.sin(t * 6), PATH_Y))
+    def main(cv, box):
+        scarab(cv, t)
+        sand_wind(cv, t)
+        if tm <= t < a1 + 0.3:      # the human in all three ages
+            pops = [ease_out_back(prog(t, tm + k * 0.25, tm + k * 0.25 + 0.35)) for k in range(3)]
+            hide = 1 - prog(t, a1, a1 + 0.3)
+            if pops[0] * hide > 0.05:
+                char_shadow(cv, 300, 80)
+                draw_baby(cv, 300, PATH_Y, 1.6 * pops[0] * hide, phase=t * 6)
+            if pops[1] * hide > 0.05:
+                char_shadow(cv, 540)
+                draw_person(cv, 540, PATH_Y, ADULT, face=1, h=300 * pops[1] * hide, wave=t * 8, blink=(t % 3) < 0.12)
+            if pops[2] * hide > 0.05:
+                char_shadow(cv, 790)
+                hand = draw_person(cv, 790, PATH_Y, OLD, face=-1, h=285 * pops[2] * hide, lean=-16,
+                                   reach=(730, PATH_Y - 120 * pops[2] * hide))
+                draw_cane(cv, hand, (718, PATH_Y))
+            poof(cv, 540, t, a1 + 0.1, 0.5)
+        if a1 <= t < t_end + 0.3:
+            x = life_x(t)
+            if t < a2 + 0.05:
+                char_shadow(cv, x, 85)
+                draw_baby(cv, x, PATH_Y, 1.6, phase=t * 9)
+                for k in range(3):       # little sand puffs behind
+                    q = (t * 3 + k / 3) % 1
+                    cv.circle(x - 90 - q * 40, PATH_Y - 10 - q * 20, 8 + q * 10, fill=(255, 236, 196, int(150 * (1 - q))))
+            elif t < a3 + 0.05:
+                char_shadow(cv, x)
+                draw_person(cv, x, PATH_Y, ADULT, face=1, h=300, phase=t * 10, blink=(t % 3) < 0.12)
+            else:
+                char_shadow(cv, x + 20)
+                hand = draw_person(cv, x, PATH_Y, OLD, face=1, h=285, lean=16, phase=t * 5,
+                                   bounce=3 * abs(math.sin(t * 3)), reach=(x + 72, PATH_Y - 120))
+                draw_cane(cv, hand, (x + 84 + 8 * math.sin(t * 3.0), PATH_Y - 6 * abs(math.sin(t * 3.0))))
+            poof(cv, life_x(a2), t, a2, 0.5)
+            poof(cv, life_x(a3), t, a3, 0.5)
 
-    frame, view = render_world_frame(cam, actors, pal, t)
+    frame, boxes = render_scene(cam, t, palette_at(t), {"far": far_actors(t), "mid": mid_actors(t), "main": main,
+                                                        "fg": fg_actors(t, 0.6)})
     if t < t0 + 1.3:
-        pill(frame, OUT_W / 2, 330, "DIE LÖSUNG", 96, bg="#fff6e6", rot=-4, border="#1d1b33",
-             scale=ease_out_back(prog(t, t0, t0 + 0.35)) * (1 - prog(t, t0 + 1.0, t0 + 1.3)))
+        pill3d(frame, OUT_W / 2, 330, "DIE LÖSUNG", 100, bg="#fff6e6", rot=-4,
+               scale=ease_out_back(prog(t, t0, t0 + 0.35)) * (1 - prog(t, t0 + 1.0, t0 + 1.3)))
     if tm <= t < a1:
-        pill(frame, OUT_W / 2, 400, "DER MENSCH!", 110, bg="#37b26c", fg="#ffffff", border="#1d1b33", rot=-3,
-             scale=ease_out_back(prog(t, tm, tm + 0.35)))
+        burst(frame, OUT_W / 2, 400, 0.8 * (1 - prog(t, a1 - 0.4, a1)), t, 160, 380, (120, 230, 150))
+        pill3d(frame, OUT_W / 2, 400, "DER MENSCH!", 116, bg="#37b26c", fg="#ffffff", rot=-3,
+               scale=ease_out_back(prog(t, tm, tm + 0.35)))
     for (ta, tb, lab, sub, bg) in ((a1, a2, "MORGEN = BABY", "4 BEINE", "#ffd9a0"),
                                    (a2, a3, "MITTAG = ERWACHSEN", "2 BEINE", "#fff6e6"),
                                    (a3, t_end, "ABEND = IM ALTER", "2 BEINE + STOCK = 3", "#f4aab0")):
         if ta <= t < tb:
-            pill(frame, OUT_W / 2, 330, lab, 60, bg=bg, border="#1d1b33", rot=-2, scale=ease_out_back(prog(t, ta, ta + 0.3)))
-            pill(frame, OUT_W / 2, 450, sub, 70, bg="#ffd34d", border="#1d1b33", rot=2,
-                 scale=ease_out_back(prog(t, ta + 0.35, ta + 0.65)))
+            pill3d(frame, OUT_W / 2, 330, lab, 62, bg=bg, rot=-2, scale=ease_out_back(prog(t, ta, ta + 0.3)))
+            pill3d(frame, OUT_W / 2, 455, sub, 72, bg="#ffd34d", rot=2,
+                   scale=ease_out_back(prog(t, ta + 0.35, ta + 0.65)))
     return frame
 
 
 def scene_outro(t):
     t0, t1 = st("Hättest"), st("Schreib's")
-    pal = palette_at(t)
+    cam = drift((540, 1040, 1750 + 60 * prog(t, t0, END)), t, 0.6)
 
-    def actors(cv):
-        ground_actors(cv, t)
-        draw_baby(cv, 230, PATH_Y, 1.5, phase=t * 6)
-        draw_person(cv, 520, PATH_Y, ADULT, face=1, h=300, wave=t * 8)
-        hand = draw_person(cv, 790, PATH_Y, OLD, face=-1, h=285, lean=-16, reach=(730, PATH_Y - 120))
-        draw_cane(cv, hand, (718, PATH_Y))
+    def main(cv, box):
+        sand_wind(cv, t)
+        char_shadow(cv, 250, 85)
+        draw_baby(cv, 250, PATH_Y, 1.5, phase=t * 6)
+        char_shadow(cv, 530)
+        draw_person(cv, 530, PATH_Y, ADULT, face=1, h=300, wave=t * 8)
+        char_shadow(cv, 800)
+        hand = draw_person(cv, 800, PATH_Y, OLD, face=-1, h=285, lean=-16, reach=(740, PATH_Y - 120))
+        draw_cane(cv, hand, (728, PATH_Y))
 
-    img, _ = render_world_frame(FULL, actors, pal, t)
-    img = ImageEnhance.Brightness(img).enhance(0.6)
-    pill(img, OUT_W / 2, 520, "HÄTTEST DU'S", 96, bg="#fff6e6", rot=-3, border="#1d1b33",
-         scale=ease_out_back(prog(t, t0, t0 + 0.35)))
-    pill(img, OUT_W / 2, 690, "GEWUSST?", 110, bg="#ffd34d", rot=2, border="#1d1b33",
-         scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.55)))
+    img, _ = render_scene(cam, t, palette_at(t), {"far": far_actors(t), "mid": mid_actors(t), "main": main,
+                                                  "fg": fg_actors(t, 0.8)})
+    img = ImageEnhance.Brightness(img).enhance(0.62)
+    pill3d(img, OUT_W / 2, 520, "HÄTTEST DU'S", 98, bg="#fff6e6", rot=-3, scale=ease_out_back(prog(t, t0, t0 + 0.35)))
+    pill3d(img, OUT_W / 2, 690, "GEWUSST?", 98, bg="#ffd34d", rot=2, scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.55)))
     if t > t1:
-        pill(img, OUT_W / 2, 840, "SCHREIB'S IN DIE KOMMENTARE", 40, bg="#ffffff", border="#1d1b33",
-             scale=ease_out_back(prog(t, t1, t1 + 0.35)))
+        pill3d(img, OUT_W / 2, 845, "SCHREIB'S IN DIE KOMMENTARE", 42, bg="#ffffff",
+               scale=ease_out_back(prog(t, t1, t1 + 0.35)))
         followed = t > t1 + 2.0
         txt = "GEFOLGT  ✓" if followed else "+  FOLGEN"
         bg = "#37b26c" if followed else "#e2574c"
         pulse = 1 + (0.06 * math.sin(t * 10) if not followed else 0)
-        pill(img, OUT_W / 2, 965, txt, 72, bg=bg, fg="#ffffff", border="#ffffff",
-             scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
-        pill(img, OUT_W / 2, 1085, "MORGEN: NEUES RÄTSEL", 48, bg="#fff6e6", border="#1d1b33",
-             scale=ease_out_back(prog(t, t1 + 1.0, t1 + 1.35)))
+        pill3d(img, OUT_W / 2, 975, txt, 74, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
+        pill3d(img, OUT_W / 2, 1100, "MORGEN: NEUES RÄTSEL", 50, bg="#fff6e6",
+               scale=ease_out_back(prog(t, t1 + 1.0, t1 + 1.35)))
     return img
 
 
@@ -660,7 +1173,6 @@ def frame_at(t):
 
 def render_chunk(args):
     i0, i1, path = args
-    world()
     p = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{OUT_W}x{OUT_H}",
                           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18",
                           "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
@@ -672,12 +1184,13 @@ def render_chunk(args):
 
 
 def render(out="video.mp4", workers=4):
-    world()
+    for name, *_ in LAYERS:
+        layer(name)
     n = int(END * FPS)
-    step = math.ceil(n / workers)
-    chunks = [(i, min(n, i + step), os.path.join(CACHE, f"chunk{k}.mp4")) for k, i in enumerate(range(0, n, step))]
+    step = math.ceil(n / (workers * 3))
+    chunks = [(i, min(n, i + step), os.path.join(CACHE, f"chunk{k:02d}.mp4")) for k, i in enumerate(range(0, n, step))]
     with Pool(workers) as pool:
-        paths = pool.map(render_chunk, chunks)
+        paths = pool.map(render_chunk, chunks, chunksize=1)
     lst = os.path.join(CACHE, "chunks.txt")
     with open(lst, "w") as f:
         f.writelines(f"file '{p}'\n" for p in paths)

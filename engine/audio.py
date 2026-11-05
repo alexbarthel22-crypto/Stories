@@ -287,6 +287,103 @@ def impact():
     return (body + noise) * 0.9
 
 
+def _t(d):
+    return np.arange(int(d * SR)) / SR
+
+
+def drum():
+    """deep frame drum / taiko hit"""
+    tt = _t(0.9)
+    f = 48 + 70 * np.exp(-tt * 28)
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt * 6)
+    slap = np.random.default_rng(3).standard_normal(len(tt)) * np.exp(-tt * 60) * 0.35
+    return (body + slap) * 0.55
+
+
+def gong(dur=3.0):
+    tt = _t(dur)
+    s = sum(a * np.sin(2 * np.pi * f * tt + p) * np.exp(-tt * d)
+            for f, a, d, p in ((110, 1, 0.9, 0), (174, .6, 1.3, 1), (232, .45, 1.6, 2), (297, .3, 2.2, .5), (411, .2, 3, 1.5)))
+    wob = 1 + 0.25 * np.sin(2 * np.pi * 4.5 * tt) * np.exp(-tt * 1.2)
+    att = np.clip(tt / 0.01, 0, 1)
+    return s * wob * att * 0.45
+
+
+def chirp():
+    """two little bird tweets"""
+    out = np.zeros(int(0.55 * SR))
+    for k, t0 in enumerate((0.0, 0.22)):
+        tt = _t(0.12)
+        f = 3200 + 1800 * np.sin(np.pi * tt / 0.12) + 400 * k
+        s = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / 0.12) ** 2
+        i = int(t0 * SR)
+        out[i:i + len(s)] += s * 0.5
+    return out
+
+
+def sparkle():
+    """bright magical shimmer (rising arpeggio of bells)"""
+    out = np.zeros(int(1.2 * SR))
+    for k, m in enumerate((84, 88, 91, 96, 100)):
+        tt = _t(0.7)
+        f = 440 * 2 ** ((m - 69) / 12)
+        s = (np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(2 * np.pi * f * 2.76 * tt)) * np.exp(-tt * 7)
+        i = int(k * 0.055 * SR)
+        out[i:i + len(s)] += s * 0.25
+    return out
+
+
+def riser(dur=1.2):
+    tt = _t(dur)
+    noise = np.random.default_rng(4).standard_normal(len(tt))
+    k = np.linspace(30, 2, len(tt)).astype(int)
+    lp = np.convolve(noise, np.ones(8) / 8, mode="same")
+    tone = np.sin(2 * np.pi * np.cumsum(200 + 900 * (tt / dur) ** 2) / SR) * 0.3
+    env = (tt / dur) ** 2
+    return (lp * 0.6 + tone) * env * 0.7
+
+
+def sistrum():
+    """egyptian metal rattle"""
+    tt = _t(0.6)
+    rng = np.random.default_rng(8)
+    out = np.zeros(len(tt))
+    for k in range(5):
+        i = int(k * 0.07 * SR)
+        n = int(0.08 * SR)
+        x = rng.standard_normal(n) * np.exp(-np.arange(n) / SR * 50)
+        jing = sum(np.sin(2 * np.pi * f * np.arange(n) / SR) for f in (5200, 6800, 8100)) * np.exp(-np.arange(n) / SR * 40)
+        out[i:i + n] += (x * 0.3 + jing * 0.25) * (1 - k * 0.12)
+    return out * 0.65
+
+
+def rumble(dur=2.0):
+    tt = _t(dur)
+    x = np.random.default_rng(11).standard_normal(len(tt))
+    for k in (120, 80):
+        x = np.convolve(x, np.ones(k) / k, mode="same")
+    env = np.sin(np.pi * tt / dur) ** 0.7
+    return (x * 14 + 0.4 * np.sin(2 * np.pi * 38 * tt)) * env * 0.27
+
+
+def owl():
+    out = np.zeros(int(1.0 * SR))
+    for t0, d in ((0.0, 0.18), (0.32, 0.45)):
+        tt = _t(d)
+        f = 420 - 60 * tt / d
+        s = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / d) * 0.5
+        i = int(t0 * SR)
+        out[i:i + len(s)] += s
+    return out
+
+
+def splash():
+    tt = _t(0.5)
+    x = np.random.default_rng(13).standard_normal(len(tt))
+    x = np.convolve(x, np.ones(3) / 3, mode="same")
+    return x * np.exp(-tt * 9) * 0.35
+
+
 def place(buf, s, t, gain=1.0):
     k = int(t * SR)
     if k >= len(buf):
@@ -336,7 +433,9 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
         s = {"ding": ding, "pop": pop, "tick": tick, "click": click, "clink": clink, "whoosh": whoosh,
              "tada": tada, "glug": glug, "fw_launch": fw_launch, "fw_boom": fw_boom,
              "fw_crackle": fw_crackle, "creak": creak, "growl": growl, "buzzer": buzzer, "step": step,
-             "drip": drip, "swish": swish, "shing": shing, "squawk": squawk, "wrong": wrong, "impact": impact}.get(kind)
+             "drip": drip, "swish": swish, "shing": shing, "squawk": squawk, "wrong": wrong, "impact": impact, "drum": drum,
+             "gong": gong, "chirp": chirp, "sparkle": sparkle, "riser": riser, "sistrum": sistrum, "rumble": rumble,
+             "owl": owl, "splash": splash}.get(kind)
         if kind == "file":          # external sound file: ("file", t, gain, path, duration)
             path, dur = extra[0], extra[1]
             s = load_music(path, int(dur * SR))
