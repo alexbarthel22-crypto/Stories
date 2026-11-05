@@ -67,6 +67,7 @@ SCENES = [
     dict(id="bus", bg="#4FA3C7", clock="08:00", title="IM BUS", lines=[
         ("Im Bus sitzen drei seiner Exen.", None),
         ("Und der Busfahrer ist der Onkel von einer.", None),
+        ("Und mit dem hatte Alex auch schon was!", None),
     ]),
     dict(id="group", bg="#2FA36B", clock="15:00", title="DORF-WHATSAPP", lines=[
         ("Nachmittags in der Dorf-WhatsApp-Gruppe: Oma Hilde hat ihn gestern gesehen.", None),
@@ -85,10 +86,10 @@ SCENES = [
         ("Seine Exen haben eine eigene WhatsApp-Gruppe.", None),
         ("Auf jedem Fest muss er jemandem ausweichen.", None),
         ("Er datet schon im Nachbardorf.", None),
-        ("Und Oma Hilde weiß alles.", None),
+        ("Und er rammelt alles, was Beine hat.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du auch so ein Dorf, wo jeder jeden kennt? Markier sie oder ihn!", None),
+        ("Kennst du auch eine Dorfmatratze? Markier sie oder ihn!", None),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]
