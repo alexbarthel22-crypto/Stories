@@ -289,12 +289,12 @@ def build_audio(path):
         add(fx, tick, tk - 0.004, getattr(script, "INTRO_TICK_GAIN", getattr(script, "INTRO_SFX_GAIN", 1.0)))
     rev = load_wav(os.path.join(ROOT, "assets", "sfx", "reveal.wav"))
     if getattr(script, "REVEAL_CUT", None):          # Original-Reveal enthält leise Fremdstimme -> abschneiden
-        n = int(script.REVEAL_CUT * SR); fo = int(0.06 * SR)
-        rev = rev[:n].copy(); rev[-fo:] *= np.linspace(1, 0, fo)
+        _n = int(script.REVEAL_CUT * SR); _fo = int(0.06 * SR)
+        rev = rev[:_n].copy(); rev[-_fo:] *= np.linspace(1, 0, _fo)
     if getattr(script, "REVEAL_TAIL", None):         # (ab Sekunde, Faktor): Nachklang mit Hintergrundstimme leiser
-        t0_, g_ = script.REVEAL_TAIL; n = int(t0_ * SR); fo = int(0.08 * SR)
-        env = np.ones(len(rev)); env[n:n + fo] = np.linspace(1, g_, len(env[n:n + fo])); env[n + fo:] = g_
-        rev = rev * env
+        _t0, _g = script.REVEAL_TAIL; _n = int(_t0 * SR); _fo = int(0.08 * SR)
+        _env = np.ones(len(rev)); _env[_n:_n + _fo] = np.linspace(1, _g, len(_env[_n:_n + _fo])); _env[_n + _fo:] = _g
+        rev = rev * _env
     add(fx, rev, REVEAL - sfx_meta["reveal_onset"], 2.6 * getattr(script, "INTRO_SFX_GAIN", 1.0))
     tdir = os.path.join(EP, "build", "tts")
     add(voice, load_wav(os.path.join(tdir, "intro_pre.wav")), 0.12)
