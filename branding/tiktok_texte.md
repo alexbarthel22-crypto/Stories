@@ -117,6 +117,6 @@ Cover: `episodes/11_dorfmatratze/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-eine Dorfmatratze 🏘️ Wentorf bei Hamburg, wo jeder jeden kennt: Beim Bäcker die Ex. Im Bus drei Exen. Der Busfahrer? Onkel von einer 💀 Und Oma Hilde hat sowieso alles gesehen 👵👀 Bei welcher Szene hast du an deinen Ort gedacht? 👇 Kennst du auch so ein Dorf, wo jeder jeden kennt? Markier sie oder ihn! Und was soll Alex morgen sein?
+eine Dorfmatratze 🏘️ Wentorf bei Hamburg, wo jeder jeden kennt: Motto: alles rammeln, was nicht bei 3 auf dem Baum ist 🌳 Beim Bäcker die Ex. Im Bus drei Exen. Der Busfahrer? Onkel von einer 💀 Und Oma Hilde hat sowieso alles gesehen 👵👀 Bei welcher Szene hast du an deinen Ort gedacht? 👇 Kennst du auch so ein Dorf, wo jeder jeden kennt? Markier sie oder ihn! Und was soll Alex morgen sein?
 
 #wentorf #hamburg #dorfleben #jederkenntjeden #dorfkind #relatable #comedy #fürdich #fyp

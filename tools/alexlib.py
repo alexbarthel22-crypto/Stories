@@ -1261,7 +1261,7 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
         half = c.device_to_user(SAFE_BOX[2], 0)[0] - cx - 45
         words = txt.split(" ", 1)
         small, big_ = (words[0], words[1]) if len(words) == 2 and words[0] in ("EIN", "EINE") else ("", txt)
-        lines = big_.replace("-", "-\n", 1).split("\n") if "-" in big_ and len(big_) > 9 else [big_]
+        lines = cfg.get("title_lines") or (big_.replace("-", "-\n", 1).split("\n") if "-" in big_ and len(big_) > 9 else [big_])
         sizes = [min(200, 200 * 2 * half / max(1, text_width(c, ln, 200, FONT_HEAD))) for ln in lines]
         bsize = min(sizes)
         def ttl():

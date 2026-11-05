@@ -81,7 +81,20 @@ def intro_decor(c, t, u):
 def alex_extras(c, x, feet, h, t, u):
     """Fuckboy, etwas billig: Sonnenbrille im Haar, dicke Goldkette, Bierdose, Zwinkern."""
     k = h / 100.0
-    emoji(c, "🕶️", x + 2 * k, feet - 90 * k, 16 * k, rot=-0.08)
+    # Sonnenbrille, ins Haar hochgeschoben (gezeichnet, sitzt auf der Stirn/Haaransatz)
+    c.save(); c.translate(x, feet - 84.5 * k); c.rotate(-0.04)
+    c.set_line_width(0.9 * k); src(c, "#111111")
+    c.move_to(-16.8 * k, 1.6 * k); c.line_to(-11.6 * k, 0.2 * k); c.move_to(16.8 * k, 1.6 * k); c.line_to(11.6 * k, 0.2 * k); c.stroke()
+    for sx in (-1, 1):
+        rrect(c, sx * 6.2 * k - 5.6 * k, -3.4 * k, 11.2 * k, 7.0 * k, 3.0 * k)
+        g = cairo.LinearGradient(0, -3.4 * k, 0, 3.6 * k)
+        g.add_color_stop_rgb(0, 0.32, 0.30, 0.38); g.add_color_stop_rgb(1, 0.06, 0.06, 0.09)
+        c.set_source(g); c.fill_preserve(); c.set_line_width(0.8 * k); src(c, "#111111"); c.stroke()
+        c.set_line_width(0.6 * k); src(c, "#FFFFFF", 0.55)
+        c.move_to(sx * 6.2 * k - 3.2 * k, -1.8 * k); c.line_to(sx * 6.2 * k - 0.6 * k, -2.6 * k); c.stroke()
+    c.set_line_width(1.0 * k); src(c, "#111111")
+    c.move_to(-0.9 * k, -1.2 * k); c.curve_to(-0.3 * k, -2.2 * k, 0.3 * k, -2.2 * k, 0.9 * k, -1.2 * k); c.stroke()
+    c.restore()
     c.set_line_width(1.6 * k); src(c, "#D4AF37")
     c.move_to(x - 7 * k, feet - 56 * k); c.curve_to(x - 5 * k, feet - 44 * k, x + 5 * k, feet - 44 * k, x + 7 * k, feet - 56 * k); c.stroke()
     c.arc(x, feet - 45 * k, 2.2 * k, 0, 2 * math.pi); src(c, "#D4AF37"); c.fill()
@@ -92,7 +105,7 @@ def alex_extras(c, x, feet, h, t, u):
 INTRO = dict(icon="🏘️", bg="#5E8C3A", spec=AL, expr="smug", pose="hips", hand_prop=None,
              house=dict(sky=("#7A4FA0", "#FF9FB8"), walls="#F7D6E0", roof="#8A2A3A", door="#2A1A20", lawn="#5DAA5E",
                         accent=("#E0457B", "#1C1C22"), sun=False),
-             umbrella=False, fill="#6FB7E8", decor=intro_decor, alex_extras=alex_extras,
+             umbrella=False, title_lines=["DORF-", "MATRATZE."], fill="#6FB7E8", decor=intro_decor, alex_extras=alex_extras,
              burst=["💋", "💔", "🏘️", "👵", "🍺", "😏", "👀", "💘"])
 
 
@@ -169,6 +182,37 @@ def sc_what(c, S):
                 emoji(c, "💔", x + 22, y - 22, 34)
     scaled(c, W / 2, 700, s, card_)
     alex_bottom(c, S, "smug", "hips")
+
+
+def sc_motto(c, S):
+    t = S.t
+    s = pop(t, S.at(0, 0.0))
+    d0 = S.at(0, 0.0)
+    def tree():
+        card(c, W / 2, 700, 980, 640, 1, color="#DFF2FF")
+        rrect(c, 80, 930, 920, 90, 0); fill(c, "#6CC47A")
+        rrect(c, 500, 640, 80, 320, 14); fill(c, "#7A4A2E")
+        rrect(c, 500, 640, 80, 320, 14); c.set_line_width(5); src(c, INK); c.stroke()
+        for dx, dy, r in ((0, 0, 170), (-140, 60, 120), (140, 60, 120), (-70, -90, 120), (90, -90, 120)):
+            c.arc(540 + dx, 560 + dy, r, 0, 2 * math.pi)
+        src(c, "#3F9A4A"); c.fill()
+        # Countdown 1-2-3
+        span = max(0.6, S.S.durs[0] * 0.8)
+        n = min(3, 1 + int(3 * clamp((t - d0) / span)))
+        u = ((t - d0) / span * 3) % 1
+        text(c, f"{n}…" if n < 3 else "3!", 830, 460, 120 * (1 + 0.2 * (1 - u)), "#E23B3B", FONT_HEAD)
+        # Dorfbewohner flüchten den Baum hoch
+        climbers = [("🧗", 470, 0.0), ("🧗", 610, 0.15), ("🧗", 520, 0.3), ("👵", 640, 0.45)]
+        for e, x, f in climbers:
+            k = clamp((t - d0 - f * span) / (span * 0.7))
+            y = 920 - 380 * ease_out_cubic(k)
+            emoji(c, e, x, y, 70)
+        if t > d0 + span:
+            emoji(c, "😮‍💨", 380, 470, 60)
+    scaled(c, W / 2, 700, s, tree)
+    alex_bottom(c, S, "smug", "hips")
+    if t > d0 + 0.3:
+        bubble(c, "1 … 2 … 😏", 845, 1200, pop(t, d0 + 0.3), tail=(-0.5, 1), size=40, max_w=300)
 
 
 def sc_bakery(c, S):
@@ -367,5 +411,5 @@ def sc_outro(c, S):
     alex_bottom(c, S, "happy", "wave")
 
 
-SCENE_DRAW = dict(what=sc_what, bakery=sc_bakery, bus=sc_bus, group=sc_group, fest=sc_fest, night=sc_night,
+SCENE_DRAW = dict(what=sc_what, motto=sc_motto, bakery=sc_bakery, bus=sc_bus, group=sc_group, fest=sc_fest, night=sc_night,
                   signs=sc_signs, outro=sc_outro)
