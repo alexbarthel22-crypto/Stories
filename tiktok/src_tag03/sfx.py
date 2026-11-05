@@ -253,7 +253,11 @@ def build_sfx(segs, N):
         elif sid == 'honor': L(0.0, whoosh()); L(0.6, ding()); L(0.9, ding() * 0.7); [L(0.75 + i * 0.15, pop()) for i in range(3)]
         elif sid == 'ultras': L(0.0, whoosh()); L(0.2, pop()); L(0.0, drum(en - st) * 0.8); L(0.0, stadium_rec(-28.0)[:int((en - st) * SR)]); L(c[2], pop()); L(c[3], ding())
         elif sid == 'kasse3': L(0.0, pop()); L(c[0], clack()); L(c[1], sad_trombone(max(0.5, (en - st) - c[1] - 0.12)))
-        elif sid == 'mud': L(0.0, pop()); L(c[3], pop()); L(0.0, water(en - st) * 1.2)
+        elif sid == 'mud':
+            L(0.0, pop()); L(c[3], pop())
+            tt = _t(en - st); tone = np.where(np.sin(2 * np.pi * 1.6 * tt) > 0, 960, 720)
+            al = np.sin(2 * np.pi * np.cumsum(tone) / SR); al = (al + 0.3 * np.sign(al)) * 0.045 * np.minimum(1, tt / 0.1) * np.minimum(1, (tt[-1] - tt) / 0.2)
+            L(0.0, al)
         elif sid == 'platzwart':
             L(0.0, thud()); L(0.15, thud()); L(c[1], whoosh()); L(c[2], thud()); L(c[3], ding())
             tt = _t(min(2.0, en - st)); siren_s = np.sin(2 * np.pi * (700 + 250 * np.sign(np.sin(2 * np.pi * 3 * tt))) * tt) * 0.03 * np.minimum(1, (tt[-1] - tt) / 0.3)

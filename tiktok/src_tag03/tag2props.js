@@ -120,9 +120,9 @@ function calcBoard(t, x, y, lines, times) {
     const vx = x + 810;
     s += `<g opacity="${k}" transform="translate(${(1 - k) * 40} 0)">
       ${hp > 0.05 ? `<rect x="${x + 20}" y="${vy - (big ? 92 : 70)}" width="820" height="${big ? 118 : 92}" rx="14" fill="#FFD31A" opacity="${0.75 * hp}"/>` : ''}
-      ${label(x + 50, ly, l[0], big ? 64 : 48, BROWN, 'start')}
+      ${label(x + 50, ly, l[0], big ? (l[0].length > 12 ? 50 : 64) : 48, BROWN, 'start')}
       <g transform="translate(${vx} ${vy - 20}) scale(${sc}) translate(${-vx} ${-(vy - 20)})">
-      <text x="${vx}" y="${vy}" text-anchor="end" ${FONT} font-size="${big ? 100 : 62}" fill="${l[2] || '#2FA84A'}" stroke="#fff" stroke-width="${big ? 6 : 0}" paint-order="stroke">${l[1]}</text></g></g>`;
+      <text x="${vx}" y="${vy}" text-anchor="end" ${FONT} font-size="${big ? 92 : 62}" fill="${l[2] || '#2FA84A'}" stroke="#fff" stroke-width="${big ? 6 : 0}" paint-order="stroke">${l[1]}</text></g></g>`;
   });
   return s;
 }

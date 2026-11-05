@@ -36,7 +36,7 @@ function ballIcon(cx, cy, r) {
   return `<text x="${cx}" y="${cy + f * 0.36}" text-anchor="middle" font-family="Noto Color Emoji" font-size="${f}">⚽</text>`;
 }
 
-function textW(text, fs) { return text.length * fs * 0.56; }
+function textW(text, fs) { return text.length * fs * 0.62; }
 
 function box(x, y, w, h, kind, sw = 9) {
   const K2 = KIND[kind] || KIND.white, r = Math.min(h * 0.2, 34);

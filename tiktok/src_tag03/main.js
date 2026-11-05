@@ -33,15 +33,16 @@ const SCENES = {
   intro(t, d, m) {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
     const world = field(t, 900, {goal: false, touchY: 1210}) + `<g transform="translate(0 -100)">${chairTribune(t)}</g>` +
-      place(coach({mouth: m, blink: blinkAt(t)}), 540, 1420, 0.72);
+      place(coach({mouth: m, blink: blinkAt(t)}), 540, 1420, 0.72) +
+      place(frog({blink: blinkAt(t, .4)}), 760, 1430 - Math.abs(Math.sin(t * 7)) * 30, 0.2);
     return cam(z, 540, 1110 - 40 * e, world) +
       `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${badge(540, 440, 'TAG 3', {kind: 'pitch', fs: 150, pad: 120})}</g>` +
-      popG(t, 0.55, 540, 640, twoLineBadge(540, 640, 'ICH GRÜNDE EINEN', 'FUSSBALLVEREIN', 52)) + introBall(t);
+      popG(t, 0.55, 540, 640, twoLineBadge(540, 640, 'ICH GRÜNDE EINEN', 'FUSSBALLVEREIN', 52)) +
+      popG(t, 0.9, 900, 980, `<g transform="translate(900 980) scale(0.36) rotate(${Math.sin(t * 3) * 4}) translate(-300 -300)">${LOGO}</g>`) + introBall(t);
   },
   fans3(t, d, m) {
     const t0 = capT(2), n = t < t0 ? 83 : Math.round(83 + 317 * easeOut(clamp((t - t0) / 1.0, 0, 1)));
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 420, 1640, 1.2) +
-        place(frog({blink: blinkAt(t, .4), mouth: t > t0}), 860, 1660 - Math.abs(Math.sin(t * 7)) * 70, 0.5)) +
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 420, 1640, 1.2)) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'GESTERN: 83 FANS', {fs: 46})) +
       popG(t, t0, 540, 500, badge(540, 500, 'HEUTE', {kind: 'pitch', fs: 56})) +
       (t >= t0 ? bigText(540, 760, String(n), '#6BF06B', 240) : '') +
@@ -85,7 +86,7 @@ const SCENES = {
     return cam(z, cx, cy, wholePitch(t) + bigStand(t, 1, 1)) +
       popG(t, 0.2, 540, 340, badge(540, 340, 'ULTRA-BLOCK', {kind: 'red', fs: 60, rot: -2})) +
       popG(t, capT(2), 540, 480, badge(540, 480, 'NEUES LOGO AUS TAG 1', {kind: 'pitch', fs: 42})) +
-      popG(t, capT(3), 760, 1200, profilePic(760, 1170, 0, 80) + `<g transform="rotate(-4 760 1290)">${badge(760, 1290, 'DANKE, EIKE!', {kind: 'orange', fs: 50})}</g>`);
+      popG(t, capT(3), 820, 640, profilePic(820, 640, 0, 95) + `<g transform="rotate(-4 820 780)">${badge(820, 780, 'DANKE, EIKE!', {kind: 'orange', fs: 50})}</g>`);
   },
   honor(t, d, m) {
     const z = 1 + 2.4 * easeOut(clamp(t / 0.7, 0, 1)), [cx, cy] = standSeatPos(1);
@@ -96,7 +97,7 @@ const SCENES = {
     return s + tags + popG(t, 0.6, 540, 1250, badge(540, 1250, '★ EHRENPLÄTZE ★', {kind: 'orange', fs: 54}));
   },
   kasse3(t, d, m) {
-    const lines = [['FERTIG-TRIBÜNE', '−836 €', '#E5483A', true]];
+    const lines = [['FERTIG-TRIBÜNE', '-836 €', '#E5483A', true]];
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(780, 1290, 0.75) + cashBox(780, 1160, 0.62, 'empty') +
         place(coach({mouth: m, mood: 'sad', blink: blinkAt(t)}), 240, 1600, 0.95)) + moth(t, capT(1) + 0.1) +
       popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [0.1])) +
@@ -106,7 +107,7 @@ const SCENES = {
   mud(t, d, m) {
     let s = field(t, 1000, {goalX: 600, noPost: true, puddles: [[160, 1400, 160, 30], [880, 1520, 180, 34]]}) + floatingGoal(t, 600, 1040, 1.0);
     s += place(coach({mouth: m, mood: 'sad', blink: blinkAt(t)}), 170, 1660, 0.75);
-    return cam(1.0, 540, 960, s) +
+    return cam(1.0, 540, 960, s) + alarmLights(t) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'PLATZ = SCHLAMMLOCH', {kind: 'red', fs: 52})) +
       popG(t, capT(3), 540, 520, badge(540, 520, 'DAS TOR SCHWIMMT WEG!', {kind: 'orange', fs: 46, rot: -3}));
   },

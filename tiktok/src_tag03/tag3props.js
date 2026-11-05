@@ -186,3 +186,16 @@ function newspaper(t) {
 function jerseyNum(cx, cy, s, sway, num, pos) {
   return jersey9(cx, cy, s, sway).replace('>9</text>', `>${num}</text>`).replace('>STURM</text>', `>${pos}</text>`);
 }
+
+// Alarm: zwei Rundumleuchten oben, rotes Pulsieren, "ALARM"-Schild
+function alarmLights(t) {
+  const on = Math.sin(t * 14) > 0, pulse = 0.5 + 0.5 * Math.sin(t * 14);
+  const lamp = (x, y, ph) => { const a = (t * 420 + ph) % 360;
+    return `<g transform="translate(${x} ${y})"><circle r="${100 + 20 * pulse}" fill="#FF3B3B" opacity="${0.18 + 0.25 * pulse}"/>
+      <g transform="rotate(${a})"><path d="M0 0 L-70 -520 L70 -520 Z" fill="#FF6A6A" opacity=".16"/><path d="M0 0 L-70 520 L70 520 Z" fill="#FF6A6A" opacity=".16"/></g>
+      <rect x="-56" y="30" width="112" height="30" rx="8" fill="#9AA0A8" stroke="#111" stroke-width="6"/>
+      <path d="M-46 32 Q-46 -50 0 -50 Q46 -50 46 32 Z" fill="${on ? '#FF3B3B' : '#9E1E1E'}" stroke="#111" stroke-width="7"/>
+      <ellipse cx="-14" cy="-22" rx="10" ry="18" fill="#fff" opacity=".55"/></g>`; };
+  return `<rect width="1080" height="1920" fill="#FF2020" opacity="${0.12 * pulse}"/>` + lamp(110, 700, 0) + lamp(970, 700, 180) +
+    `<g transform="translate(540 760) scale(${1 + 0.06 * pulse})">${box(-170, -50, 340, 100, 'red', 9)}${label(0, 22, 'ALARM!', 66, '#fff')}</g>`;
+}
