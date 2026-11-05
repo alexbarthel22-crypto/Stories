@@ -31,6 +31,7 @@ import alexlib as _alexlib
 _alexlib.SAFE_MODE = getattr(script, "SAFE_MODE", "default")
 _alexlib.CAPTION_SIZE = getattr(script, "CAPTION_SIZE", 50)
 _alexlib.NAME_SCALE = getattr(script, "NAME_SCALE", 1.0)
+_alexlib.BUBBLE_SCALE = getattr(script, "BUBBLE_SCALE", 1.0)
 TITLE_SIZE = getattr(script, "TITLE_SIZE", 72)
 scenes = load("scenes")
 tts = json.load(open(os.path.join(EP, "build", "tts.json")))

@@ -282,6 +282,7 @@ def title(c, s_txt, y, color, s=1.0, size=70):
 
 CAPTION_SIZE = 50
 NAME_SCALE = 1.0
+BUBBLE_SCALE = 1.0
 
 
 def caption(c, s_txt, t_since, y=1585):
@@ -318,6 +319,7 @@ def bubble(c, s_txt, x, y, s=1.0, tail=(0, 1), size=40, max_w=560, color="#FFFFF
     """Sprechblase mit Mittelpunkt (x, y). tail = Richtung des Zipfels."""
     if s <= 0.001:
         return
+    size *= BUBBLE_SCALE; max_w *= BUBBLE_SCALE
     lines = wrap(c, s_txt, size, max_w, font)
     w = max(text_width(c, ln, size, font) for ln in lines) + 60
     h = len(lines) * size * 1.18 + 40
@@ -1229,11 +1231,26 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
         emoji(c, icon, 540, 730, 60)
     # Kopfzeile + Auswahl-Leiste
     text(c, "Heute ist Alex", W / 2, 112, 44, "#FFFFFF", FONT_BOLD)
-    sc = pop(t, reveal_t, 0.4) if revealed else 1.0
+    if revealed:
+        u_ = (t - reveal_t) / 0.5
+        sc = ease_out_back(u_, 2.8) if u_ < 1 else 1 + 0.03 * math.sin((t - reveal_t) * 6)
+        tsize = min(124, 124 * 1000 / max(1, text_width(c, txt, 124, FONT_HEAD)))
+        ty, rot = 212, -0.03
+    else:
+        sc, tsize, ty, rot = 1.0, 76, 196, 0
     def ttl():
-        c.save(); c.translate(0, 6); text(c, txt, W / 2, 196, 76, "#000000", FONT_HEAD, alpha=0.3); c.restore()
-        text(c, txt, W / 2, 196, 76, "#FFFFFF", FONT_HEAD)
-    scaled(c, W / 2, 196, sc, ttl)
+        c.save(); c.translate(W / 2, ty); c.rotate(rot); c.translate(-W / 2, -ty)
+        if revealed:
+            c.select_font_face(FONT_HEAD); c.set_font_size(tsize)
+            w_ = text_width(c, txt, tsize, FONT_HEAD)
+            c.move_to(W / 2 - w_ / 2, ty + tsize * 0.36); c.text_path(txt)
+            c.set_line_width(tsize * 0.16); c.set_line_join(cairo.LINE_JOIN_ROUND); src(c, INK); c.stroke_preserve()
+            src(c, "#FFE14D"); c.fill()
+        else:
+            c.save(); c.translate(0, 6); text(c, txt, W / 2, ty, tsize, "#000000", FONT_HEAD, alpha=0.3); c.restore()
+            text(c, txt, W / 2, ty, tsize, "#FFFFFF", FONT_HEAD)
+        c.restore()
+    scaled(c, W / 2, ty, sc, ttl)
     icons = [s_[1] for s_ in shuffle] + [cfg["icon"]]
     cols = [s_[3] for s_ in shuffle] + [cfg["bg"]]
     sel = len(shuffle) if revealed else k

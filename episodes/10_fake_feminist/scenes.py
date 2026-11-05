@@ -1,4 +1,4 @@
-"""Visuals: Alex ist heute ein Fake-Feminist (TikTok Folge 4). Aufbau wie Pick-me-Boy.
+"""Visuals: Alex ist heute ein Fake-Feminist (TikTok Folge 3). Aufbau wie Pick-me-Boy.
 Alles liegt in TikToks Sicherheitsbereich (SAFE_MODE "strict" in script.py).
 """
 import math, random
@@ -109,11 +109,45 @@ def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
     draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, INTRO)
 
 
+import alexlib as _al
+CONTENT_SCALE = 1.12      # Karten/Telefon/Listen größer; Alex, Lea und Sprechblasen bleiben am Platz
+_BASE = [None]
+
+
+def _on_base(fn):
+    def wrapped(c, *a, **k):
+        if _BASE[0] is None:
+            return fn(c, *a, **k)
+        m = c.get_matrix(); c.set_matrix(_BASE[0])
+        try:
+            return fn(c, *a, **k)
+        finally:
+            c.set_matrix(m)
+    return wrapped
+
+
+def big(fn):
+    def wrapped(c, S):
+        _BASE[0] = c.get_matrix()
+        c.save()
+        c.translate(W / 2, 330); c.scale(CONTENT_SCALE, CONTENT_SCALE); c.translate(-W / 2, -330)
+        try:
+            fn(c, S)
+        finally:
+            c.restore(); _BASE[0] = None
+    return wrapped
+
+
+bubble = _on_base(_al.bubble)
+
+
+@_on_base
 def alex_bottom(c, S, expr="smug", pose="idle", prop=None, x=W / 2, h=AH):
     person(c, x, FEET, h, AL, S.t, expr, pose, prop, name="Alex")
     shirt_text(c, x, FEET, h)
 
 
+@_on_base
 def lea(c, S, expr="neutral", x=790, h=AH * 0.97, s=1.0):
     scaled(c, x, FEET, s, lambda: person(c, x, FEET, h, LEA, S.t, expr, name="Lea", blink_seed=3))
 
@@ -159,7 +193,7 @@ def sc_what(c, S):
     scaled(c, W / 2, 680, s, meter)
     alex_bottom(c, S, "smug", "hips")
     if t >= a1:
-        bubble(c, "Ich bin der größte Feminist, den du kennst! ✊", W / 2, 1000, pop(t, a1), tail=(0.2, 1), size=40, max_w=700)
+        bubble(c, "Ich bin der größte Feminist, den du kennst! ✊", 815, 1150, pop(t, a1), tail=(-0.5, 1), size=38, max_w=340)
 
 
 def sc_post(c, S):
@@ -202,13 +236,13 @@ def sc_mansplain(c, S):
     lea(c, S, "neutral" if t < a1 else "cringe", s=pop(t, S.at(0, 0.2)))
     if t >= a1:
         def badge():
-            c.save(); c.translate(790, 1100); c.rotate(-0.05)
-            rrect(c, -230, -50, 460, 100, 18); fill(c, "#FFE14D")
-            rrect(c, -230, -50, 460, 100, 18); c.set_line_width(5); src(c, INK); c.stroke()
-            text(c, "GLEICHSTELLUNGS-", 0, -16, 32, INK, FONT_HEAD)
-            text(c, "BEAUFTRAGTE", 0, 22, 32, INK, FONT_HEAD)
+            c.save(); c.translate(W / 2, 880); c.rotate(-0.08)
+            rrect(c, -300, -60, 600, 120, 18); fill(c, "#FFE14D")
+            rrect(c, -300, -60, 600, 120, 18); c.set_line_width(6); src(c, "#E23B3B"); c.stroke()
+            text(c, "SIE IST GLEICHSTELLUNGS-", 0, -20, 36, "#C0392B", FONT_HEAD)
+            text(c, "BEAUFTRAGTE 😳", 0, 26, 36, "#C0392B", FONT_HEAD)
             c.restore()
-        scaled(c, 790, 1100, pop(t, a1 + 0.05), badge)
+        scaled(c, W / 2, 880, pop(t, a1 + 0.05), badge)
         emoji(c, "🙄", 930, 1220, 70 * pop(t, a1 + 0.4))
 
 
@@ -284,10 +318,10 @@ def sc_signs(c, S):
     items = [("Feminist nur online", "📱"), ("Erklärt Frauen Feminismus", "👨‍🏫" if False else "🗣️"),
              ("„Hilft“ im Haushalt", "🧽"), ("Gleichberechtigung à la carte", "🍽️")]
     for i, (lab, ic) in enumerate(items):
-        y = 420 + i * 175
-        row_card(c, W / 2, y, 900, 140, pop(t, S.at(i + 1, 0.0)), lab, ic, 40, num=i + 1, rot=(-0.02 if i % 2 else 0.02))
+        y = 400 + i * 175
+        row_card(c, W / 2, y, 1000, 160, pop(t, S.at(i + 1, 0.0)), lab, ic, 48, num=i + 1, rot=(-0.02 if i % 2 else 0.02))
     for i in range(3):
-        emoji(c, "🚩", 140 + i * 400, 1110 + math.sin(t * 3 + i) * 12, 70 * pop(t, S.at(0, 0.2 + 0.15 * i)))
+        emoji(c, "🚩", 140 + i * 400, 1150 + math.sin(t * 3 + i) * 12, 90 * pop(t, S.at(0, 0.2 + 0.15 * i)))
     alex_bottom(c, S, "smug", "shrug")
 
 
@@ -295,8 +329,8 @@ def sc_outro(c, S):
     t, a1 = S.t, S.at(1)
     q = "Kennst du auch so einen Fake-Feministen?" if t < a1 else "Was soll Alex morgen sein?"
     qs = pop(t, S.at(0, 0.0)) if t < a1 else pop(t, a1)
-    card(c, W / 2, 240, 940, 200, qs)
-    scaled(c, W / 2, 240, qs, lambda: text_block(c, q, W / 2, 240, 46, 880, INK, FONT_HEAD))
+    card(c, W / 2, 230, 1000, 220, qs)
+    scaled(c, W / 2, 230, qs, lambda: text_block(c, q, W / 2, 230, 60, 940, INK, FONT_HEAD))
     if t < a1 + 0.2:
         out = out_fade(t, a1)
         s = pop(t, S.at(0, 0.3)) * out
@@ -314,29 +348,30 @@ def sc_outro(c, S):
         emoji(c, "👇", 880, 1110 + math.sin(t * 8) * 12, 90 * pop(t, S.at(0, 0.6)) * out)
     if t >= a1:
         colors = ["#EC7FAE", "#3E5C9A", "#4A2E6B", "#7A3FA8", "#3E7BDA", "#8E5BE0", "#36B5C2", "#F07F4F", "#555A66"]
-        # TikTok-Reihenfolge: 1 Pick-me-Boy, 2 Emotional abhängig, 3 Gaslighter, heute 4
-        prev = [("🌹", "FOLGE 1"), ("🥺", "FOLGE 2"), ("🌀", "FOLGE 3"), ("📢", "HEUTE ✅")]
+        # TikTok-Reihenfolge: 1 Pick-me-Boy, 2 Emotional abhängig, heute 3
+        prev = [("🌹", "FOLGE 1"), ("🥺", "FOLGE 2"), ("📢", "HEUTE ✅")]
         for i in range(9):
             r, cc = i // 3, i % 3
-            x, y = 260 + cc * 280, 500 + r * 230
+            x, y = 250 + cc * 290, 445 + r * 192
             def icon(x=x, y=y, i=i):
-                c.arc(x, y, 95, 0, 2 * math.pi); fill(c, colors[i])
-                c.arc(x, y, 95, 0, 2 * math.pi); c.set_line_width(6); src(c, "#FFFFFF"); c.stroke()
+                c.arc(x, y, 88, 0, 2 * math.pi); fill(c, colors[i])
+                c.arc(x, y, 88, 0, 2 * math.pi); c.set_line_width(7); src(c, "#FFFFFF"); c.stroke()
                 if i < len(prev):
                     e, lab = prev[i]
                     emoji(c, e, x, y, 100)
-                    rrect(c, x - 85, y + 70, 170, 46, 12); fill(c, "#2FA36B" if i == len(prev) - 1 else "#555A66")
-                    text(c, lab, x, y + 93, 26, "#FFFFFF", FONT_HEAD)
+                    rrect(c, x - 88, y + 58, 176, 48, 12); fill(c, "#2FA36B" if i == len(prev) - 1 else "#555A66")
+                    text(c, lab, x, y + 82, 30, "#FFFFFF", FONT_HEAD)
                 else:
                     text(c, "?", x, y, 110, "#FFFFFF", FONT_HEAD)
             scaled(c, x, y, pop(t, a1 + 0.1 + i * 0.07), icon)
         ps = pop(t, S.at(1, 0.45))
         def pill():
-            rrect(c, 170, 1040, 740, 96, 48); fill(c, "#E23B3B")
-            text(c, "Schreib's in die Kommentare ⬇️", W / 2, 1088, 42, "#FFFFFF", FONT_HEAD)
-        scaled(c, W / 2, 1088, ps * (1 + 0.04 * math.sin(t * 7)), pill)
+            rrect(c, 100, 955, 880, 116, 58); fill(c, "#E23B3B")
+            rrect(c, 100, 955, 880, 116, 58); c.set_line_width(6); src(c, "#FFFFFF"); c.stroke()
+            text(c, "Schreib's in die Kommentare ⬇️", W / 2, 1013, 54, "#FFFFFF", FONT_HEAD)
+        scaled(c, W / 2, 1013, ps * (1 + 0.05 * math.sin(t * 7)), pill)
     alex_bottom(c, S, "happy", "wave")
 
 
-SCENE_DRAW = dict(what=sc_what, post=sc_post, mansplain=sc_mansplain, work=sc_work, home=sc_home,
-                  date=sc_date, signs=sc_signs, outro=sc_outro)
+SCENE_DRAW = dict(what=big(sc_what), post=big(sc_post), mansplain=big(sc_mansplain), work=sc_work,
+                  home=big(sc_home), date=sc_date, signs=sc_signs, outro=sc_outro)

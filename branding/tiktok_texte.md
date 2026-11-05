@@ -104,7 +104,7 @@ ein Gaslighter 🌀 „Das hab ich nie gesagt.“ – „Du bist zu empfindlich.
 
 #gaslighting #redflags #toxischebeziehung #beziehung #selbstwert #relatable #fürdich #fyp
 
-## TikTok Folge 4 – Fake-Feminist
+## TikTok Folge 3 – Fake-Feminist
 Cover: `episodes/10_fake_feminist/thumbnail.png`
 Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung). Layout: TikTok-Sicherheitsbereiche frei.
 

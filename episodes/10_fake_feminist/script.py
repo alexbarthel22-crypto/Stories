@@ -1,4 +1,4 @@
-"""TikTok Folge 4: Heute ist Alex ... ein Fake-Feminist. (Aufbau wie Pick-me-Boy)
+"""TikTok Folge 3: Heute ist Alex ... ein Fake-Feminist. (Aufbau wie Pick-me-Boy)
 Humor über performativen 'Feminismus' – nicht über Feminismus selbst.
 Layout: SAFE_MODE "strict" (TikTok-Sicherheitsbereiche komplett frei).
 Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.08.
@@ -8,6 +8,7 @@ TTS_PROFILE = "pickme"
 SAFE_MODE = "strict"
 CAPTION_SIZE = 62        # größere Untertitel
 TITLE_SIZE = 92          # größere Überschriften
+BUBBLE_SCALE = 1.2       # größere Sprechblasen
 NAME_SCALE = 1.6         # größeres Namensschild
 MUSIC = "marimba" # eigenes lizenzfreies Thema (fröhliche Marimba), mit Ducking unter der Stimme
 INTRO_SFX_GAIN = 2.2   # Auswahl-Klicks + Reveal im Intro lauter
