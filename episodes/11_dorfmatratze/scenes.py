@@ -315,7 +315,7 @@ def sc_bakery(c, S):
             c.rectangle(90 + i * 100, 380, 100, 80); src(c, "#C0392B" if i % 2 == 0 else "#FFFFFF"); c.fill()
         rrect(c, W / 2 - 230, 395, 460, 60, 14); fill(c, INK)
         text(c, "BÄCKEREI MÜLLER", W / 2, 425, 36, "#FFFFFF", FONT_HEAD)
-        person(c, 380, 900, 380, JANA, t, "cringe", bob=False, name="Ex")
+        person(c, 380, 900, 380, JANA, t, "happy" if t > S.at(2) else "cringe", bob=False, name="Ex")
         if t > a1:
             person(c, 700, 900, 400, MUTTER, t, "angry", bob=False, name="ihre Mutter")
         rrect(c, 110, 880, 860, 150, 14); fill(c, "#B07A4F")
@@ -326,8 +326,17 @@ def sc_bakery(c, S):
     c.save(); c.translate(shake, 0)
     scaled(c, W / 2, 710, s, shop)
     c.restore()
-    box_fx(c, t, a1 + 0.1, W / 2, 710, 900, 660, "anger")
-    alex_bottom(c, S, "cringe", "idle")
+    a2 = S.at(2)
+    if t < a2:
+        box_fx(c, t, a1 + 0.1, W / 2, 710, 900, 660, "anger")
+    else:
+        # Geheimnis: Ex ahnt nichts, Mutter auch Ex
+        tag(c, 700, 848, "AUCH EX 🤫", "#7A3FA8", s=pop(t, a2 + 0.3))
+        tag(c, 380, 848, "WEISS NIX 🙈", "#2FA36B", s=pop(t, a2 + 0.6))
+        box_fx(c, t, a2 + 0.3, W / 2, 710, 900, 660, "shock")
+    alex_bottom(c, S, "smug" if t > a2 else "cringe", "idle")
+    if t > a2:
+        emoji(c, "🤫", 760, 1190, 80 * pop(t, a2 + 0.2))
     if t > S.at(0, 0.6):
         emoji(c, "💦", 640, 1270, 60)
 

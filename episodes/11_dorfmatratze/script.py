@@ -11,7 +11,8 @@ CAPTION_SIZE = 62
 NAME_SCALE = 1.6
 TITLE_SIZE = 92
 BUBBLE_SCALE = 1.2
-INTRO_SFX_GAIN = 3.4   # Auswahl-Klicks + Reveal deutlich lauter
+INTRO_SFX_GAIN = 3.4   # Reveal-Effekt
+INTRO_TICK_GAIN = 6.0  # Auswahl-Klicks während die Leiste läuft, extra laut
 REACTIONS = {"bakery": ["🥐", "😬", "🚩"], "bus": ["🚌", "💀", "🚩"], "group": ["👀", "📢", "🚩"],
              "fest": ["💃", "😠", "🚩"], "night": ["👵", "👀", "🚩"]}
 
@@ -24,7 +25,7 @@ MOODS = {
     "intro_role": "völlig überrascht und laut lachend amüsiert, wie ungläubig ausgerufen: Was?! Echt jetzt?",
     "what": "erklärend und amüsiert, die Pointe trocken",
     "motto": "amüsiert und verschmitzt, 'rammeln' frech betont, die Pointe 'bei drei auf dem Baum' schnell und lachend",
-    "bakery": "peinlich berührt und amüsiert, die Pointe trocken",
+    "bakery": "peinlich berührt und amüsiert, die letzte Pointe verschwörerisch geflüstert und dann frech",
     "bus": "ungläubig amüsiert, die Pointe trocken",
     "group": "verschwörerisch wie Dorftratsch, dann trocken",
     "fest": "erst feierlich, dann peinlich berührt",
@@ -63,6 +64,7 @@ SCENES = [
     dict(id="bakery", bg="#E9A23B", clock="07:00", title="BEIM BÄCKER", lines=[
         ("Sieben Uhr beim Bäcker. Hinter der Theke: seine Ex.", None),
         ("Daneben ihre Mutter. Sie sagt nichts. Sie guckt nur.", None),
+        ("Was die Ex nicht weiß: Mit ihrer Mutter hatte Alex auch schon was.", None),
     ]),
     dict(id="bus", bg="#4FA3C7", clock="08:00", title="IM BUS", lines=[
         ("Im Bus sitzen drei seiner Exen.", None),

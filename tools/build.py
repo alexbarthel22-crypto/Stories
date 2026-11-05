@@ -286,7 +286,7 @@ def build_audio(path):
     # Intro: Original-Ticks im Original-Rhythmus + Reveal-Burst
     tick = load_wav(os.path.join(ROOT, "assets", "sfx", "tick.wav"))
     for tk in TICKS:
-        add(fx, tick, tk - 0.004, getattr(script, "INTRO_SFX_GAIN", 1.0))
+        add(fx, tick, tk - 0.004, getattr(script, "INTRO_TICK_GAIN", getattr(script, "INTRO_SFX_GAIN", 1.0)))
     rev = load_wav(os.path.join(ROOT, "assets", "sfx", "reveal.wav"))
     add(fx, rev, REVEAL - sfx_meta["reveal_onset"], 2.6 * getattr(script, "INTRO_SFX_GAIN", 1.0))
     tdir = os.path.join(EP, "build", "tts")
