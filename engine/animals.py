@@ -361,3 +361,53 @@ def draw_parrot(cv, x, y, s=1.0, t=0.0, face=1):
     cv.circle(x + f * 7 * s, y - 53 * s, 2.5 * s, fill=INK)
     wing = [(x - f * 4 * s, y - 36 * s), (x - f * (18 + 10 * flap) * s, y - (34 + 26 * flap) * s), (x - f * 8 * s, y - 14 * s)]
     cv.poly(wing, fill=hexc("#2a9a5a"))
+
+
+# ---------------------------------------------------------------- fruit (sangria)
+def draw_citrus_slice(cv, x, y, r, kind="orange", flat=1.0, rot=0.0):
+    """citrus wheel: rind, white pith, juicy segments. flat < 1 squashes it (floating slice seen at an angle)"""
+    rind, flesh, seg = {"orange": ("#e8761e", "#ffa23a", "#ffd08a"), "lemon": ("#e9c21c", "#fbe36a", "#fff3b0"),
+                        "lime": ("#4f9a2c", "#9ccf4a", "#d9f0a0")}[kind]
+    ry = r * flat
+
+    def E(rr, col):
+        cv.ellipse(x - rr, y - rr * flat, x + rr, y + rr * flat, fill=hexc(col) if isinstance(col, str) else col)
+    E(r, rind)
+    E(r * 0.86, "#fff6e8")
+    E(r * 0.76, flesh)
+    for i in range(8):                       # segment membranes
+        a = rot + i * math.pi / 4
+        cv.line([(x, y), (x + math.cos(a) * r * 0.74, y + math.sin(a) * r * 0.74 * flat)], hexc(seg), max(1.0, r * 0.07),
+                cap=False)
+    for i in range(8):                       # juicy highlight dots
+        a = rot + (i + 0.5) * math.pi / 4
+        cv.circle(x + math.cos(a) * r * 0.48, y + math.sin(a) * r * 0.48 * flat, r * 0.07, fill=(255, 255, 255, 120))
+    cv.circle(x, y, r * 0.09, fill=hexc(seg))
+
+
+def draw_apple_cube(cv, x, y, s, rot=0.0):
+    pts = [(-1, -1), (1, -1), (1, 1), (-1, 1)]
+    c, si = math.cos(rot), math.sin(rot)
+    P = [(x + (px * c - py * si) * s, y + (px * si + py * c) * s) for px, py in pts]
+    cv.poly(P, fill=hexc("#f3e2b8"))
+    cv.line([P[0], P[1]], hexc("#c0392b"), max(1.5, s * 0.45), cap=False)      # red skin edge
+    cv.circle(x - s * 0.3, y + s * 0.2, s * 0.15, fill=hexc("#7a4f2e"))       # seed
+
+
+def draw_ice_cube(cv, x, y, s, rot=0.0):
+    c, si = math.cos(rot), math.sin(rot)
+    P = [(x + (px * c - py * si) * s, y + (px * si + py * c) * s) for px, py in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+    cv.poly(P, fill=(225, 240, 255, 120))
+    cv.line(P + [P[0]], (255, 255, 255, 190), max(1.5, s * 0.18), cap=False)
+    cv.line([(x - s * 0.5, y - s * 0.4), (x - s * 0.1, y - s * 0.6)], (255, 255, 255, 220), max(1.5, s * 0.2))
+
+
+def draw_orange_wedge(cv, x, y, r):
+    """orange slice stuck on a glass rim (half wheel)"""
+    cv.pieslice(x - r, y - r, x + r, y + r, 180, 360, fill=hexc("#e8761e"))
+    cv.pieslice(x - r * 0.84, y - r * 0.84, x + r * 0.84, y + r * 0.84, 180, 360, fill=hexc("#fff6e8"))
+    cv.pieslice(x - r * 0.74, y - r * 0.74, x + r * 0.74, y + r * 0.74, 180, 360, fill=hexc("#ffa23a"))
+    for i in range(1, 4):
+        a = math.pi + i * math.pi / 4
+        cv.line([(x, y), (x + math.cos(a) * r * 0.72, y + math.sin(a) * r * 0.72)], hexc("#ffd08a"), max(1.0, r * 0.08),
+                cap=False)

@@ -12,6 +12,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "engine"))
 from toolkit import *  # noqa
 import toolkit as _tk
+from animals import draw_citrus_slice, draw_apple_cube, draw_ice_cube, draw_orange_wedge
 
 # High-contrast text boxes for the colourful party scene: light boxes become dark navy with a yellow
 # frame, yellow boxes get a dark frame, green/red boxes a white frame. The question scene (dark
@@ -192,8 +193,8 @@ def draw_barrel(cv, t, stream_to=None):
     lx = cx - 20                     # label kept left of TikTok's icon column
     cv.rect(lx - 56, top + 112, lx + 56, top + 190, fill=hexc("#f7f1e6"), r=10)
     cv.text(lx, top + 140, "SANGRIA", 23, hexc(DRINK_D))
-    for k, col in enumerate(("#f0a03c", "#ffd34d", "#e2574c")):
-        cv.circle(lx - 22 + k * 22, top + 168, 7, fill=hexc(col))
+    for k, kind in enumerate(("orange", "lemon", "orange")):
+        draw_citrus_slice(cv, lx - 24 + k * 24, top + 168, 9, kind, flat=1.0, rot=k)
     # tap (brass) with lever
     opened = stream_to is not None
     ty = TAP[1]
@@ -223,7 +224,7 @@ def draw_table(cv):
         cv.poly([(cx - 17, top - gh), (cx + 17, top - gh), (cx + 13, top), (cx - 13, top)], fill=(230, 240, 248, 140))
         cv.poly([(cx - 15, top - gh * 0.6), (cx + 15, top - gh * 0.6), (cx + 13, top - 2), (cx - 13, top - 2)],
                 fill=hexc(DRINK))
-        cv.circle(cx + 10, top - gh * 0.95, 9, fill=hexc("#f0a03c"))
+        draw_orange_wedge(cv, cx + 12, top - gh * 0.9, 11)
 
 
 def _rot(pts, ang, piv):
@@ -232,6 +233,12 @@ def _rot(pts, ang, piv):
 
 
 STRAW_COLS = ("#ff6b6b", "#ffd34d", "#3f7fd9", "#37b26c")
+# fruit pieces inside the sangria: (kind, u = -0.5..0.5 across, v = height fraction, size, rotation)
+FRUIT = {"big": [("orange", -0.18, 0.22, 15, 0.2), ("apple", 0.22, 0.12, 9, 0.4), ("lemon", 0.2, 0.48, 12, 0.6),
+                 ("apple", -0.25, 0.55, 8, -0.3), ("ice", 0.02, 0.7, 10, 0.25), ("orange", -0.08, 0.78, 13, 1.0)],
+         "small": [("orange", 0.12, 0.25, 12, 0.3), ("apple", -0.2, 0.18, 7, 0.7), ("lemon", -0.12, 0.6, 10, 0.1),
+                   ("ice", 0.18, 0.66, 8, -0.2)]}
+FLOAT = {"big": [("orange", -0.2, 17, 0.4), ("lemon", 0.22, 14, 0.9)], "small": [("orange", 0.12, 14, 0.2)]}
 
 
 def draw_bucket(cv, name, bx, by, liters, tilt=0.0):
@@ -252,15 +259,42 @@ def draw_bucket(cv, name, bx, by, liters, tilt=0.0):
     if frac > 0.002:
         ly = by - h * frac
         wl = bw + (tw - bw) * frac
-        liquid = [(bx - wl / 2, ly), (bx + wl / 2, ly), (bx + bw / 2, by), (bx - bw / 2, by)]
-        cv.poly(R(liquid), fill=hexc(DRINK))
-        cv.line(R([(bx - wl / 2 + 3, ly + 2), (bx + wl / 2 - 3, ly + 2)]), hexc("#c23a50"), 5, cap=False)
-        if frac > 0.12:   # fruit slices floating
-            for k, (dx, col) in enumerate(((-0.22, "#f0a03c"), (0.18, "#ffd34d"))):
-                c = R([(bx + dx * wl, ly + 6)])[0]
-                cv.circle(c[0], c[1], 11, fill=hexc("#fff3d6"))
-                cv.circle(c[0], c[1], 8, fill=hexc(col))
-    cv.poly(R(body), fill=(210, 230, 245, 60))
+        W_at = lambda v: bw + (tw - bw) * v          # inner width at height fraction v
+        # liquid with depth gradient (darker towards the bottom)
+        bands = 6
+        for i in range(bands):
+            v0, v1 = frac * i / bands, frac * (i + 1) / bands
+            col = mix(hexc("#5e0a1e"), hexc("#b21d38"), (i + 1) / bands)
+            y0, y1 = by - h * v0, by - h * v1
+            cv.poly(R([(bx - W_at(v1) / 2, y1), (bx + W_at(v1) / 2, y1), (bx + W_at(v0) / 2, y0 + 0.5),
+                       (bx - W_at(v0) / 2, y0 + 0.5)]), fill=col)
+        # fruit sunk in the drink (only where the drink already reaches)
+        for (kind, u, v, sz, rot) in FRUIT[name]:
+            if v + sz / h * 0.9 > frac:
+                continue
+            fx, fy = bx + u * W_at(v), by - h * v
+            p = R([(fx, fy)])[0]
+            if kind == "apple":
+                draw_apple_cube(cv, p[0], p[1], sz * 0.55, rot + tilt)
+            elif kind == "ice":
+                draw_ice_cube(cv, p[0], p[1], sz * 0.6, rot + tilt)
+            else:
+                draw_citrus_slice(cv, p[0], p[1], sz, kind, flat=1.0, rot=rot)
+        # tiny rising bubbles
+        for i in range(4):
+            u = -0.3 + i * 0.2
+            vv = (0.15 + i * 0.21) % 1 * frac
+            p = R([(bx + u * W_at(vv), by - h * vv)])[0]
+            cv.circle(p[0], p[1], 2.2, fill=(255, 220, 225, 150))
+        # shiny surface + side highlight
+        cv.line(R([(bx - wl / 2 + 3, ly + 2), (bx + wl / 2 - 3, ly + 2)]), hexc("#d4485f"), 5, cap=False)
+        cv.line(R([(bx - wl / 2 + 8, ly + 8), (bx - bw / 2 + 8, by - 6)]), (255, 255, 255, 60), 5, cap=False)
+        # slices floating on top, seen at an angle
+        if frac > 0.15:
+            for (kind, u, sz, rot) in FLOAT[name]:
+                p = R([(bx + u * wl, ly + 2)])[0]
+                draw_citrus_slice(cv, p[0], p[1], sz, kind, flat=0.42, rot=rot)
+    cv.poly(R(body), fill=(210, 230, 245, 32))
     cv.line(R(body + [body[0]]), hexc("#9fb3c8"), 4, joint="curve", cap=False)
     cv.line(R([(bx - tw / 2 - 4, by - h), (bx + tw / 2 + 4, by - h)]), hexc("#7f93a8"), 7)
     hp = R([(bx - tw / 2 + 5 + k * (tw - 10) / 10, by - h - 0.33 * tw * math.sin(math.pi * k / 10)) for k in range(11)])

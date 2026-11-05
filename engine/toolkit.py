@@ -425,7 +425,8 @@ def draw_person(cv, x, y, st, phase=None, face=1, reach=None, umbrella=None, bou
                  (cx - gw * 0.75, cy + gh * 0.25)], fill=(230, 240, 248, 170))
         cv.poly([(cx - gw * 0.9, cy - gh * 0.35), (cx + gw * 0.9, cy - gh * 0.35), (cx + gw * 0.72, cy + gh * 0.22),
                  (cx - gw * 0.72, cy + gh * 0.22)], fill=hexc(cup))
-        cv.circle(cx + gw * 0.7, cy - gh * 0.75, gw * 0.45, fill=hexc("#f0a03c"))
+        from animals import draw_orange_wedge
+        draw_orange_wedge(cv, cx + gw * 0.55, cy - gh * 0.72, gw * 0.62)
         cv.circle(hand[0], hand[1], aw * 0.5, fill=skin)
     return hand_tip
 
