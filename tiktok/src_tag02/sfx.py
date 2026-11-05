@@ -190,7 +190,7 @@ def build_sfx(segs, N):
         L = lambda lt, snd: put(st + lt, snd)
         if k > 0: L(0, splat())
         sid = s['id']
-        if sid == 'intro': L(0.0, whoosh()); L(0.3, thud()); L(0.3, pop()); L(0.6, pop()); L(0.0, stadium_rec() / 0.6)
+        if sid == 'intro': L(0.0, whoosh()); L(0.3, thud() * 0.55); L(0.3, pop()); L(0.6, pop()); L(0.0, stadium_rec() / 0.6)
         elif sid == 'follow': L(0.6, pop())
         elif sid == 'first3':
             for x in c[1:4]: L(x, pop())
@@ -201,6 +201,10 @@ def build_sfx(segs, N):
         elif sid == 'problem':
             L(0.1, pop()); L(c[2], pop())
             for x in (0.5, 0.9, 1.3, 1.7): L(x, pop() * 0.7)
+            import wave as _w
+            _f = _w.open('buh_menge.wav'); _b = np.frombuffer(_f.readframes(_f.getnframes()), dtype=np.int16).astype(np.float32) / 32768
+            _b = _b[:int(((en - st) - 0.15) * SR)]; _b = _b * np.minimum(1, (len(_b) - np.arange(len(_b))) / (0.3 * SR))
+            L(0.15, _b * 0.35 / 0.6)
         elif sid == 'calc':
             L(0.0, pop())
             for x in (c[0], c[1], c[2]): L(x, whoosh())

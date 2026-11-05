@@ -67,12 +67,12 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Soundeffekte (leise gemischt): synthetisch in `src/sfx.py` (Szene 1: Stadionjubel aus der Pixabay-Aufnahme „crowd-cheering-379666“ (Pixabay-Lizenz), Ausschnitt Sekunde 1,85–4,36 (sofort laut), startet mit dem Video und läuft nur in Szene 1, `audio/stadion_intro_jubel.wav`; Schlamm-Platscher bei Schnitten, Flackern beim Flutlicht; keine Platz- und Hupen-Sounds; Münzen, Kassenklingeln, Pfiff, Fanfare, trauriges Posaunen-„wah-wah“, Benachrichtigungs-Ding)
 - Final: Gemini TTS (`gemini-3.8-flash-tts`), Stimme **Puck**
 - Regie: schneller TikTok-Creator, trocken-ironisch, Kunstpausen vor Pointen, „Fans: null“ traurig, Ziel und Folgen-Aufruf mit Energie
-- Ganzes Skript in **einem** Aufruf einsprechen, an den Pausen in Szenen schneiden, mit `atempo=0.85` auf das Referenztempo (ca. 150 Wörter pro Minute) bringen
+- Ganzes Skript **immer in einem einzigen Aufruf** einsprechen (sonst klingen Szenen unterschiedlich), „Follower“ in der Sprache vermeiden (klingt amerikanisch) – stattdessen „neue Fans“; Stil-Satz: „Read in German like an energetic, fast, dry and ironic young TikTok creator, the same voice and mood for every line, with a one-second pause between lines:“; an den Pausen in Szenen schneiden, mit `atempo=0.85` auf das Referenztempo (ca. 150 Wörter pro Minute) bringen
 - Stimmanalyse der Referenzvideos: `audio/analyse.json`
 - Entwurfsstimme (kostenlos, offline): espeak-ng mit MBROLA `mb-de6`
 
 ## Folge 2 (Tag 2)
-- Datei: `tiktok/tag02_fc_schlammloch_v6.mp4` (0:54), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
+- Datei: `tiktok/tag02_fc_schlammloch_v7.mp4` (0:48; komplette Sprache in EINEM Gemini-Aufruf für eine einheitliche Stimme), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
 - Die ersten drei Fans sitzen auf Klappstuhl 1–3 (Cartoon-Figuren mit Schal, keine echten Fotos):
   - Stuhl 1: **Eike** (@eikemzz) – rote Cap, graues Hoodie
   - Stuhl 2: **Tobi** (@tobiii1911) – braune Locken, oranges Hoodie
@@ -82,7 +82,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Geld: 83 Follower × 1 € = 83 € + 24 Kommentare × 2 € = 48 € + 500 € = **631 €**. Ausgegeben: **80 Klappstühle = 500 €** (Reihen am Spielfeldrand) und eine blau-gelbe **Plane = 131 €** über der Tribüne. **Vereinskasse danach: 0 €**
 - Die Nr. 9 hat morgens den Bus genommen und ist raus. Gesucht wird eine neue Nr. 9 aus der Community
 - Regel ab Tag 2: **1 Follower = 1 €, 1 Kommentar = 2 €**
-- Ablauf: TAG 2 (euphorisch gesprochen, Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“) → 83 Fans (Frodo hüpft neben dem Trainer) → die ersten 3 Fans auf der Tribüne → Problem: nur 3 Plätze (traurige, nasse Menge mit Sprechblasen „NASS!“, „WILL SITZEN!“, „MIR IST KALT!“, „BUUUH!“) → Rechnung (Vlad läuft im Tor hin und her) → 631 € → 80 Klappstühle in 8 Reihen → Plane drüber, 80 Fans setzen sich → „Aber dann die Enttäuschung…“: Bus mit dem Stürmer Nr. 9 fährt weg → Nr. 9 wird dramatisch rot durchgestrichen, „RAUS!“ → „Also suchen wir einen neuen Stürmer mit der Nummer neun“ (hoffnungsvoll, Trikot am Bügel) → 80 Klappstühle −500 €, Plane −131 €, Kasse 0 € → „Wir brauchen dich, um die Vereinskasse zu füllen!“ + Geld-Regel (🫵-Finger zeigt auf den Zuschauer) → Top-Kommentar: „Wer wird Nr. 9? Und was sollen wir vom Geld kaufen?“ → „Sonntag ist unser erstes Spiel gegen den SC Heuballen. Wir brauchen euch!“ (Wappen FC Schlammloch vs. SC Heuballen)
+- Ablauf: TAG 2 (euphorisch gesprochen, Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“) → 83 Fans (Frodo hüpft neben dem Trainer) → die ersten 3 Fans auf der Tribüne → Problem: nur 3 Plätze (traurige, nasse Menge buht – Buh-Chor aus Gemini-„Buuuh“ geschichtet, `src_tag02/buh_menge.wav` –, Sprechblasen „NASS!“, „WILL SITZEN!“, „MIR IST KALT!“, „BUUUH!“) → Rechnung (Vlad läuft im Tor hin und her) → 631 € → 80 Klappstühle in 8 Reihen → Plane drüber, 80 Fans setzen sich, Eike/Tobi/Leo klein vorne in der ersten Reihe → „Aber dann die Enttäuschung…“: Bus mit dem Stürmer Nr. 9 fährt weg → Nr. 9 wird dramatisch rot durchgestrichen, „RAUS!“ → „Also suchen wir einen neuen Stürmer mit der Nummer neun“ (hoffnungsvoll, Trikot am Bügel) → 80 Klappstühle −500 €, Plane −131 €, Kasse 0 € → „Wir brauchen dich, um die Vereinskasse zu füllen!“ + Geld-Regel (großes, mittiges „DICH!“) → Top-Kommentar: „Wer wird Nr. 9? Und was sollen wir vom Geld kaufen?“ → „Sonntag ist unser erstes Spiel gegen den SC Heuballen. Wir brauchen euch!“ (Wappen FC Schlammloch vs. SC Heuballen)
 
 ## Stand nach Tag 2
 - Fans: 83 · Vereinskasse: 0 €

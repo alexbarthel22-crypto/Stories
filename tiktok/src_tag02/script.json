@@ -37,10 +37,10 @@
  },
  {
   "id": "calc",
-  "say": "Dreiundachtzig Follower, vierundzwanzig Kommentare, plus fünfhundert in der Kasse.",
+  "say": "Dreiundachtzig neue Fans, vierundzwanzig Kommentare, plus fünfhundert in der Kasse.",
   "cap": [
-   "83 FOLLOWER,",
-   "24 KOMMENTARE,",
+   "83 NEUE *FANS,",
+   "24 *KOMMENTARE,",
    "PLUS *500",
    "IN DER KASSE."
   ]
@@ -73,10 +73,10 @@
  },
  {
   "id": "bus",
-  "say": "Aber dann die Enttäuschung. Unser Stürmer, die Nummer neun, hat heute Morgen den Bus genommen.",
+  "say": "Aber dann die Enttäuschung: Unser Stürmer, die Nummer neun, hat heute Morgen den Bus genommen.",
   "cap": [
    "ABER DANN",
-   "DIE !ENTTÄUSCHUNG...",
+   "DIE !ENTTÄUSCHUNG:",
    "UNSER *STÜRMER,",
    "DIE *NUMMER 9,",
    "HAT HEUTE MORGEN",
@@ -113,12 +113,12 @@
  },
  {
   "id": "rule",
-  "say": "Wir brauchen dich, um die Vereinskasse zu füllen! Jeder Follower bringt einen Euro, jeder Kommentar zwei.",
+  "say": "Wir brauchen dich, um die Vereinskasse zu füllen! Jeder neue Fan bringt einen Euro, jeder Kommentar zwei.",
   "cap": [
    "WIR BRAUCHEN *DICH,",
    "UM DIE *VEREINSKASSE",
    "ZU FÜLLEN!",
-   "JEDER *FOLLOWER: *1 €,",
+   "JEDER NEUE *FAN: *1 €,",
    "JEDER *KOMMENTAR: *2 €."
   ]
  },

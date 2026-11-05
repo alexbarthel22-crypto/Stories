@@ -123,11 +123,11 @@ function calcBoard(t, x, y, lines, times) {
 }
 
 // 80 Fans setzen sich nacheinander auf die Stuhlreihen (fallen von oben auf ihren Platz)
-function seatedCrowd(t, x0, y0, cols, rows, dx, dy, s, t0, step) {
+function seatedCrowd(t, x0, y0, cols, rows, dx, dy, s, t0, step, skip = []) {
   let out = '';
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
     const k = r * cols + c, tt = t - (t0 + ((k * 37) % (rows * cols)) * step);
-    if (tt <= 0) continue;
+    if (tt <= 0 || skip.includes(k)) continue;
     const sc = s * (1 + r * 0.08), seatY = y0 + r * dy - 115 * sc, drop = Math.max(0, 1 - tt / 0.18);
     out += miniFan(x0 + c * dx + (r % 2) * dx * 0.5 - dx * 0.25, seatY - drop * 120 + 4 * sc * 10, sc * 2.2, k + 3);
   }

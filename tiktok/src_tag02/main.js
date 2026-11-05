@@ -76,7 +76,8 @@ const SCENES = {
   tarp(t, d, m) {
     let s = field(t, 720, {goal: false, touchY: 1310});
     s += chairRows(9, 95, 800, 10, 8, 99, 66, 0.17, 0, 0);
-    s += seatedCrowd(t, 95, 800, 10, 8, 99, 66, 0.17, 0.35, 0.016);
+    s += seatedCrowd(t, 95, 800, 10, 8, 99, 66, 0.17, 0.35, 0.016, [74, 75, 76]);
+    [0, 1, 2].forEach(i => { const x = 95 + (4 + i) * 99 + 0.5 * 99 - 99 * 0.25; s += place(fanFigure(Object.assign({blink: blinkAt(t, i)}, FIRST_FANS[i].o), true), x, 800 + 7 * 66, 0.17 * 1.56 * 0.62); });
     s += tarp(t, 45, 1035, 610, 1310, easeOut(clamp(t / 0.35, 0, 1)));
     return cam(1.0, 540, 960, s) +
       popG(t, 0.0, 540, 330, badge(540, 330, 'PLANE DRÜBER', {kind: 'pitch', fs: 56})) +
@@ -134,8 +135,8 @@ const SCENES = {
     }
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(540, 1180, 0.95) + cashBox(540, 1015, 0.8, 'empty') + coins +
         place(coach({mouth: m, wave: t < c[3] ? Math.sin(t * 9) : 0, blink: blinkAt(t)}), 170, 1600, 0.85)) +
-      popG(t, c[0], 520, 330, badge(520, 330, 'WIR BRAUCHEN DICH!', {kind: 'red', fs: 54, rot: -2})) +
-      (t >= c[0] + 0.1 && t < c[3] ? popG(t, c[0] + 0.1, 820, 760, `<g transform="translate(820 760) scale(${1 + 0.06 * Math.sin(t * 12)})"><text x="0" y="95" text-anchor="middle" font-family="Noto Color Emoji" font-size="260">🫵🏻</text></g>`) : '') +
+      popG(t, c[0], 520, 400, badge(520, 400, 'WIR BRAUCHEN', {kind: 'red', fs: 60, rot: -2})) +
+      (t >= c[0] && t < c[3] ? popG(t, c[0] + 0.1, 540, 700, `<g transform="translate(540 700) scale(${1 + 0.04 * Math.sin(t * 10)}) translate(-540 -700)">${bigText(540, 790, 'DICH!', '#FFD31A', 300)}</g>`) : '') +
       popG(t, c[3], 520, 470, badge(520, 470, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 46})) +
       popG(t, c[4], 520, 590, badge(520, 590, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 46, rot: -2}));
   },
