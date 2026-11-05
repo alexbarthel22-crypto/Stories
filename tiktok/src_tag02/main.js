@@ -26,6 +26,7 @@ const SCENES = {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
     return cam(z, 540, 1060 - 30 * e, field(t, 1060, {goalX: 790}) + place(coach({mouth: m, blink: blinkAt(t)}), 470, 1290, 0.6)) +
       `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${popG(t, 0.3, 540, 440, badge(540, 440, 'TAG 2', {kind: 'pitch', fs: 150, pad: 120}))}</g>` +
+      popG(t, 0.6, 540, 610, badge(540, 610, 'ICH GRÜNDE EINEN FUSSBALLVEREIN', {bg: '#FFD31A', fs: 44, ball: true})) +
       introBall(t);
   },
   first3(t, d, m) {
@@ -96,10 +97,20 @@ const SCENES = {
     return cam(1.0, 540, 960, s) + popG(t, 0.0, 540, 420, badge(540, 420, 'HEUTE MORGEN', {fs: 60}));
   },
   out(t, d, m) {
-    const st = popG(t, 0.15, 540, 940, `<g transform="rotate(-10 540 940)"><rect x="290" y="855" width="500" height="170" rx="20" fill="#fff" fill-opacity=".85" stroke="#E5483A" stroke-width="16"/>
-      <text x="540" y="980" text-anchor="middle" ${FONT} font-size="120" fill="#E5483A">RAUS!</text></g>`);
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 780}) + busStop(800, 1500, 1.0)) +
-      nameCard(80, 600, '9', '???', 'STURM · BUS GENOMMEN') + st;
+    // Nr. 9 wird dramatisch durchgestrichen: zwei rote Pinselstriche, Bildschuetteln, roter Blitz
+    const k1 = clamp((t - 0.05) / 0.18, 0, 1), k2 = clamp((t - 0.25) / 0.18, 0, 1);
+    const shake = t < 0.6 ? Math.sin(t * 90) * 14 * Math.exp(-t * 5) : 0;
+    const L = 760;
+    const strokes = `<g stroke-linecap="round" fill="none">
+      <path d="M240 600 L840 1220" stroke="#111" stroke-width="64" stroke-dasharray="${L * 1.15}" stroke-dashoffset="${L * 1.15 * (1 - k1)}"/>
+      <path d="M240 600 L840 1220" stroke="#E5483A" stroke-width="48" stroke-dasharray="${L * 1.15}" stroke-dashoffset="${L * 1.15 * (1 - k1)}"/>
+      <path d="M840 600 L240 1220" stroke="#111" stroke-width="64" stroke-dasharray="${L * 1.15}" stroke-dashoffset="${L * 1.15 * (1 - k2)}"/>
+      <path d="M840 600 L240 1220" stroke="#E5483A" stroke-width="48" stroke-dasharray="${L * 1.15}" stroke-dashoffset="${L * 1.15 * (1 - k2)}"/></g>`;
+    const flash = t > 0.25 && t < 0.6 ? `<rect width="1080" height="1920" fill="#E5483A" opacity="${0.35 * (1 - (t - 0.25) / 0.35)}"/>` : '';
+    return `<g transform="translate(${shake} 0)">` + cam(1.0, 540, 960, field(t, 1080, {goalX: 780}) +
+        `<g opacity=".85">${place(busguy({mood: 'sad'}), 540, 1300, 1.0)}</g>`) +
+      nameCard(80, 400, '9', '???', 'STÜRMER · BUS GENOMMEN') + strokes +
+      popG(t, 0.45, 540, 1150, badge(540, 1150, 'RAUS!', {kind: 'red', fs: 90, rot: -8})) + `</g>` + flash;
   },
   search(t, d, m) {
     const sway = Math.sin(t * 2) * 5;

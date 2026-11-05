@@ -211,7 +211,7 @@ def build_sfx(segs, N):
             for k in range(21): L(0.15 + k * 0.06, clack() * 0.5)
         elif sid == 'tarp': L(0.0, whoosh()); L(0.55, thud()); L(c[2], pop())
         elif sid == 'kasse0': L(0.0, pop()); L(0.3, clack()); L(c[1], sad_trombone(max(0.5, (en - st) - c[1] - 0.12)))
-        elif sid == 'out': L(0.15, thud()); L(0.15, clack())
+        elif sid == 'out': L(0.05, whoosh()); L(0.2, thud()); L(0.25, whoosh()); L(0.42, thud()); L(0.45, clack())
         elif sid == 'search': L(0.0, pop()); L(c[2], pop())
         elif sid == 'chairs':
             L(0.0, pop()); L(0.9, pop())

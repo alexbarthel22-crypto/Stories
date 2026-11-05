@@ -1,13 +1,13 @@
 // Tag 2: Fans, Mini-Fans, Plane, Bus, Rechentafel
 // Die ersten drei Fans (Cartoon-Figuren, keine echten Fotos), sitzend auf Klappstuehlen.
 const FIRST_FANS = [
-  {handle: 'EIKE', o: {jersey: '#9AA3AE', trim: '#2F7FD8', skin: '#F2CBA4', browCol: '#3A2A20',
+  {handle: '@eikemzz', o: {jersey: '#9AA3AE', trim: '#2F7FD8', skin: '#F2CBA4', browCol: '#3A2A20',
     hair: `<path d="M104 180 Q120 70 250 70 Q380 70 396 180 Z" fill="#E5483A"/>`,
     hairOver: `<path d="M110 176 L390 176" stroke="#111" stroke-width="7"/><rect x="226" y="160" width="48" height="18" rx="4" fill="#B83226" stroke="#111" stroke-width="4"/>`}},
-  {handle: 'TOBI', o: {jersey: '#F28A2E', trim: '#FFD31A', skin: '#E7B98E', browCol: '#5A3416',
+  {handle: '@tobiii1911', o: {jersey: '#F28A2E', trim: '#FFD31A', skin: '#E7B98E', browCol: '#5A3416',
     hair: `<path d="M100 210 Q100 70 250 70 Q400 70 400 210 Q370 150 250 150 Q130 150 100 210Z" fill="#6B4226"/>`,
     hairOver: `<path d="M120 100 q20 -30 50 -10 q20 -30 50 -6 q30 -26 60 -2 q30 -22 54 6 q30 -6 40 20" fill="none" stroke="#6B4226" stroke-width="28" stroke-linecap="round"/>`}},
-  {handle: 'LEO', o: {jersey: '#2A2A2E', trim: '#FFD31A', skin: '#F2CCA6', browCol: '#9A9A9A',
+  {handle: '@leo.hro1', o: {jersey: '#2A2A2E', trim: '#FFD31A', skin: '#F2CCA6', browCol: '#9A9A9A',
     hair: `<path d="M100 200 Q104 96 250 92 Q396 96 400 200 Q380 150 250 146 Q120 150 100 200Z" fill="#A8A8A8"/>`,
     face: `<path d="M196 292 Q222 274 250 288 Q278 274 304 292 Q300 312 272 306 Q250 298 228 306 Q200 312 196 292Z" fill="#8A8A8A" stroke="#111" stroke-width="5"/>`, mouthY: 318}},
 ];

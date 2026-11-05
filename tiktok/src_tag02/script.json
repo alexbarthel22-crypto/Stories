@@ -1,11 +1,11 @@
 [
  {
   "id": "intro",
-  "say": "Tag zwei. Ich gründe einen Fußballverein.",
+  "say": "Tag zwei! Ich gründe einen Fußballverein!",
   "cap": [
-   "TAG ZWEI.",
+   "TAG ZWEI!",
    "ICH GRÜNDE EINEN",
-   "*FUSSBALLVEREIN."
+   "*FUSSBALLVEREIN!"
   ]
  },
  {
@@ -75,9 +75,10 @@
  },
  {
   "id": "bus",
-  "say": "Und dann das: Unser Stürmer, die Nummer neun, hat heute Morgen den Bus genommen.",
+  "say": "Aber dann die Enttäuschung. Unser Stürmer, die Nummer neun, hat heute Morgen den Bus genommen.",
   "cap": [
-   "UND DANN DAS:",
+   "ABER DANN",
+   "DIE !ENTTÄUSCHUNG...",
    "UNSER *STÜRMER,",
    "DIE *NUMMER 9,",
    "HAT HEUTE MORGEN",
