@@ -278,9 +278,9 @@ def build_audio(path):
     # Intro: Original-Ticks im Original-Rhythmus + Reveal-Burst
     tick = load_wav(os.path.join(ROOT, "assets", "sfx", "tick.wav"))
     for tk in TICKS:
-        add(fx, tick, tk - 0.004, 1.0)
+        add(fx, tick, tk - 0.004, getattr(script, "INTRO_SFX_GAIN", 1.0))
     rev = load_wav(os.path.join(ROOT, "assets", "sfx", "reveal.wav"))
-    add(fx, rev, REVEAL - sfx_meta["reveal_onset"], 2.6)
+    add(fx, rev, REVEAL - sfx_meta["reveal_onset"], 2.6 * getattr(script, "INTRO_SFX_GAIN", 1.0))
     tdir = os.path.join(EP, "build", "tts")
     add(voice, load_wav(os.path.join(tdir, "intro_pre.wav")), 0.12)
     add(voice, load_wav(os.path.join(tdir, "intro_role.wav")), REVEAL + 0.3)
@@ -308,7 +308,8 @@ def build_audio(path):
         from scipy.ndimage import maximum_filter1d, uniform_filter1d
         m = np.zeros(n)
         start = REVEAL + 0.4                     # Original-Intro-Sounds bleiben unberührt
-        th = theme(TOTAL - start + 0.3, SR)
+        style = script.MUSIC if isinstance(script.MUSIC, str) else "lofi"
+        th = theme(TOTAL - start + 0.3, SR, style=style)
         add(m, th, start)
         # Ducking: Musik ~22 dB unter Stimmspitze, während Sprache weitere ~8 dB leiser
         env = np.sqrt(np.maximum(uniform_filter1d(voice ** 2, int(0.03 * SR)), 0))

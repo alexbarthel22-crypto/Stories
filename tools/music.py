@@ -68,11 +68,55 @@ def _loop(sr, with_melody=True, seed=0):
     return out
 
 
-def theme(seconds, sr=44100):
-    """Theme in gewünschter Länge: Loops mit/ohne Melodie im Wechsel, weich ein- und ausgeblendet."""
+# ---------------------------------------------------------------- Stil 2: "marimba"
+# Fröhlich-verspielt, 112 BPM, C–G–Am–F, Marimba-Hook, gezupfter Bass, Fingerschnipser.
+M_BPM = 112
+M_BEAT = 60 / M_BPM
+M_BAR = 4 * M_BEAT
+M_CHORDS = [(60, 64, 67), (55, 59, 62), (57, 60, 64), (53, 57, 60)]
+M_BASS = [36, 43, 45, 41]
+M_HOOK = [(0, 0, 72, .5), (0, .5, 76, .5), (0, 1, 79, .5), (0, 2, 76, .5), (0, 2.5, 74, .5), (0, 3, 72, 1),
+          (1, 0, 71, .5), (1, .5, 74, .5), (1, 1, 79, 1), (1, 2.5, 77, .5), (1, 3, 74, 1),
+          (2, 0, 72, .5), (2, .5, 76, .5), (2, 1, 81, .5), (2, 2, 79, .5), (2, 2.5, 76, .5), (2, 3, 72, 1),
+          (3, 0, 77, .5), (3, .5, 76, .5), (3, 1, 74, .5), (3, 1.5, 72, .5), (3, 2, 74, 2)]
+
+
+def _marimba(f, dur, sr):
+    return _tone(f, dur, sr, [(1, 1), (4.0, .18), (10, .04)], 7.0, 0.002)
+
+
+def _loop_marimba(sr, with_melody=True, seed=0):
+    n = int(4 * M_BAR * sr)
+    keys, bass, mel, perc = (np.zeros(n) for _ in range(4))
+    rnd = np.random.default_rng(seed + 100)
+    for b in range(4):
+        t0 = b * M_BAR
+        for e in range(8):                                     # Akkord-Arpeggio in Achteln
+            if e % 2 == 1:
+                m = M_CHORDS[b][(e // 2) % 3] + 12
+                _add(keys, _marimba(hz(m), 0.5, sr), t0 + e * M_BEAT / 2, sr, 0.35)
+        for beat in (0, 2):
+            _add(bass, _tone(hz(M_BASS[b]), 0.45, sr, [(1, 1), (2, .4), (3, .15)], 6.0, 0.004), t0 + beat * M_BEAT, sr, 1.0)
+            _add(bass, _tone(hz(M_BASS[b] + 7), 0.35, sr, [(1, 1), (2, .3)], 7.0, 0.004), t0 + (beat + 1) * M_BEAT, sr, 0.6)
+        for beat in (1, 3):                                    # Fingerschnipser
+            sn = rnd.standard_normal(int(0.04 * sr)) * np.exp(-np.arange(int(0.04 * sr)) / sr * 90)
+            _add(perc, sn, t0 + beat * M_BEAT, sr, 0.18)
+    if with_melody:
+        for bar, beat, m, L in M_HOOK:
+            _add(mel, _marimba(hz(m), L * M_BEAT + 0.4, sr), bar * M_BAR + beat * M_BEAT, sr, 0.9)
+    hp = butter(2, 1800, "highpass", fs=sr, output="sos")
+    perc = sosfilt(hp, perc)
+    lp = butter(2, 5000, "lowpass", fs=sr, output="sos")
+    return sosfilt(lp, 0.6 * keys + 0.7 * bass + 0.55 * mel + 0.5 * perc)
+
+
+def theme(seconds, sr=44100, style="lofi"):
+    """Theme in gewünschter Länge: Loops mit/ohne Melodie im Wechsel, weich ein- und ausgeblendet.
+    style: "lofi" (ruhig, 96 BPM) oder "marimba" (fröhlich, 112 BPM)."""
+    loop = _loop_marimba if style == "marimba" else _loop
     parts, total, i = [], 0, 0
     while total < seconds * sr:
-        p = _loop(sr, with_melody=(i % 2 == 0), seed=i)
+        p = loop(sr, with_melody=(i % 2 == 0), seed=i)
         parts.append(p); total += len(p); i += 1
     y = np.concatenate(parts)[: int(seconds * sr)]
     fi, fo = int(1.2 * sr), int(2.0 * sr)
@@ -83,4 +127,5 @@ def theme(seconds, sr=44100):
 
 if __name__ == "__main__":
     import sys, soundfile as sf
-    sf.write(sys.argv[1], theme(float(sys.argv[2]) if len(sys.argv) > 2 else 20), 44100)
+    sf.write(sys.argv[1], theme(float(sys.argv[2]) if len(sys.argv) > 2 else 20, 44100,
+                                sys.argv[3] if len(sys.argv) > 3 else "lofi"), 44100)
