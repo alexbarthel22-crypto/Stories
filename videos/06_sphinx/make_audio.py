@@ -11,7 +11,7 @@ a1, a2, a3, t_end = st("Am Morgen"), st("Am Mittag"), st("Und am Abend"), st("HÃ
 tq, tsol = st("PAUSE"), st("Hier kommt")
 ev = [
     # --- opener: WARTE!
-    ("impact", 0.0, 0.95), ("gong", 0.0, 0.35), ("whoosh", 0.02, 0.5),
+    ("impact", 0.0, 1.0), ("gong", 0.0, 0.4), ("drum", 0.0, 0.6), ("whoosh", 0.02, 0.5),
     ("pop", mv.word_time("WARTE", "Dieses", 0.1), 0.45), ("pop", mv.word_time("WARTE", "niemand", 0.1), 0.5),
     ("wind", 0.0, 0.35, tq + 0.3),                                           # desert wind under the story
     # --- Egypt intro: camera flight to the Sphinx
@@ -41,7 +41,21 @@ ev = [
     *[(("clink" if k % 2 else "step"), a3 + 0.3 + k * 0.52, 0.5) for k in range(int((t_end - a3 - 0.4) / 0.52))],
     # --- outro
     ("whoosh", t_end - 0.15, 0.6), ("sistrum", t_end, 0.5), ("pop", t_end, 0.7), ("pop", t_end + 0.2, 0.6),
-    ("pop", st("Schreib's") + 0.4, 0.7), ("ding", st("Schreib's") + 2.0, 0.6)]
-mix(os.path.join(HERE, "voice.wav"), mv.END, ev, os.path.join(HERE, "mix.wav"),
+    ("pop", st("Schreib's") + 0.3, 0.7), ("ding", st("Schreib's") + 1.3, 0.6)]
+# shout "WARTE!" louder: boost the first word with soft saturation
+import numpy as np, soundfile as sf
+v, sr = sf.read(os.path.join(HERE, "voice.wav"), dtype="float32")
+env = np.convolve(np.abs(v), np.ones(int(0.03 * sr)) / int(0.03 * sr), mode="same")
+quiet = np.where(env[int(0.25 * sr):int(1.2 * sr)] < 0.02)[0]
+w_end = int(0.25 * sr) + (quiet[0] if len(quiet) else int(0.45 * sr))
+g = np.ones(len(v), np.float32)
+g[:w_end] = 2.6
+ramp = int(0.05 * sr)
+g[w_end:w_end + ramp] = np.linspace(2.6, 1.0, ramp)
+v = v * 0.62                                    # rest of the voice a bit lower, WARTE stands out
+v = np.tanh(v * g * 1.3) / np.tanh(1.3)
+sf.write(os.path.join(HERE, "cache", "voice_boost.wav"), v, sr)
+print("WARTE boosted until", round(w_end / sr, 2), "s")
+mix(os.path.join(HERE, "cache", "voice_boost.wav"), mv.END, ev, os.path.join(HERE, "mix.wav"),
     music_path=os.path.join(HERE, "..", "..", "assets", "music", "raetsel_theme.mp3"), music_db=-16.0)
 print("mix.wav", round(mv.END, 2), "s")

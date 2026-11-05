@@ -491,7 +491,7 @@ KEYS = ["WARTE", "Im alten", "Wer vorbei", "Was geht", "PAUSE", "Kleiner Tipp", 
         "Es ist der", "Am Morgen", "Am Mittag", "Und am Abend", "Hättest", "Schreib's"]
 S, E = anchors(TIM, KEYS)
 K = {k: i for i, k in enumerate(KEYS)}
-END = E[-1] + 2.4
+END = E[-1] + 0.8
 XFADE = 0.3
 
 
@@ -800,8 +800,6 @@ def _pill_tile(words, base, bg, fg, pops=None, depth=12, Z=2):
         d.rounded_rectangle([x0 * Z, (y0 + k) * Z, x1 * Z, (y1 + k) * Z], radius=rad, fill=side)
     d.rounded_rectangle([x0 * Z, y0 * Z, x1 * Z, y1 * Z], radius=rad, fill=hexc(bg), outline=hexc("#1d1b33"),
                         width=4 * Z)
-    d.rounded_rectangle([(x0 + 10) * Z, (y0 + 6) * Z, (x1 - 10) * Z, (y0 + (y1 - y0) * 0.42) * Z], radius=rad,
-                        fill=(255, 255, 255, 55))   # gloss
     x = x0 + padx
     cy = (y0 + (y1 - y0) / 2) * Z
     for j, w in enumerate(words):
@@ -878,13 +876,13 @@ def karaoke(frame, t, lines, seg_key, ys):
         b = base
         while True:
             tile, box = _pill_tile(line, b, bg, fg, pops)
-            if box[2] - box[0] <= 780 or b < 40:
+            if box[2] - box[0] <= (780 if len(line) == 1 else 780) or b < 40:
                 break
             b -= 3
         single = len(line) == 1
         sc = (1 + 0.12 * pops[0]) if single else 1.0
-        if li == 0 and t < 0.35:             # slam-in of WARTE at the very start
-            sc *= 1 + 0.22 * (1 - ease_out_back(prog(t, 0, 0.35)))
+        if li == 0:                          # WARTE pops up from small to big with overshoot
+            sc *= 0.2 + 0.8 * ease_out_back(prog(t, 0, 0.36))
         if single:
             burst(frame, OUT_W / 2, ys[li], max(pops[0], 1 - prog(t, 0.0, 0.7)) * fade, t)
         tile = tile.rotate(rot, resample=Image.BICUBIC, expand=True)
@@ -901,7 +899,7 @@ def karaoke(frame, t, lines, seg_key, ys):
         i += len(line)
 
 
-INTRO_LINES = [(["WARTE!"], "#e2574c", "#ffffff", -3, 172),
+INTRO_LINES = [(["WARTE!"], "#e2574c", "#ffffff", -3, 240),
                (["DIESES", "RÄTSEL", "KANN"], "#fff6e6", "#2b2140", 2, 92),
                (["NIEMAND", "LÖSEN!"], "#ffd34d", "#2b2140", -2, 104)]
 
@@ -939,7 +937,7 @@ def scene_story(t):
         frame = Image.blend(frame, Image.new("RGB", frame.size, (15, 10, 30)), 0.32 * (1 - prog(t, t1, t1 + 0.6)))
         if t < 0.22:
             frame = Image.blend(frame, Image.new("RGB", frame.size, (255, 250, 230)), 0.45 * (1 - t / 0.22))
-    karaoke(frame, t, INTRO_LINES, "WARTE", [590, 860, 1010])
+    karaoke(frame, t, INTRO_LINES, "WARTE", [555, 845, 995])
     if t1 + 0.3 <= t < t2 + 0.2:
         pill3d(frame, OUT_W / 2, 330, "ALTES ÄGYPTEN", 68, bg="#ffd34d", rot=-2,
                scale=ease_out_back(prog(t, t1 + 0.3, t1 + 0.65)))
@@ -1140,13 +1138,13 @@ def scene_outro(t):
     if t > t1:
         pill3d(img, OUT_W / 2, 845, "SCHREIB'S IN DIE KOMMENTARE", 42, bg="#ffffff",
                scale=ease_out_back(prog(t, t1, t1 + 0.35)))
-        followed = t > t1 + 2.0
+        followed = t > t1 + 1.3
         txt = "GEFOLGT  ✓" if followed else "+  FOLGEN"
         bg = "#37b26c" if followed else "#e2574c"
         pulse = 1 + (0.06 * math.sin(t * 10) if not followed else 0)
-        pill3d(img, OUT_W / 2, 975, txt, 74, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
+        pill3d(img, OUT_W / 2, 975, txt, 74, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.3, t1 + 0.6)) * pulse)
         pill3d(img, OUT_W / 2, 1100, "MORGEN: NEUES RÄTSEL", 50, bg="#fff6e6",
-               scale=ease_out_back(prog(t, t1 + 1.0, t1 + 1.35)))
+               scale=ease_out_back(prog(t, t1 + 0.7, t1 + 1.0)))
     return img
 
 
