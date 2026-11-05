@@ -110,6 +110,6 @@ Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung). 
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein Fake-Feminist 📢 „The future is female“ auf dem Shirt – aber Leas Idee im Meeting klaut er trotzdem 🙄 Und im Haushalt „hilft“ er nur 🧽 Kennst du auch so einen Fake-Feministen? Markier ihn! 👇 Und was soll Alex morgen sein?
+ein Fake-Feminist 📢 „Männer sind das Problem!“ – sagt der Mann, der Leas Idee im Meeting klaut 🙄 Aber er ist ja anders 😇 Kennst du auch so einen Fake-Feministen? Markier ihn! 👇 Und was soll Alex morgen sein?
 
 #fakefeminist #redflags #feminismus #gleichberechtigung #dating #relatable #comedy #fürdich #fyp

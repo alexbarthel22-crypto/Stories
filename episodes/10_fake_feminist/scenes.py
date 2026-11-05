@@ -273,7 +273,7 @@ def sc_home(c, S):
         card(c, W / 2, 680, 900, 560, 1)
         text(c, "HAUSHALT", W / 2, 460, 48, INK, FONT_HEAD)
         tasks = ["Kochen", "Wäsche", "Bad", "Einkaufen", "Müll"]
-        text(c, "Lea", 300, 530, 38, INK, FONT_HEAD); text(c, "Alex", 780, 530, 38, INK, FONT_HEAD)
+        text(c, "Jana", 300, 530, 38, INK, FONT_HEAD); text(c, "Alex", 780, 530, 38, INK, FONT_HEAD)
         for i, tk in enumerate(tasks):
             y = 590 + i * 62
             text(c, tk, W / 2, y, 30, "#555555", FONT_BOLD)
@@ -288,29 +288,49 @@ def sc_home(c, S):
         bubble(c, "Ich helfe ja im Haushalt! 😇", 815, 1150, pop(t, S.at(0, 0.3)) * out_fade(t, a1), tail=(-0.5, 1), size=40, max_w=340)
 
 
-def sc_date(c, S):
+def sc_men(c, S):
     t, a1 = S.t, S.at(1)
     if t < a1 + 0.2:
         o = out_fade(t, a1)
-        def bill():
-            c.save(); c.translate(W / 2, 680); c.rotate(-0.03)
-            rrect(c, -300, -280, 600, 560, 16); fill(c, "#FFFDF5")
-            rrect(c, -300, -280, 600, 560, 16); c.set_line_width(5); src(c, INK); c.stroke()
-            text(c, "RECHNUNG", 0, -210, 50, INK, FONT_HEAD)
-            for i, (it, pr) in enumerate((("Pasta", "14,90"), ("Pizza", "12,50"), ("2× Cola", "7,80"))):
-                text(c, it, -240, -120 + i * 70, 36, "#333333", FONT_BOLD, anchor="l")
-                text(c, pr + " €", 240, -120 + i * 70, 36, "#333333", FONT_BOLD, anchor="r")
-            c.set_dash([12, 8]); c.set_line_width(4); src(c, INK); c.move_to(-240, 110); c.line_to(240, 110); c.stroke(); c.set_dash([])
-            text(c, "÷ 2 = Gleichberechtigung ✅", 0, 190, 34, "#2FA36B", FONT_HEAD)
+        s = pop(t, S.at(0, 0.0)) * o
+        x0, y0, w, h = phone(c, W / 2, 680, 560, 620, s, screen="#FFFFFF")
+        def screen():
+            c.save(); rrect(c, x0, y0, w, h, 42); c.clip()
+            rrect(c, x0, y0, w, 110, 0); fill(c, "#F4F4F6")
+            c.arc(x0 + 60, y0 + 62, 28, 0, 2 * math.pi); fill(c, ALEX_BASE["hair"])
+            text(c, "alex.ally", x0 + 105, y0 + 62, 32, INK, FONT_HEAD, anchor="l")
+            text_block(c, "Männer sind das Problem. ALLE Männer! 😤", W / 2, y0 + 270, 46, w - 70, INK, FONT_HEAD)
+            text(c, "#allmen #feminist", W / 2, y0 + 420, 30, "#3D8BFF", FONT_BOLD)
+            likes = int(512 * ease_out_cubic((t - S.at(0, 0.4)) / 1.2)) if t > S.at(0, 0.4) else 0
+            text(c, f"♥ {likes}", x0 + 40, y0 + 520, 34, "#E23B3B", FONT_HEAD, anchor="l")
             c.restore()
-        scaled(c, W / 2, 680, pop(t, S.at(0, 0.0)) * o, bill)
+        scaled(c, W / 2, 680, s, screen)
+        alex_bottom(c, S, "angry", "phone", "📱")
     else:
-        u = ease_in_out((t - a1) / 1.2)
-        emoji(c, "📦", 790, 820 - 30 * math.sin(t * 6), 260)
-        text(c, "UMZUG", 790, 1010, 40, "#FFFFFF", FONT_HEAD)
-        bubble(c, "Du bist doch eine starke Frau 💪", 380, 965, pop(t, S.at(1, 0.4)), tail=(-0.3, 1), size=38, max_w=500)
-    alex_bottom(c, S, "smug", "phone" if t > a1 else "idle", "📱" if t > a1 else None, x=320)
-    lea(c, S, "happy" if t < a1 else "angry")
+        s = pop(t, a1 + 0.05)
+        def lineup():
+            card(c, W / 2, 680, 980, 560, 1)
+            text(c, "ALLE MÄNNER", W / 2, 460, 52, INK, FONT_HEAD)
+            for i, x in enumerate((150, 300, 450, 630, 780, 930)):
+                person(c, x, 880, 300, person_spec(160 + i), t, "neutral", bob=False, blink_seed=i)
+            if t > S.at(1, 0.15):
+                c.set_line_width(14); src(c, "#E23B3B")
+                c.move_to(110, 520); c.line_to(970, 880); c.move_to(970, 520); c.line_to(110, 880); c.stroke()
+        scaled(c, W / 2, 680, s, lineup)
+        # Alex mit Heiligenschein + Schild "außer mir"
+        hy = FEET - AH * 1.12
+        c.save(); c.translate(W / 2, hy); c.scale(1, 0.3); c.arc(0, 0, 100, 0, 2 * math.pi); c.restore()
+        c.set_line_width(12); src(c, "#FFE14D", pop(t, S.at(1, 0.4)) * 0.95); c.stroke()
+        alex_bottom(c, S, "smug", "hips")
+        def sign():
+            c.save(); c.translate(830, 1330); c.rotate(0.08)
+            rrect(c, -150, -60, 300, 120, 16); fill(c, "#FFFFFF")
+            rrect(c, -150, -60, 300, 120, 16); c.set_line_width(5); src(c, INK); c.stroke()
+            text(c, "AUSSER MIR", 0, -16, 38, INK, FONT_HEAD)
+            text(c, "ich bin anders 😇", 0, 28, 28, "#7A3FA8", FONT_HEAD)
+            c.restore()
+        scaled(c, 830, 1330, pop(t, S.at(1, 0.45)), sign)
+        emoji(c, "👈", 680, 1420, 80 * pop(t, S.at(1, 0.45)))
 
 
 def sc_signs(c, S):
@@ -374,4 +394,4 @@ def sc_outro(c, S):
 
 
 SCENE_DRAW = dict(what=big(sc_what), post=big(sc_post), mansplain=big(sc_mansplain), work=sc_work,
-                  home=big(sc_home), date=sc_date, signs=sc_signs, outro=sc_outro)
+                  home=big(sc_home), men=sc_men, signs=sc_signs, outro=sc_outro)

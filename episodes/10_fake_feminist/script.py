@@ -14,7 +14,7 @@ MUSIC = "marimba" # eigenes lizenzfreies Thema (fröhliche Marimba), mit Ducking
 INTRO_SFX_GAIN = 2.2   # Auswahl-Klicks + Reveal im Intro lauter
 EXTRAS = True     # Red-Flag-Zähler, Tagesleiste, Reaktions-Emojis, Wisch-Übergänge
 REACTIONS = {"post": ["📈", "🙄", "🚩"], "mansplain": ["🤦", "😂", "🚩"], "work": ["😤", "🙄", "🚩"],
-             "home": ["🧽", "😂", "🚩"], "date": ["📦", "💀", "🚩"]}
+             "home": ["🧽", "😂", "🚩"], "men": ["🤡", "🙄", "🚩"]}
 
 ROLE = "EIN FAKE-FEMINIST."
 ROLE_TTS = "ein Fake-Feminist."
@@ -28,7 +28,7 @@ MOODS = {
     "mansplain": "amüsiert-ungläubig, das Zitat von Alex belehrend und selbstverliebt",
     "work": "trocken und entlarvend",
     "home": "erst stolz, dann trocken entlarvend",
-    "date": "amüsiert, die Pointe trocken",
+    "men": "erst übertrieben empört und laut, dann trocken und entlarvend",
     "signs": "energisch wie ein Countdown, jedes Anzeichen mit Nachdruck",
     "outro": "freundlich, aufgedreht, direkt an die Zuschauer, auffordernd",
 }
@@ -73,9 +73,9 @@ SCENES = [
         ("Zu Hause sagt er stolz: Ich helfe ja im Haushalt.", None),
         ("Helfen. Als wäre es nicht auch seine Wohnung.", None),
     ]),
-    dict(id="date", bg="#E06A6A", clock="21:00", title="GLEICHBERECHTIGUNG?", lines=[
-        ("Beim Date: Wir teilen die Rechnung, Gleichberechtigung!", None),
-        ("Beim Umzugskarton: Kannst du das tragen? Du bist doch eine starke Frau.", None),
+    dict(id="men", bg="#E06A6A", clock="21:00", title="ALLE MÄNNER?", lines=[
+        ("Abends postet er: Männer sind das Problem. Alle Männer!", None),
+        ("Und er selbst? Na ja, er ist ja anders.", None),
     ]),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen Fake-Feministen erkennst:", None),
