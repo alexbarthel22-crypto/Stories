@@ -82,7 +82,7 @@ SCENES = [
         ("Feminist nur online.", None),
         ("Erklärt Frauen den Feminismus.", None),
         ("Hilft im Haushalt, statt mitzumachen.", None),
-        ("Gleichberechtigung nur, wenn's ihm nützt.", None),
+        ("Und: Alle Männer sind das Problem. Außer ihm natürlich.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du auch so einen Fake-Feministen? Markier ihn!", None),

@@ -336,7 +336,7 @@ def sc_men(c, S):
 def sc_signs(c, S):
     t = S.t
     items = [("Feminist nur online", "📱"), ("Erklärt Frauen Feminismus", "👨‍🏫" if False else "🗣️"),
-             ("„Hilft“ im Haushalt", "🧽"), ("Gleichberechtigung à la carte", "🍽️")]
+             ("„Hilft“ im Haushalt", "🧽"), ("„Alle Männer!“ – außer ihm", "😇")]
     for i, (lab, ic) in enumerate(items):
         y = 400 + i * 175
         row_card(c, W / 2, y, 1000, 160, pop(t, S.at(i + 1, 0.0)), lab, ic, 48, num=i + 1, rot=(-0.02 if i % 2 else 0.02))
