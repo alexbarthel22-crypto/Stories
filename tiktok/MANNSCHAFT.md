@@ -38,8 +38,8 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Ohne Stadionjubel (die Variante mit Jubel, `gemini_v4`, wird nicht genutzt)
 
 ## Thumbnail-Vorlage (für jede Folge gleich)
-- `node src/thumb.js <Tag> <Fans> <Kasse in €> <ausgabe.png>`, z. B. `node src/thumb.js 2 37 571 tag02_thumbnail.png`
-- Großer Spielfeld-Kasten „TAG X“, darunter orange „⚽ FC SCHLAMMLOCH“, der Trainer groß und lachend, unten zwei Kästen: **FANS** (rot bei 0, sonst grün) und **VEREINSKASSE** (grün, Betrag in €)
+- `node src/thumb.js <Tag> <Fans> <Kasse in €> <ausgabe.png> [+Zuwachs]`, z. B. `node src/thumb.js 2 83 0 tag02_thumbnail.png +83`
+- Großer Spielfeld-Kasten „TAG X“, darunter orange „⚽ FC SCHLAMMLOCH“, der Trainer groß und lachend, unten zwei Kästen: **FANS** (rot bei 0, sonst grün) und **VEREINSKASSE** (grün, bei 0 € rot), optional grüner Pfeil nach oben mit Fan-Zuwachs (z. B. „+83“) am Fans-Kasten
 - Alles Wichtige liegt im mittleren 3:4-Ausschnitt, der im TikTok-Profilraster sichtbar ist
 
 ## Stand nach Tag 1
