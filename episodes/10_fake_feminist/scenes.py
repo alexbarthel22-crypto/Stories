@@ -25,9 +25,10 @@ def shirt_text(c, x, feet, h):
 def _sign(c, x, y, txt, col, rot, size=30, w=230, post=150):
     c.save(); c.translate(x, y); c.rotate(rot)
     c.set_line_width(10); src(c, "#8A5E3B"); c.move_to(0, 40); c.line_to(0, 40 + post); c.stroke()
-    rrect(c, -w / 2, -55, w, 100, 10); fill(c, col)
-    rrect(c, -w / 2, -55, w, 100, 10); c.set_line_width(4); src(c, INK); c.stroke()
-    text_block(c, txt, 0, -5, size, w - 24, INK, FONT_HEAD)
+    hh = 100 if size < 40 else 120
+    rrect(c, -w / 2, -hh + 45, w, hh, 12); fill(c, col)
+    rrect(c, -w / 2, -hh + 45, w, hh, 12); c.set_line_width(5); src(c, INK); c.stroke()
+    text_block(c, txt, 0, 45 - hh / 2, size, w - 24, INK, FONT_HEAD)
     c.restore()
 
 
@@ -49,11 +50,17 @@ def intro_decor(c, t, u):
         text(c, "THE FUTURE IS FEMALE ✨", 540, by, 36, "#FFFFFF", FONT_HEAD)
     scaled(c, 540, 790, s_, banner)
     # Poster in den Fenstern
-    emoji(c, "✊", 350, 955, 80 * s_); emoji(c, "♀️", 730, 955, 80 * s_)
+    emoji(c, "✊", 350, 955, 80 * s_)
+    if s_ > 0.01:                                  # Venus-Symbol selbst gezeichnet, exakt mittig im rechten Fenster
+        c.save(); c.translate(730, 955); c.scale(s_, s_)
+        c.set_line_width(9); c.set_line_cap(cairo.LINE_CAP_ROUND); src(c, "#9B3FC8")
+        c.arc(0, -12, 22, 0, 2 * math.pi); c.stroke()
+        c.move_to(0, 10); c.line_to(0, 42); c.move_to(-14, 28); c.line_to(14, 28); c.stroke()
+        c.restore()
     emoji(c, "📢", 540, 730, 60 * s_)
     # Protestschilder im Garten
-    _sign(c, 185, 1590, "#ALLY ✊", "#FFE14D", -0.12, 44, 290, 110)
-    _sign(c, 890, 1590, "Feminist des Jahres 🏆", "#FFFFFF", 0.1, 34, 300, 110)
+    _sign(c, 195, 1650, "#ALLY ✊", "#FFE14D", -0.1, 54, 340, 70)
+    _sign(c, 880, 1650, "Feminist des Jahres 🏆", "#FFFFFF", 0.08, 40, 350, 70)
     # Blumenbeet + Ballons
     for i, x in enumerate(range(240, 860, 62)):
         if abs(x - 540) > 90:

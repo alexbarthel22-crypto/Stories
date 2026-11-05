@@ -106,10 +106,9 @@ ein Gaslighter 🌀 „Das hab ich nie gesagt.“ – „Du bist zu empfindlich.
 
 ## TikTok Folge 3 – Fake-Feminist
 Cover: `episodes/10_fake_feminist/thumbnail.png`
-Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung). Layout: TikTok-Sicherheitsbereiche frei.
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein Fake-Feminist 📢 „Männer sind das Problem!“ – sagt der Mann, der Leas Idee im Meeting klaut 🙄 Aber er ist ja anders 😇 Kennst du auch so einen Fake-Feministen? Markier ihn! 👇 Und was soll Alex morgen sein?
+ein Fake-Feminist 📢 Shirt: „The future is female“ ✨ Realität: Leas Idee klauen, Jana putzen lassen und „Alle Männer sind das Problem!“ … außer ihm natürlich 😇🤡 Welche Red Flag hast du schon live erlebt? 1, 2, 3 oder 4? 👇 Kennst du auch so einen Fake-Feministen? Markier ihn! Und was soll Alex morgen sein?
 
-#fakefeminist #redflags #feminismus #gleichberechtigung #dating #relatable #comedy #fürdich #fyp
+#fakefeminist #redflags #feminismus #performativeally #dating #relatable #comedy #fürdich #fyp

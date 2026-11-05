@@ -51,8 +51,8 @@ SHUFFLE = [
 
 # Cover: Anordnung wie Pick-me-Boy, Farben zum Thema (Lila + Pink, "Fake" in Gelb)
 THUMB = dict(head="HEUTE IST ALEX EIN…", l1="FAKE-", l2="FEMINIST", bg="#7A3FA8", color1="#FFE14D",
-             accent="#FF7BC0", pill="#2A1240", pill_text="#FFFFFF", expr="smug", pose="hips", prop=None,
-             emojis=("🚩", "📢", "👕", "🙄"))
+             accent="#FF7BC0", pill="#2A1240", pill_text="#FFFFFF", expr="smug", pose="up", prop=None, extras=True,
+             emojis=("🚩", "🤡", "♀️", "🙄"))
 
 SCENES = [
     dict(id="what", bg="#7A3FA8", clock=None, title="WAS IST EIN FAKE-FEMINIST?", dark=True, lines=[

@@ -51,4 +51,6 @@ else:
 for e, (x, y, s, r) in zip(TH["emojis"], ((150, 1020, 130, -0.3), (930, 1060, 130, 0.3), (190, 1350, 110, -0.2), (900, 1340, 110, 0.2))):
     emoji(c, e, x, y, s, r)
 person(c, W / 2, 1700, 760, SPEC, 0.9, TH["expr"], TH["pose"], TH["prop"], bob=False)
+if TH.get("extras") and hasattr(scenes, "alex_extras"):
+    scenes.alex_extras(c, W / 2, 1700, 760, 0.9, 1.0)
 surf.write_to_png(out)
