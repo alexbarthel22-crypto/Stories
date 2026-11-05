@@ -213,6 +213,15 @@ def sc_what(c, S):
             if t > a1 and i < int(30 * clamp((t - a1) / 2.0)) and rnd.random() < 0.85:
                 emoji(c, "💔", x + 22, y - 22, 34)
     scaled(c, W / 2, 700, s, card_)
+    if t > a1:                                    # kleines Einwohner-Schild (rechts, im Sicherheitsbereich)
+        def sign():
+            c.rectangle(812, 1150, 16, 230); fill(c, "#8A8F98")
+            rrect(c, 715, 1050, 210, 120, 12); fill(c, "#FFFFFF")
+            rrect(c, 715, 1050, 210, 120, 12); c.set_line_width(5); src(c, INK); c.stroke()
+            rrect(c, 727, 1062, 186, 96, 6); c.set_line_width(3); src(c, "#2E7D4F"); c.stroke()
+            text(c, "Einwohner", 820, 1088, 30, INK, FONT_BOLD)
+            text(c, "463", 820, 1132, 48, "#2E7D4F", FONT_HEAD)
+        scaled(c, 820, 1380, pop(t, a1 + 0.2), sign)
     alex_bottom(c, S, "smug", "hips")
 
 

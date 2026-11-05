@@ -102,5 +102,5 @@ GEMINI_LINE_TEXT = {"bakery_2": "Was die Ex nicht weiß: Mit ihrer Mutter hatte 
 GEMINI_LINE_MOOD = {"bakery_2": "verschwörerisch geflüstert, dann trocken; den Namen deutsch aussprechen: A-leks mit offenem A wie in 'Alexander', niemals englisch 'Äläx'; kein Lachen, kein Kichern"}
 
 # Bäcker etwas kürzer, Aufzählung schneller
-LINE_TEMPO = {"bakery_0": 1.14, "bakery_1": 1.16, "bakery_2": 1.12,
+LINE_TEMPO = {"intro_role": 1.25, "bakery_0": 1.14, "bakery_1": 1.16, "bakery_2": 1.12,
               "signs_0": 1.22, "signs_1": 1.25, "signs_2": 1.25, "signs_3": 1.25, "signs_4": 1.2}
