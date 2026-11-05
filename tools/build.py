@@ -312,12 +312,13 @@ def build_audio(path):
         from music import theme
         from scipy.ndimage import maximum_filter1d, uniform_filter1d
         m = np.zeros(n)
-        start = REVEAL + 0.4                     # Original-Intro-Sounds bleiben unberührt
+        start = getattr(script, "MUSIC_START", REVEAL + 0.4)
         style = script.MUSIC if isinstance(script.MUSIC, str) else "lofi"
-        th = theme(TOTAL - start + 0.3, SR, style=style)
+        th = theme(TOTAL - start + 0.3, SR, style=style, fade_in=0.15 if start < 0.5 else 1.2)
         add(m, th, start)
         # Ducking: Musik ~22 dB unter Stimmspitze, während Sprache weitere ~8 dB leiser
-        env = np.sqrt(np.maximum(uniform_filter1d(voice ** 2, int(0.03 * SR)), 0))
+        duck_src = voice + (fx * 0.15 if start < INTRO_LEN else 0)  # Musik unter den Intro-Klicks leicht leiser
+        env = np.sqrt(np.maximum(uniform_filter1d(duck_src ** 2, int(0.03 * SR)), 0))
         env = maximum_filter1d(env, int(0.35 * SR))
         speech = np.clip(env / (env.max() * 0.08 + 1e-9), 0, 1)
         speech = uniform_filter1d(speech, int(0.12 * SR))

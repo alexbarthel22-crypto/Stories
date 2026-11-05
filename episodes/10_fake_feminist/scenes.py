@@ -42,15 +42,12 @@ def intro_decor(c, t, u):
         src(c, ["#E0457B", "#7A3FA8", "#FFFFFF", "#F7C948"][i % 4]); c.fill()
     # Banner hängt an Ballons im Himmel
     def banner():
-        by = 548 + math.sin(t * 2) * 6
+        by = 790 + math.sin(t * 2) * 4
         c.set_line_width(2); src(c, "#FFFFFF")
-        for bx in (260, 820):
-            c.move_to(bx, by); c.line_to(bx, by - 60); c.stroke()
-            emoji(c, "🎈", bx, by - 95, 70)
         rrect(c, 230, by - 34, 620, 68, 12); fill(c, "#E0457B")
         rrect(c, 230, by - 34, 620, 68, 12); c.set_line_width(4); src(c, INK); c.stroke()
         text(c, "THE FUTURE IS FEMALE ✨", 540, by, 36, "#FFFFFF", FONT_HEAD)
-    scaled(c, 540, 548, s_, banner)
+    scaled(c, 540, 790, s_, banner)
     # Poster in den Fenstern
     emoji(c, "✊", 350, 955, 80 * s_); emoji(c, "♀️", 730, 955, 80 * s_)
     emoji(c, "📢", 540, 730, 60 * s_)

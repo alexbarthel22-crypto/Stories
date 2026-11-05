@@ -1230,27 +1230,41 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
         emoji(c, det[3 if len(det) < 5 else 4], 730, 955, 80)
         emoji(c, icon, 540, 730, 60)
     # Kopfzeile + Auswahl-Leiste
-    text(c, "Heute ist Alex", W / 2, 112, 44, "#FFFFFF", FONT_BOLD)
+    head = "Heute ist Alex"
+    if revealed and txt.split(" ", 1)[0] in ("EIN", "EINE"):
+        head += " " + txt.split(" ", 1)[0].lower() + " …"
+    text(c, head, c.device_to_user(W / 2, 0)[0] if revealed else W / 2, 112, 50 if revealed else 44, "#FFFFFF", FONT_HEAD if revealed else FONT_BOLD)
     if revealed:
         u_ = (t - reveal_t) / 0.5
         sc = ease_out_back(u_, 2.8) if u_ < 1 else 1 + 0.03 * math.sin((t - reveal_t) * 6)
-        tsize = min(150, 150 * 1040 / max(1, text_width(c, txt, 150, FONT_HEAD)))
-        ty, rot = 222, 0.0
+        # Bildschirmmitte (nicht Mitte des Inhaltsbereichs) und maximale Breite bis zur rechten Sperrzone
+        cx = c.device_to_user(W / 2, 0)[0]
+        half = c.device_to_user(SAFE_BOX[2], 0)[0] - cx - 45
+        words = txt.split(" ", 1)
+        small, big_ = (words[0], words[1]) if len(words) == 2 and words[0] in ("EIN", "EINE") else ("", txt)
+        lines = big_.replace("-", "-\n", 1).split("\n") if "-" in big_ and len(big_) > 9 else [big_]
+        sizes = [min(200, 200 * 2 * half / max(1, text_width(c, ln, 200, FONT_HEAD))) for ln in lines]
+        bsize = min(sizes)
+        def ttl():
+            y = 175 + bsize * 0.5
+            for ln in lines:
+                c.select_font_face(FONT_HEAD); c.set_font_size(bsize)
+                w_ = text_width(c, ln, bsize, FONT_HEAD)
+                c.move_to(cx - w_ / 2 + 8, y + bsize * 0.36 + 10); c.text_path(ln); src(c, "#000000", 0.3); c.fill()
+                c.move_to(cx - w_ / 2, y + bsize * 0.36); c.text_path(ln)
+                c.set_line_width(bsize * 0.15); c.set_line_join(cairo.LINE_JOIN_ROUND); src(c, INK); c.stroke_preserve()
+                src(c, "#FFE14D"); c.fill()
+                y += bsize * 0.95
+            ttl.bottom = y
+        ty = 175 + bsize * 0.5
+        scaled(c, cx, ty + bsize * 0.4, sc, ttl)
+        title_bottom = c.user_to_device(0, getattr(ttl, "bottom", ty + bsize * 1.4) - bsize * 0.35)[1]
     else:
-        sc, tsize, ty, rot = 1.0, 76, 196, 0
-    def ttl():
-        c.save(); c.translate(W / 2, ty); c.rotate(rot); c.translate(-W / 2, -ty)
-        if revealed:
-            c.select_font_face(FONT_HEAD); c.set_font_size(tsize)
-            w_ = text_width(c, txt, tsize, FONT_HEAD)
-            c.move_to(W / 2 - w_ / 2, ty + tsize * 0.36); c.text_path(txt)
-            c.set_line_width(tsize * 0.16); c.set_line_join(cairo.LINE_JOIN_ROUND); src(c, INK); c.stroke_preserve()
-            src(c, "#FFE14D"); c.fill()
-        else:
-            c.save(); c.translate(0, 6); text(c, txt, W / 2, ty, tsize, "#000000", FONT_HEAD, alpha=0.3); c.restore()
-            text(c, txt, W / 2, ty, tsize, "#FFFFFF", FONT_HEAD)
-        c.restore()
-    scaled(c, W / 2, ty, sc, ttl)
+        title_bottom = None
+        def ttl():
+            c.save(); c.translate(0, 6); text(c, txt, W / 2, 196, 76, "#000000", FONT_HEAD, alpha=0.3); c.restore()
+            text(c, txt, W / 2, 196, 76, "#FFFFFF", FONT_HEAD)
+        ttl()
     icons = [s_[1] for s_ in shuffle] + [cfg["icon"]]
     cols = [s_[3] for s_ in shuffle] + [cfg["bg"]]
     sel = len(shuffle) if revealed else k
@@ -1278,8 +1292,9 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
     # Auswahl-Band über die volle Bildschirmbreite (darf rechts in den Sicherheitsbereich)
     # nach der Enthüllung: Band wird kleiner und rutscht nach unten (Platz für das große Thema)
     bu = ease_in_out((t - reveal_t) / 0.4) if revealed else 0.0
-    bs = 1 - 0.32 * bu
-    yb = band_y + 22 + 42 * bu
+    bs = 1 - 0.45 * bu
+    target = (title_bottom + 45) if title_bottom else band_y + 22
+    yb = band_y + 22 + (max(band_y + 22, target) - band_y - 22) * bu
     rrect(c, 0, yb - 78 * bs, W, 156 * bs, 0); src(c, "#000000", 0.6); c.fill()
     step = 150 * bs
     for j in range(-7, 8):
