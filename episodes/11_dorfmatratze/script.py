@@ -11,7 +11,7 @@ CAPTION_SIZE = 62
 NAME_SCALE = 1.6
 TITLE_SIZE = 92
 BUBBLE_SCALE = 1.2
-INTRO_SFX_GAIN = 2.2
+INTRO_SFX_GAIN = 3.4   # Auswahl-Klicks + Reveal deutlich lauter
 REACTIONS = {"bakery": ["🥐", "😬", "🚩"], "bus": ["🚌", "💀", "🚩"], "group": ["👀", "📢", "🚩"],
              "fest": ["💃", "😠", "🚩"], "night": ["👵", "👀", "🚩"]}
 

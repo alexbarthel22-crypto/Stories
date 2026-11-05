@@ -61,17 +61,9 @@ def intro_decor(c, t, u):
         text(c, "OPEN", 330, 1094, 30, "#FF9FE0", FONT_HEAD, alpha=glow)
         text(c, "24/7 💘", 330, 1128, 26, "#FF9FE0", FONT_HEAD, alpha=glow)
     scaled(c, 330, 1110, s_, neon)
-    # Ortsschild-Banner
-    def banner():
-        by = 790
-        rrect(c, 230, by - 44, 620, 88, 10); fill(c, "#F7D21B")
-        rrect(c, 240, by - 34, 600, 68, 6); c.set_line_width(5); src(c, INK); c.stroke()
-        text(c, "WENTORF", 540, by - 6, 42, INK, FONT_HEAD)
-        text(c, "bei Hamburg · alle kennen Alex", 540, by + 26, 22, INK, FONT_BOLD)
-    scaled(c, 540, 790, s_, banner)
     # Schilder vorne
     _sign(c, 200, 1650, "Tür immer offen 🚪", "#FFFFFF", -0.1, 42, 340)
-    _sign(c, 880, 1650, "Schon wieder Besuch 👀", "#FFB3D9", 0.08, 40, 340)
+    _sign(c, 880, 1650, "Ich rammel alles 🐰", "#FFB3D9", 0.08, 42, 340)
     # Herzen fliegen
     for i in range(5):
         u2 = (t * 0.35 + i / 5) % 1
@@ -514,9 +506,9 @@ def sc_outro(c, S):
             scaled(c, x, y, pop(t, a1 + 0.1 + i * 0.07), icon)
         ps = pop(t, S.at(1, 0.45))
         def pill():
-            rrect(c, 100, 955, 880, 116, 58); fill(c, "#E23B3B")
-            rrect(c, 100, 955, 880, 116, 58); c.set_line_width(6); src(c, "#FFFFFF"); c.stroke()
-            text(c, "Schreib's in die Kommentare ⬇️", W / 2, 1013, 54, "#FFFFFF", FONT_HEAD)
+            rrect(c, 40, 950, 1000, 126, 63); fill(c, "#E23B3B")
+            rrect(c, 40, 950, 1000, 126, 63); c.set_line_width(6); src(c, "#FFFFFF"); c.stroke()
+            text(c, "Schreib's in die Kommentare ⬇️", W / 2, 1013, 52, "#FFFFFF", FONT_HEAD)
         scaled(c, W / 2, 1013, ps * (1 + 0.05 * math.sin(t * 7)), pill)
     alex_bottom(c, S, "happy", "wave")
 
