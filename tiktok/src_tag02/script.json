@@ -94,40 +94,47 @@
  },
  {
   "id": "search",
-  "say": "Wir suchen einen neuen Stürmer für die Nummer neun. Und das wird einer von euch!",
+  "say": "Also suchen wir einen neuen Stürmer mit der Nummer neun. Und das wird einer von euch.",
   "cap": [
-   "WIR SUCHEN EINEN",
-   "NEUEN *STÜRMER",
-   "FÜR DIE *NUMMER 9.",
+   "ALSO SUCHEN WIR",
+   "EINEN NEUEN *STÜRMER",
+   "MIT DER *NUMMER 9.",
    "UND DAS WIRD",
-   "*EINER VON EUCH!"
+   "*EINER VON EUCH."
   ]
  },
  {
   "id": "kasse0",
-  "say": "Vereinskasse: null Euro.",
+  "say": "Achtzig Klappstühle: fünfhundert Euro. Die Plane: hunderteinunddreißig Euro. Vereinskasse: null Euro.",
   "cap": [
+   "80 KLAPPSTÜHLE:",
+   "!500 EURO,",
+   "DIE PLANE:",
+   "!131 EURO,",
    "VEREINSKASSE:",
    "!0 EURO."
   ]
  },
  {
   "id": "rule",
-  "say": "Jeder Follower bringt einen Euro, jeder Kommentar zwei.",
+  "say": "Wir brauchen dich, um die Vereinskasse zu füllen! Jeder Follower bringt einen Euro, jeder Kommentar zwei.",
   "cap": [
-   "JEDER *FOLLOWER:",
-   "*1 EURO.",
-   "JEDER *KOMMENTAR:",
-   "*2 EURO."
+   "WIR BRAUCHEN *DICH,",
+   "UM DIE *VEREINSKASSE",
+   "ZU FÜLLEN!",
+   "JEDER *FOLLOWER: *1 €,",
+   "JEDER *KOMMENTAR: *2 €."
   ]
  },
  {
   "id": "comment",
-  "say": "Wer wird unsere neue Nummer neun? Schreib es in die Kommentare!",
+  "say": "Wer wird unsere neue Nummer neun? Und was sollen wir vom Geld kaufen? Schreib es in die Kommentare!",
   "cap": [
    "WER WIRD UNSERE",
    "NEUE *NUMMER 9?",
-   "SCHREIB ES IN DIE",
+   "UND WAS SOLLEN WIR",
+   "VOM *GELD KAUFEN?",
+   "SCHREIB'S IN DIE",
    "*KOMMENTARE!"
   ]
  }

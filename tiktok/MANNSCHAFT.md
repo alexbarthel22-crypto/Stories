@@ -4,7 +4,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 
 | Nr. | Name | Position | Aussehen |
 |---|---|---|---|
-| 1 | **Vlad** | Tor | schwarze Haare, Augenklappe (links), grünes Torwarttrikot, Handschuhe |
+| 1 | **Vlad** | Tor | schwarze Haare, Augenklappe immer auf **seinem rechten Auge** (vom Betrachter aus links, auch beim Laufen nie spiegeln), grünes Torwarttrikot, Handschuhe |
 | 4 | **Opa Jürgen** | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock, **kräftiger Körper mit Bierbauch** (breite Schultern, dicke Arme und Beine) |
 | 3 | Iro *(Platzhalter-Name)* | Abwehr | grüner Irokese, Ohrring |
 | 5 | Bulldozer *(Platzhalter-Name)* | Abwehr | Glatze, roter Vollbart |
@@ -72,17 +72,17 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Entwurfsstimme (kostenlos, offline): espeak-ng mit MBROLA `mb-de6`
 
 ## Folge 2 (Tag 2)
-- Datei: `tiktok/tag02_fc_schlammloch_v4.mp4` (0:49), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
+- Datei: `tiktok/tag02_fc_schlammloch_v5.mp4` (0:57), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
 - Die ersten drei Fans sitzen auf Klappstuhl 1–3 (Cartoon-Figuren mit Schal, keine echten Fotos):
   - Stuhl 1: **Eike** (@eikemzz) – rote Cap, graues Hoodie
   - Stuhl 2: **Tobi** (@tobiii1911) – braune Locken, oranges Hoodie
   - Stuhl 3: **Leo** (@leo.hro1) – graue Haare, grauer Schnauzer, schwarze Jacke
   - Gesprochen nur Vornamen („Unsere ersten drei Fans: Eike, Tobi und Leo!“), angezeigt mit ihren echten Profilbildern (aus dem Screenshot, `src_tag02/fanpics.js`) und Usernamen; sie sitzen hinter der Seitenlinie
 - Fans: **83**
-- Geld: 83 Follower × 1 € = 83 € + 24 Kommentare × 2 € = 48 € + 500 € = **631 €**. Ausgegeben für Klappstühle für alle (Reihen am Spielfeldrand) und eine blau-gelbe **Plane** über der Tribüne. **Vereinskasse danach: 0 €**
+- Geld: 83 Follower × 1 € = 83 € + 24 Kommentare × 2 € = 48 € + 500 € = **631 €**. Ausgegeben: **80 Klappstühle = 500 €** (Reihen am Spielfeldrand) und eine blau-gelbe **Plane = 131 €** über der Tribüne. **Vereinskasse danach: 0 €**
 - Die Nr. 9 hat morgens den Bus genommen und ist raus. Gesucht wird eine neue Nr. 9 aus der Community
 - Regel ab Tag 2: **1 Follower = 1 €, 1 Kommentar = 2 €**
-- Ablauf: TAG 2 (euphorisch gesprochen, Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“) → 83 Fans (Frodo hüpft neben dem Trainer) → die ersten 3 Fans auf der Tribüne → Problem: nur 3 Plätze (traurige, nasse Menge mit Sprechblasen „NASS!“, „WILL SITZEN!“, „MIR IST KALT!“, „BUUUH!“) → Rechnung (Vlad läuft im Tor hin und her) → 631 € → 80 Klappstühle in 8 Reihen → Plane drüber, 80 Fans setzen sich → „Aber dann die Enttäuschung…“: Bus mit dem Stürmer Nr. 9 fährt weg → Nr. 9 wird dramatisch rot durchgestrichen, „RAUS!“ → Gesucht: neuer Stürmer Nr. 9 (Trikot am Bügel) → Kasse 0 € → Geld-Regel → Top-Kommentar „Wer wird Nr. 9?“
+- Ablauf: TAG 2 (euphorisch gesprochen, Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“) → 83 Fans (Frodo hüpft neben dem Trainer) → die ersten 3 Fans auf der Tribüne → Problem: nur 3 Plätze (traurige, nasse Menge mit Sprechblasen „NASS!“, „WILL SITZEN!“, „MIR IST KALT!“, „BUUUH!“) → Rechnung (Vlad läuft im Tor hin und her) → 631 € → 80 Klappstühle in 8 Reihen → Plane drüber, 80 Fans setzen sich → „Aber dann die Enttäuschung…“: Bus mit dem Stürmer Nr. 9 fährt weg → Nr. 9 wird dramatisch rot durchgestrichen, „RAUS!“ → „Also suchen wir einen neuen Stürmer mit der Nummer neun“ (hoffnungsvoll, Trikot am Bügel) → 80 Klappstühle −500 €, Plane −131 €, Kasse 0 € → „Wir brauchen dich, um die Vereinskasse zu füllen!“ + Geld-Regel → Top-Kommentar: „Wer wird Nr. 9? Und was sollen wir vom Geld kaufen?“
 
 ## Stand nach Tag 2
 - Fans: 83 · Vereinskasse: 0 €
