@@ -90,6 +90,65 @@ for sc_def, sc_tts in zip(script.SCENES, tts["scenes"]):
 TOTAL = t
 NFRAMES = int(math.ceil(TOTAL * FPS))
 
+# ---- Zusatz-Elemente (script.EXTRAS = True): Red-Flag-Zähler, Tagesleiste, Reaktionen, Wisch-Übergänge
+EXTRAS = getattr(script, "EXTRAS", False)
+FLAG_TIMES = [S_.start + 0.35 for S_ in timeline if S_.clock] if EXTRAS else []
+REACTIONS = getattr(script, "REACTIONS", {})
+REACT_TIMES = []
+if EXTRAS:
+    for S_ in timeline:
+        if S_.clock:
+            REACT_TIMES.append((S_.start + S_.starts[-1] + S_.durs[-1] * 0.75, REACTIONS.get(S_.id, ["😂", "🙄", "🚩"])))
+
+
+def draw_extras(c, S, tg, tl):
+    if not EXTRAS:
+        return
+    if S.clock:
+        # Red-Flag-Zähler oben links
+        n = sum(1 for ft in FLAG_TIMES if tg >= ft)
+        last = max([ft for ft in FLAG_TIMES if tg >= ft] or [-9])
+        sc_ = 1 + 0.35 * max(0, 1 - (tg - last) / 0.35)
+        def badge():
+            rrect(c, 40, 88, 180, 62, 31); src(c, "#000000", 0.6); c.fill()
+            emoji(c, "🚩", 85, 119, 40)
+            text(c, f"× {n}", 160, 119, 38, "#FFFFFF", FONT_HEAD)
+        scaled(c, 130, 119, sc_, badge)
+        # Tages-Fortschritt unten
+        hh, mm = map(int, S.clock.split(":"))
+        f = clamp((hh + mm / 60 - 6) / 18)
+        y = 1730
+        rrect(c, 140, y - 9, 800, 18, 9); src(c, "#000000", 0.35); c.fill()
+        rrect(c, 140, y - 9, max(18, 800 * f), 18, 9); src(c, "#FFFFFF", 0.9); c.fill()
+        emoji(c, "☀️" if hh < 18 else "🌙", 140 + 800 * f, y, 46)
+        text(c, "06:00", 140, y + 34, 24, "#FFFFFF", FONT_BOLD, alpha=0.8)
+        text(c, "24:00", 940, y + 34, 24, "#FFFFFF", FONT_BOLD, alpha=0.8)
+    # Reaktions-Emojis steigen rechts auf
+    for rt, ems in REACT_TIMES:
+        u = (tg - rt) / 1.6
+        if 0 <= u <= 1:
+            for i, e in enumerate(ems):
+                uu = clamp(u * 1.2 - i * 0.12)
+                if uu <= 0:
+                    continue
+                x = 880 + math.sin(uu * 7 + i) * 30 - i * 25
+                emoji(c, e, x, 1500 - uu * 520, 64, rot=math.sin(uu * 5 + i) * 0.3, alpha=1 - uu ** 2)
+
+
+def draw_wipe(c, tg):
+    if not EXTRAS:
+        return
+    for a, b in zip(timeline, timeline[1:]):
+        p = (tg - (b.start - 0.25)) / 0.5
+        if 0 <= p <= 1:
+            off = -2.5 * W + ease_in_out(p) * (3.5 * W + 480)
+            c.save(); c.identity_matrix()
+            c.move_to(off, 0); c.line_to(off + 2 * W, 0); c.line_to(off + 2 * W - 480, H); c.line_to(off - 480, H); c.close_path()
+            src(c, b.bg); c.fill()
+            c.move_to(off + 2 * W, 0); c.line_to(off + 2 * W + 26, 0); c.line_to(off + 2 * W - 454, H); c.line_to(off + 2 * W - 480, H); c.close_path()
+            src(c, "#FFFFFF", 0.85); c.fill()
+            c.restore()
+
 
 class Ctx:
     def __init__(self, S, tl):
@@ -129,7 +188,9 @@ def draw_frame(c, tg):
     li = max([i for i, st in enumerate(S.starts) if tl >= st] or [0])
     if tl > S.starts[li] + S.durs[li] + 0.18:
         cur = None
+    draw_extras(c, S, tg, tl)
     caption(c, cur, since)
+    draw_wipe(c, tg)
 
 
 def render_range(args):
@@ -200,6 +261,9 @@ def synth_crickets(dur=2.2, amp=0.12, seed=3):
     return amp * out * env
 
 
+MUSIC_CHECK = None
+
+
 def build_audio(path):
     n = int((TOTAL + 0.5) * SR)
     voice = np.zeros(n)
@@ -236,7 +300,25 @@ def build_audio(path):
             add(fx, synth_crickets(), t0)
     voice /= (np.abs(voice).max() + 1e-9)
     voice *= 0.9
+    for t0 in FLAG_TIMES:
+        add(fx, synth_pop(1320, 0.12, 0.07), t0)
     mix = voice + fx
+    if getattr(script, "MUSIC", False):
+        from music import theme
+        from scipy.ndimage import maximum_filter1d, uniform_filter1d
+        m = np.zeros(n)
+        start = REVEAL + 0.4                     # Original-Intro-Sounds bleiben unberührt
+        th = theme(TOTAL - start + 0.3, SR)
+        add(m, th, start)
+        # Ducking: Musik ~22 dB unter Stimmspitze, während Sprache weitere ~8 dB leiser
+        env = np.sqrt(np.maximum(uniform_filter1d(voice ** 2, int(0.03 * SR)), 0))
+        env = maximum_filter1d(env, int(0.35 * SR))
+        speech = np.clip(env / (env.max() * 0.08 + 1e-9), 0, 1)
+        speech = uniform_filter1d(speech, int(0.12 * SR))
+        g = 10 ** (-22 / 20) * (1 - speech * (1 - 10 ** (-8 / 20)))
+        mix = mix + m * g
+        global MUSIC_CHECK
+        MUSIC_CHECK = (voice, m * g)
     mix /= max(1.0, np.abs(mix).max() / 0.98)
     sf.write(path, np.stack([mix, mix], 1), SR)
 

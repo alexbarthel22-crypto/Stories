@@ -44,3 +44,4 @@ Sound-Effekte neu extrahieren: `python3 tools/extract_sfx.py referenz.wav assets
 - Schluss immer: „Kennst du jemanden, der …? Markier sie oder ihn!“ + „Und was soll Alex morgen sein? Schreib's in die Kommentare.“
 - Raster am Ende zeigt die tatsächlich veröffentlichten TikTok-Folgen (Folge 1 = Pick-me-Boy).
 - Stimme: gemini-3.8-flash-tts, Puck (wie Pick-me-Boy), nicht auf andere Modelle ausweichen.
+- Neue optionale Elemente pro Folge (script.py): `MUSIC = True` (eigenes lizenzfreies Serien-Thema aus tools/music.py, automatisch unter die Stimme geduckt), `EXTRAS = True` (Red-Flag-Zähler, Tagesleiste, Reaktions-Emojis, Wisch-Übergänge), `SAFE_MODE = "strict"` (TikTok-Sicherheitsbereiche frei).

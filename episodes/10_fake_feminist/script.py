@@ -6,6 +6,10 @@ Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", 
 
 TTS_PROFILE = "pickme"
 SAFE_MODE = "strict"
+MUSIC = True      # eigenes lizenzfreies Serien-Thema, mit Ducking unter der Stimme
+EXTRAS = True     # Red-Flag-Zähler, Tagesleiste, Reaktions-Emojis, Wisch-Übergänge
+REACTIONS = {"post": ["📈", "🙄", "🚩"], "mansplain": ["🤦", "😂", "🚩"], "work": ["😤", "🙄", "🚩"],
+             "home": ["🧽", "😂", "🚩"], "date": ["📦", "💀", "🚩"]}
 
 ROLE = "EIN FAKE-FEMINIST."
 ROLE_TTS = "ein Fake-Feminist."
