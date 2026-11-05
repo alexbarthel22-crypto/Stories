@@ -1,4 +1,4 @@
-"""TikTok Folge 3: Heute ist Alex ... ein Fake-Feminist. (Aufbau wie Pick-me-Boy)
+"""TikTok Folge 4: Heute ist Alex ... ein Fake-Feminist. (Aufbau wie Pick-me-Boy)
 Humor über performativen 'Feminismus' – nicht über Feminismus selbst.
 Layout: SAFE_MODE "strict" (TikTok-Sicherheitsbereiche komplett frei).
 Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.08.

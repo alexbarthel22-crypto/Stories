@@ -103,7 +103,7 @@ ein Gaslighter 🌀 Er vergisst dich abzuholen – und plötzlich wolltest DU de
 
 #gaslighting #redflags #toxischebeziehung #beziehung #selbstwert #relatable #storytime #fürdich #fyp
 
-## TikTok Folge 3 – Fake-Feminist
+## TikTok Folge 4 – Fake-Feminist
 Cover: `episodes/10_fake_feminist/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
