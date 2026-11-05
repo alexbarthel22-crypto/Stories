@@ -18,7 +18,9 @@ HINTS = {
     "surprised": "neugierig und überrascht, als echte Frage an die Zuschauer",
     "excited": "begeistert",
     "tense": "spannend, etwas leiser und geheimnisvoll",
+    "fast": "laut, aufgeregt und sehr schnell, wie ein Weckruf, der zum Stehenbleiben zwingt",
 }
+LINE_TEMPO = {"fast": 1.22}      # extra speed-up for single lines (on top of --tempo)
 
 
 def synth(text, voice, model, hint=None, retries=7):
@@ -134,6 +136,13 @@ def main(script, out_dir, voice, model, tempo=1.0, gap=0.08, cache_dir=None):
                 raise RuntimeError("no clean take for: " + l)
             a = best
             sf.write(cp, a, SR)
+        if hint in LINE_TEMPO:
+            import subprocess, tempfile
+            with tempfile.TemporaryDirectory() as d:
+                sf.write(f"{d}/i.wav", a, SR)
+                subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{d}/i.wav", "-af",
+                                f"atempo={LINE_TEMPO[hint]}", f"{d}/o.wav"], check=True)
+                a = sf.read(f"{d}/o.wav", dtype="float32")[0]
         a = a / (np.abs(a).max() + 1e-9) * 0.9
         g = gap + (0.12 if l[-1] in ".!?" else 0.0)
         timing.append({"text": l, "start": round(t, 3), "end": round(t + len(a) / SR, 3)})

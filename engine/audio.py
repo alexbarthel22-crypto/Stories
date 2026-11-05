@@ -263,6 +263,30 @@ def rain_noise(dur, seed=2):
     return lp * 0.25
 
 
+def wind(dur, seed=5):
+    """soft desert wind: low-passed noise with slow gusts"""
+    n = int(dur * SR)
+    x = np.random.default_rng(seed).standard_normal(n)
+    for k in (40, 25):
+        x = np.convolve(x, np.ones(k) / k, mode="same")
+    tt = np.arange(n) / SR
+    gust = 0.55 + 0.45 * np.sin(tt * 0.9) * np.sin(tt * 0.37 + 1)
+    s = x * gust * 2.2
+    r = int(min(1.0, dur / 3) * SR)
+    s[:r] *= np.linspace(0, 1, r); s[-r:] *= np.linspace(1, 0, r)
+    return s
+
+
+def impact():
+    """deep cinematic hit for a shouted opener"""
+    d = 1.4
+    tt = np.arange(int(d * SR)) / SR
+    f = 55 * np.exp(-tt * 1.5) + 30
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt * 3.0)
+    noise = np.random.default_rng(9).standard_normal(len(tt)) * np.exp(-tt * 18) * 0.5
+    return (body + noise) * 0.9
+
+
 def place(buf, s, t, gain=1.0):
     k = int(t * SR)
     if k >= len(buf):
@@ -312,7 +336,7 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
         s = {"ding": ding, "pop": pop, "tick": tick, "click": click, "clink": clink, "whoosh": whoosh,
              "tada": tada, "glug": glug, "fw_launch": fw_launch, "fw_boom": fw_boom,
              "fw_crackle": fw_crackle, "creak": creak, "growl": growl, "buzzer": buzzer, "step": step,
-             "drip": drip, "swish": swish, "shing": shing, "squawk": squawk, "wrong": wrong}.get(kind)
+             "drip": drip, "swish": swish, "shing": shing, "squawk": squawk, "wrong": wrong, "impact": impact}.get(kind)
         if kind == "file":          # external sound file: ("file", t, gain, path, duration)
             path, dur = extra[0], extra[1]
             s = load_music(path, int(dur * SR))
@@ -323,6 +347,8 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
             s = crackle_bed(extra[0])
         elif kind == "chainsaw":
             s = chainsaw(extra[0])
+        elif kind == "wind":
+            s = wind(extra[0])
         elif kind == "rain":
             s = rain_noise(extra[0]); r = int(0.4 * SR)
             s[:r] *= np.linspace(0, 1, r); s[-r:] *= np.linspace(1, 0, r)

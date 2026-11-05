@@ -411,3 +411,37 @@ def draw_orange_wedge(cv, x, y, r):
         a = math.pi + i * math.pi / 4
         cv.line([(x, y), (x + math.cos(a) * r * 0.72, y + math.sin(a) * r * 0.72)], hexc("#ffd08a"), max(1.0, r * 0.08),
                 cap=False)
+
+
+def draw_baby(cv, x, y, s=1.0, phase=0.0, face=1):
+    """crawling baby on all fours, ground at y, ~120*s long"""
+    f = face
+    skin, skin_d = hexc("#f2c4a0"), hexc("#d9a37f")
+    suit, suit_d = hexc("#8fc3ea"), hexc("#6aa2cf")
+    sw = math.sin(phase)
+    # back limbs (far side)
+    cv.line([(x - f * 18 * s, y - 34 * s), (x - f * (14 - 6 * sw) * s, y - 4 * s), (x - f * 46 * s, y - 6 * s)], suit_d, 15 * s)
+    cv.line([(x + f * 26 * s, y - 40 * s), (x + f * (34 + 8 * sw) * s, y - 3 * s)], skin_d, 12 * s)
+    # body (onesie) + diaper bump
+    cv.ellipse(x - 42 * s, y - 62 * s, x + 40 * s, y - 20 * s, fill=suit)
+    cv.ellipse(x - f * 52 * s - 20 * s, y - 58 * s, x - f * 52 * s + 20 * s, y - 24 * s, fill=hexc("#ffffff"))
+    # near limbs
+    cv.line([(x - f * 24 * s, y - 34 * s), (x - f * (20 + 6 * sw) * s, y - 4 * s), (x - f * 52 * s, y - 8 * s)], suit, 16 * s)
+    cv.circle(x - f * 54 * s, y - 8 * s, 7 * s, fill=skin)
+    cv.line([(x + f * 22 * s, y - 42 * s), (x + f * (30 - 8 * sw) * s, y - 3 * s)], suit, 13 * s)
+    cv.circle(x + f * (30 - 8 * sw) * s, y - 3 * s, 7 * s, fill=skin)
+    # head
+    hx, hy = x + f * 48 * s, y - 66 * s
+    cv.circle(hx, hy, 25 * s, fill=skin)
+    cv.circle(hx - f * 20 * s, hy + 2 * s, 7 * s, fill=skin_d)                       # ear
+    cv.arc(hx - 10 * s, hy - 34 * s, hx + 8 * s, hy - 16 * s, 200, 340, hexc("#6b4423"), 4 * s)   # curl
+    cv.circle(hx + f * 8 * s, hy - 4 * s, 3.2 * s, fill=INK)
+    cv.circle(hx + f * 19 * s, hy - 4 * s, 3.2 * s, fill=INK)
+    cv.arc(hx + f * 6 * s, hy + 2 * s, hx + f * 20 * s, hy + 14 * s, 20, 160, INK, 2.5 * s)
+    cv.circle(hx + f * 2 * s, hy + 7 * s, 5 * s, fill=hexc("#ff8a7a", 90))
+
+
+def draw_cane(cv, hand, foot):
+    cv.line([hand, foot], hexc("#7a4f2e"), 9, cap=False)
+    cv.arc(hand[0] - 18, hand[1] - 16, hand[0] + 6, hand[1] + 8, 180, 360, hexc("#7a4f2e"), 9)
+    cv.rect(foot[0] - 6, foot[1] - 8, foot[0] + 6, foot[1], fill=INK, r=2)

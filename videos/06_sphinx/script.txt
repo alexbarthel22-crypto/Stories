@@ -1,0 +1,16 @@
+# Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden.
+# {emotion} am Zeilenanfang = Regieanweisung für diese Zeile (amused, surprised, tense, fast ...).
+{fast} WARTE! Dieses Rätsel kann niemand lösen!
+Im alten Ägypten bewacht die Sphinx den Weg zu den Pyramiden.
+Wer vorbei will, muss ihr Rätsel lösen.
+{tense} Was geht am Morgen auf vier Beinen, am Mittag auf zwei Beinen und am Abend auf drei Beinen?
+[PAUSE 1.6]
+Kleiner Tipp: Der Tag steht für ein ganzes Leben.
+Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!
+Hier kommt die Lösung.
+{amused} Es ist der Mensch!
+Am Morgen seines Lebens krabbelt er als Baby auf allen vieren.
+Am Mittag, als Erwachsener, geht er auf zwei Beinen.
+Und am Abend, im Alter, nimmt er einen Stock als drittes Bein.
+{amused} Hättest du's gewusst?
+Schreib's in die Kommentare und folg mir für das nächste Rätsel!
