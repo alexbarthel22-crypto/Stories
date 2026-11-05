@@ -166,7 +166,7 @@ def croak():
     return np.concatenate(out) * 0.5
 
 
-def stadium_rec(target_db=-20.0):
+def stadium_rec(target_db=-25.0):
     """Stadionjubel aus Pixabay-Aufnahme (crowd-cheering-379666, Pixabay-Lizenz), Ausschnitt 1,85-4,36 s (sofort laut), nur Szene 1."""
     import wave
     w = wave.open('stadion_jubel.wav')

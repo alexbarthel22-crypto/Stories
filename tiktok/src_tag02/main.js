@@ -135,7 +135,8 @@ const SCENES = {
     }
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(540, 1180, 0.95) + cashBox(540, 1015, 0.8, 'empty') + coins +
         place(coach({mouth: m, wave: t < c[3] ? Math.sin(t * 9) : 0, blink: blinkAt(t)}), 170, 1600, 0.85)) +
-      popG(t, c[0], 520, 400, badge(520, 400, 'WIR BRAUCHEN', {kind: 'red', fs: 60, rot: -2})) +
+      (t < c[3] ? popG(t, c[0], 520, 400, badge(520, 400, 'WIR BRAUCHEN', {kind: 'red', fs: 60, rot: -2}))
+                : popG(t, c[3], 520, 330, badge(520, 330, 'WIR BRAUCHEN DICH!', {kind: 'red', fs: 52, rot: -2}))) +
       (t >= c[0] && t < c[3] ? popG(t, c[0] + 0.1, 540, 700, `<g transform="translate(540 700) scale(${1 + 0.04 * Math.sin(t * 10)}) translate(-540 -700)">${bigText(540, 790, 'DICH!', '#FFD31A', 300)}</g>`) : '') +
       popG(t, c[3], 520, 470, badge(520, 470, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 46})) +
       popG(t, c[4], 520, 590, badge(520, 590, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 46, rot: -2}));

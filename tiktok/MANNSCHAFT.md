@@ -72,7 +72,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Entwurfsstimme (kostenlos, offline): espeak-ng mit MBROLA `mb-de6`
 
 ## Folge 2 (Tag 2)
-- Datei: `tiktok/tag02_fc_schlammloch_v7.mp4` (0:48; komplette Sprache in EINEM Gemini-Aufruf für eine einheitliche Stimme), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
+- Datei: `tiktok/tag02_fc_schlammloch_v8.mp4` (0:48; Jubel leiser; komplette Sprache in EINEM Gemini-Aufruf für eine einheitliche Stimme), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
 - Die ersten drei Fans sitzen auf Klappstuhl 1–3 (Cartoon-Figuren mit Schal, keine echten Fotos):
   - Stuhl 1: **Eike** (@eikemzz) – rote Cap, graues Hoodie
   - Stuhl 2: **Tobi** (@tobiii1911) – braune Locken, oranges Hoodie
