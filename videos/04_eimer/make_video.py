@@ -11,6 +11,28 @@ from PIL import Image, ImageEnhance
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "engine"))
 from toolkit import *  # noqa
+import toolkit as _tk
+
+# High-contrast text boxes for the colourful party scene: light boxes become dark navy with a yellow
+# frame, yellow boxes get a dark frame, green/red boxes a white frame. The question scene (dark
+# background) keeps the normal channel style.
+_PARTY_STYLE = {"on": True}
+_NAVY = "#1d1b33"
+
+
+def pill(img, cx, cy, text, size=64, fg="#2b2140", bg="#fff6e6", **kw):
+    if _PARTY_STYLE["on"] and "border" not in kw:
+        if bg in ("#fff6e6", "#ffffff"):
+            bg, fg, kw["border"] = _NAVY, "#ffffff", "#ffd34d"
+        elif bg == "#c5def5":
+            bg, fg, kw["border"] = _NAVY, "#9fd2ff", "#9fd2ff"
+        elif bg == "#ffd34d":
+            kw["border"] = _NAVY
+        else:
+            kw["border"] = "#ffffff"
+    return _tk.pill(img, cx, cy, text, size, fg=fg, bg=bg, **kw)
+
+
 
 CACHE = os.path.join(HERE, "cache")
 os.makedirs(CACHE, exist_ok=True)
@@ -605,6 +627,14 @@ Q_FEET = 1150
 
 
 def scene_question(t):
+    _PARTY_STYLE["on"] = False
+    try:
+        return _scene_question(t)
+    finally:
+        _PARTY_STYLE["on"] = True
+
+
+def _scene_question(t):
     t0, t_pause, t_tip, t_cm = st("Wie bekommt"), st("PAUSE"), st("Kleiner Tipp"), st("Schreib deine")
     img = vgradient(OUT_W, OUT_H, [(0, "#14213d"), (1, "#2b3f74")])
     cv = Canvas(img)
@@ -696,7 +726,6 @@ def scene_outro(t):
         pill(img, OUT_W / 2, 965, txt, 72, bg=bg, fg="#ffffff", scale=ease_out_back(prog(t, t1 + 0.4, t1 + 0.75)) * pulse)
         pill(img, OUT_W / 2, 1085, "MORGEN: NEUES RÄTSEL", 48, bg="#fff6e6",
              scale=ease_out_back(prog(t, t1 + 1.0, t1 + 1.35)))
-    pill(img, OUT_W / 2, 1230, "4 L  ✓", 56, bg="#37b26c", fg="#ffffff", pad=(22, 10), rot=-3)
     return img
 
 

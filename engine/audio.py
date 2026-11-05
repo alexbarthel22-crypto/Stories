@@ -313,7 +313,13 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
              "tada": tada, "glug": glug, "fw_launch": fw_launch, "fw_boom": fw_boom,
              "fw_crackle": fw_crackle, "creak": creak, "growl": growl, "buzzer": buzzer, "step": step,
              "drip": drip, "swish": swish, "shing": shing, "squawk": squawk, "wrong": wrong}.get(kind)
-        if kind == "bed":
+        if kind == "file":          # external sound file: ("file", t, gain, path, duration)
+            path, dur = extra[0], extra[1]
+            s = load_music(path, int(dur * SR))
+            fo = int(min(0.5, dur / 3) * SR)
+            s[-fo:] *= np.linspace(1, 0, fo)
+            s[:int(0.01 * SR)] *= np.linspace(0, 1, int(0.01 * SR))
+        elif kind == "bed":
             s = crackle_bed(extra[0])
         elif kind == "chainsaw":
             s = chainsaw(extra[0])

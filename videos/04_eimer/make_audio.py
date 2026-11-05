@@ -25,9 +25,10 @@ for (t0, t1, kind, src, dst, amt) in mv.ACTIONS:
 ev += [("whoosh", st("Wie bekommt") - 0.15, 0.6), ("whoosh", st("Hier kommt") - 0.15, 0.6),
        ("whoosh", st("Hättest") - 0.15, 0.6), ("tada", st("Eins plus drei") + 0.1, 0.9)]
 ev = [e for e in ev if not (e[0] == "ding" and abs(e[1] - st("Eins plus drei")) < 0.01)]
-# opening fireworks: clearly quieter than the voice (sfx are mixed at 0.6x on top of these gains)
-for (t0, fx, fy, col) in mv.INTRO_FIREWORKS:
-    ev += [("fw_launch", t0, 0.11), ("fw_boom", t0 + mv.FW_LAUNCH, 0.21), ("fw_crackle", t0 + mv.FW_LAUNCH + 0.12, 0.15)]
+# opening fireworks: clearly quieter than the voice (about 20 dB below it)
+FW_GAIN = 0.13
+FW_FILE = os.path.join(HERE, "..", "..", "assets", "sfx", "fireworks.mp3")   # user-provided fireworks sound
+ev += [("file", 0.0, FW_GAIN, FW_FILE, 3.0)]
 mix(os.path.join(HERE, "voice.wav"), mv.END, ev, os.path.join(HERE, "mix.wav"),
     music_path=os.path.join(HERE, "..", "..", "assets", "music", "raetsel_theme.mp3"), music_db=-15.0)
 print("mix.wav", round(mv.END, 2), "s")
