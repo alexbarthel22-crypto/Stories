@@ -65,14 +65,14 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 ## Stimme
 - Hintergrundmusik: eigene Komposition, lizenzfrei – **Lo-Fi-Hip-Hop** (`src/music2.py`, Hörprobe `audio/hintergrundmusik_lofi.wav`): 92 BPM, a-Moll, E-Piano-Akkorde Am7–Fmaj7–C–G, Boom-Bap-Drums, Bass, kurze Pfeif-Melodie als Hook, leichtes Vinyl-Knistern; wird unter der Stimme leiser. (Die frühere Marimba-Musik `src/music.py` wird nicht mehr genutzt.)
 - Soundeffekte (leise gemischt): synthetisch in `src/sfx.py` (Szene 1: Stadionjubel aus der Pixabay-Aufnahme „crowd-cheering-379666“ (Pixabay-Lizenz), Ausschnitt Sekunde 1,85–4,36 (sofort laut), startet mit dem Video und läuft nur in Szene 1, `audio/stadion_intro_jubel.wav`; Schlamm-Platscher bei Schnitten, Flackern beim Flutlicht; keine Platz- und Hupen-Sounds; Münzen, Kassenklingeln, Pfiff, Fanfare, trauriges Posaunen-„wah-wah“, Benachrichtigungs-Ding)
-- Final: Gemini TTS (`gemini-3.8-flash-tts`), Stimme **Puck**
+- Final ab Tag 2: Gemini TTS (`gemini-3.8-flash-tts`), Stimme **Fenrir** (energiegeladen, euphorisch); Stil-Satz: „Read in German like a hyped, super energetic, euphoric young TikTok creator, full of excitement and speed, the same high energy for every line, with a one-second pause between lines:“ (Tag 1 noch mit Puck)
 - Regie: schneller TikTok-Creator, trocken-ironisch, Kunstpausen vor Pointen, „Fans: null“ traurig, Ziel und Folgen-Aufruf mit Energie
 - Ganzes Skript **immer in einem einzigen Aufruf** einsprechen (sonst klingen Szenen unterschiedlich), „Follower“ in der Sprache vermeiden (klingt amerikanisch) – stattdessen „neue Fans“; Stil-Satz: „Read in German like an energetic, fast, dry and ironic young TikTok creator, the same voice and mood for every line, with a one-second pause between lines:“; an den Pausen in Szenen schneiden, mit `atempo=0.85` auf das Referenztempo (ca. 150 Wörter pro Minute) bringen
 - Stimmanalyse der Referenzvideos: `audio/analyse.json`
 - Entwurfsstimme (kostenlos, offline): espeak-ng mit MBROLA `mb-de6`
 
 ## Folge 2 (Tag 2)
-- Datei: `tiktok/tag02_fc_schlammloch_v8.mp4` (0:48; Jubel leiser; komplette Sprache in EINEM Gemini-Aufruf für eine einheitliche Stimme), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
+- Datei: `tiktok/tag02_fc_schlammloch_v9.mp4` (0:53; neue Stimme Fenrir, euphorisch; die 3 Fans sitzen schon im Intro im Hintergrund; komplette Sprache in EINEM Gemini-Aufruf für eine einheitliche Stimme), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
 - Die ersten drei Fans sitzen auf Klappstuhl 1–3 (Cartoon-Figuren mit Schal, keine echten Fotos):
   - Stuhl 1: **Eike** (@eikemzz) – rote Cap, graues Hoodie
   - Stuhl 2: **Tobi** (@tobiii1911) – braune Locken, oranges Hoodie
