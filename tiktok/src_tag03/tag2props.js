@@ -115,9 +115,14 @@ function calcBoard(t, x, y, lines, times) {
   lines.forEach((l, i) => {
     if (t < times[i]) return;
     const k = clamp((t - times[i]) / 0.2, 0, 1);
+    const big = l[3], ly = y + 106 + i * 110 + (big ? 14 : 0), vy = y + 110 + i * 110 + (big ? 22 : 0);
+    const age = t - times[i], hp = age < 0.6 ? Math.exp(-age * 6) : 0, sc = 1 + 0.55 * hp;
+    const vx = x + 810;
     s += `<g opacity="${k}" transform="translate(${(1 - k) * 40} 0)">
-      ${label(x + 50, y + 106 + i * 110, l[0], 48, BROWN, 'start')}
-      <text x="${x + 810}" y="${y + 110 + i * 110}" text-anchor="end" ${FONT} font-size="62" fill="${l[2] || '#2FA84A'}">${l[1]}</text></g>`;
+      ${hp > 0.05 ? `<rect x="${x + 20}" y="${vy - (big ? 92 : 70)}" width="820" height="${big ? 118 : 92}" rx="14" fill="#FFD31A" opacity="${0.75 * hp}"/>` : ''}
+      ${label(x + 50, ly, l[0], big ? 64 : 48, BROWN, 'start')}
+      <g transform="translate(${vx} ${vy - 20}) scale(${sc}) translate(${-vx} ${-(vy - 20)})">
+      <text x="${vx}" y="${vy}" text-anchor="end" ${FONT} font-size="${big ? 100 : 62}" fill="${l[2] || '#2FA84A'}" stroke="#fff" stroke-width="${big ? 6 : 0}" paint-order="stroke">${l[1]}</text></g></g>`;
   });
   return s;
 }

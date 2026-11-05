@@ -20,7 +20,12 @@ for i, s in enumerate(segs):
     caps = s['cap']
     L = [len(c.replace('*', '').replace('!', '')) + 3 for c in caps]; tot = sum(L); ct = vs
     cl = []
-    for c, l in zip(caps, L):
+    if s.get('cap_off') and len(s['cap_off']) == len(caps):
+        offs = list(s['cap_off']) + [d]
+        for j, c in enumerate(caps):
+            cl.append({'text': c, 't0': round(vs + offs[j], 3), 't1': round(vs + offs[j + 1], 3)})
+    else:
+      for c, l in zip(caps, L):
         dd = d * l / tot
         cl.append({'text': c, 't0': round(ct, 3), 't1': round(ct + dd, 3)}); ct += dd
     end = vs + d + GAP + (TAIL if i == len(segs) - 1 else 0)
@@ -50,7 +55,7 @@ for p in rng.integers(0, N - 2000, int(total * 25)):
 from sfx import build_sfx
 fx = build_sfx(out, N)
 from music2 import make_music
-mus = make_music(total, v)[:N]
+mus = make_music(total, v)[:N] * 1.35
 if len(mus) < N: mus = np.pad(mus, (0, N - len(mus)))
 mix = np.clip(v * 0.95 + rain + drops + fx + mus, -1, 1)
 o = wave.open('mix.wav', 'w'); o.setnchannels(1); o.setsampwidth(2); o.setframerate(SR)

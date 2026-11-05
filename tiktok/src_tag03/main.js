@@ -60,13 +60,13 @@ const SCENES = {
       popG(tt, 0.3, 860, 470, `<g transform="rotate(12 860 470)">${badge(860, 470, 'NEU!', {kind: 'red', fs: 60})}</g>`);
   },
   money3(t, d, m) {
-    const lines = [['408 FOLLOWER × 1 €', '+408 €'], ['214 KOMMENTARE × 2 €', '+428 €'], ['VEREINSKASSE', '836 €']];
+    const lines = [['408 FOLLOWER × 1 €', '+408 €'], ['214 KOMMENTARE × 2 €', '+428 €'], ['VEREINSKASSE', '836 €', '#2FA84A', true]];
     let coins = '';
     const t3 = capT(2);
     for (let i = 0; i < 18; i++) { const t0 = t3 + rnd(i + 900) * 1.2, k = (t - t0) / 0.9; if (k > 0 && k < 1) coins += coin(80 + rnd(i + 950) * 920, -60 + k * 1500, 34, i % 2); }
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(coach({mouth: m, wave: t > t3 ? Math.sin(t * 10) : 0, blink: blinkAt(t)}), 540, 1660, 1.05)) +
-      popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(1), t3]).replace('>836 €</text>', ' font-size="84">836 €</text>').replace('font-size="62" fill="#2FA84A" font-size="84">836', 'font-size="84" fill="#2FA84A">836')) +
-      (t >= t3 ? `<path d="M150 ${290 + 106 + 110 + 36} H930" stroke="#3A2316" stroke-width="7"/>` : '') + coins;
+      popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(1), t3])) +
+      (t >= t3 ? `<path d="M150 ${290 + 106 + 110 + 30} H930" stroke="#3A2316" stroke-width="7"/>` : '') + coins;
   },
   ikea(t, d, m) {
     const tb = 0.9, build = easeOut(clamp((t - tb) / 0.6, 0, 1)), fill = clamp((t - tb - 0.6) / 1.4, 0, 1);
@@ -79,6 +79,14 @@ const SCENES = {
       popG(t, capT(3), 540, 1280, badge(540, 1280, '500 PLÄTZE!', {kind: 'orange', fs: 54, rot: -2})) +
       popG(t, 2.2, 240, 960, badge(240, 960, 'MIT ULTRAS!', {kind: 'red', fs: 40, rot: -4}));
   },
+  ultras(t, d, m) {
+    const z = 1 + 1.2 * easeOut(clamp(t / 0.6, 0, 1)), cx = 280, cy = 700;
+    const sx = x => 540 + z * (x - cx), sy = y => 960 + z * (y - cy);
+    return cam(z, cx, cy, wholePitch(t) + bigStand(t, 1, 1)) +
+      popG(t, 0.2, 540, 340, badge(540, 340, 'ULTRA-BLOCK', {kind: 'red', fs: 60, rot: -2})) +
+      popG(t, capT(2), 540, 480, badge(540, 480, 'NEUES LOGO AUS TAG 1', {kind: 'pitch', fs: 42})) +
+      popG(t, capT(3), 760, 1200, profilePic(760, 1170, 0, 80) + `<g transform="rotate(-4 760 1290)">${badge(760, 1290, 'DANKE, EIKE!', {kind: 'orange', fs: 50})}</g>`);
+  },
   honor(t, d, m) {
     const z = 1 + 2.4 * easeOut(clamp(t / 0.7, 0, 1)), [cx, cy] = standSeatPos(1);
     let s = cam(z, cx, cy - 10, wholePitch(t) + bigStand(t, 1, 1));
@@ -88,7 +96,7 @@ const SCENES = {
     return s + tags + popG(t, 0.6, 540, 1250, badge(540, 1250, '★ EHRENPLÄTZE ★', {kind: 'orange', fs: 54}));
   },
   kasse3(t, d, m) {
-    const lines = [['FERTIG-TRIBÜNE', '−836 €', '#E5483A']];
+    const lines = [['FERTIG-TRIBÜNE', '−836 €', '#E5483A', true]];
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(780, 1290, 0.75) + cashBox(780, 1160, 0.62, 'empty') +
         place(coach({mouth: m, mood: 'sad', blink: blinkAt(t)}), 240, 1600, 0.95)) + moth(t, capT(1) + 0.1) +
       popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [0.1])) +
@@ -103,30 +111,73 @@ const SCENES = {
       popG(t, capT(3), 540, 520, badge(540, 520, 'DAS TOR SCHWIMMT WEG!', {kind: 'orange', fs: 46, rot: -3}));
   },
   platzwart(t, d, m) {
-    const c3 = capT(3), pulse = 0.5 + 0.5 * Math.sin(t * 12);
-    const tape = (y, r) => `<g transform="rotate(${r} 540 ${y})"><rect x="-100" y="${y - 38}" width="1280" height="76" fill="#FFD31A" stroke="#111" stroke-width="6"/>
-      ${Array.from({length: 22}, (_, i) => `<path d="M${-100 + i * 64} ${y + 38} l38 -76 h30 l-38 76z" fill="#111"/>`).join('')}
-      <rect x="250" y="${y - 30}" width="580" height="60" fill="#FFD31A"/><text x="540" y="${y + 18}" text-anchor="middle" ${FONT} font-size="48" fill="#111">DRINGEND GESUCHT</text></g>`;
-    const tools = `<g transform="translate(540 860) rotate(${Math.sin(t * 2) * 5})">
-      <path d="M0 -260 V220" stroke="#8A5A36" stroke-width="22" stroke-linecap="round"/>
-      <path d="M-120 220 H120" stroke="#9A9A9A" stroke-width="20" stroke-linecap="round"/>
-      ${Array.from({length: 9}, (_, i) => `<path d="M${-110 + i * 27.5} 220 v50" stroke="#9A9A9A" stroke-width="10" stroke-linecap="round"/>`).join('')}
-      <g transform="translate(150 -40) rotate(20)"><path d="M0 -200 V100" stroke="#8A5A36" stroke-width="20" stroke-linecap="round"/><path d="M-60 100 Q0 260 60 100 Z" fill="#9A9A9A" stroke="#3A2316" stroke-width="8"/></g>
-      <g transform="translate(-170 40) rotate(-15)"><path d="M0 -150 V120" stroke="#8A5A36" stroke-width="16" stroke-linecap="round"/><rect x="-60" y="110" width="120" height="70" rx="10" fill="#E5483A" stroke="#3A2316" stroke-width="7"/></g></g>`;
-    const siren = (x) => `<g transform="translate(${x} 560)"><path d="M-40 30 Q-40 -40 0 -40 Q40 -40 40 30Z" fill="${pulse > 0.5 ? '#FF4A4A' : '#9E2A2A'}" stroke="#111" stroke-width="7"/>
-      <rect x="-50" y="28" width="100" height="22" rx="6" fill="#555" stroke="#111" stroke-width="6"/>
-      ${pulse > 0.5 ? `<path d="M-80 -30 l-40 -20 M80 -30 l40 -20 M0 -60 v-40" stroke="#FF4A4A" stroke-width="10" stroke-linecap="round"/>` : ''}</g>`;
+    const c = SEG.caps.map(x => x.t0 - SEG.start), pulse = 0.5 + 0.5 * Math.sin(t * 10);
+    const defs = `<defs>
+      <linearGradient id="pwMetal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F4F6F8"/><stop offset=".45" stop-color="#A9B0B8"/><stop offset=".55" stop-color="#E2E6EA"/><stop offset="1" stop-color="#6C737B"/></linearGradient>
+      <linearGradient id="pwWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6B4226"/><stop offset=".4" stop-color="#B07A48"/><stop offset=".6" stop-color="#C98E58"/><stop offset="1" stop-color="#5A361E"/></linearGradient>
+      <linearGradient id="pwGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF3A8"/><stop offset=".5" stop-color="#FFD31A"/><stop offset="1" stop-color="#C98A12"/></linearGradient>
+      <radialGradient id="pwSiren" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#FFE0E0"/><stop offset=".35" stop-color="#FF3B3B"/><stop offset="1" stop-color="#7A0E0E"/></radialGradient>
+      <radialGradient id="pwGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FF4A4A" stop-opacity=".85"/><stop offset="1" stop-color="#FF4A4A" stop-opacity="0"/></radialGradient>
+      <linearGradient id="pwBeam" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFF6C8" stop-opacity=".55"/><stop offset="1" stop-color="#FFF6C8" stop-opacity="0"/></linearGradient>
+      <linearGradient id="pwRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF7A6E"/><stop offset=".5" stop-color="#E5483A"/><stop offset="1" stop-color="#A3241A"/></linearGradient>
+    </defs>`;
+    // Suchscheinwerfer
+    let beams = '';
+    [[200, 1], [880, -1]].forEach(([x, dir]) => { const a = dir * (18 * Math.sin(t * 1.6)) - dir * 8;
+      beams += `<g transform="rotate(${a} ${x} 1500)"><path d="M${x - 30} 1500 L${x - 260} 200 L${x + 260} 200 L${x + 30} 1500 Z" fill="url(#pwBeam)"/></g>`; });
+    // 3D-Titel: gestapelte Ebenen
+    const title3d = (txt, cx, cy, fs) => { let s = ''; for (let k = 12; k > 0; k--) s += `<text x="${cx + k * 1.5}" y="${cy + k * 2.2}" text-anchor="middle" ${FONT} font-size="${fs}" fill="${k > 10 ? '#1A0E06' : '#7A4A10'}">${txt}</text>`;
+      return s + `<text x="${cx}" y="${cy}" text-anchor="middle" ${FONT} font-size="${fs}" fill="url(#pwGold)" stroke="#3A2316" stroke-width="5" paint-order="stroke">${txt}</text>`; };
+    // drehendes 3D-Warnschild
+    const ry = Math.cos(t * 2.4), face = ry >= 0;
+    const sign = (x, y) => `<g transform="translate(${x} ${y}) scale(${Math.max(0.06, Math.abs(ry))} 1)">
+      <path d="M0 -80 L80 0 L0 80 L-80 0 Z" fill="${face ? '#FFD31A' : '#C99A12'}" stroke="#111" stroke-width="9"/>
+      ${face ? `<path d="M0 -80 L80 0 L0 0 Z" fill="#fff" opacity=".18"/><text x="0" y="34" text-anchor="middle" ${FONT} font-size="100" fill="#111">!</text>` : ''}</g>`;
+    // Sirene mit Glanz und Lichtkegel
+    const siren = (x) => { const a = t * 400 % 360;
+      return `<g transform="translate(${x} 640)"><circle r="${110 + 20 * pulse}" fill="url(#pwGlow)" opacity="${0.5 + 0.5 * pulse}"/>
+        <g transform="rotate(${a})"><path d="M0 0 L-60 -380 L60 -380 Z" fill="#FF6A6A" opacity=".18"/></g>
+        <rect x="-62" y="34" width="124" height="34" rx="8" fill="url(#pwMetal)" stroke="#111" stroke-width="6"/>
+        <path d="M-50 36 Q-50 -56 0 -56 Q50 -56 50 36 Z" fill="url(#pwSiren)" stroke="#111" stroke-width="7"/>
+        <ellipse cx="-16" cy="-26" rx="12" ry="20" fill="#fff" opacity=".6"/></g>`; };
+    // hochwertige Werkzeuge: Rechen und Spaten gekreuzt, Schubkarre davor
+    const tools = `<g transform="translate(540 870) scale(${0.6 + 0.01 * Math.sin(t * 3)})">
+      <g transform="rotate(-24)">
+        <rect x="-12" y="-330" width="24" height="560" rx="12" fill="url(#pwWood)" stroke="#3A2316" stroke-width="6"/>
+        <rect x="-150" y="218" width="300" height="34" rx="10" fill="url(#pwMetal)" stroke="#3A2316" stroke-width="6"/>
+        ${Array.from({length: 11}, (_, i) => `<path d="M${-140 + i * 28} 250 l0 52 l6 8" stroke="#6C737B" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M${-142 + i * 28} 252 v40" stroke="#E2E6EA" stroke-width="4" stroke-linecap="round"/>`).join('')}</g>
+      <g transform="rotate(24)">
+        <rect x="-12" y="-330" width="24" height="420" rx="12" fill="url(#pwWood)" stroke="#3A2316" stroke-width="6"/>
+        <path d="M-40 -330 h80 v-26 a40 40 0 0 0 -80 0z" fill="#2A2A2E" stroke="#111" stroke-width="6"/>
+        <path d="M-80 90 L80 90 L70 250 Q0 320 -70 250 Z" fill="url(#pwMetal)" stroke="#3A2316" stroke-width="7"/>
+        <path d="M-50 110 L-44 240" stroke="#fff" stroke-width="10" opacity=".5" stroke-linecap="round"/></g>
+      <g transform="translate(0 250)">
+        <path d="M-200 -60 L200 -60 L160 60 L-160 60 Z" fill="url(#pwRed)" stroke="#3A2316" stroke-width="8" stroke-linejoin="round"/>
+        <path d="M-180 -48 L180 -48" stroke="#fff" stroke-width="8" opacity=".35"/>
+        <ellipse cx="0" cy="-60" rx="200" ry="22" fill="#6B4A30" stroke="#3A2316" stroke-width="6"/>
+        <circle cx="0" cy="110" r="46" fill="#2A2A2E" stroke="#111" stroke-width="8"/><circle cx="0" cy="110" r="16" fill="url(#pwMetal)"/>
+        <path d="M-160 40 L-260 120 M160 40 L260 120" stroke="url(#pwWood)" stroke-width="20" stroke-linecap="round"/></g></g>`;
+    // Bewerbungs-Umschlaege mit 3D-Flip
     let letters = '';
-    if (t >= c3) for (let i = 0; i < 9; i++) {
-      const t0 = c3 + i * 0.16, k = (t - t0) / 0.7;
-      if (k > 0 && k < 1) { const x0 = 100 + rnd(i + 30) * 880, x = x0 + (540 - x0) * k, y = 1700 - k * 600; letters += `<text x="${x}" y="${y}" text-anchor="middle" font-family="Noto Color Emoji" font-size="${80 - k * 30}" transform="rotate(${(1 - k) * 30} ${x} ${y})">✉️</text>`; }
+    if (t >= c[3]) for (let i = 0; i < 10; i++) {
+      const t0 = c[3] + i * 0.14, k = (t - t0) / 0.75;
+      if (k > 0 && k < 1) { const x0 = 80 + rnd(i + 30) * 920, x = x0 + (540 - x0) * k, y = 1750 - k * 530, fl = Math.cos(k * 8);
+        letters += `<g transform="translate(${x} ${y}) rotate(${(1 - k) * 40 * (i % 2 ? 1 : -1)}) scale(${0.9 - k * 0.4} ${(0.9 - k * 0.4) * Math.max(0.15, Math.abs(fl))})">
+          <rect x="-60" y="-40" width="120" height="80" rx="8" fill="${fl > 0 ? '#FFFFFF' : '#E8E2D6'}" stroke="#3A2316" stroke-width="6"/>
+          ${fl > 0 ? `<path d="M-60 -40 L0 10 L60 -40" stroke="#3A2316" stroke-width="6" fill="none"/><circle cx="34" cy="16" r="10" fill="#E5483A"/>` : ''}</g>`; }
     }
-    const inbox = t >= c3 ? popG(t, c3, 540, 1130, `<g transform="translate(540 1130) scale(${1 + 0.06 * pulse}) translate(-540 -1130)">${box(200, 1060, 680, 140, 'red', 11)}
-      ${label(540, 1150, 'BEWERBUNGEN 👇', 70, '#fff').replace('👇', '')}<text x="830" y="1158" text-anchor="middle" font-family="Noto Color Emoji" font-size="64">👇</text></g>`) : '';
-    return cam(1.0, 540, 960, field(t, 1080, {goal: false}) + `<rect width="1080" height="1920" fill="#E5483A" opacity="${0.12 * pulse}"/>`) +
-      tools + siren(170) + siren(910) + popG(t, 0.0, 540, 400, tape(400, -3)) +
-      popG(t, capT(2), 540, 1000, `<g transform="rotate(4 540 1000)">${badge(540, 1000, 'PLATZWART', {kind: 'pitch', fs: 80})}</g>`) +
-      inbox + letters + popG(t, c3 + 0.6, 540, 1270, badge(540, 1270, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 44, rot: -2}));
+    const inbox = t >= c[3] ? popG(t, c[3], 540, 1160, `<g transform="translate(540 1160) scale(${1 + 0.05 * pulse}) translate(-540 -1160)">
+      <rect x="196" y="1104" width="700" height="130" rx="24" fill="#5E120C"/>
+      <rect x="190" y="1090" width="700" height="130" rx="24" fill="url(#pwRed)" stroke="#3A2316" stroke-width="9"/>
+      <rect x="206" y="1102" width="668" height="40" rx="16" fill="#fff" opacity=".18"/>
+      ${label(510, 1180, 'BEWERBUNGEN', 72, '#fff')}<text x="820" y="${1186 + 10 * Math.abs(Math.sin(t * 6))}" text-anchor="middle" font-family="Noto Color Emoji" font-size="70">👇</text></g>`) : '';
+    return defs + cam(1.0, 540, 960, field(t, 1080, {goal: false})) + `<rect width="1080" height="1920" fill="#000" opacity=".45"/>` + beams +
+      `<rect width="1080" height="1920" fill="#E5483A" opacity="${0.10 * pulse}"/>` +
+      siren(150) + siren(930) + popG(t, 0.0, 540, 360, title3d('DRINGEND', 540, 400, 130)) +
+      popG(t, 0.15, 540, 470, title3d('GESUCHT!', 540, 520, 96)) + sign(150, 860) + sign(930, 860) +
+      popG(t, c[1], 540, 870, tools) +
+      popG(t, c[2], 540, 620, `<g transform="rotate(-3 540 620)">${title3d('PLATZWART', 540, 650, 110)}</g>`) +
+      inbox + letters + popG(t, c[4] + 0.2, 540, 1268, badge(540, 1268, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 34, rot: -2}));
   },
   opa(t, d, m) {
     let s = field(t, 960, {goal: false, touchY: 1320});

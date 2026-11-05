@@ -23,8 +23,7 @@ function tiktokComment(x, y, t) {
     <text x="200" y="82" font-family="Inter" font-weight="700" font-size="40" fill="#9A9A9A">Leberkaaszerfetzer</text>
     <text x="610" y="82" font-family="Noto Color Emoji" font-size="38">🐻🦣</text>
     <text x="200" y="150" font-family="Inter" font-weight="600" font-size="52" fill="#fff">bitte ich Stürmer</text>
-    <rect x="200" y="186" width="250" height="56" rx="12" fill="#3A3A3A"/>
-    <text x="325" y="224" text-anchor="middle" font-family="Inter" font-weight="700" font-size="30" fill="#BDBDBD">Erster Kommentar</text>
+    <text x="200" y="240" font-family="Inter" font-weight="700" font-size="34" fill="#8A8A8A">8 Std   Antworten</text>
     <g transform="translate(800 140) scale(${1 + 0.12 * Math.max(0, Math.sin(t * 9))})"><path d="M0 -14 c-22 -30 -64 -8 -46 24 l46 46 l46 -46 c18 -32 -24 -54 -46 -24z" fill="#FE2C55" stroke="#fff" stroke-width="4"/></g>
     <text x="800" y="250" text-anchor="middle" font-family="Inter" font-weight="800" font-size="34" fill="#fff">40</text></g>`;
 }

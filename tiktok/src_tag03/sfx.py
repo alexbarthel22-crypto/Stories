@@ -175,6 +175,37 @@ def stadium_rec(target_db=-20.0):
     return x * (10 ** (target_db / 20) / rms)
 
 
+def water(d):
+    """Wellen und Gluckern: langsam an- und abschwellendes Rauschen + Blubber-Blasen."""
+    t = _t(d); n = len(t)
+    x = rng.standard_normal(n); low = _lp(x, 60) * 6
+    swell = 0.5 + 0.5 * np.sin(2 * np.pi * 0.45 * t) ** 2
+    out = low * swell * 0.25
+    for k in range(int(d * 5)):
+        st = int(rng.random() * (d - 0.2) * SR); tt = _t(0.07 + 0.05 * rng.random())
+        f0 = 300 + 500 * rng.random()
+        out[st:st + len(tt)] += np.sin(2 * np.pi * (f0 + 2500 * tt) * tt) * np.exp(-tt * 40) * 0.12
+    return out * np.minimum(1, t / 0.2) * np.minimum(1, (t[-1] - t) / 0.3)
+
+
+def creak(d=0.5):
+    t = _t(d); f = 140 + 40 * np.sin(2 * np.pi * 1.2 * t)
+    saw = 2 * ((np.cumsum(f) / SR) % 1) - 1
+    return _lp(saw, 5) * np.sin(np.pi * t / t[-1]) * 0.05
+
+
+def drum(d):
+    out = np.zeros(int(d * SR)); b = 0.32
+    for k in range(int(d / b)):
+        s = thud() * (1.2 if k % 2 == 0 else 0.8); i = int(k * b * SR); n = min(len(s), len(out) - i)
+        if n > 0: out[i:i + n] += s[:n]
+    return out
+
+
+def shutter():
+    return np.concatenate([click(), np.zeros(int(0.04 * SR)), click() * 0.8])
+
+
 def build_sfx(segs, N):
     # Stadionjubel (cheer) ist vorhanden, wird in Folge 1 aber bewusst NICHT genutzt (veroeffentlichte Fassung = gemini_v3)
     fx = np.zeros(N, np.float32)
@@ -218,19 +249,25 @@ def build_sfx(segs, N):
         elif sid == 'ikea':
             L(0.0, whoosh()); L(0.45, thud()); L(0.45, clack()); L(0.9, whoosh())
             for k in range(8): L(0.95 + k * 0.08, clack() * 0.5)
-            L(1.6, ding())
-        elif sid == 'honor': L(0.0, whoosh()); L(0.6, ding()); [L(0.75 + i * 0.15, pop()) for i in range(3)]
+            L(1.6, ding()); L(1.5, stadium_rec(-27.0)[:int(max(0.5, en - st - 1.5) * SR)])
+        elif sid == 'honor': L(0.0, whoosh()); L(0.6, ding()); L(0.9, ding() * 0.7); [L(0.75 + i * 0.15, pop()) for i in range(3)]
+        elif sid == 'ultras': L(0.0, whoosh()); L(0.2, pop()); L(0.0, drum(en - st) * 0.8); L(0.0, stadium_rec(-28.0)[:int((en - st) * SR)]); L(c[2], pop()); L(c[3], ding())
         elif sid == 'kasse3': L(0.0, pop()); L(c[0], clack()); L(c[1], sad_trombone(max(0.5, (en - st) - c[1] - 0.12)))
-        elif sid == 'mud': L(0.0, pop()); L(c[3], pop()); [L(x, squelch()) for x in (0.4, 1.2, 2.0, 2.8)]
+        elif sid == 'mud': L(0.0, pop()); L(c[3], pop()); L(0.0, water(en - st) * 1.2)
         elif sid == 'platzwart':
-            L(0.0, thud()); L(c[2], pop()); L(c[3], ding())
+            L(0.0, thud()); L(0.15, thud()); L(c[1], whoosh()); L(c[2], thud()); L(c[3], ding())
             tt = _t(min(2.0, en - st)); siren_s = np.sin(2 * np.pi * (700 + 250 * np.sign(np.sin(2 * np.pi * 3 * tt))) * tt) * 0.03 * np.minimum(1, (tt[-1] - tt) / 0.3)
             L(0.0, siren_s)
-            for i in range(9): L(c[3] + i * 0.16 + 0.6, pop() * 0.5)
-        elif sid == 'opa': L(0.0, pop()); L(c[2], pop())
+            for i in range(10): L(c[3] + i * 0.14 + 0.7, pop() * 0.5)
+            L(c[4] + 0.2, pop())
+        elif sid == 'opa':
+            L(0.0, pop()); L(c[2], pop())
+            for k in range(int((en - st) / 1.2)): L(k * 1.2 + 0.3, creak())
         elif sid == 'abwehr': L(0.0, pop())
-        elif sid == 'news': L(0.0, whoosh()); L(0.6, thud()); L(0.62, click()); L(c[4], thud()); L(c[4], clack())
-        elif sid == 'train': L(0.0, whistle()); L(0.05, pop()); L(c[2], pop()); L(c[4], thud())
+        elif sid == 'news': L(0.0, whoosh()); L(0.3, whoosh()); L(0.6, thud()); L(0.62, shutter()); L(c[2], ding()); L(c[4], thud()); L(c[4], clack())
+        elif sid == 'train':
+            L(0.0, whistle()); L(0.05, pop()); L(c[2], pop()); L(c[4], thud())
+            for k in range(int((en - st) / 0.3)): L(k * 0.3, squelch() * 0.35)
         elif sid == 'rule3':
             L(c[0], pop()); L(c[1], pop())
             for i in range(10):

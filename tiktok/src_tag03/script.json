@@ -1,7 +1,7 @@
 [
  {
   "id": "intro",
-  "say": "TAG DREI!!! Ich gründe einen Fußballverein!",
+  "say": "Tag drei! Ich gründe einen Fußballverein!",
   "cap": [
    "TAG DREI!",
    "ICH GRÜNDE EINEN",
@@ -47,6 +47,16 @@
    "EINE *FERTIG-TRIBÜNE",
    "VON IKEA.",
    "DA PASSEN *ALLE DRAUF!"
+  ]
+ },
+ {
+  "id": "ultras",
+  "say": "Mit eigenem Ultra-Block und dem neuen Ultra-Logo aus Tag eins. Danke, Eike!",
+  "cap": [
+   "MIT EIGENEM *ULTRA-BLOCK",
+   "UND DEM NEUEN",
+   "*ULTRA-LOGO AUS TAG 1.",
+   "DANKE, *EIKE!"
   ]
  },
  {

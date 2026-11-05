@@ -62,8 +62,11 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Intro jeder Folge: euphorisch gesprochen „Tag X! Ich gründe einen Fußballverein!“, darunter die orange Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“ (Tag 1: „⚽ VEREIN GEGRÜNDET“). Weitwinkel auf den Platz mit Tor und Strafraum, der Trainer steht darauf; die Kamera zoomt während der ersten Szene auf ihn. Ein Fußball fliegt von unten links ins Bild, trifft das „TAG X“-Feld (ab Tag 2 ist es ab Sekunde 0 sichtbar) und springt oben rechts raus (mit Aufprall-Geräusch)
 - Untertitel bei y 1420 (unter den Mündern), TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1450, rechts nicht über x 940
 
+## Untertitel-Synchronisierung
+- Untertitel werden nicht mehr gleichmäßig verteilt, sondern exakt an die Sprache gelegt: Gemini liefert für die Rohaufnahme die Startzeit jedes Untertitel-Abschnitts (`cap_off` in `segs.json`), `prep.py` nutzt diese Zeiten
+
 ## Stimme
-- Hintergrundmusik: eigene Komposition, lizenzfrei – **Lo-Fi-Hip-Hop** (`src/music2.py`, Hörprobe `audio/hintergrundmusik_lofi.wav`): 92 BPM, a-Moll, E-Piano-Akkorde Am7–Fmaj7–C–G, Boom-Bap-Drums, Bass, kurze Pfeif-Melodie als Hook, leichtes Vinyl-Knistern; wird unter der Stimme leiser. (Die frühere Marimba-Musik `src/music.py` wird nicht mehr genutzt.)
+- Hintergrundmusik (ab Tag 3 etwas lauter, weniger abgesenkt unter der Stimme): eigene Komposition, lizenzfrei – **Lo-Fi-Hip-Hop** (`src/music2.py`, Hörprobe `audio/hintergrundmusik_lofi.wav`): 92 BPM, a-Moll, E-Piano-Akkorde Am7–Fmaj7–C–G, Boom-Bap-Drums, Bass, kurze Pfeif-Melodie als Hook, leichtes Vinyl-Knistern; wird unter der Stimme leiser. (Die frühere Marimba-Musik `src/music.py` wird nicht mehr genutzt.)
 - Soundeffekte (leise gemischt): synthetisch in `src/sfx.py` (Szene 1: Stadionjubel aus der Pixabay-Aufnahme „crowd-cheering-379666“ (Pixabay-Lizenz), Ausschnitt Sekunde 1,85–4,36 (sofort laut), startet mit dem Video und läuft nur in Szene 1, `audio/stadion_intro_jubel.wav`; Schlamm-Platscher bei Schnitten, Flackern beim Flutlicht; keine Platz- und Hupen-Sounds; Münzen, Kassenklingeln, Pfiff, Fanfare, trauriges Posaunen-„wah-wah“, Benachrichtigungs-Ding)
 - Final ab Tag 2: Gemini TTS (`gemini-3.8-flash-tts`), Stimme **Fenrir** (energiegeladen, euphorisch); Stil-Satz: „Read in German like a hyped, super energetic, euphoric young TikTok creator, full of excitement and speed, the same high energy for every line, with a one-second pause between lines:“ (Tag 1 noch mit Puck)
 - Regie: schneller TikTok-Creator, trocken-ironisch, Kunstpausen vor Pointen, „Fans: null“ traurig, Ziel und Folgen-Aufruf mit Energie
@@ -91,11 +94,12 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Nächstes Spiel: **Sonntag, 1. Spiel gegen den SC Heuballen** (Gegner-Wappen: gelber Schild mit Heuballen, grüner Kopfbalken)
 
 ## Folge 3 (Tag 3)
-- Datei: `tiktok/tag03_fc_schlammloch_v2.mp4` (1:10), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
+- Datei: `tiktok/tag03_fc_schlammloch_v3.mp4` (1:08), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
 - Intro: „TAG DREI!!!“ laut, Trainer vor der Klappstuhl-Tribüne mit Plane aus Folge 2 (Stühle in realistischer Größe), Stadionjubel lauter
 - Fans: gestern 83 → heute **400 (+317)**
 - Neuer Stürmer Nr. 9: **Leberkaaszerfetzer** (sein Kommentar wird nachgebaut gezeigt, mit Profilbild)
 - Geld: 408 Follower × 1 € = 408 € + 214 Kommentare × 2 € = 428 € + 0 € = **836 €** → **Fertig-Tribüne „TRIBÜNSTAD“** (Flachpaket, 500 Plätze, „Schlammloch-Arena“) → **Kasse 0 €**
+- Neu gesprochen: „Mit eigenem Ultra-Block und dem neuen Ultra-Logo aus Tag eins. Danke, Eike!“ (Zoom auf das Banner, Eikes Profilbild)
 - Tribüne: ~500 Fans, vorne Mitte **Ehrenplätze** (goldene Sitze) für Eike, Tobi, Leo; links der **Ultra-Block** mit blau-gelben Fahnen und Banner „Ultra Szene Schlammloch“ (Frakturschrift, gelb auf blau, `src_tag03/ultra.js`)
 - Problem: Strafraum ist ein Schlammsee, das Tor treibt von seiner Torlinie weg → „Deswegen brauchen wir **dringend einen Platzwart**“ (Absperrband „DRINGEND GESUCHT“, Blaulichter, fliegende Bewerbungsbriefe in die Box „BEWERBUNGEN 👇“, Top-Kommentar gewinnt)
 - Opa Jürgen seit heute Morgen in Rente (Schaukelstuhl) → **Verteidiger gesucht**
