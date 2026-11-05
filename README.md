@@ -13,7 +13,8 @@ Deutsche Kurzvideos (9:16, 1080×1920, max. 1:30). Hauptfigur **Alex** schlüpft
 | 6 | OF-Model (Alexia) | `episodes/06_of_model/06_of_model.mp4` | 1:16 |
 | 7 | Emotional abhängig (TikTok Folge 2) | `episodes/07_emotional_abhaengig/07_emotional_abhaengig.mp4` | 1:12 |
 | 8 | Friedrich Merz (TikTok Folge 3) | `episodes/08_merz/08_merz.mp4` | 1:04 |
-| 9 | Gaslighter (TikTok Folge 3) | `episodes/09_gaslighter/09_gaslighter.mp4` | 0:53 |
+| 9 | Gaslighter (TikTok Folge 3) | `episodes/09_gaslighter/09_gaslighter.mp4` | 0:52 |
+| 10 | Fake-Feminist (TikTok Folge 4) | `episodes/10_fake_feminist/10_fake_feminist.mp4` | 1:01 |
 
 ## Alex – fester Look (gilt für alle Folgen)
 Definiert in `tools/alexlib.py` → `ALEX_BASE`. **Nicht ändern**, nur das Outfit wechselt pro Rolle.

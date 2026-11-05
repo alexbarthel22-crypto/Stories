@@ -103,3 +103,13 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Gaslighter 🌀 „Das hab ich nie gesagt.“ – „Du bist zu empfindlich.“ – „Du bildest dir das ein.“ 🚩 Welchen Satz hast du schon mal gehört? 👇 Kennst du jemanden, der auch immer sagt „Das hab ich nie gesagt“? Markier sie oder ihn! Und was soll Alex morgen sein? 🤍
 
 #gaslighting #redflags #toxischebeziehung #beziehung #selbstwert #relatable #fürdich #fyp
+
+## TikTok Folge 4 – Fake-Feminist
+Cover: `episodes/10_fake_feminist/thumbnail.png`
+Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung). Layout: TikTok-Sicherheitsbereiche frei.
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Fake-Feminist 📢 „The future is female“ auf dem Shirt – aber Leas Idee im Meeting klaut er trotzdem 🙄 Und im Haushalt „hilft“ er nur 🧽 Kennst du auch so einen Fake-Feministen? Markier ihn! 👇 Und was soll Alex morgen sein?
+
+#fakefeminist #redflags #feminismus #gleichberechtigung #dating #relatable #comedy #fürdich #fyp
