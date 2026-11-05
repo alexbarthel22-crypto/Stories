@@ -291,6 +291,10 @@ def build_audio(path):
     if getattr(script, "REVEAL_CUT", None):          # Original-Reveal enthält leise Fremdstimme -> abschneiden
         n = int(script.REVEAL_CUT * SR); fo = int(0.06 * SR)
         rev = rev[:n].copy(); rev[-fo:] *= np.linspace(1, 0, fo)
+    if getattr(script, "REVEAL_TAIL", None):         # (ab Sekunde, Faktor): Nachklang mit Hintergrundstimme leiser
+        t0_, g_ = script.REVEAL_TAIL; n = int(t0_ * SR); fo = int(0.08 * SR)
+        env = np.ones(len(rev)); env[n:n + fo] = np.linspace(1, g_, len(env[n:n + fo])); env[n + fo:] = g_
+        rev = rev * env
     add(fx, rev, REVEAL - sfx_meta["reveal_onset"], 2.6 * getattr(script, "INTRO_SFX_GAIN", 1.0))
     tdir = os.path.join(EP, "build", "tts")
     add(voice, load_wav(os.path.join(tdir, "intro_pre.wav")), 0.12)
