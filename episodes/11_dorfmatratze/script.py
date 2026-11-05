@@ -12,7 +12,6 @@ NAME_SCALE = 1.6
 TITLE_SIZE = 92
 BUBBLE_SCALE = 1.2
 INTRO_SFX_GAIN = 3.4   # Reveal-Effekt
-REVEAL_CUT = 0.3       # Reveal nur bis 0,3 s: danach leise Stimme aus dem Originalclip
 INTRO_TICK_GAIN = 6.0  # Auswahl-Klicks während die Leiste läuft, extra laut
 REACTIONS = {"bakery": ["🥐", "😬", "🚩"], "bus": ["🚌", "💀", "🚩"], "group": ["👀", "📢", "🚩"],
              "fest": ["💃", "😠", "🚩"], "night": ["👵", "👀", "🚩"]}
