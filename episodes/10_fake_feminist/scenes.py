@@ -5,7 +5,7 @@ import math, random
 from alexlib import *
 
 AL = alex(top="#FFFFFF", top_style="tee", pants="#3F4A6B", shoes="#FFFFFF")
-FEET, AH = 1665, 470
+FEET, AH = 1665, 560     # Alex größer
 LEA = person_spec(22, girl=True, top="#36B5C2", hair="#3B2A20", skin="#EBB894", pants="#3F4A6B", shoes="#2A2A2A")
 
 INTRO = dict(icon="📢", bg="#7A3FA8", spec=AL, expr="smug", pose="hips", hand_prop=None,
@@ -22,9 +22,9 @@ def shirt_text(c, x, feet, h):
     c.new_path(); c.restore()
 
 
-def _sign(c, x, y, txt, col, rot, size=30, w=230):
+def _sign(c, x, y, txt, col, rot, size=30, w=230, post=150):
     c.save(); c.translate(x, y); c.rotate(rot)
-    c.set_line_width(10); src(c, "#8A5E3B"); c.move_to(0, 40); c.line_to(0, 190); c.stroke()
+    c.set_line_width(10); src(c, "#8A5E3B"); c.move_to(0, 40); c.line_to(0, 40 + post); c.stroke()
     rrect(c, -w / 2, -55, w, 100, 10); fill(c, col)
     rrect(c, -w / 2, -55, w, 100, 10); c.set_line_width(4); src(c, INK); c.stroke()
     text_block(c, txt, 0, -5, size, w - 24, INK, FONT_HEAD)
@@ -55,8 +55,8 @@ def intro_decor(c, t, u):
     emoji(c, "✊", 350, 955, 80 * s_); emoji(c, "♀️", 730, 955, 80 * s_)
     emoji(c, "📢", 540, 730, 60 * s_)
     # Protestschilder im Garten
-    _sign(c, 165, 1440, "#ALLY ✊", "#FFE14D", -0.12, 30, 200)
-    _sign(c, 915, 1440, "Feminist des Jahres 🏆", "#FFFFFF", 0.1, 24, 220)
+    _sign(c, 190, 1620, "#ALLY ✊", "#FFE14D", -0.12, 30, 200, 90)
+    _sign(c, 890, 1620, "Feminist des Jahres 🏆", "#FFFFFF", 0.1, 24, 220, 90)
     # Blumenbeet + Ballons
     for i, x in enumerate(range(240, 860, 62)):
         if abs(x - 540) > 90:
@@ -96,7 +96,8 @@ def alex_extras(c, x, feet, h, t, u):
     c.restore()
 
 
-INTRO["house"] = dict(sky=("#B97ADB", "#FFD1E6"), walls="#F7C6DA", roof="#7A3FA8", door="#E0457B", lawn="#6CC47A")
+INTRO["house"] = dict(sky=("#B97ADB", "#FFD1E6"), walls="#F7C6DA", roof="#7A3FA8", door="#E0457B", lawn="#6CC47A",
+                      accent=("#E0457B", "#7A3FA8"))
 INTRO["decor"] = intro_decor
 INTRO["alex_extras"] = alex_extras
 INTRO["pose"] = "up"
@@ -158,7 +159,7 @@ def sc_what(c, S):
     scaled(c, W / 2, 680, s, meter)
     alex_bottom(c, S, "smug", "hips")
     if t >= a1:
-        bubble(c, "Ich bin der größte Feminist, den du kennst! ✊", W / 2, 1075, pop(t, a1), tail=(0.2, 1), size=40, max_w=700)
+        bubble(c, "Ich bin der größte Feminist, den du kennst! ✊", W / 2, 1000, pop(t, a1), tail=(0.2, 1), size=40, max_w=700)
 
 
 def sc_post(c, S):
@@ -222,9 +223,9 @@ def sc_work(c, S):
         emoji(c, "📊", W / 2, 520, 140)
     scaled(c, W / 2, 700, s, table)
     if S.at(0, 0.1) < t < S.at(0, 0.45):
-        bubble(c, "Wir könnten doch … 💡", 790, 1040, pop(t, S.at(0, 0.1)), tail=(0.3, 1), size=38, max_w=440)
+        bubble(c, "Wir könnten doch … 💡", 790, 965, pop(t, S.at(0, 0.1)), tail=(0.3, 1), size=38, max_w=440)
     if t >= S.at(0, 0.45):
-        bubble(c, "WIR KÖNNTEN DOCH … 💡!!", 330, 1040, pop(t, S.at(0, 0.45)), tail=(-0.3, 1), size=40, max_w=480)
+        bubble(c, "WIR KÖNNTEN DOCH … 💡!!", 330, 965, pop(t, S.at(0, 0.45)), tail=(-0.3, 1), size=40, max_w=480)
     if t >= S.at(0, 0.75):
         emoji(c, "🏆", 180, 1180, 100 * pop(t, S.at(0, 0.75)), rot=-0.2)
     alex_bottom(c, S, "smug" if t > S.at(0, 0.45) else "neutral", "up" if t > S.at(0, 0.75) else "idle", x=320)
@@ -250,7 +251,7 @@ def sc_home(c, S):
     scaled(c, W / 2, 680, s, kitchen)
     alex_bottom(c, S, "smug", "hips")
     if t < a1 + 0.1:
-        bubble(c, "Ich helfe ja im Haushalt! 😇", W / 2, 1075, pop(t, S.at(0, 0.3)) * out_fade(t, a1), tail=(0.2, 1), size=42)
+        bubble(c, "Ich helfe ja im Haushalt! 😇", 815, 1150, pop(t, S.at(0, 0.3)) * out_fade(t, a1), tail=(-0.5, 1), size=40, max_w=340)
 
 
 def sc_date(c, S):
@@ -273,7 +274,7 @@ def sc_date(c, S):
         u = ease_in_out((t - a1) / 1.2)
         emoji(c, "📦", 790, 820 - 30 * math.sin(t * 6), 260)
         text(c, "UMZUG", 790, 1010, 40, "#FFFFFF", FONT_HEAD)
-        bubble(c, "Du bist doch eine starke Frau 💪", 380, 1040, pop(t, S.at(1, 0.4)), tail=(-0.3, 1), size=38, max_w=500)
+        bubble(c, "Du bist doch eine starke Frau 💪", 380, 965, pop(t, S.at(1, 0.4)), tail=(-0.3, 1), size=38, max_w=500)
     alex_bottom(c, S, "smug", "phone" if t > a1 else "idle", "📱" if t > a1 else None, x=320)
     lea(c, S, "happy" if t < a1 else "angry")
 

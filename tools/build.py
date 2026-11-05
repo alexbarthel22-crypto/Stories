@@ -29,6 +29,8 @@ def load(name):
 script = load("script")
 import alexlib as _alexlib
 _alexlib.SAFE_MODE = getattr(script, "SAFE_MODE", "default")
+_alexlib.CAPTION_SIZE = getattr(script, "CAPTION_SIZE", 50)
+_alexlib.NAME_SCALE = getattr(script, "NAME_SCALE", 1.0)
 scenes = load("scenes")
 tts = json.load(open(os.path.join(EP, "build", "tts.json")))
 sfx_meta = json.load(open(os.path.join(ROOT, "assets", "sfx", "sfx_meta.json")))
@@ -110,10 +112,11 @@ def draw_extras(c, S, tg, tl):
         last = max([ft for ft in FLAG_TIMES if tg >= ft] or [-9])
         sc_ = 1 + 0.35 * max(0, 1 - (tg - last) / 0.35)
         def badge():
-            rrect(c, 40, 88, 180, 62, 31); src(c, "#000000", 0.6); c.fill()
-            emoji(c, "🚩", 85, 119, 40)
-            text(c, f"× {n}", 160, 119, 38, "#FFFFFF", FONT_HEAD)
-        scaled(c, 130, 119, sc_, badge)
+            rrect(c, 30, 66, 300, 104, 52); src(c, "#000000", 0.65); c.fill()
+            rrect(c, 30, 66, 300, 104, 52); c.set_line_width(5); src(c, "#FFFFFF", 0.9); c.stroke()
+            emoji(c, "🚩", 100, 118, 66)
+            text(c, f"× {n}", 225, 118, 62, "#FFFFFF", FONT_HEAD)
+        scaled(c, 180, 118, sc_, badge)
         # Tages-Fortschritt unten
         hh, mm = map(int, S.clock.split(":"))
         f = clamp((hh + mm / 60 - 6) / 18)

@@ -6,6 +6,8 @@ Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", 
 
 TTS_PROFILE = "pickme"
 SAFE_MODE = "strict"
+CAPTION_SIZE = 62        # größere Untertitel
+NAME_SCALE = 1.6         # größeres Namensschild
 MUSIC = "marimba" # eigenes lizenzfreies Thema (fröhliche Marimba), mit Ducking unter der Stimme
 INTRO_SFX_GAIN = 2.2   # Auswahl-Klicks + Reveal im Intro lauter
 EXTRAS = True     # Red-Flag-Zähler, Tagesleiste, Reaktions-Emojis, Wisch-Übergänge

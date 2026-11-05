@@ -275,12 +275,16 @@ def title(c, s_txt, y, color, s=1.0, size=70):
     scaled(c, W / 2, y, s, draw)
 
 
+CAPTION_SIZE = 50
+NAME_SCALE = 1.0
+
+
 def caption(c, s_txt, t_since, y=1585):
     """Untertitel-Box wie im Referenzstil: weiß, dunkler Rand, leicht schräg."""
     if not s_txt:
         return
     s_txt = s_txt.upper()
-    size = 50
+    size = CAPTION_SIZE
     lines = wrap(c, s_txt, size, 820, FONT_HEAD)
     w = max(text_width(c, ln, size, FONT_HEAD) for ln in lines) + 56
     h = len(lines) * size * 1.12 + 34
@@ -979,7 +983,7 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     c.restore()
 
     if name:
-        name_tag(c, name, x, y - h * 1.055 + by * k, size=max(16, int(h * 0.052)))
+        name_tag(c, name, x, y - h * (1.055 + 0.02 * (NAME_SCALE - 1)) + by * k, size=max(16, int(h * 0.052 * NAME_SCALE)))
 
 
 
@@ -1096,7 +1100,57 @@ def mix_col(a, b, u):
     return "#%02x%02x%02x" % (int((ra + (rb - ra) * u) * 255), int((ga + (gb - ga) * u) * 255), int((ba + (bb - ba) * u) * 255))
 
 
-def house_scene(c, t, sky=("#4E98E0", "#BFE3FF"), walls="#F2E3C8", roof="#B5523B", door="#7A4A2E", lawn="#5DBB63"):
+def garden_furniture(c, t, accent=("#3E7BDA", "#F2B233")):
+    a1, a2 = accent
+    wood, dark = "#A87447", "#6B4A2E"
+    def line(w=5):
+        c.set_line_width(w); src(c, INK); c.stroke()
+    # Fußmatte, Wandlaternen, Blumentöpfe an der Tür
+    rrect(c, 470, 1255, 140, 16, 4); fill(c, shade(a1, 0.8))
+    for x in (450, 630):
+        rrect(c, x - 14, 1095, 28, 40, 6); fill(c, "#2B2B2B")
+        rrect(c, x - 9, 1101, 18, 26, 4); src(c, "#FFE9A8", 0.7 + 0.3 * math.sin(t * 3 + x) ** 2); c.fill()
+    for x in (430, 650):
+        c.move_to(x - 26, 1205); c.line_to(x + 26, 1205); c.line_to(x + 18, 1262); c.line_to(x - 18, 1262); c.close_path(); fill(c, a2)
+        c.move_to(x - 26, 1205); c.line_to(x + 26, 1205); c.line_to(x + 18, 1262); c.line_to(x - 18, 1262); c.close_path(); line(4)
+        for dx, dy, r in ((0, -30, 26), (-18, -14, 18), (18, -14, 18)):
+            c.arc(x + dx, 1205 + dy, r, 0, 2 * math.pi)
+        fill(c, "#3F9A4A")
+    # Vogelhaus am Baum
+    c.move_to(90, 1010); c.line_to(130, 1045); c.line_to(50, 1045); c.close_path(); fill(c, a1)
+    rrect(c, 58, 1045, 64, 54, 4); fill(c, a2); rrect(c, 58, 1045, 64, 54, 4); line(3)
+    c.arc(90, 1070, 10, 0, 2 * math.pi); fill(c, INK)
+    # Briefkasten am Zaun
+    c.rectangle(684, 1330, 12, 110); fill(c, dark)
+    rrect(c, 650, 1280, 80, 56, 18); fill(c, a1); rrect(c, 650, 1280, 80, 56, 18); line(4)
+    c.rectangle(722, 1262, 6, 30); fill(c, "#E23B3B")
+    # Bank links
+    for x in (135, 315):
+        c.rectangle(x, 1470, 14, 60); fill(c, dark)
+    for i in range(3):
+        rrect(c, 120, 1395 + i * 22, 220, 14, 4); fill(c, wood)
+    rrect(c, 115, 1460, 230, 18, 5); fill(c, wood); rrect(c, 115, 1460, 230, 18, 5); line(3)
+    rrect(c, 130, 1440, 90, 26, 10); fill(c, a1)
+    rrect(c, 230, 1440, 90, 26, 10); fill(c, a2)
+    # Picknicktisch + Sonnenschirm rechts
+    c.set_line_width(8); src(c, "#E8E8E8"); c.move_to(895, 1180); c.line_to(895, 1470); c.stroke()
+    for i in range(6):
+        x0 = 765 + i * 43.3
+        c.move_to(895, 1160); c.line_to(x0, 1235); c.line_to(x0 + 43.3, 1235); c.close_path()
+        src(c, a1 if i % 2 == 0 else "#FFFFFF"); c.fill()
+    c.move_to(895, 1160); c.line_to(765, 1235); c.line_to(1025, 1235); c.close_path(); line(4)
+    rrect(c, 790, 1455, 210, 18, 5); fill(c, wood); rrect(c, 790, 1455, 210, 18, 5); line(3)
+    for x in (805, 970):
+        c.move_to(x, 1473); c.line_to(x + 12, 1473); c.line_to(x + (24 if x < 900 else -12), 1540); c.line_to(x + (12 if x < 900 else -24), 1540); c.close_path()
+        fill(c, dark)
+    for x in (770, 1010):                                    # Hocker
+        rrect(c, x - 22, 1490, 44, 12, 4); fill(c, a2); c.rectangle(x - 4, 1502, 8, 40); fill(c, dark)
+    rrect(c, 860, 1425, 26, 30, 5); fill(c, "#FFFFFF")      # Becher
+    c.arc(915, 1440, 14, 0, 2 * math.pi); fill(c, "#F2B233")   # Zitrone
+
+
+def house_scene(c, t, sky=("#4E98E0", "#BFE3FF"), walls="#F2E3C8", roof="#B5523B", door="#7A4A2E", lawn="#5DBB63",
+                accent=("#3E7BDA", "#F2B233")):
     g = cairo.LinearGradient(0, 0, 0, 1240)
     g.add_color_stop_rgb(0, *rgb(sky[0])[:3]); g.add_color_stop_rgb(1, *rgb(sky[1])[:3])
     c.rectangle(-400, -400, W + 800, 1640); c.set_source(g); c.fill()
@@ -1137,6 +1191,7 @@ def house_scene(c, t, sky=("#4E98E0", "#BFE3FF"), walls="#F2E3C8", roof="#B5523B
     for y in (1350, 1395):
         c.rectangle(-40, y, 440, 10); c.rectangle(700, y, 440, 10)
     fill(c, "#EDEDED")
+    garden_furniture(c, t, accent)
 
 
 def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg):
@@ -1162,8 +1217,8 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
         det = ROLE_DETAILS.get(txt, [icon] * 4)
         house_scene(c, t, sky=(mix_col("#4E98E0", bg, 0.55), mix_col("#BFE3FF", bg, 0.25)))
         bounce = 1 + 0.15 * max(0, 1 - (t - ticks[k]) / 0.08) if t >= ticks[0] else 1
-        emoji(c, det[1], 170, 1500, 120 * bounce, rot=-0.15)
-        emoji(c, det[2], 910, 1500, 120 * bounce, rot=0.15)
+        emoji(c, det[1], 228, 1395, 95 * bounce, rot=-0.15)
+        emoji(c, det[2], 940, 1405, 85 * bounce, rot=0.15)
         emoji(c, det[3], 350, 955, 80)
         emoji(c, det[3 if len(det) < 5 else 4], 730, 955, 80)
         emoji(c, icon, 540, 730, 60)
