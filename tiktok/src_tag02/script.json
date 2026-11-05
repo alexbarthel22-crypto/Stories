@@ -1,0 +1,16 @@
+[
+ {"id":"intro","say":"Tag zwei. Wir haben unsere ersten Fans!","cap":["TAG ZWEI.","WIR HABEN UNSERE","ERSTEN *FANS!"]},
+ {"id":"first3","say":"Auf der Tribüne sitzen: Eikems, Tobi und Leo.","cap":["AUF DER TRIBÜNE SITZEN:","*@EIKEMZZ,","*@TOBIII1911","UND *@LEO.HRO1."]},
+ {"id":"fans83","say":"Und jetzt sind wir schon dreiundachtzig Fans!","cap":["UND JETZT SIND WIR","SCHON *83 FANS!"]},
+ {"id":"problem","say":"Problem: Unsere Tribüne hat nur drei Plätze.","cap":["!PROBLEM:","UNSERE TRIBÜNE HAT","NUR *3 PLÄTZE."]},
+ {"id":"calc","say":"Dreiundachtzig Follower: dreiundachtzig Euro. Vierundzwanzig Kommentare: achtundvierzig Euro. Plus fünfhundert in der Kasse.","cap":["83 FOLLOWER:","*83 EURO.","24 KOMMENTARE:","*48 EURO.","PLUS *500","IN DER KASSE."]},
+ {"id":"total","say":"Macht sechshunderteinunddreißig Euro!","cap":["MACHT","*631 EURO!"]},
+ {"id":"chairs","say":"Davon kaufen wir Klappstühle für alle.","cap":["DAVON KAUFEN WIR","*KLAPPSTÜHLE","FÜR *ALLE."]},
+ {"id":"tarp","say":"Und eine Plane, damit ihr nicht nass werdet.","cap":["UND EINE *PLANE,","DAMIT IHR NICHT","*NASS WERDET."]},
+ {"id":"kasse0","say":"Vereinskasse: null Euro.","cap":["VEREINSKASSE:","!0 EURO."]},
+ {"id":"bus","say":"Und dann das: Unsere Nummer neun hat heute Morgen den Bus genommen.","cap":["UND DANN DAS:","UNSERE *NUMMER 9","HAT HEUTE MORGEN","DEN *BUS GENOMMEN."]},
+ {"id":"out","say":"Er ist raus.","cap":["ER IST !RAUS."]},
+ {"id":"search","say":"Wir suchen eine neue Nummer neun. Und das wird einer von euch!","cap":["WIR SUCHEN","EINE NEUE *NUMMER 9.","UND DAS WIRD","*EINER VON EUCH!"]},
+ {"id":"rule","say":"Jeder Follower bringt einen Euro, jeder Kommentar zwei.","cap":["JEDER *FOLLOWER:","*1 EURO.","JEDER *KOMMENTAR:","*2 EURO."]},
+ {"id":"comment","say":"Wer wird unsere neue Nummer neun? Schreib es in die Kommentare!","cap":["WER WIRD UNSERE","NEUE *NUMMER 9?","SCHREIB ES IN DIE","*KOMMENTARE!"]}
+]

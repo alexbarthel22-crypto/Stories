@@ -12,7 +12,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | 7 | Vokuhila *(Platzhalter-Name)* | Mittelfeld | rotbrauner Vokuhila, rotes Stirnband |
 | 8 | Der Jüngste *(Platzhalter-Name)* | Mittelfeld | rote Cap, Zahnspange |
 | 10 | Spielmacherin *(Platzhalter-Name)* | Mittelfeld | braune Zöpfe mit pinken Haargummis |
-| 9 | **Der, der den Bus verpasst hat** (Name noch offen) | Sturm | blonde Strubbelhaare, verschlafene Augen, Rucksack, **Flip-Flops** |
+| 9 | ~~Der, der den Bus verpasst hat~~ – **seit Tag 2 raus** (hat morgens den Bus genommen). Neue Nr. 9 wird ein Fan aus den Kommentaren | Sturm | blonde Strubbelhaare, verschlafene Augen, Rucksack, **Flip-Flops** |
 | 11 | Der Coole *(Platzhalter-Name)* | Sturm | Afro, Sonnenbrille |
 | 14 | Träumer *(Platzhalter-Name)* | Sturm | Locken, blaue Kopfhörer |
 
@@ -70,3 +70,20 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Ganzes Skript in **einem** Aufruf einsprechen, an den Pausen in Szenen schneiden, mit `atempo=0.85` auf das Referenztempo (ca. 150 Wörter pro Minute) bringen
 - Stimmanalyse der Referenzvideos: `audio/analyse.json`
 - Entwurfsstimme (kostenlos, offline): espeak-ng mit MBROLA `mb-de6`
+
+## Folge 2 (Tag 2)
+- Datei: `tiktok/tag02_fc_schlammloch.mp4` (0:47), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
+- Die ersten drei Fans sitzen auf Klappstuhl 1–3 (Cartoon-Figuren mit Schal, keine echten Fotos):
+  - Stuhl 1: **@eikemzz** – rote Cap, graues Hoodie
+  - Stuhl 2: **@tobiii1911** – braune Locken, oranges Hoodie
+  - Stuhl 3: **@leo.hro1** – graue Haare, grauer Schnauzer, schwarze Jacke
+- Fans: **83**
+- Geld: 83 Follower × 1 € = 83 € + 24 Kommentare × 2 € = 48 € + 500 € = **631 €**. Ausgegeben für Klappstühle für alle (Reihen am Spielfeldrand) und eine blau-gelbe **Plane** über der Tribüne. **Vereinskasse danach: 0 €**
+- Die Nr. 9 hat morgens den Bus genommen und ist raus. Gesucht wird eine neue Nr. 9 aus der Community
+- Regel ab Tag 2: **1 Follower = 1 €, 1 Kommentar = 2 €**
+- Ablauf: TAG 2 / Erste Fans → Fans auf der Tribüne → 83 Fans → Problem: nur 3 Plätze (Menge im Regen) → Rechnung → 631 € → Klappstühle für alle → Plane → Kasse 0 € → Bus mit der Nr. 9 fährt weg → „RAUS!“ → Gesucht: Nr. 9 → Geld-Regel → Top-Kommentar „Wer wird Nr. 9?“
+
+## Stand nach Tag 2
+- Fans: 83 · Vereinskasse: 0 €
+- Tribüne: viele Klappstühle am Spielfeldrand, darüber eine Plane; Stuhl 1–3 gehören @eikemzz, @tobiii1911, @leo.hro1
+- Kader: 10 Spieler, die Nr. 9 ist frei
