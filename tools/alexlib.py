@@ -232,6 +232,14 @@ SAFE_SCALE, SAFE_PIVOT = 0.9, (W / 2, 1720)
 SAFE_MODE = "default"
 STRICT = dict(scale=0.78, x0=500 - 540 * 0.78, y0=160 - 60 * 0.78)
 SAFE_BOX = (60, 160, 940, 1500)   # x0, y0, x1, y1 der freien Zone (unten ~420 px für TikTok-Text)
+
+
+def configure_strict(top=160, bottom=1500, left=60, right=940):
+    """Freie Zone setzen; Inhalt (Design-Bereich y 60..1772) wird hineinskaliert und zentriert."""
+    global SAFE_BOX
+    sc_ = min((right - left) / 1080, (bottom - top) / (1772 - 60))
+    STRICT.update(scale=sc_, x0=left + ((right - left) - 1080 * sc_) / 2, y0=top - 60 * sc_)
+    SAFE_BOX = (left, top, right, bottom)
 TITLE_SIZE = 72
 
 

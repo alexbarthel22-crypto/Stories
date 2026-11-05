@@ -4,7 +4,9 @@ Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", 
 """
 
 TTS_PROFILE = "pickme"
-SAFE_MODE = "strict"     # TikTok-Sicherheitsbereiche frei (wie Fake-Feminist)
+SAFE_MODE = "strict"     # TikTok-Sicherheitsbereiche frei
+SAFE_TOP = 240           # Suchleiste reicht real bis ~225 px (iPhone-Screenshot)
+SAFE_LEFT = 100          # iPhone schneidet seitlich ~100 px ab
 EXTRAS = True            # Red-Flag-Zähler, Tagesleiste, Reaktionen, Wisch-Übergänge
 CAPTION_SIZE = 62
 NAME_SCALE = 1.6

@@ -29,6 +29,9 @@ def load(name):
 script = load("script")
 import alexlib as _alexlib
 _alexlib.SAFE_MODE = getattr(script, "SAFE_MODE", "default")
+if hasattr(script, "SAFE_TOP") or hasattr(script, "SAFE_LEFT"):
+    _alexlib.configure_strict(top=getattr(script, "SAFE_TOP", 160), bottom=getattr(script, "SAFE_BOTTOM", 1500),
+                              left=getattr(script, "SAFE_LEFT", 60), right=getattr(script, "SAFE_RIGHT", 940))
 _alexlib.CAPTION_SIZE = getattr(script, "CAPTION_SIZE", 50)
 _alexlib.NAME_SCALE = getattr(script, "NAME_SCALE", 1.0)
 _alexlib.BUBBLE_SCALE = getattr(script, "BUBBLE_SCALE", 1.0)
