@@ -317,6 +317,24 @@ def st(key):
     return S[K[key]]
 
 
+def word_time(key, word):
+    """estimated time a word is spoken inside a script line (by character position)"""
+    seg = next(x for x in TIM if x["text"].startswith(key))
+    i = seg["text"].find(word)
+    f = (i + len(word) * 0.5) / len(seg["text"])
+    return seg["start"] + (seg["end"] - seg["start"]) * f
+
+
+BUCKET_MENTION = {"big": word_time("Zum Abmessen", "Fünf-Liter-Eimer"),
+                  "small": word_time("Zum Abmessen", "Drei-Liter-Eimer")}
+
+
+def bucket_highlight(name, t):
+    """0..1: swell + glow while the bucket is mentioned"""
+    tm = BUCKET_MENTION[name]
+    return smooth(prog(t, tm - 0.35, tm - 0.05)) * (1 - smooth(prog(t, tm + 0.7, tm + 1.1)))
+
+
 def build_actions():
     """(t0, t1, kind, src, dst, amount) – kinds: fill, pour, empty"""
     acts = []
@@ -599,7 +617,19 @@ def draw_scene(cv, t, solution=True, dario_face=1, cheer=0.0, intro=False):
     lips = {}
     order = sorted(BUCKETS, key=lambda n: 1 if tilt[n] else 0)   # pouring bucket in front
     for n in order:
-        lips[n] = draw_bucket(cv, n, pos[n][0], pos[n][1], lv[n], tilt[n])
+        hl = 0.0 if solution else bucket_highlight(n, t)
+        if hl > 0.01:
+            bx, by = pos[n]
+            b = BUCKETS[n]
+            gcy = by - b["h"] * 0.6
+            pulse = 1 + 0.08 * math.sin(t * 14)
+            for k in range(5, 0, -1):
+                cv.circle(bx, gcy, b["tw"] * (0.45 + 0.22 * k) * pulse, fill=(255, 211, 77, int(34 * hl)))
+            sc = 1 + 0.45 * hl
+            sub = Canvas(cv.img, bx - (bx - cv.ox) / sc, by - (by - cv.oy) / sc, cv.s * sc)
+            lips[n] = draw_bucket(sub, n, bx, by, lv[n], tilt[n])
+        else:
+            lips[n] = draw_bucket(cv, n, pos[n][0], pos[n][1], lv[n], tilt[n])
     for src, target in streams:
         lip = lips[src]
         d = 1 if tilt[src] > 0 else -1
@@ -624,14 +654,41 @@ def level_pills(img, view, pos, lv, scale=1.0, show=("big", "small")):
         pill(img, clamp(sx, 125, 840), min(sy, 1430), fmt_l(lv[n]), 44, bg=bg, fg=fg, pad=(22, 10), scale=scale)
 
 
-def cap_labels(img, view, scale):
+def cap_labels(img, view, t):
     for n in BUCKETS:
         x, y = BUCKETS[n]["home"]
-        sx, sy = w2s(x, y - BUCKETS[n]["h"] * 1.5 - 60, view)
-        pill(img, sx, sy, f"{BUCKETS[n]['cap']} L", 50, bg="#ffd34d", pad=(20, 10), scale=scale)
+        hl = bucket_highlight(n, t)
+        sx, sy = w2s(x, y - BUCKETS[n]["h"] * (1.5 + 0.7 * hl) - 60, view)
+        tm = BUCKET_MENTION[n]
+        sc = ease_out_back(prog(t, tm - 0.2, tm + 0.15)) * (1 + 0.25 * hl)
+        pill(img, sx, sy, f"{BUCKETS[n]['cap']} L", 50, bg="#ffd34d", pad=(20, 10), scale=sc)
 
 
 # ------------------------------------------------------------------ scenes
+def goal_title(frame, t, out=1.0):
+    """'ZIEL: GENAU 4 LITER' – already in frame 0, slams in like a stamp, sparkles, then pulses"""
+    if out <= 0.01:
+        return
+    slam = 1.0 + 0.25 * (1 - smooth(prog(t, 0.0, 0.28)))          # starts a bit bigger (visible at t=0), lands
+    land = prog(t, 0.24, 0.6)
+    bounce = 1 + 0.08 * math.sin(math.pi * land) * (land < 1)
+    pulse = 1 + 0.035 * math.sin(t * 6.5) * (t > 0.6)
+    sc = slam * bounce * pulse * out
+    shake = 6 * math.sin(t * 70) * (1 - prog(t, 0.24, 0.5)) * (t > 0.24)
+    # sparkle ring when it lands
+    if 0.2 < t < 0.9:
+        q = prog(t, 0.2, 0.9)
+        d = ImageDraw.Draw(frame, "RGBA")
+        for i in range(14):
+            a = i / 14 * 2 * math.pi
+            r0, r1 = 230 + 160 * q, 270 + 200 * q
+            cx, cy = OUT_W / 2, 400
+            d.line([(cx + math.cos(a) * r0, cy + math.sin(a) * r0 * 0.45),
+                    (cx + math.cos(a) * r1, cy + math.sin(a) * r1 * 0.45)], fill=(255, 211, 77, int(230 * (1 - q))), width=6)
+    pill(frame, OUT_W / 2 + shake, 300, "ZIEL", 46, bg="#e2574c", fg="#ffffff", pad=(24, 10), rot=-4, scale=sc)
+    pill(frame, OUT_W / 2 - shake, 420, "GENAU 4 LITER", 90, bg="#ffd34d", rot=2, scale=sc, pad=(36, 16))
+
+
 def scene_story(t):
     t0, t1, t2, t3 = st("Dario will"), st("Das Getränk"), st("Zum Abmessen"), st("Und die Eimer")
     cam = keyframes(t, [(t0, FULL), (t0 + 1.2, FULL), (t1, CAM)])
@@ -644,13 +701,12 @@ def scene_story(t):
         out = 1 - prog(t, t1 - 0.1, t1 + 0.2)
         sx, sy = w2s(515, FLOOR - PERSON_H['dario'] - 60, view)
         pill(frame, sx, sy, "DARIO", 52, bg="#ffd34d", rot=3, scale=ease_out_back(prog(t, t0 + 0.2, t0 + 0.5)) * out)
-        pill(frame, OUT_W / 2, 330, "ZIEL: GENAU 4 LITER", 60, bg="#fff6e6", rot=-2,
-             scale=ease_out_back(prog(t, t0 + 1.0, t0 + 1.35)) * out)
+        goal_title(frame, t, out)
     if t1 <= t < t2 + 0.2:
         sx, sy = w2s((BARREL[0] + BARREL[1]) / 2, BARREL[2] - 60, view)
         pill(frame, min(sx, 760), sy, "DAS FASS", 48, bg="#fff6e6", rot=-3, scale=ease_out_back(prog(t, t1, t1 + 0.35)))
     if t2 <= t:
-        cap_labels(frame, view, ease_out_back(prog(t, t2 + 0.6, t2 + 0.95)))
+        cap_labels(frame, view, t)
     if t3 <= t:
         pill(frame, OUT_W / 2, 330, "KEINE MARKIERUNGEN!", 58, bg="#e2574c", fg="#ffffff", rot=-2,
              scale=ease_out_back(prog(t, t3 + 0.2, t3 + 0.55)))
