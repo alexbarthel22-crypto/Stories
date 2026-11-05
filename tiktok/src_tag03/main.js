@@ -32,9 +32,9 @@ function chairTribune(t) {
 const SCENES = {
   intro(t, d, m) {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
-    const world = field(t, 900, {goal: false, touchY: 1190}) + `<g transform="translate(255 495) scale(0.53)">${chairTribune(t)}</g>` +
-      place(coach({mouth: m, blink: blinkAt(t)}), 540, 1330, 0.6);
-    return cam(z, 540, 1080 - 30 * e, world) +
+    const world = field(t, 900, {goal: false, touchY: 1210}) + `<g transform="translate(0 -100)">${chairTribune(t)}</g>` +
+      place(coach({mouth: m, blink: blinkAt(t)}), 540, 1420, 0.72);
+    return cam(z, 540, 1110 - 40 * e, world) +
       `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${badge(540, 440, 'TAG 3', {kind: 'pitch', fs: 150, pad: 120})}</g>` +
       popG(t, 0.55, 540, 640, twoLineBadge(540, 640, 'ICH GRÜNDE EINEN', 'FUSSBALLVEREIN', 52)) + introBall(t);
   },
@@ -60,13 +60,13 @@ const SCENES = {
       popG(tt, 0.3, 860, 470, `<g transform="rotate(12 860 470)">${badge(860, 470, 'NEU!', {kind: 'red', fs: 60})}</g>`);
   },
   money3(t, d, m) {
-    const lines = [['408 FOLLOWER × 1 €', '408 €'], ['214 KOMMENTARE × 2 €', '428 €'], ['VEREINSKASSE', '0 €']];
+    const lines = [['408 FOLLOWER × 1 €', '+408 €'], ['214 KOMMENTARE × 2 €', '+428 €'], ['VEREINSKASSE', '836 €']];
     let coins = '';
-    const t3 = capT(3);
+    const t3 = capT(2);
     for (let i = 0; i < 18; i++) { const t0 = t3 + rnd(i + 900) * 1.2, k = (t - t0) / 0.9; if (k > 0 && k < 1) coins += coin(80 + rnd(i + 950) * 920, -60 + k * 1500, 34, i % 2); }
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(coach({mouth: m, wave: t > t3 ? Math.sin(t * 10) : 0, blink: blinkAt(t)}), 540, 1660, 1.05)) +
-      popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(1), capT(1) + 0.4])) +
-      (t >= t3 ? `<path d="M150 760 H930" stroke="#3A2316" stroke-width="10"/>` + popG(t, t3, 540, 920, bigText(540, 1010, '= 836 €', '#6BF06B', 240)) : '') + coins;
+      popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(1), t3]).replace('>836 €</text>', ' font-size="84">836 €</text>').replace('font-size="62" fill="#2FA84A" font-size="84">836', 'font-size="84" fill="#2FA84A">836')) +
+      (t >= t3 ? `<path d="M150 ${290 + 106 + 110 + 36} H930" stroke="#3A2316" stroke-width="7"/>` : '') + coins;
   },
   ikea(t, d, m) {
     const tb = 0.9, build = easeOut(clamp((t - tb) / 0.6, 0, 1)), fill = clamp((t - tb - 0.6) / 1.4, 0, 1);
@@ -96,21 +96,37 @@ const SCENES = {
       popG(t, capT(1), 540, 800, bigText(540, 900, '0 €', '#FF4A4A', 250));
   },
   mud(t, d, m) {
-    let s = field(t, 960, {goal: false}) + floatingGoal(t);
+    let s = field(t, 1000, {goalX: 600, noPost: true, puddles: [[160, 1400, 160, 30], [880, 1520, 180, 34]]}) + floatingGoal(t, 600, 1040, 1.0);
     s += place(coach({mouth: m, mood: 'sad', blink: blinkAt(t)}), 170, 1660, 0.75);
     return cam(1.0, 540, 960, s) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'PLATZ = SCHLAMMLOCH', {kind: 'red', fs: 52})) +
       popG(t, capT(3), 540, 520, badge(540, 520, 'DAS TOR SCHWIMMT WEG!', {kind: 'orange', fs: 46, rot: -3}));
   },
   platzwart(t, d, m) {
-    const rake = `<g transform="translate(540 820) rotate(${Math.sin(t * 2) * 5})">
+    const c3 = capT(3), pulse = 0.5 + 0.5 * Math.sin(t * 12);
+    const tape = (y, r) => `<g transform="rotate(${r} 540 ${y})"><rect x="-100" y="${y - 38}" width="1280" height="76" fill="#FFD31A" stroke="#111" stroke-width="6"/>
+      ${Array.from({length: 22}, (_, i) => `<path d="M${-100 + i * 64} ${y + 38} l38 -76 h30 l-38 76z" fill="#111"/>`).join('')}
+      <rect x="250" y="${y - 30}" width="580" height="60" fill="#FFD31A"/><text x="540" y="${y + 18}" text-anchor="middle" ${FONT} font-size="48" fill="#111">DRINGEND GESUCHT</text></g>`;
+    const tools = `<g transform="translate(540 860) rotate(${Math.sin(t * 2) * 5})">
       <path d="M0 -260 V220" stroke="#8A5A36" stroke-width="22" stroke-linecap="round"/>
       <path d="M-120 220 H120" stroke="#9A9A9A" stroke-width="20" stroke-linecap="round"/>
       ${Array.from({length: 9}, (_, i) => `<path d="M${-110 + i * 27.5} 220 v50" stroke="#9A9A9A" stroke-width="10" stroke-linecap="round"/>`).join('')}
-      <g transform="translate(150 -40) rotate(20)"><path d="M0 -200 V100" stroke="#8A5A36" stroke-width="20" stroke-linecap="round"/><path d="M-60 100 Q0 260 60 100 Z" fill="#9A9A9A" stroke="#3A2316" stroke-width="8"/></g></g>`;
-    return cam(1.0, 540, 960, field(t, 1080, {goal: false}) + `<path d="M540 0 L300 1100 L780 1100 Z" fill="#FFF3B0" opacity=".14"/>`) + rake +
-      popG(t, 0.0, 540, 360, badge(540, 360, 'GESUCHT: PLATZWART', {kind: 'pitch', fs: 56})) +
-      popG(t, capT(2), 540, 1200, badge(540, 1200, 'TOP-KOMMENTAR GEWINNT!', {kind: 'red', fs: 46, rot: -2}));
+      <g transform="translate(150 -40) rotate(20)"><path d="M0 -200 V100" stroke="#8A5A36" stroke-width="20" stroke-linecap="round"/><path d="M-60 100 Q0 260 60 100 Z" fill="#9A9A9A" stroke="#3A2316" stroke-width="8"/></g>
+      <g transform="translate(-170 40) rotate(-15)"><path d="M0 -150 V120" stroke="#8A5A36" stroke-width="16" stroke-linecap="round"/><rect x="-60" y="110" width="120" height="70" rx="10" fill="#E5483A" stroke="#3A2316" stroke-width="7"/></g></g>`;
+    const siren = (x) => `<g transform="translate(${x} 560)"><path d="M-40 30 Q-40 -40 0 -40 Q40 -40 40 30Z" fill="${pulse > 0.5 ? '#FF4A4A' : '#9E2A2A'}" stroke="#111" stroke-width="7"/>
+      <rect x="-50" y="28" width="100" height="22" rx="6" fill="#555" stroke="#111" stroke-width="6"/>
+      ${pulse > 0.5 ? `<path d="M-80 -30 l-40 -20 M80 -30 l40 -20 M0 -60 v-40" stroke="#FF4A4A" stroke-width="10" stroke-linecap="round"/>` : ''}</g>`;
+    let letters = '';
+    if (t >= c3) for (let i = 0; i < 9; i++) {
+      const t0 = c3 + i * 0.16, k = (t - t0) / 0.7;
+      if (k > 0 && k < 1) { const x0 = 100 + rnd(i + 30) * 880, x = x0 + (540 - x0) * k, y = 1700 - k * 600; letters += `<text x="${x}" y="${y}" text-anchor="middle" font-family="Noto Color Emoji" font-size="${80 - k * 30}" transform="rotate(${(1 - k) * 30} ${x} ${y})">✉️</text>`; }
+    }
+    const inbox = t >= c3 ? popG(t, c3, 540, 1130, `<g transform="translate(540 1130) scale(${1 + 0.06 * pulse}) translate(-540 -1130)">${box(200, 1060, 680, 140, 'red', 11)}
+      ${label(540, 1150, 'BEWERBUNGEN 👇', 70, '#fff').replace('👇', '')}<text x="830" y="1158" text-anchor="middle" font-family="Noto Color Emoji" font-size="64">👇</text></g>`) : '';
+    return cam(1.0, 540, 960, field(t, 1080, {goal: false}) + `<rect width="1080" height="1920" fill="#E5483A" opacity="${0.12 * pulse}"/>`) +
+      tools + siren(170) + siren(910) + popG(t, 0.0, 540, 400, tape(400, -3)) +
+      popG(t, capT(2), 540, 1000, `<g transform="rotate(4 540 1000)">${badge(540, 1000, 'PLATZWART', {kind: 'pitch', fs: 80})}</g>`) +
+      inbox + letters + popG(t, c3 + 0.6, 540, 1270, badge(540, 1270, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 44, rot: -2}));
   },
   opa(t, d, m) {
     let s = field(t, 960, {goal: false, touchY: 1320});
@@ -137,8 +153,8 @@ const SCENES = {
   },
   train(t, d, m) {
     let run = '';
-    [0, 2, 5, 7].forEach((i, k) => { const x = ((t * 260 + k * 300) % 1500) - 200; run += place(teamPlayer(i, t), x, 1150 - Math.abs(Math.sin(t * 10 + k)) * 14, 0.33); });
-    run += place(lkz({}), ((t * 260 + 1200) % 1500) - 200, 1150 - Math.abs(Math.sin(t * 10 + 4)) * 14, 0.33);
+    const runners = [vlad({blink: blinkAt(t)}), lkz({}), teamPlayer(1, t), teamPlayer(2, t), teamPlayer(0, t), teamPlayer(6, t), teamPlayer(4, t), teamPlayer(5, t)];
+    runners.forEach((svg, k) => { const x = ((t * 230 + k * 190) % 1520) - 220; run += place(svg, x, 1180 - Math.abs(Math.sin(t * 10 + k)) * 14, 0.36); });
     const t2 = capT(2);
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + run + place(coach({mouth: m, blink: blinkAt(t)}), 220, 1680, 0.9)) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'HÄRTER TRAINIEREN!', {kind: 'red', fs: 56, rot: -2})) +
@@ -157,9 +173,9 @@ const SCENES = {
   end3(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1700, 1.15)) +
       `<g transform="translate(510 500) scale(${1 + 0.025 * Math.sin(t * 6)}) translate(-510 -500)">${popG(t, 0.0, 510, 500, commentCard(70, 300, t, 'ICH WERDE ...'))}</g>` +
-      popG(t, capT(0), 300, 790, badge(300, 790, 'PLATZWART?', {kind: 'pitch', fs: 44, rot: -3})) +
-      popG(t, capT(1), 760, 790, badge(760, 790, 'VERTEIDIGER?', {kind: 'pitch', fs: 44, rot: 3})) +
-      popG(t, capT(2), 540, 910, badge(540, 910, 'WAS KAUFEN WIR?', {bg: '#FFD31A', fs: 48, rot: -1}));
+      popG(t, capT(1), 300, 790, badge(300, 790, 'PLATZWART?', {kind: 'pitch', fs: 44, rot: -3})) +
+      popG(t, capT(2), 760, 790, badge(760, 790, 'VERTEIDIGER?', {kind: 'pitch', fs: 44, rot: 3})) +
+      popG(t, capT(3), 540, 910, badge(540, 910, 'WAS VORM SPIEL KAUFEN?', {bg: '#FFD31A', fs: 44, rot: -1}));
   },
 };
 

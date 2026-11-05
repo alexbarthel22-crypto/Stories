@@ -99,15 +99,16 @@ function wholePitch(t) {
 }
 
 // Schwimmendes Tor in einem Schlammsee
-function floatingGoal(t) {
-  const dx = -140 + t * 35, bob = Math.sin(t * 3) * 10, tilt = Math.sin(t * 2.2) * 5;
-  let s = `<ellipse cx="560" cy="1260" rx="560" ry="170" fill="#4A3828" stroke="#2C2018" stroke-width="10"/>
-    <ellipse cx="420" cy="1220" rx="230" ry="40" fill="#7B8AA3" opacity=".25"/>`;
-  s += `<g transform="translate(${dx} ${bob}) rotate(${tilt} 600 1260)">${goalPost(600, 1250, 1.2)}</g>`;
-  s += `<path d="M120 1262 Q560 1300 1000 1262 L1000 1440 L120 1440Z" fill="#4A3828" opacity=".85"/>`;
+// Tor steht auf seiner Torlinie (gx, gy) im Strafraum – der Strafraum ist ein Schlammsee, das Tor treibt langsam weg
+function floatingGoal(t, gx, gy, sc) {
+  const dx = t * 22, bob = Math.sin(t * 3) * 8 * sc, tilt = Math.sin(t * 2.2) * 4;
+  let s = `<ellipse cx="${gx}" cy="${gy + 60 * sc}" rx="${300 * sc}" ry="${70 * sc}" fill="#4A3828" stroke="#2C2018" stroke-width="8"/>
+    <ellipse cx="${gx - 120 * sc}" cy="${gy + 40 * sc}" rx="${170 * sc}" ry="${26 * sc}" fill="#7B8AA3" opacity=".3"/>`;
+  s += `<g transform="translate(${dx} ${bob}) rotate(${tilt} ${gx} ${gy})">${goalPost(gx, gy + 8 * sc, 0.9 * sc / 0.9)}</g>`;
+  s += `<path d="M${gx - 290 * sc} ${gy + 12 * sc} Q${gx} ${gy + 34 * sc} ${gx + 290 * sc} ${gy + 12 * sc} Q${gx + 270 * sc} ${gy + 110 * sc} ${gx} ${gy + 128 * sc} Q${gx - 270 * sc} ${gy + 110 * sc} ${gx - 290 * sc} ${gy + 12 * sc}Z" fill="#4A3828" opacity=".8"/>`;
   for (let k = 0; k < 4; k++) {
     const ph = (t * 0.9 + k / 4) % 1;
-    s += `<ellipse cx="${600 + dx}" cy="${1262 + bob}" rx="${240 + ph * 260}" ry="${30 + ph * 50}" fill="none" stroke="#C9D3E3" stroke-width="4" opacity="${0.6 * (1 - ph)}"/>`;
+    s += `<ellipse cx="${gx + dx}" cy="${gy + 10 * sc + bob}" rx="${(170 + ph * 230) * sc}" ry="${(22 + ph * 40) * sc}" fill="none" stroke="#C9D3E3" stroke-width="4" opacity="${0.6 * (1 - ph)}"/>`;
   }
   return s;
 }

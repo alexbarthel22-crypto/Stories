@@ -166,7 +166,7 @@ def croak():
     return np.concatenate(out) * 0.5
 
 
-def stadium_rec(target_db=-25.0):
+def stadium_rec(target_db=-20.0):
     """Stadionjubel aus Pixabay-Aufnahme (crowd-cheering-379666, Pixabay-Lizenz), Ausschnitt 1,85-4,36 s (sofort laut), nur Szene 1."""
     import wave
     w = wave.open('stadion_jubel.wav')
@@ -222,7 +222,11 @@ def build_sfx(segs, N):
         elif sid == 'honor': L(0.0, whoosh()); L(0.6, ding()); [L(0.75 + i * 0.15, pop()) for i in range(3)]
         elif sid == 'kasse3': L(0.0, pop()); L(c[0], clack()); L(c[1], sad_trombone(max(0.5, (en - st) - c[1] - 0.12)))
         elif sid == 'mud': L(0.0, pop()); L(c[3], pop()); [L(x, squelch()) for x in (0.4, 1.2, 2.0, 2.8)]
-        elif sid == 'platzwart': L(0.0, pop()); L(c[2], pop())
+        elif sid == 'platzwart':
+            L(0.0, thud()); L(c[2], pop()); L(c[3], ding())
+            tt = _t(min(2.0, en - st)); siren_s = np.sin(2 * np.pi * (700 + 250 * np.sign(np.sin(2 * np.pi * 3 * tt))) * tt) * 0.03 * np.minimum(1, (tt[-1] - tt) / 0.3)
+            L(0.0, siren_s)
+            for i in range(9): L(c[3] + i * 0.16 + 0.6, pop() * 0.5)
         elif sid == 'opa': L(0.0, pop()); L(c[2], pop())
         elif sid == 'abwehr': L(0.0, pop())
         elif sid == 'news': L(0.0, whoosh()); L(0.6, thud()); L(0.62, click()); L(c[4], thud()); L(c[4], clack())

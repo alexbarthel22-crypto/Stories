@@ -91,17 +91,18 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Nächstes Spiel: **Sonntag, 1. Spiel gegen den SC Heuballen** (Gegner-Wappen: gelber Schild mit Heuballen, grüner Kopfbalken)
 
 ## Folge 3 (Tag 3)
-- Datei: `tiktok/tag03_fc_schlammloch.mp4` (1:04), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
-- Intro: Trainer vor der Klappstuhl-Tribüne mit Plane aus Folge 2
+- Datei: `tiktok/tag03_fc_schlammloch_v2.mp4` (1:10), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
+- Intro: „TAG DREI!!!“ laut, Trainer vor der Klappstuhl-Tribüne mit Plane aus Folge 2 (Stühle in realistischer Größe), Stadionjubel lauter
 - Fans: gestern 83 → heute **400 (+317)**
 - Neuer Stürmer Nr. 9: **Leberkaaszerfetzer** (sein Kommentar wird nachgebaut gezeigt, mit Profilbild)
 - Geld: 408 Follower × 1 € = 408 € + 214 Kommentare × 2 € = 428 € + 0 € = **836 €** → **Fertig-Tribüne „TRIBÜNSTAD“** (Flachpaket, 500 Plätze, „Schlammloch-Arena“) → **Kasse 0 €**
 - Tribüne: ~500 Fans, vorne Mitte **Ehrenplätze** (goldene Sitze) für Eike, Tobi, Leo; links der **Ultra-Block** mit blau-gelben Fahnen und Banner „Ultra Szene Schlammloch“ (Frakturschrift, gelb auf blau, `src_tag03/ultra.js`)
-- Problem: Platz ist ein Schlammsee, ein Tor schwimmt davon → **Platzwart gesucht** (Top-Kommentar gewinnt)
-- Opa Jürgen in Rente (Schaukelstuhl) → **Verteidiger gesucht**
+- Problem: Strafraum ist ein Schlammsee, das Tor treibt von seiner Torlinie weg → „Deswegen brauchen wir **dringend einen Platzwart**“ (Absperrband „DRINGEND GESUCHT“, Blaulichter, fliegende Bewerbungsbriefe in die Box „BEWERBUNGEN 👇“, Top-Kommentar gewinnt)
+- Opa Jürgen seit heute Morgen in Rente (Schaukelstuhl) → **Verteidiger gesucht**
 - Zeitung „Kreisliga-Kurier“: **FC Asche schlägt SV Kuhwiese 1:0** (Wappen: FC Asche orange/schwarz mit Ball und 2026; SV Kuhwiese weiß mit Kuhflecken, gelber SV-Kreis)
-- „Wir müssen härter trainieren“ – noch **3 Tage** bis zum Spiel gegen den SC Heuballen
+- „Wir müssen härter trainieren“ (Vlad, Leberkaaszerfetzer und weitere Kaderspieler joggen durch den Matsch) – noch **3 Tage** bis zum Spiel gegen den SC Heuballen
 - Stimme: Fenrir, alles in einem Aufruf
+- Ende: „Wer wird unser neuer Platzwart und unser neuer Verteidiger? Und was müssen wir vorm Spiel noch unbedingt kaufen?“
 
 ## Stand nach Tag 3
 - Fans: 400 · Vereinskasse: 0 €
