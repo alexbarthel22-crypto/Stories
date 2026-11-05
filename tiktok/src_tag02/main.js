@@ -26,11 +26,11 @@ const SCENES = {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
     return cam(z, 540, 1060 - 30 * e, field(t, 1060, {goalX: 790}) + place(coach({mouth: m, blink: blinkAt(t)}), 470, 1290, 0.6)) +
       `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${popG(t, 0.3, 540, 440, badge(540, 440, 'TAG 2', {kind: 'pitch', fs: 150, pad: 120}))}</g>` +
-      popG(t, 0.6, 540, 610, badge(540, 610, 'ERSTE FANS!', {bg: '#FFD31A', fs: 56, ball: true})) + introBall(t);
+      introBall(t);
   },
   first3(t, d, m) {
     const z = 1.0 + 0.06 * t / d;
-    let s = field(t, 960, {goal: false, touchY: 1180});
+    let s = field(t, 960, {goal: false, touchY: 1265});
     [220, 540, 860].forEach((x, i) => { s += place(seatedFan(i, t), x, 1210, 0.82); });
     let tags = '';
     FIRST_FANS.forEach((f, i) => { tags += popG(t, capT(i + 1), [220, 540, 860][i], 600 + (i % 2) * 70, handleTag([220, 540, 860][i], 600 + (i % 2) * 70, f.handle, 1.15)); });
@@ -38,12 +38,12 @@ const SCENES = {
   },
   fans83(t, d, m) {
     const n = Math.round(83 * easeOut(clamp((t - 0.3) / 1.4, 0, 1)));
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1640, 1.2)) +
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 460, 1640, 1.2) + place(frog({blink: blinkAt(t, .4), mouth: t > 0.6 && t < 1.1}), 860, 1660 - Math.abs(Math.sin(t * 7)) * 70, 0.5)) +
       popG(t, 0.0, 540, 400, badge(540, 400, 'FANS', {kind: 'pitch', fs: 64})) +
       popG(t, 0.2, 540, 600, bigText(540, 660, String(n), '#6BF06B', 230));
   },
   problem(t, d, m) {
-    let s = field(t, 960, {goal: false, touchY: 1130});
+    let s = field(t, 960, {goal: false, touchY: 1150});
     [380, 540, 700].forEach((x, i) => { s += place(seatedFan(i, t), x, 1120, 0.42); });
     s += crowd(t, 70, 1330, 9, 4, 118, 105, 0.7);
     return cam(1.0, 540, 960, s) +
@@ -65,17 +65,18 @@ const SCENES = {
       popG(t, 0.25, 540, 900, bigText(540, 960, '= 631 €', '#6BF06B', 170)) + coins;
   },
   chairs(t, d, m) {
-    let s = field(t, 960, {goal: false, touchY: 1250});
-    s += chairRows(t, 130, 1040, 7, 3, 137, 105, 0.3, 0.15, 0.06);
-    return cam(1.0 + 0.05 * t / d, 540, 1050, s) + popG(t, 0.0, 540, 420, badge(540, 420, 'KLAPPSTÜHLE FÜR ALLE', {kind: 'pitch', fs: 54}));
+    let s = field(t, 720, {goal: false, touchY: 1310});
+    s += chairRows(t, 95, 800, 10, 8, 99, 66, 0.17, 0.1, 0.018);
+    return cam(1.0 + 0.04 * t / d, 540, 960, s) + popG(t, 0.0, 540, 360, badge(540, 360, 'KLAPPSTÜHLE FÜR ALLE', {kind: 'pitch', fs: 54}));
   },
   tarp(t, d, m) {
-    let s = field(t, 960, {goal: false, touchY: 1250});
-    s += chairRows(9, 130, 1040, 7, 3, 137, 105, 0.3, 0, 0);
-    s += tarp(t, 110, 970, 880, 1250, easeOut(clamp(t / 0.6, 0, 1)));
-    return cam(1.0, 540, 1050, s) +
-      popG(t, 0.0, 540, 420, badge(540, 420, 'PLANE DRÜBER', {kind: 'pitch', fs: 56})) +
-      popG(t, capT(2), 540, 560, badge(540, 560, 'KEINER WIRD NASS', {kind: 'orange', fs: 48, rot: -2}));
+    let s = field(t, 720, {goal: false, touchY: 1310});
+    s += chairRows(9, 95, 800, 10, 8, 99, 66, 0.17, 0, 0);
+    s += seatedCrowd(t, 95, 800, 10, 8, 99, 66, 0.17, 0.35, 0.016);
+    s += tarp(t, 45, 1035, 610, 1310, easeOut(clamp(t / 0.35, 0, 1)));
+    return cam(1.0, 540, 960, s) +
+      popG(t, 0.0, 540, 330, badge(540, 330, 'PLANE DRÜBER', {kind: 'pitch', fs: 56})) +
+      popG(t, capT(2), 540, 470, badge(540, 470, 'KEINER WIRD NASS', {kind: 'orange', fs: 48, rot: -2}));
   },
   kasse0(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(690, 1180, 0.95) + cashBox(690, 1015, 0.8, 'empty') +
@@ -102,11 +103,7 @@ const SCENES = {
   },
   search(t, d, m) {
     const sway = Math.sin(t * 2) * 5;
-    const jersey = `<g transform="translate(540 820) rotate(${sway})">
-      <path d="M-20 -150 Q0 -190 20 -150" stroke="#9A9A9A" stroke-width="10" fill="none"/>
-      <path d="M-150 -120 L150 -120 L120 -60 L160 -20 L110 30 L110 200 L-110 200 L-110 30 L-160 -20 L-120 -60 Z" fill="#2F7FD8" stroke="#111" stroke-width="10" stroke-linejoin="round"/>
-      <path d="M-50 -120 Q0 -70 50 -120" fill="#FFD31A" stroke="#111" stroke-width="7"/>
-      <text x="0" y="130" text-anchor="middle" ${FONT} font-size="190" fill="#FFD31A" stroke="#111" stroke-width="10" paint-order="stroke">9</text></g>`;
+    const jersey = jersey9(540, 860, 1.05, sway);
     const beam = `<path d="M540 0 L300 1100 L780 1100 Z" fill="#FFF3B0" opacity=".14"/>`;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + beam) + jersey +
       popG(t, 0.0, 540, 400, badge(540, 400, 'GESUCHT: NR. 9', {kind: 'pitch', fs: 62})) +
@@ -142,7 +139,7 @@ function render(f) {
   const m = DATA.env[Math.min(f, DATA.env.length - 1)] || 0;
   let body = SCENES[SEG.id](lt, d, m);
   let r = rain(t, 150, 0.45);
-  if (SEG.id === 'tarp') r = `<defs><mask id="tm"><rect width="1080" height="1920" fill="#fff"/><rect x="90" y="${880 + 60}" width="900" height="330" fill="#000"/></mask></defs><g mask="url(#tm)">${r}</g>`;
+  if (SEG.id === 'tarp') r = `<defs><mask id="tm"><rect width="1080" height="1920" fill="#fff"/><rect x="20" y="670" width="1040" height="640" fill="#000"/></mask></defs><g mask="url(#tm)">${r}</g>`;
   body += r;
   const cap = SEG.caps.find(c => t >= c.t0 && t < c.t1) || (t >= SEG.caps[SEG.caps.length - 1].t0 ? SEG.caps[SEG.caps.length - 1] : null);
   if (cap) body += caption(cap.text, cap.t0, t);

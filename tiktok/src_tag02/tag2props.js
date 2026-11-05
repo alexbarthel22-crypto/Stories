@@ -1,13 +1,13 @@
 // Tag 2: Fans, Mini-Fans, Plane, Bus, Rechentafel
 // Die ersten drei Fans (Cartoon-Figuren, keine echten Fotos), sitzend auf Klappstuehlen.
 const FIRST_FANS = [
-  {handle: '@eikemzz', o: {jersey: '#9AA3AE', trim: '#2F7FD8', skin: '#F2CBA4', browCol: '#3A2A20',
+  {handle: 'EIKE', o: {jersey: '#9AA3AE', trim: '#2F7FD8', skin: '#F2CBA4', browCol: '#3A2A20',
     hair: `<path d="M104 180 Q120 70 250 70 Q380 70 396 180 Z" fill="#E5483A"/>`,
     hairOver: `<path d="M110 176 L390 176" stroke="#111" stroke-width="7"/><rect x="226" y="160" width="48" height="18" rx="4" fill="#B83226" stroke="#111" stroke-width="4"/>`}},
-  {handle: '@tobiii1911', o: {jersey: '#F28A2E', trim: '#FFD31A', skin: '#E7B98E', browCol: '#5A3416',
+  {handle: 'TOBI', o: {jersey: '#F28A2E', trim: '#FFD31A', skin: '#E7B98E', browCol: '#5A3416',
     hair: `<path d="M100 210 Q100 70 250 70 Q400 70 400 210 Q370 150 250 150 Q130 150 100 210Z" fill="#6B4226"/>`,
     hairOver: `<path d="M120 100 q20 -30 50 -10 q20 -30 50 -6 q30 -26 60 -2 q30 -22 54 6 q30 -6 40 20" fill="none" stroke="#6B4226" stroke-width="28" stroke-linecap="round"/>`}},
-  {handle: '@leo.hro1', o: {jersey: '#2A2A2E', trim: '#FFD31A', skin: '#F2CCA6', browCol: '#9A9A9A',
+  {handle: 'LEO', o: {jersey: '#2A2A2E', trim: '#FFD31A', skin: '#F2CCA6', browCol: '#9A9A9A',
     hair: `<path d="M100 200 Q104 96 250 92 Q396 96 400 200 Q380 150 250 146 Q120 150 100 200Z" fill="#A8A8A8"/>`,
     face: `<path d="M196 292 Q222 274 250 288 Q278 274 304 292 Q300 312 272 306 Q250 298 228 306 Q200 312 196 292Z" fill="#8A8A8A" stroke="#111" stroke-width="5"/>`, mouthY: 318}},
 ];
@@ -77,7 +77,7 @@ function chairRows(t, x0, y0, cols, rows, dx, dy, s, t0, step) {
   let out = '';
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
     const k = r * cols + c, p = pop(t, t0 + k * step, 0.2);
-    if (p > 0) out += place(chair({}), x0 + c * dx, y0 + r * dy, s * (1 + r * 0.08) * p);
+    if (p > 0) out += place(chair({}), x0 + c * dx + (r % 2) * dx * 0.5 - dx * 0.25, y0 + r * dy, s * (1 + r * 0.08) * p);
   }
   return out;
 }
@@ -119,4 +119,34 @@ function calcBoard(t, x, y, lines, times) {
       <text x="${x + 810}" y="${y + 110 + i * 110}" text-anchor="end" ${FONT} font-size="62" fill="${l[2] || '#2FA84A'}">${l[1]}</text></g>`;
   });
   return s;
+}
+
+// 80 Fans setzen sich nacheinander auf die Stuhlreihen (fallen von oben auf ihren Platz)
+function seatedCrowd(t, x0, y0, cols, rows, dx, dy, s, t0, step) {
+  let out = '';
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    const k = r * cols + c, tt = t - (t0 + ((k * 37) % (rows * cols)) * step);
+    if (tt <= 0) continue;
+    const sc = s * (1 + r * 0.08), seatY = y0 + r * dy - 115 * sc, drop = Math.max(0, 1 - tt / 0.18);
+    out += miniFan(x0 + c * dx + (r % 2) * dx * 0.5 - dx * 0.25, seatY - drop * 120 + 4 * sc * 10, sc * 2.2, k + 3);
+  }
+  return out;
+}
+
+// Trikot der Nr. 9 auf einem Buegel, mit Aermeln, Kragen, Seitenstreifen und Schatten
+function jersey9(cx, cy, s, sway) {
+  return `<g transform="translate(${cx} ${cy}) rotate(${sway}) scale(${s})">
+    <path d="M0 -250 q0 -40 30 -40 q30 0 30 30" stroke="#9A9A9A" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M-170 -170 Q0 -215 170 -170 L180 -150 L-180 -150 Z" fill="#8A5A36" stroke="#111" stroke-width="8"/>
+    <path d="M-80 -180 L-200 -140 L-260 -10 L-185 20 L-150 -40 L-150 230 Q0 250 150 230 L150 -40 L185 20 L260 -10 L200 -140 L80 -180 Q0 -110 -80 -180 Z"
+      fill="#2F7FD8" stroke="#111" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M-150 -40 L-150 230 L-118 232 L-118 -60 Z M150 -40 L150 230 L118 232 L118 -60 Z" fill="#1F5FAE"/>
+    <path d="M-133 -40 V228 M133 -40 V228" stroke="#FFD31A" stroke-width="10"/>
+    <path d="M-262 -14 L-188 16" stroke="#FFD31A" stroke-width="16"/><path d="M262 -14 L188 16" stroke="#FFD31A" stroke-width="16"/>
+    <path d="M-80 -180 Q0 -110 80 -180 L60 -184 Q0 -132 -60 -184 Z" fill="#FFD31A" stroke="#111" stroke-width="6"/>
+    <path d="M-60 -140 Q-90 0 -70 200" stroke="#fff" stroke-width="14" fill="none" opacity=".18" stroke-linecap="round"/>
+    <g transform="translate(-75 -95) scale(0.11) translate(-300 -300)">${LOGO}</g>
+    <text x="0" y="150" text-anchor="middle" ${FONT} font-size="230" fill="#FFD31A" stroke="#111" stroke-width="12" paint-order="stroke">9</text>
+    <text x="0" y="-60" text-anchor="middle" ${FONT} font-size="44" fill="#fff" stroke="#111" stroke-width="6" paint-order="stroke" letter-spacing="3">STURM</text>
+  </g>`;
 }

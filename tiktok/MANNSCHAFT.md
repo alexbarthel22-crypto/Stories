@@ -72,16 +72,17 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Entwurfsstimme (kostenlos, offline): espeak-ng mit MBROLA `mb-de6`
 
 ## Folge 2 (Tag 2)
-- Datei: `tiktok/tag02_fc_schlammloch.mp4` (0:47), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
+- Datei: `tiktok/tag02_fc_schlammloch_v2.mp4` (0:48), Titelbild `tag02_thumbnail.png`, Beschreibung `tag02_beschreibung.md`, Code `src_tag02/`
 - Die ersten drei Fans sitzen auf Klappstuhl 1–3 (Cartoon-Figuren mit Schal, keine echten Fotos):
-  - Stuhl 1: **@eikemzz** – rote Cap, graues Hoodie
-  - Stuhl 2: **@tobiii1911** – braune Locken, oranges Hoodie
-  - Stuhl 3: **@leo.hro1** – graue Haare, grauer Schnauzer, schwarze Jacke
+  - Stuhl 1: **Eike** (@eikemzz) – rote Cap, graues Hoodie
+  - Stuhl 2: **Tobi** (@tobiii1911) – braune Locken, oranges Hoodie
+  - Stuhl 3: **Leo** (@leo.hro1) – graue Haare, grauer Schnauzer, schwarze Jacke
+  - Im Video nur Vornamen; sie sitzen hinter der Seitenlinie
 - Fans: **83**
 - Geld: 83 Follower × 1 € = 83 € + 24 Kommentare × 2 € = 48 € + 500 € = **631 €**. Ausgegeben für Klappstühle für alle (Reihen am Spielfeldrand) und eine blau-gelbe **Plane** über der Tribüne. **Vereinskasse danach: 0 €**
 - Die Nr. 9 hat morgens den Bus genommen und ist raus. Gesucht wird eine neue Nr. 9 aus der Community
 - Regel ab Tag 2: **1 Follower = 1 €, 1 Kommentar = 2 €**
-- Ablauf: TAG 2 / Erste Fans → Fans auf der Tribüne → 83 Fans → Problem: nur 3 Plätze (Menge im Regen) → Rechnung → 631 € → Klappstühle für alle → Plane → Kasse 0 € → Bus mit der Nr. 9 fährt weg → „RAUS!“ → Gesucht: Nr. 9 → Geld-Regel → Top-Kommentar „Wer wird Nr. 9?“
+- Ablauf: TAG 2 „Ich gründe einen Fußballverein“ → Fans auf der Tribüne → 83 Fans (Frodo hüpft neben dem Trainer) → Problem: nur 3 Plätze (Menge im Regen) → Rechnung → 631 € → 80 Klappstühle in 8 Reihen → Plane drüber, 80 Fans setzen sich → Bus mit dem Stürmer Nr. 9 fährt weg → „RAUS!“ → Gesucht: neuer Stürmer Nr. 9 (Trikot am Bügel) → Kasse 0 € → Geld-Regel → Top-Kommentar „Wer wird Nr. 9?“
 
 ## Stand nach Tag 2
 - Fans: 83 · Vereinskasse: 0 €
