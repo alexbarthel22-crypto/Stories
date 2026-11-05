@@ -112,11 +112,11 @@ ein Fake-Feminist 📢 Shirt: „The future is female“ ✨ Realität: Leas Ide
 
 #fakefeminist #redflags #feminismus #performativeally #dating #relatable #comedy #fürdich #fyp
 
-## TikTok Folge 5 – Dorfmatratze
+## TikTok Folge 4 – Dorfmatratze (Wentorf bei Hamburg)
 Cover: `episodes/11_dorfmatratze/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-eine Dorfmatratze 🏘️ Beim Bäcker: die Ex. Im Bus: drei Exen. Der Busfahrer: Onkel von einer 💀 Und Oma Hilde hat sowieso alles gesehen 👵👀 Bei welcher Szene hast du an dein Dorf gedacht? 👇 Kennst du auch so ein Dorf, wo jeder jeden kennt? Markier sie oder ihn! Und was soll Alex morgen sein?
+eine Dorfmatratze 🏘️ Wentorf bei Hamburg, wo jeder jeden kennt: Beim Bäcker die Ex. Im Bus drei Exen. Der Busfahrer? Onkel von einer 💀 Und Oma Hilde hat sowieso alles gesehen 👵👀 Bei welcher Szene hast du an deinen Ort gedacht? 👇 Kennst du auch so ein Dorf, wo jeder jeden kennt? Markier sie oder ihn! Und was soll Alex morgen sein?
 
-#dorfleben #dorfkind #jederkenntjeden #landleben #schützenfest #relatable #comedy #fürdich #fyp
+#wentorf #hamburg #dorfleben #jederkenntjeden #dorfkind #relatable #comedy #fürdich #fyp

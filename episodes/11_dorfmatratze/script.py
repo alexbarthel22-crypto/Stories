@@ -1,4 +1,4 @@
-"""TikTok Folge 5: Heute ist Alex ... eine Dorfmatratze. (ähnlich F-Boy, Dorf: jeder kennt jeden)
+"""TikTok Folge 4: Heute ist Alex ... eine Dorfmatratze. (ähnlich F-Boy, Dorf: jeder kennt jeden)
 Nicht explizit; Outro markiert Dörfer/Leute, nicht 'Dorfmatratzen' (keine Bloßstellung).
 Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.08.
 """
@@ -21,7 +21,7 @@ ROLE_SAY = "eine Dorfmatratze!"
 
 MOODS = {
     "intro_pre": "geheimnisvoll und spannend, ruhig und flüssig, ohne Stocken; den Namen Alex deutsch aussprechen (kurzes A wie in Alexander)",
-    "intro_role": "triumphierende, laute Enthüllung mit einem Augenzwinkern",
+    "intro_role": "völlig überrascht und laut lachend amüsiert, wie ungläubig ausgerufen: Was?! Echt jetzt?",
     "what": "erklärend und amüsiert, die Pointe trocken",
     "bakery": "peinlich berührt und amüsiert, die Pointe trocken",
     "bus": "ungläubig amüsiert, die Pointe trocken",
@@ -54,8 +54,7 @@ THUMB = dict(head="HEUTE IST ALEX EINE…", l1="DORF-", l2="MATRATZE", bg="#5E8C
 SCENES = [
     dict(id="what", bg="#5E8C3A", clock=None, title="WAS IST EINE DORFMATRATZE?", dark=True, lines=[
         ("Eine Dorfmatratze hatte schon was mit fast jedem im Dorf.", None),
-        ("Und im Dorf weiß das natürlich jeder. Bei 412 Einwohnern wird die Auswahl schnell klein.",
-         "Und im Dorf weiß das natürlich jeder. Bei vierhundertzwölf Einwohnern wird die Auswahl schnell klein."),
+        ("Und in Wentorf bei Hamburg weiß das natürlich jeder. Da wird die Auswahl schnell klein.", None),
     ]),
     dict(id="bakery", bg="#E9A23B", clock="07:00", title="BEIM BÄCKER", lines=[
         ("Sieben Uhr beim Bäcker. Hinter der Theke: seine Ex.", None),

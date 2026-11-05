@@ -1,9 +1,10 @@
-"""Visuals: Alex ist heute eine Dorfmatratze (TikTok Folge 5). Nicht explizit – Humor: im Dorf kennt jeder jeden."""
+"""Visuals: Alex ist heute eine Dorfmatratze (TikTok Folge 4). Nicht explizit – Humor: im Dorf kennt jeder jeden."""
 import math, random
 from alexlib import *
 
 # Outfit: Holzfäller-Karohemd, Jeans
-AL = alex(top="#B5343A", top_style="tee", pants="#3F5A8A", shoes="#FFFFFF")
+# Fuckboy-Look, bewusst etwas billig: schwarzes Muskelshirt, dicke Goldkette, Pump, helle Jeans
+AL = alex(top="#1C1C22", top_style="tank", pump=True, chain="#D4AF37", pants="#8FB3D9", shoes="#FFFFFF")
 FEET, AH = 1690, 560
 JANA = person_spec(31, girl=True, top="#F2B233", hair="#C98B4A", skin="#F1C9A8")
 LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894", pants="#3F4A6B", shoes="#2A2A2A")
@@ -25,71 +26,74 @@ def _sign(c, x, y, txt, col, rot, size=40, w=330, post=70):
 
 def intro_decor(c, t, u):
     s_ = clamp(u)
-    # Fachwerk-Balken auf den Wänden
+    # Herz-Lichterkette über dem Dach (blinkt)
+    for i in range(14):
+        x = 205 + i * 52; y = 830 + 26 * math.sin(math.pi * i / 13)
+        on = (int(t * 4) + i) % 2 == 0
+        emoji(c, "❤️" if on else "🩷", x, y + 14, 34 * s_)
+    # Fachwerk-Balken
     c.save(); rrect(c, 220, 820, 640, 440, 6); c.clip()
     c.set_line_width(14); src(c, "#5A3A22", s_)
     for x in (230, 420, 660, 850):
         c.move_to(x, 820); c.line_to(x, 1260)
     for y in (880, 1060):
         c.move_to(220, y); c.line_to(860, y)
-    for (x0, x1) in ((230, 420), (660, 850)):
-        c.move_to(x0, 1060); c.line_to(x1, 1260); c.move_to(x1, 1060); c.line_to(x0, 1260)
     c.stroke(); c.restore()
-    # Fenster: links Herzchen-Gardine, rechts Oma Hilde guckt raus
-    c.save(); rrect(c, 290, 900, 120, 110, 8); c.clip()
-    src(c, "#FFFFFF", 0.9 * s_); c.rectangle(290, 900, 40, 110); c.fill(); c.rectangle(370, 900, 40, 110); c.fill()
-    c.restore()
-    emoji(c, "💕", 350, 955, 60 * s_)
+    # Fenster: links rotes Herz-Licht, rechts Oma Hilde guckt raus
+    rrect(c, 294, 904, 112, 102, 6); src(c, "#FF4D7A", (0.45 + 0.25 * math.sin(t * 3)) * s_); c.fill()
+    emoji(c, "💋", 350, 955, 56 * s_)
     peek = 0.5 + 0.5 * math.sin(t * 2)
     c.save(); rrect(c, 670, 900, 120, 110, 8); c.clip()
     emoji(c, "👵", 700 + 30 * peek, 960, 80 * s_)
     src(c, "#FFFFFF", 0.95); c.rectangle(670, 900, 40 + 30 * (1 - peek), 110); c.fill()
     c.restore()
     emoji(c, "👀", 730, 870, 46 * s_)
-    # Ortsschild-Banner am Dach
+    # Tür steht offen + Fußmatte "Komm rein"
+    rrect(c, 480, 1080, 120, 180, 6); fill(c, "#2A1A20")
+    c.move_to(480, 1080); c.line_to(440, 1100); c.line_to(440, 1250); c.line_to(480, 1260); c.close_path(); fill(c, "#C0392B")
+    rrect(c, 455, 1250, 170, 30, 6); fill(c, "#8A3A3A")
+    text(c, "KOMM REIN 😏", 540, 1265, 20, "#FFFFFF", FONT_HEAD)
+    # Neon-Schild "OPEN 24/7"
+    def neon():
+        glow = 0.7 + 0.3 * (1 if int(t * 3) % 4 else 0.2)
+        rrect(c, 232, 1110 - 40, 196, 80, 18); src(c, "#1C1C22", 0.92); c.fill()
+        rrect(c, 232, 1110 - 40, 196, 80, 18); c.set_line_width(5); src(c, "#FF4DB8", glow); c.stroke()
+        text(c, "OPEN", 330, 1094, 30, "#FF9FE0", FONT_HEAD, alpha=glow)
+        text(c, "24/7 💘", 330, 1128, 26, "#FF9FE0", FONT_HEAD, alpha=glow)
+    scaled(c, 330, 1110, s_, neon)
+    # Ortsschild-Banner
     def banner():
         by = 790
         rrect(c, 230, by - 44, 620, 88, 10); fill(c, "#F7D21B")
         rrect(c, 240, by - 34, 600, 68, 6); c.set_line_width(5); src(c, INK); c.stroke()
-        text(c, "KLEINKLECKERSDORF", 540, by - 6, 40, INK, FONT_HEAD)
-        text(c, "412 Einwohner · alle kennen Alex", 540, by + 26, 22, INK, FONT_BOLD)
+        text(c, "WENTORF", 540, by - 6, 42, INK, FONT_HEAD)
+        text(c, "bei Hamburg · alle kennen Alex", 540, by + 26, 22, INK, FONT_BOLD)
     scaled(c, 540, 790, s_, banner)
-    # Maibaum links
-    c.set_line_width(12); src(c, "#E8E0D0"); c.move_to(150, 1300); c.line_to(150, 860); c.stroke()
-    for i, col in enumerate(("#3E7BDA", "#FFFFFF", "#3E7BDA", "#FFFFFF")):
-        c.set_line_width(6); src(c, col); c.move_to(150, 880 + i * 10); c.line_to(150 + 70 * math.sin(t * 2 + i) * s_, 980 + i * 30); c.stroke()
-    c.arc(150, 860, 26, 0, 2 * math.pi); src(c, "#3F9A4A"); c.fill()
     # Schilder vorne
-    _sign(c, 200, 1650, "Jeder kennt jeden 👀", "#FFFFFF", -0.1, 42, 340)
-    _sign(c, 880, 1650, "Ex-Treffpunkt: Bäcker 🥐", "#FFE14D", 0.08, 38, 340)
+    _sign(c, 200, 1650, "Tür immer offen 🚪", "#FFFFFF", -0.1, 42, 340)
+    _sign(c, 880, 1650, "Schon wieder Besuch 👀", "#FFB3D9", 0.08, 40, 340)
     # Herzen fliegen
     for i in range(5):
         u2 = (t * 0.35 + i / 5) % 1
-        emoji(c, "💔" if i % 2 else "💕", 120 + i * 210, 1250 - u2 * 160, 46, alpha=0.8 * (1 - u2))
+        emoji(c, "💔" if i % 2 else "💋", 120 + i * 210, 1250 - u2 * 160, 46, alpha=0.8 * (1 - u2))
 
 
 def alex_extras(c, x, feet, h, t, u):
-    """Lebkuchenherz 'DORFLIEBLING' um den Hals, Rose in der Hand, Zwinker."""
+    """Fuckboy, etwas billig: Sonnenbrille im Haar, dicke Goldkette, Bierdose, Zwinkern."""
     k = h / 100.0
-    c.set_line_width(0.5 * k); src(c, "#C0392B")
-    c.move_to(x - 5 * k, feet - 57 * k); c.line_to(x, feet - 46 * k); c.line_to(x + 5 * k, feet - 57 * k); c.stroke()
-    c.save(); c.translate(x, feet - 40 * k); c.scale(k, k)
-    c.move_to(0, 7); c.curve_to(-11, -1, -9, -10, -3, -9); c.curve_to(-1, -9, 0, -7, 0, -6)
-    c.curve_to(0, -7, 1, -9, 3, -9); c.curve_to(9, -10, 11, -1, 0, 7); c.close_path()
-    src(c, "#B5703A"); c.fill_preserve(); c.set_line_width(0.9); src(c, "#FFFFFF"); c.stroke()
-    c.select_font_face(FONT_HEAD); c.set_font_size(1.9); src(c, "#FFFFFF")
-    for i, ln in enumerate(("DORF-", "LIEBLING")):
-        e = c.text_extents(ln); c.move_to(-e.x_advance / 2, -3 + i * 2.4); c.show_text(ln)
-    c.new_path(); c.restore()
-    emoji(c, "🌹", x + 34 * k, feet - 64 * k, 11 * k, rot=0.3)
+    emoji(c, "🕶️", x + 2 * k, feet - 90 * k, 16 * k, rot=-0.08)
+    c.set_line_width(1.6 * k); src(c, "#D4AF37")
+    c.move_to(x - 7 * k, feet - 56 * k); c.curve_to(x - 5 * k, feet - 44 * k, x + 5 * k, feet - 44 * k, x + 7 * k, feet - 56 * k); c.stroke()
+    c.arc(x, feet - 45 * k, 2.2 * k, 0, 2 * math.pi); src(c, "#D4AF37"); c.fill()
+    emoji(c, "🍺", x + 36 * k, feet - 30 * k, 12 * k, rot=0.1)
     emoji(c, "😉", x - 30 * k, feet - 94 * k, 12 * k)
 
 
 INTRO = dict(icon="🏘️", bg="#5E8C3A", spec=AL, expr="smug", pose="hips", hand_prop=None,
-             house=dict(sky=("#6FB7E8", "#FFE3B8"), walls="#F7EBD3", roof="#B5523B", door="#3E7B4A", lawn="#5DBB63",
-                        accent=("#C0392B", "#F2B233")),
+             house=dict(sky=("#7A4FA0", "#FF9FB8"), walls="#F7D6E0", roof="#8A2A3A", door="#2A1A20", lawn="#5DAA5E",
+                        accent=("#E0457B", "#1C1C22"), sun=False),
              umbrella=False, fill="#6FB7E8", decor=intro_decor, alex_extras=alex_extras,
-             burst=["💕", "💔", "🏘️", "👵", "🥐", "🌹", "👀", "🍺"])
+             burst=["💋", "💔", "🏘️", "👵", "🍺", "😏", "👀", "💘"])
 
 
 def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
@@ -153,8 +157,8 @@ def sc_what(c, S):
         c.save(); c.translate(W / 2, 480)
         rrect(c, -300, -60, 600, 120, 10); fill(c, "#F7D21B")
         rrect(c, -288, -48, 576, 96, 6); c.set_line_width(5); src(c, INK); c.stroke()
-        text(c, "KLEINKLECKERSDORF", 0, -10, 46, INK, FONT_HEAD)
-        text(c, "412 Einwohner", 0, 28, 26, INK, FONT_BOLD)
+        text(c, "WENTORF", 0, -10, 50, INK, FONT_HEAD)
+        text(c, "bei Hamburg", 0, 28, 26, INK, FONT_BOLD)
         c.restore()
         rnd = random.Random(4)
         for i in range(30):
@@ -223,8 +227,8 @@ def sc_group(c, S):
     def screen():
         c.save(); rrect(c, x0, y0, w, h, 42); c.clip()
         rrect(c, x0, y0, w, 130, 0); fill(c, "#2FA36B")
-        text(c, "Dorf-News 🏘️", x0 + 40, y0 + 62, 34, "#FFFFFF", FONT_HEAD, anchor="l")
-        text(c, "412 Mitglieder", x0 + 40, y0 + 100, 22, "#E8FFE8", FONT_BOLD, anchor="l")
+        text(c, "Wentorf-News 🏘️", x0 + 40, y0 + 62, 34, "#FFFFFF", FONT_HEAD, anchor="l")
+        text(c, "1.204 Mitglieder", x0 + 40, y0 + 100, 22, "#E8FFE8", FONT_BOLD, anchor="l")
         y = y0 + 160
         msgs = [("Oma Hilde", "Hab den Alex gestern gesehen 👀", "#C0392B", 0.1),
                 ("Gerd", "Mit wem??", "#3E7BDA", 0.45),
@@ -300,7 +304,7 @@ def sc_night(c, S):
         def notif():
             rrect(c, 120, 905, 840, 110, 26); src(c, "#FFFFFF", 0.95); c.fill()
             rrect(c, 120, 905, 840, 110, 26); c.set_line_width(4); src(c, INK); c.stroke()
-            text(c, "📢 Dorf-News: 37 neue Nachrichten", W / 2, 960, 38, INK, FONT_HEAD)
+            text(c, "📢 Wentorf-News: 37 neue Nachrichten", W / 2, 960, 36, INK, FONT_HEAD)
         scaled(c, W / 2, 960, pop(t, a1 + 0.1), notif)
     alex_bottom(c, S, "shock" if t > S.at(0, 0.5) else "smug", "idle", x=320, h=AH * 0.9)
 
@@ -339,7 +343,7 @@ def sc_outro(c, S):
         scaled(c, W / 2, 700, s, tg, rot=math.sin(t * 4) * 0.02)
     if t >= a1:
         colors = ["#EC7FAE", "#3E5C9A", "#4A2E6B", "#7A3FA8", "#5E8C3A", "#8E5BE0", "#36B5C2", "#F07F4F", "#555A66"]
-        prev = [("🌹", "FOLGE 1"), ("🥺", "FOLGE 2"), ("🌀", "FOLGE 3"), ("📢", "FOLGE 4"), ("🏘️", "HEUTE ✅")]
+        prev = [("🌹", "FOLGE 1"), ("🥺", "FOLGE 2"), ("🌀", "FOLGE 3"), ("🏘️", "HEUTE ✅")]
         for i in range(9):
             r, cc = i // 3, i % 3
             x, y = 250 + cc * 290, 445 + r * 192
