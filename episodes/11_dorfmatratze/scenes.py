@@ -334,9 +334,7 @@ def sc_bakery(c, S):
         tag(c, 700, 848, "AUCH EX 🤫", "#7A3FA8", s=pop(t, a2 + 0.3))
         tag(c, 380, 848, "WEISS NIX 🙈", "#2FA36B", s=pop(t, a2 + 0.6))
         box_fx(c, t, a2 + 0.3, W / 2, 710, 900, 660, "shock")
-    alex_bottom(c, S, "smug" if t > a2 else "cringe", "idle")
-    if t > a2:
-        emoji(c, "🤫", 760, 1190, 80 * pop(t, a2 + 0.2))
+    alex_bottom(c, S, "cringe", "idle")
     if t > S.at(0, 0.6):
         emoji(c, "💦", 640, 1270, 60)
 
@@ -390,6 +388,8 @@ def sc_group(c, S):
                 y += chat_msg(c, who, m, x0, w, y, pop(t, S.at(0, f), 0.2), col) + 16
         if t > a1:
             y += chat_msg(c, "Oma Hilde", "📷 Foto", x0, w, y, pop(t, a1 + 0.1, 0.2), "#C0392B") + 16
+        if t > a1 + 0.9:
+            y += chat_msg(c, "Gerd", "Der rammelt auch alles 😂", x0, w, y, pop(t, a1 + 0.9, 0.2), "#3E7BDA") + 16
         c.restore()
         if t > a1:
             n = min(99, int(99 * clamp((t - a1) / 1.2)))
@@ -462,6 +462,7 @@ def sc_night(c, S):
             text(c, "📢 Wentorf-News: 37 neue Nachrichten", W / 2, 960, 36, INK, FONT_HEAD)
         scaled(c, W / 2, 960, pop(t, a1 + 0.1), notif)
     alex_bottom(c, S, "shock" if t > S.at(0, 0.5) else "smug", "idle", x=320, h=AH * 0.9)
+    person(c, 740, FEET, AH * 0.86, JANA, t, "shock" if t > S.at(0, 0.5) else "happy", "idle", name="Jana", blink_seed=2)
 
 
 def sc_signs(c, S):

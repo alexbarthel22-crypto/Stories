@@ -158,6 +158,9 @@ for s in script.SCENES:
 def run(job):
     key, gem_text, piper_text, mood = job
     p = f"{out}/{key}.wav"
+    # GEMINI_LINE_TEXT / GEMINI_LINE_MOOD = {"szene_zeile": ...} -> nur für diese Zeile (Aussprache/Betonung)
+    gem_text = getattr(script, "GEMINI_LINE_TEXT", {}).get(key, gem_text)
+    mood = getattr(script, "GEMINI_LINE_MOOD", {}).get(key, mood)
     if GEMINI:
         sid, _, li = key.rpartition("_")
         ov = OVERRIDE.get((sid, int(li))) if li.isdigit() else None

@@ -8,8 +8,14 @@ tempo = float(sys.argv[2]) if len(sys.argv) > 2 else 1.08
 maxp = float(sys.argv[3]) if len(sys.argv) > 3 else 0.22
 mp = os.path.join(ep, "build", "tts.json")
 meta = json.load(open(mp))
+# Optional im script.py der Folge: LINE_TEMPO = {"signs_1": 1.25} -> eigenes Tempo pro Zeile
+import importlib.util
+_sp = importlib.util.spec_from_file_location("script", os.path.join(ep, "script.py"))
+_script = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_script)
+LINE_TEMPO = getattr(_script, "LINE_TEMPO", {})
 
 def process(f):
+    tempo_ = LINE_TEMPO.get(os.path.basename(f)[:-4], tempo)
     orig = f[:-4] + ".orig.wav"
     if not os.path.exists(orig):
         shutil.copy(f, orig)
@@ -35,7 +41,7 @@ def process(f):
     b = a[keep]
     tmp = f[:-4] + ".tmp.wav"
     sf.write(tmp, b, sr)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-af", f"atempo={tempo}", f], check=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-af", f"atempo={tempo_}", f], check=True)
     os.remove(tmp)
     return sf.info(f).duration
 
