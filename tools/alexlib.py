@@ -1210,20 +1210,26 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
         if t >= tk:
             k = i
     revealed = t >= reveal_t
-    fill_rect(c, cfg.get("house", {}).get("sky", ("#4E98E0",))[0] if revealed else "#4E98E0")
+    fill_rect(c, cfg.get("fill", cfg.get("house", {}).get("sky", ("#4E98E0",))[0] if revealed else "#4E98E0"))
     c.save()
     safe_zone(c)
     if revealed:
         u = ease_out_back((t - reveal_t) / 0.45)
         hcfg = cfg.get("house", {})
-        house_scene(c, t, umbrella=cfg.get("umbrella", True), **hcfg)
+        if cfg.get("scene"):
+            cfg["scene"](c, t, True, cfg["bg"])
+        else:
+            house_scene(c, t, umbrella=cfg.get("umbrella", True), **hcfg)
         if cfg.get("decor"):
             cfg["decor"](c, t, u)
         txt = role_text
     else:
         txt, icon, top, bg = shuffle[k]
         det = ROLE_DETAILS.get(txt, [icon] * 4)
-        house_scene(c, t, sky=(mix_col("#4E98E0", bg, 0.55), mix_col("#BFE3FF", bg, 0.25)), umbrella=cfg.get("umbrella", True))
+        if cfg.get("scene"):
+            cfg["scene"](c, t, False, bg)
+        else:
+            house_scene(c, t, sky=(mix_col("#4E98E0", bg, 0.55), mix_col("#BFE3FF", bg, 0.25)), umbrella=cfg.get("umbrella", True))
         bounce = 1 + 0.15 * max(0, 1 - (t - ticks[k]) / 0.08) if t >= ticks[0] else 1
         emoji(c, det[1], 228, 1395, 95 * bounce, rot=-0.15)
         emoji(c, det[2], 940, 1405, 85 * bounce, rot=0.15)

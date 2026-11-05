@@ -4,6 +4,14 @@ Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", 
 """
 
 TTS_PROFILE = "pickme"
+SAFE_MODE = "strict"     # TikTok-Sicherheitsbereiche frei (wie Fake-Feminist)
+EXTRAS = True            # Red-Flag-Zähler, Tagesleiste, Reaktionen, Wisch-Übergänge
+CAPTION_SIZE = 62
+NAME_SCALE = 1.6
+TITLE_SIZE = 92
+BUBBLE_SCALE = 1.2
+INTRO_SFX_GAIN = 2.2
+REACTIONS = {"forgot": ["🤷", "😤", "🚩"], "proof": ["🔍", "🙄", "🚩"], "joke": ["😢", "😠", "🚩"], "fight": ["🔄", "🤯", "🚩"]}
 
 ROLE = "EIN GASLIGHTER."
 ROLE_TTS = "ein Gaslighter."
