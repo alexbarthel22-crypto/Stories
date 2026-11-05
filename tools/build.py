@@ -288,6 +288,9 @@ def build_audio(path):
     for tk in TICKS:
         add(fx, tick, tk - 0.004, getattr(script, "INTRO_TICK_GAIN", getattr(script, "INTRO_SFX_GAIN", 1.0)))
     rev = load_wav(os.path.join(ROOT, "assets", "sfx", "reveal.wav"))
+    if getattr(script, "REVEAL_CUT", None):          # Original-Reveal enthält leise Fremdstimme -> abschneiden
+        n = int(script.REVEAL_CUT * SR); fo = int(0.06 * SR)
+        rev = rev[:n].copy(); rev[-fo:] *= np.linspace(1, 0, fo)
     add(fx, rev, REVEAL - sfx_meta["reveal_onset"], 2.6 * getattr(script, "INTRO_SFX_GAIN", 1.0))
     tdir = os.path.join(EP, "build", "tts")
     add(voice, load_wav(os.path.join(tdir, "intro_pre.wav")), 0.12)
