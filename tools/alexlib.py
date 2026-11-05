@@ -1107,7 +1107,7 @@ def mix_col(a, b, u):
     return "#%02x%02x%02x" % (int((ra + (rb - ra) * u) * 255), int((ga + (gb - ga) * u) * 255), int((ba + (bb - ba) * u) * 255))
 
 
-def garden_furniture(c, t, accent=("#3E7BDA", "#F2B233")):
+def garden_furniture(c, t, accent=("#3E7BDA", "#F2B233"), umbrella=True):
     a1, a2 = accent
     wood, dark = "#A87447", "#6B4A2E"
     def line(w=5):
@@ -1139,13 +1139,14 @@ def garden_furniture(c, t, accent=("#3E7BDA", "#F2B233")):
     rrect(c, 115, 1460, 230, 18, 5); fill(c, wood); rrect(c, 115, 1460, 230, 18, 5); line(3)
     rrect(c, 130, 1440, 90, 26, 10); fill(c, a1)
     rrect(c, 230, 1440, 90, 26, 10); fill(c, a2)
-    # Picknicktisch + Sonnenschirm rechts
-    c.set_line_width(8); src(c, "#E8E8E8"); c.move_to(895, 1180); c.line_to(895, 1470); c.stroke()
-    for i in range(6):
-        x0 = 765 + i * 43.3
-        c.move_to(895, 1160); c.line_to(x0, 1235); c.line_to(x0 + 43.3, 1235); c.close_path()
-        src(c, a1 if i % 2 == 0 else "#FFFFFF"); c.fill()
-    c.move_to(895, 1160); c.line_to(765, 1235); c.line_to(1025, 1235); c.close_path(); line(4)
+    # Picknicktisch (+ optional Sonnenschirm) rechts
+    if umbrella:
+        c.set_line_width(8); src(c, "#E8E8E8"); c.move_to(895, 1180); c.line_to(895, 1470); c.stroke()
+        for i in range(6):
+            x0 = 765 + i * 43.3
+            c.move_to(895, 1160); c.line_to(x0, 1235); c.line_to(x0 + 43.3, 1235); c.close_path()
+            src(c, a1 if i % 2 == 0 else "#FFFFFF"); c.fill()
+        c.move_to(895, 1160); c.line_to(765, 1235); c.line_to(1025, 1235); c.close_path(); line(4)
     rrect(c, 790, 1455, 210, 18, 5); fill(c, wood); rrect(c, 790, 1455, 210, 18, 5); line(3)
     for x in (805, 970):
         c.move_to(x, 1473); c.line_to(x + 12, 1473); c.line_to(x + (24 if x < 900 else -12), 1540); c.line_to(x + (12 if x < 900 else -24), 1540); c.close_path()
@@ -1157,7 +1158,7 @@ def garden_furniture(c, t, accent=("#3E7BDA", "#F2B233")):
 
 
 def house_scene(c, t, sky=("#4E98E0", "#BFE3FF"), walls="#F2E3C8", roof="#B5523B", door="#7A4A2E", lawn="#5DBB63",
-                accent=("#3E7BDA", "#F2B233")):
+                accent=("#3E7BDA", "#F2B233"), umbrella=True):
     g = cairo.LinearGradient(0, 0, 0, 1240)
     g.add_color_stop_rgb(0, *rgb(sky[0])[:3]); g.add_color_stop_rgb(1, *rgb(sky[1])[:3])
     c.rectangle(-400, -400, W + 800, 1640); c.set_source(g); c.fill()
@@ -1198,7 +1199,7 @@ def house_scene(c, t, sky=("#4E98E0", "#BFE3FF"), walls="#F2E3C8", roof="#B5523B
     for y in (1350, 1395):
         c.rectangle(-40, y, 440, 10); c.rectangle(700, y, 440, 10)
     fill(c, "#EDEDED")
-    garden_furniture(c, t, accent)
+    garden_furniture(c, t, accent, umbrella)
 
 
 def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg):
@@ -1215,14 +1216,14 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
     if revealed:
         u = ease_out_back((t - reveal_t) / 0.45)
         hcfg = cfg.get("house", {})
-        house_scene(c, t, **hcfg)
+        house_scene(c, t, umbrella=cfg.get("umbrella", True), **hcfg)
         if cfg.get("decor"):
             cfg["decor"](c, t, u)
         txt = role_text
     else:
         txt, icon, top, bg = shuffle[k]
         det = ROLE_DETAILS.get(txt, [icon] * 4)
-        house_scene(c, t, sky=(mix_col("#4E98E0", bg, 0.55), mix_col("#BFE3FF", bg, 0.25)))
+        house_scene(c, t, sky=(mix_col("#4E98E0", bg, 0.55), mix_col("#BFE3FF", bg, 0.25)), umbrella=cfg.get("umbrella", True))
         bounce = 1 + 0.15 * max(0, 1 - (t - ticks[k]) / 0.08) if t >= ticks[0] else 1
         emoji(c, det[1], 228, 1395, 95 * bounce, rot=-0.15)
         emoji(c, det[2], 940, 1405, 85 * bounce, rot=0.15)

@@ -52,8 +52,8 @@ def intro_decor(c, t, u):
     emoji(c, "✊", 350, 955, 80 * s_); emoji(c, "♀️", 730, 955, 80 * s_)
     emoji(c, "📢", 540, 730, 60 * s_)
     # Protestschilder im Garten
-    _sign(c, 190, 1620, "#ALLY ✊", "#FFE14D", -0.12, 30, 200, 90)
-    _sign(c, 890, 1620, "Feminist des Jahres 🏆", "#FFFFFF", 0.1, 24, 220, 90)
+    _sign(c, 185, 1590, "#ALLY ✊", "#FFE14D", -0.12, 44, 290, 110)
+    _sign(c, 890, 1590, "Feminist des Jahres 🏆", "#FFFFFF", 0.1, 34, 300, 110)
     # Blumenbeet + Ballons
     for i, x in enumerate(range(240, 860, 62)):
         if abs(x - 540) > 90:
@@ -65,16 +65,10 @@ def intro_decor(c, t, u):
 
 
 def alex_extras(c, x, feet, h, t, u):
-    """Alex maximal 'Ally': Shirt-Print, Schärpe, Stirnband, Megafon, Schild, Anstecker."""
+    """Alex als 'Ally': Shirt-Print, Stirnband, Megafon, Anstecker."""
     k = h / 100.0
     shirt_text(c, x, feet, h)
     c.save(); c.translate(x, feet); c.scale(k, k)
-    # Schärpe
-    c.move_to(-13, -55); c.line_to(-8, -56); c.line_to(13, -27); c.line_to(8, -26); c.close_path(); fill(c, "#7A3FA8")
-    c.save(); c.translate(1, -41); c.rotate(0.95)
-    c.select_font_face(FONT_HEAD); c.set_font_size(2.6); src(c, "#FFFFFF")
-    e = c.text_extents("ALLY 2026"); c.move_to(-e.x_advance / 2, 1); c.show_text("ALLY 2026"); c.new_path()
-    c.restore()
     # Stirnband
     rrect(c, -17.5, -86, 35, 5, 2); fill(c, "#E0457B")
     c.select_font_face(FONT_HEAD); c.set_font_size(3.2); src(c, "#FFFFFF")
@@ -83,16 +77,11 @@ def alex_extras(c, x, feet, h, t, u):
     # Anstecker
     for (dx, dy, e_) in ((-10, -36, "✊"), (-9, -30, "♀️"), (9, -48, "💜")):
         emoji(c, e_, x + dx * k, feet + dy * k, 4.5 * k)
-    # Megafon rechts oben, Schild links oben (Pose "up")
+    # Megafon rechts oben (Pose "up")
     emoji(c, "📢", x + 23 * k, feet - 74 * k, 13 * k, rot=-0.3)
-    c.save(); c.translate(x - 24 * k, feet - 84 * k); c.rotate(-0.12)
-    rrect(c, -13 * k, -8 * k, 26 * k, 14 * k, 1.5 * k); fill(c, "#FFFFFF")
-    rrect(c, -13 * k, -8 * k, 26 * k, 14 * k, 1.5 * k); c.set_line_width(0.6 * k); src(c, INK); c.stroke()
-    text(c, "ICH BIN", 0, -3.2 * k, 3.2 * k, INK, FONT_HEAD)
-    text(c, "FEMINIST! ✊", 0, 1.8 * k, 3.2 * k, "#E0457B", FONT_HEAD)
-    c.restore()
 
 
+INTRO["umbrella"] = False
 INTRO["house"] = dict(sky=("#B97ADB", "#FFD1E6"), walls="#F7C6DA", roof="#7A3FA8", door="#E0457B", lawn="#6CC47A",
                       accent=("#E0457B", "#7A3FA8"))
 INTRO["decor"] = intro_decor
