@@ -12,6 +12,7 @@ NAME_SCALE = 1.6
 TITLE_SIZE = 92
 BUBBLE_SCALE = 1.2
 INTRO_SFX_GAIN = 3.4   # Reveal-Effekt
+REVEAL_TAIL = (0.28, 0.0)   # Hintergrundstimme im Original-Reveal (Hörprobe A) entfernt, Knall bleibt
 INTRO_TICK_GAIN = 6.0  # Auswahl-Klicks während die Leiste läuft, extra laut
 REACTIONS = {"bakery": ["🥐", "😬", "🚩"], "bus": ["🚌", "💀", "🚩"], "group": ["👀", "📢", "🚩"],
              "fest": ["💃", "😠", "🚩"], "night": ["👵", "👀", "🚩"]}
