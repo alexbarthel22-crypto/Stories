@@ -1158,11 +1158,15 @@ def garden_furniture(c, t, accent=("#3E7BDA", "#F2B233"), umbrella=True):
 
 
 def house_scene(c, t, sky=("#4E98E0", "#BFE3FF"), walls="#F2E3C8", roof="#B5523B", door="#7A4A2E", lawn="#5DBB63",
-                accent=("#3E7BDA", "#F2B233"), umbrella=True):
+                accent=("#3E7BDA", "#F2B233"), umbrella=True, sun=True):
     g = cairo.LinearGradient(0, 0, 0, 1240)
     g.add_color_stop_rgb(0, *rgb(sky[0])[:3]); g.add_color_stop_rgb(1, *rgb(sky[1])[:3])
     c.rectangle(-400, -400, W + 800, 1640); c.set_source(g); c.fill()
-    c.arc(900, 470, 70, 0, 2 * math.pi); src(c, "#FFE27A"); c.fill()
+    if sun:
+        c.arc(900, 470, 70, 0, 2 * math.pi); src(c, "#FFE27A"); c.fill()
+    else:
+        c.arc(900, 470, 62, 0, 2 * math.pi); src(c, "#F2EBD9"); c.fill()
+        c.arc(926, 452, 54, 0, 2 * math.pi); src(c, sky[0]); c.fill()
     for i, (x0, y0, s) in enumerate(((180, 470, 1.0), (760, 560, 0.8))):
         x = x0 + math.sin(t * 0.4 + i) * 20
         for dx, dy, r in ((0, 0, 40), (45, -15, 50), (95, 0, 38)):

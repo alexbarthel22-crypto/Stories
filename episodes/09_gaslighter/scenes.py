@@ -177,7 +177,32 @@ def alex_extras(c, x, feet, h, t, u):
     emoji(c, "😇", x - 30 * k, feet - 92 * k, 12 * k)
 
 
-INTRO.update(scene=gas_scene, fill="#2A1F45", decor=intro_decor, alex_extras=alex_extras, pose="shrug", expr="smug",
+def intro_decor_house(c, t, u):
+    """Gaslighting-Deko auf dem Haus aus der Fake-Feminist-Folge."""
+    s_ = clamp(u)
+    # flackerndes Licht in den Fenstern (Gaslight)
+    lit = 0.5 + 0.5 * math.sin(t * 9) * math.sin(t * 3.1)
+    for x in (290, 670):
+        rrect(c, x + 4, 904, 112, 102, 6); src(c, "#F7C66B", (0.35 + 0.5 * lit) * s_); c.fill()
+    c.arc(540, 730, 38, 0, 2 * math.pi); src(c, "#F7C66B", (0.35 + 0.5 * lit) * s_); c.fill()
+    # flackernde Gaslampe vorne rechts im Garten
+    g_ = gas_lamp
+    c.save(); c.translate(1000, 1460); c.scale(0.75, 0.75); c.translate(-1000, -1460)
+    g_(c, 1000, 1460, t, s_, 3)
+    c.restore()
+    intro_decor(c, t, u)
+    # Nebel über dem Rasen
+    for i in range(3):
+        y = 1270 + i * 55; x = (t * 40 * (1 + i * 0.3)) % 600 - 300
+        for k in range(4):
+            c.save(); c.translate(x + k * 420, y); c.scale(1, 0.25); c.arc(0, 0, 260, 0, 2 * math.pi); c.restore()
+            src(c, "#E8E0F0", (0.10 + 0.03 * i) * s_); c.fill()
+
+
+INTRO.update(house=dict(sky=("#2E2350", "#A27CC0"), walls="#CFC3DD", roof="#3A2A55", door="#2E2440", lawn="#4F8A5A",
+                        accent=("#4A2E6B", "#FFB547"), sun=False),
+             umbrella=False, fill="#2E2350", decor=intro_decor_house,
+             alex_extras=alex_extras, pose="shrug", expr="smug",
              burst=["🌀", "❓", "🤷", "🕯️", "🙄", "💭", "🚩", "😇"])
 
 
