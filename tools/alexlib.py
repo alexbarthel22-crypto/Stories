@@ -1234,8 +1234,8 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
     if revealed:
         u_ = (t - reveal_t) / 0.5
         sc = ease_out_back(u_, 2.8) if u_ < 1 else 1 + 0.03 * math.sin((t - reveal_t) * 6)
-        tsize = min(124, 124 * 1000 / max(1, text_width(c, txt, 124, FONT_HEAD)))
-        ty, rot = 212, -0.03
+        tsize = min(150, 150 * 1040 / max(1, text_width(c, txt, 150, FONT_HEAD)))
+        ty, rot = 222, 0.0
     else:
         sc, tsize, ty, rot = 1.0, 76, 196, 0
     def ttl():
@@ -1276,16 +1276,19 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
         emoji(c, det[0], fx + 190, fy - 300, 110, rot=0.15)
     c.restore()
     # Auswahl-Band über die volle Bildschirmbreite (darf rechts in den Sicherheitsbereich)
-    yb = band_y + 22
-    rrect(c, 0, yb - 78, W, 156, 0); src(c, "#000000", 0.6); c.fill()
-    step = 150
-    for j in range(-5, 6):
+    # nach der Enthüllung: Band wird kleiner und rutscht nach unten (Platz für das große Thema)
+    bu = ease_in_out((t - reveal_t) / 0.4) if revealed else 0.0
+    bs = 1 - 0.32 * bu
+    yb = band_y + 22 + 42 * bu
+    rrect(c, 0, yb - 78 * bs, W, 156 * bs, 0); src(c, "#000000", 0.6); c.fill()
+    step = 150 * bs
+    for j in range(-7, 8):
         idx = (sel + j) % len(icons)
         x = band_x + (j + slide) * step
-        c.arc(x, yb, 58, 0, 2 * math.pi); fill(c, shade(cols[idx], 0.85))
-        c.arc(x, yb, 58, 0, 2 * math.pi); c.set_line_width(4); src(c, "#FFFFFF", 0.4); c.stroke()
-        emoji(c, icons[idx], x, yb, 62)
-    c.arc(band_x, yb, 68, 0, 2 * math.pi); c.set_line_width(10); src(c, "#F7C948"); c.stroke()
+        c.arc(x, yb, 58 * bs, 0, 2 * math.pi); fill(c, shade(cols[idx], 0.85))
+        c.arc(x, yb, 58 * bs, 0, 2 * math.pi); c.set_line_width(4 * bs); src(c, "#FFFFFF", 0.4); c.stroke()
+        emoji(c, icons[idx], x, yb, 62 * bs)
+    c.arc(band_x, yb, 68 * bs, 0, 2 * math.pi); c.set_line_width(10 * bs); src(c, "#F7C948"); c.stroke()
     if flash_start <= t < reveal_t + 0.3:
         a = clamp((t - flash_start) / 0.04) if t < reveal_t else 1 - ease_out_cubic((t - reveal_t) / 0.3)
         c.set_source_rgba(1, 1, 1, a); c.paint()
