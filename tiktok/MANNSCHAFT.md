@@ -5,14 +5,14 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | Nr. | Name | Position | Aussehen |
 |---|---|---|---|
 | 1 | **Vlad** | Tor | schwarze Haare, Augenklappe immer auf **seinem rechten Auge** (vom Betrachter aus links, auch beim Laufen nie spiegeln), grünes Torwarttrikot, Handschuhe |
-| 4 | **Opa Jürgen** | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock, **kräftiger Körper mit Bierbauch** (breite Schultern, dicke Arme und Beine) |
+| 4 | **Opa Jürgen** – **seit Tag 3 in Rente**, sitzt im Schaukelstuhl am Spielfeldrand (Decke, Tasse Tee). Neuer Verteidiger gesucht | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock, **kräftiger Körper mit Bierbauch** (breite Schultern, dicke Arme und Beine) |
 | 3 | Iro *(Platzhalter-Name)* | Abwehr | grüner Irokese, Ohrring |
 | 5 | Bulldozer *(Platzhalter-Name)* | Abwehr | Glatze, roter Vollbart |
 | 6 | Hipster *(Platzhalter-Name)* | Mittelfeld | Dutt, eckige Brille |
 | 7 | Vokuhila *(Platzhalter-Name)* | Mittelfeld | rotbrauner Vokuhila, rotes Stirnband |
 | 8 | Der Jüngste *(Platzhalter-Name)* | Mittelfeld | rote Cap, Zahnspange |
 | 10 | Spielmacherin *(Platzhalter-Name)* | Mittelfeld | braune Zöpfe mit pinken Haargummis |
-| 9 | ~~Der, der den Bus verpasst hat~~ – **seit Tag 2 raus** (hat morgens den Bus genommen). Neue Nr. 9 wird ein Fan aus den Kommentaren | Sturm | blonde Strubbelhaare, verschlafene Augen, Rucksack, **Flip-Flops** |
+| 9 | **Leberkaaszerfetzer** (Neuzugang Tag 3, Top-Kommentar „bitte ich Stürmer“) – kurze dunkelbraune Haare, Bartschatten, gelber Stern auf dem Trikot. Vorgänger (Bus-Typ) seit Tag 2 raus | Sturm | blonde Strubbelhaare, verschlafene Augen, Rucksack, **Flip-Flops** |
 | 11 | Der Coole *(Platzhalter-Name)* | Sturm | Afro, Sonnenbrille |
 | 14 | Träumer *(Platzhalter-Name)* | Sturm | Locken, blaue Kopfhörer |
 
@@ -89,3 +89,21 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Tribüne: viele Klappstühle am Spielfeldrand, darüber eine Plane; Stuhl 1–3 gehören @eikemzz, @tobiii1911, @leo.hro1
 - Kader: 10 Spieler, die Nr. 9 ist frei
 - Nächstes Spiel: **Sonntag, 1. Spiel gegen den SC Heuballen** (Gegner-Wappen: gelber Schild mit Heuballen, grüner Kopfbalken)
+
+## Folge 3 (Tag 3)
+- Datei: `tiktok/tag03_fc_schlammloch.mp4` (1:04), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
+- Intro: Trainer vor der Klappstuhl-Tribüne mit Plane aus Folge 2
+- Fans: gestern 83 → heute **400 (+317)**
+- Neuer Stürmer Nr. 9: **Leberkaaszerfetzer** (sein Kommentar wird nachgebaut gezeigt, mit Profilbild)
+- Geld: 408 Follower × 1 € = 408 € + 214 Kommentare × 2 € = 428 € + 0 € = **836 €** → **Fertig-Tribüne „TRIBÜNSTAD“** (Flachpaket, 500 Plätze, „Schlammloch-Arena“) → **Kasse 0 €**
+- Tribüne: ~500 Fans, vorne Mitte **Ehrenplätze** (goldene Sitze) für Eike, Tobi, Leo; links der **Ultra-Block** mit blau-gelben Fahnen und Banner „Ultra Szene Schlammloch“ (Frakturschrift, gelb auf blau, `src_tag03/ultra.js`)
+- Problem: Platz ist ein Schlammsee, ein Tor schwimmt davon → **Platzwart gesucht** (Top-Kommentar gewinnt)
+- Opa Jürgen in Rente (Schaukelstuhl) → **Verteidiger gesucht**
+- Zeitung „Kreisliga-Kurier“: **FC Asche schlägt SV Kuhwiese 1:0** (Wappen: FC Asche orange/schwarz mit Ball und 2026; SV Kuhwiese weiß mit Kuhflecken, gelber SV-Kreis)
+- „Wir müssen härter trainieren“ – noch **3 Tage** bis zum Spiel gegen den SC Heuballen
+- Stimme: Fenrir, alles in einem Aufruf
+
+## Stand nach Tag 3
+- Fans: 400 · Vereinskasse: 0 €
+- Liga-Konkurrenten: FC Asche, SV Kuhwiese, SC Heuballen (nächster Gegner, in 3 Tagen)
+- Offen: Platzwart, Verteidiger (Nr. 4)
