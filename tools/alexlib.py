@@ -1076,3 +1076,139 @@ def draw_intro_generic(c, t, shuffle, ticks, flash_start, reveal_t, role_text, c
         c.paint()
         if t < reveal_t:
             emoji(c, cfg["icon"], W / 2, 960, 130, rot=(t - flash_start) * 9)
+
+
+# ----------------------------------------------------------------- Intro draußen vor dem Haus
+ROLE_DETAILS = {
+    "EIN ASTRONAUT.": ["🚀", "🪐", "🛰️", "⭐"], "EIN PICK ME BOY.": ["🌹", "📖", "🧋", "🎸"],
+    "EIN GAMER.": ["🎮", "🕹️", "🎧", "🖥️"], "EMOTIONAL ABHÄNGIG.": ["📱", "🥺", "💔", "⏳"],
+    "EIN GASLIGHTER.": ["🤷", "🌀", "🚩", "🕯️"], "EIN INFLUENCER.": ["🤳", "💄", "📸", "✨"],
+    "EIN BAUARBEITER.": ["🔨", "🧱", "🚧", "👷"], "EIN DJ.": ["🎧", "💿", "🔊", "🪩"],
+    "EIN PIRAT.": ["⚓", "🦜", "💰", "🏴"], "EIN LEHRER.": ["🍎", "📚", "✏️", "🔔"],
+    "EIN POLIZIST.": ["🚨", "🚓", "🍩", "👮"], "EIN ROCKSTAR.": ["🎸", "🤘", "🎤", "⚡"],
+    "EIN KOCH.": ["🍳", "🥘", "🧂", "🍝"], "EIN F-BOY.": ["📱", "💪", "🌙", "👻"],
+    "EIN OF-MODEL.": ["📸", "💄", "💸", "💅"], "FRIEDRICH MERZ.": ["🎙️", "🛩️", "⛰️", "💼"],
+}
+
+
+def mix_col(a, b, u):
+    ra, ga, ba, _ = rgb(a); rb, gb, bb, _ = rgb(b)
+    return "#%02x%02x%02x" % (int((ra + (rb - ra) * u) * 255), int((ga + (gb - ga) * u) * 255), int((ba + (bb - ba) * u) * 255))
+
+
+def house_scene(c, t, sky=("#4E98E0", "#BFE3FF"), walls="#F2E3C8", roof="#B5523B", door="#7A4A2E", lawn="#5DBB63"):
+    g = cairo.LinearGradient(0, 0, 0, 1240)
+    g.add_color_stop_rgb(0, *rgb(sky[0])[:3]); g.add_color_stop_rgb(1, *rgb(sky[1])[:3])
+    c.rectangle(-400, -400, W + 800, 1640); c.set_source(g); c.fill()
+    c.arc(900, 470, 70, 0, 2 * math.pi); src(c, "#FFE27A"); c.fill()
+    for i, (x0, y0, s) in enumerate(((180, 470, 1.0), (760, 560, 0.8))):
+        x = x0 + math.sin(t * 0.4 + i) * 20
+        for dx, dy, r in ((0, 0, 40), (45, -15, 50), (95, 0, 38)):
+            c.arc(x + dx * s, y0 + dy * s, r * s, 0, 2 * math.pi)
+        src(c, "#FFFFFF", 0.9); c.fill()
+    c.rectangle(-400, 1240, W + 800, 2400); src(c, lawn); c.fill()
+    c.rectangle(-400, 1240, W + 800, 14); src(c, shade(lawn, 0.85)); c.fill()
+    # Baum links, Busch rechts
+    rrect(c, 70, 1000, 40, 260, 12); fill(c, "#7A4A2E")
+    for dx, dy, r in ((0, 0, 95), (-60, 50, 70), (60, 50, 70)):
+        c.arc(90 + dx, 950 + dy, r, 0, 2 * math.pi)
+    src(c, "#3F9A4A"); c.fill()
+    for dx in (0, 60):
+        c.arc(960 + dx, 1250, 70, math.pi, 0); src(c, "#4CAB57"); c.fill()
+    # Haus
+    rrect(c, 220, 820, 640, 440, 6); fill(c, walls)
+    rrect(c, 220, 820, 640, 440, 6); c.set_line_width(6); src(c, INK); c.stroke()
+    c.rectangle(700, 600, 70, 160); fill(c, shade(roof, 0.8))
+    c.move_to(540, 560); c.line_to(900, 840); c.line_to(180, 840); c.close_path(); fill(c, roof)
+    c.move_to(540, 560); c.line_to(900, 840); c.line_to(180, 840); c.close_path(); c.set_line_width(6); src(c, INK); c.stroke()
+    for x in (290, 670):
+        rrect(c, x, 900, 120, 110, 8); fill(c, "#BFE6FF")
+        rrect(c, x, 900, 120, 110, 8); c.set_line_width(5); src(c, INK); c.stroke()
+        c.move_to(x + 60, 900); c.line_to(x + 60, 1010); c.move_to(x, 955); c.line_to(x + 120, 955); c.set_line_width(3); c.stroke()
+    c.arc(540, 730, 42, 0, 2 * math.pi); fill(c, "#BFE6FF")
+    c.arc(540, 730, 42, 0, 2 * math.pi); c.set_line_width(5); src(c, INK); c.stroke()
+    rrect(c, 480, 1080, 120, 180, 10); fill(c, door)
+    c.arc(580, 1175, 7, 0, 2 * math.pi); fill(c, "#F2C94C")
+    # Weg + Zaun
+    c.move_to(480, 1260); c.line_to(600, 1260); c.line_to(760, 2400); c.line_to(320, 2400); c.close_path(); src(c, "#D9CBB0"); c.fill()
+    for x in list(range(-40, 400, 55)) + list(range(700, 1140, 55)):
+        c.move_to(x, 1330); c.line_to(x + 18, 1305); c.line_to(x + 36, 1330); c.line_to(x + 36, 1420); c.line_to(x, 1420); c.close_path()
+        fill(c, "#FFFFFF")
+    for y in (1350, 1395):
+        c.rectangle(-40, y, 440, 10); c.rectangle(700, y, 440, 10)
+    fill(c, "#EDEDED")
+
+
+def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg):
+    """Auswahl-Intro draußen vor dem Haus. cfg wie draw_intro_generic, zusätzlich optional:
+    house=dict(sky, walls, roof, door, lawn), decor(c, t, u), alex_extras(c, x, feet, h, t, u)."""
+    k = 0
+    for i, tk in enumerate(ticks):
+        if t >= tk:
+            k = i
+    revealed = t >= reveal_t
+    fill_rect(c, cfg.get("house", {}).get("sky", ("#4E98E0",))[0] if revealed else "#4E98E0")
+    c.save()
+    safe_zone(c)
+    if revealed:
+        u = ease_out_back((t - reveal_t) / 0.45)
+        hcfg = cfg.get("house", {})
+        house_scene(c, t, **hcfg)
+        if cfg.get("decor"):
+            cfg["decor"](c, t, u)
+        txt = role_text
+    else:
+        txt, icon, top, bg = shuffle[k]
+        det = ROLE_DETAILS.get(txt, [icon] * 4)
+        house_scene(c, t, sky=(mix_col("#4E98E0", bg, 0.55), mix_col("#BFE3FF", bg, 0.25)))
+        bounce = 1 + 0.15 * max(0, 1 - (t - ticks[k]) / 0.08) if t >= ticks[0] else 1
+        emoji(c, det[1], 170, 1500, 120 * bounce, rot=-0.15)
+        emoji(c, det[2], 910, 1500, 120 * bounce, rot=0.15)
+        emoji(c, det[3], 350, 955, 80)
+        emoji(c, det[3 if len(det) < 5 else 4], 730, 955, 80)
+        emoji(c, icon, 540, 730, 60)
+    # Kopfzeile + Auswahl-Leiste
+    text(c, "Heute ist Alex", W / 2, 112, 44, "#FFFFFF", FONT_BOLD)
+    sc = pop(t, reveal_t, 0.4) if revealed else 1.0
+    def ttl():
+        c.save(); c.translate(0, 6); text(c, txt, W / 2, 196, 76, "#000000", FONT_HEAD, alpha=0.3); c.restore()
+        text(c, txt, W / 2, 196, 76, "#FFFFFF", FONT_HEAD)
+    scaled(c, W / 2, 196, sc, ttl)
+    icons = [s_[1] for s_ in shuffle] + [cfg["icon"]]
+    cols = [s_[3] for s_ in shuffle] + [cfg["bg"]]
+    sel = len(shuffle) if revealed else k
+    last_tick = reveal_t if revealed else (ticks[k] if t >= ticks[0] else 0)
+    slide = 1 - ease_out_cubic((t - last_tick) / 0.06)
+    yb = 330
+    c.save(); c.rectangle(0, yb - 52, W, 104); c.clip()      # Leiste nur im freien Bereich
+    rrect(c, -200, yb - 50, W + 400, 100, 0); src(c, "#000000", 0.55); c.fill()
+    for j in range(-7, 8):
+        idx = (sel + j) % len(icons)
+        x = W / 2 + (j + slide) * 96
+        c.arc(x, yb, 36, 0, 2 * math.pi); fill(c, shade(cols[idx], 0.85))
+        c.arc(x, yb, 36, 0, 2 * math.pi); c.set_line_width(3); src(c, "#FFFFFF", 0.35); c.stroke()
+        emoji(c, icons[idx], x, yb, 38)
+    c.restore()
+    c.arc(W / 2, yb, 44, 0, 2 * math.pi); c.set_line_width(7); src(c, "#F7C948"); c.stroke()
+    # Alex
+    fx, fy, hh = W / 2, 1640, 700
+    if revealed:
+        s = 0.9 + 0.1 * ease_out_back((t - reveal_t) / 0.35)
+        def body():
+            person(c, fx, fy, hh, cfg["spec"], t, cfg.get("expr", "happy"), cfg.get("pose", "idle"), cfg.get("hand_prop"))
+            if cfg.get("alex_extras"):
+                cfg["alex_extras"](c, fx, fy, hh, t, u)
+        scaled(c, fx, fy, s, body)
+        sparkle_lines(c, t, reveal_t, W / 2, 1150, n=14, r0=260, r1=560, d=0.55)
+        burst(c, t, reveal_t, cfg["burst"], W / 2, 1150, n=18, seed=5, dist=620, life=1.6, size=86)
+    else:
+        txt_, icon, top, bg = shuffle[k]
+        det = ROLE_DETAILS.get(txt_, [icon] * 4)
+        person(c, fx, fy, hh, alex(top=top, top_style="hoodie", pants="#2F3B52"), t, "happy", "idle")
+        emoji(c, det[0], fx + 190, fy - 300, 110, rot=0.15)
+    c.restore()
+    if flash_start <= t < reveal_t + 0.3:
+        a = clamp((t - flash_start) / 0.04) if t < reveal_t else 1 - ease_out_cubic((t - reveal_t) / 0.3)
+        c.set_source_rgba(1, 1, 1, a); c.paint()
+        if t < reveal_t:
+            emoji(c, cfg["icon"], W / 2, 960, 130, rot=(t - flash_start) * 9)
