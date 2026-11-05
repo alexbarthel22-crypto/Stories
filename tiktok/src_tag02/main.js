@@ -57,7 +57,7 @@ const SCENES = {
     const lines = [['83 FOLLOWER × 1 €', '83 €'], ['24 KOMMENTARE × 2 €', '48 €'], ['VEREINSKASSE', '500 €']];
     const vx = 860 + Math.sin(t * 2.6) * 115, vflip = Math.cos(t * 2.6) < 0;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(vlad({blink: blinkAt(t)}), vx, 1124 - Math.abs(Math.sin(t * 10)) * 6, 0.3) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1660, 1.05)) +
-      popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(2), capT(4)]));
+      popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(1), capT(2)]));
   },
   total(t, d, m) {
     let coins = '';
@@ -66,7 +66,7 @@ const SCENES = {
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1660, 1.05)) +
       calcBoard(9, 110, 290, lines, [0, 0, 0]) +
       `<path d="M150 760 H930" stroke="#3A2316" stroke-width="10"/>` +
-      popG(t, 0.25, 540, 900, bigText(540, 960, '= 631 €', '#6BF06B', 170)) + coins;
+      popG(t, 0.2, 540, 920, bigText(540, 1010, '= 631 €', '#6BF06B', 240)) + coins;
   },
   chairs(t, d, m) {
     let s = field(t, 720, {goal: false, touchY: 1310});
@@ -119,11 +119,11 @@ const SCENES = {
   },
   kasse0(t, d, m) {
     const lines = [['80 KLAPPSTÜHLE', '−500 €', '#E5483A'], ['PLANE', '−131 €', '#E5483A']];
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(720, 1180, 0.95) + cashBox(720, 1015, 0.8, t >= capT(4) ? 'empty' : true) +
-        place(coach({mouth: m, mood: t >= capT(4) ? 'sad' : 'talk', blink: blinkAt(t)}), 240, 1600, 0.95)) + moth(t, capT(5) + 0.1) +
-      popG(t, 0.0, 540, 360, calcBoard(t, 110, 290, lines, [capT(0), capT(2)])) +
-      popG(t, capT(4), 540, 720, badge(540, 690, 'VEREINSKASSE', {fs: 46})) +
-      popG(t, capT(5), 540, 800, bigText(540, 860, '0 €', '#FF4A4A', 170));
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(780, 1290, 0.75) + cashBox(780, 1160, 0.62, t >= capT(2) ? 'empty' : true) +
+        place(coach({mouth: m, mood: t >= capT(2) ? 'sad' : 'talk', blink: blinkAt(t)}), 240, 1600, 0.95)) + moth(t, capT(3) + 0.1) +
+      popG(t, 0.0, 540, 360, calcBoard(t, 110, 290, lines, [capT(0), capT(1)])) +
+      popG(t, capT(2), 540, 700, badge(540, 680, 'VEREINSKASSE', {fs: 46})) +
+      popG(t, capT(3), 540, 860, bigText(540, 965, '0 €', '#FF4A4A', 250));
   },
   rule(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
@@ -135,6 +135,7 @@ const SCENES = {
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(540, 1180, 0.95) + cashBox(540, 1015, 0.8, 'empty') + coins +
         place(coach({mouth: m, wave: t < c[3] ? Math.sin(t * 9) : 0, blink: blinkAt(t)}), 170, 1600, 0.85)) +
       popG(t, c[0], 520, 330, badge(520, 330, 'WIR BRAUCHEN DICH!', {kind: 'red', fs: 54, rot: -2})) +
+      (t >= c[0] + 0.1 && t < c[3] ? popG(t, c[0] + 0.1, 820, 760, `<g transform="translate(820 760) scale(${1 + 0.06 * Math.sin(t * 12)})"><text x="0" y="95" text-anchor="middle" font-family="Noto Color Emoji" font-size="260">🫵🏻</text></g>`) : '') +
       popG(t, c[3], 520, 470, badge(520, 470, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 46})) +
       popG(t, c[4], 520, 590, badge(520, 590, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 46, rot: -2}));
   },
@@ -143,6 +144,22 @@ const SCENES = {
       `<g transform="translate(510 500) scale(${1 + 0.025 * Math.sin(t * 6)}) translate(-510 -500)">${popG(t, 0.0, 510, 500, commentCard(70, 300, t, 'NR. 9 + KAUFEN: ...'))}</g>` +
       popG(t, 0.6, 520, 790, badge(520, 790, 'WER WIRD NR. 9?', {bg: '#FFD31A', fs: 50, rot: -2})) +
       popG(t, capT(2), 520, 920, badge(520, 920, 'WAS KAUFEN WIR?', {kind: 'pitch', fs: 50, rot: 2}));
+  },
+  sunday2(t, d, m) {
+    const heu = `<g transform="translate(790 820)">
+      <path d="M-150 -170 H150 V30 Q150 150 0 200 Q-150 150 -150 30 Z" fill="#E8C24A" stroke="#3A2316" stroke-width="12"/>
+      <path d="M-150 -170 H150 V-110 H-150 Z" fill="#6B8E23" stroke="#3A2316" stroke-width="8"/>
+      <text x="0" y="-126" text-anchor="middle" ${FONT} font-size="40" fill="#fff">SC HEUBALLEN</text>
+      <ellipse cx="0" cy="30" rx="105" ry="80" fill="#F2D06B" stroke="#3A2316" stroke-width="9"/>
+      <ellipse cx="-55" cy="30" rx="30" ry="80" fill="#E0B84A" stroke="#3A2316" stroke-width="6"/>
+      <path d="M-20 -40 Q30 -30 90 -10 M-15 0 Q40 10 100 20 M-15 50 Q40 60 95 70 M-20 90 Q30 98 80 100" stroke="#C99A2E" stroke-width="5" fill="none"/>
+      <path d="M-55 -50 V110 M40 -48 V108" stroke="#B83226" stroke-width="7"/></g>`;
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 540}) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1780, 0.8)) +
+      popG(t, 0.0, 540, 340, badge(540, 340, 'SONNTAG · 1. SPIEL', {kind: 'pitch', fs: 58})) +
+      popG(t, 0.25, 280, 820, `<g transform="translate(280 820) scale(0.6) translate(-300 -300)">${LOGO}</g>`) +
+      popG(t, 0.5, 540, 820, bigText(540, 860, 'VS', '#FFD31A', 120)) +
+      popG(t, 0.7, 790, 820, heu) +
+      popG(t, capT(3), 540, 1110, badge(540, 1110, 'WIR BRAUCHEN EUCH!', {kind: 'red', fs: 54, rot: -2}));
   },
 };
 

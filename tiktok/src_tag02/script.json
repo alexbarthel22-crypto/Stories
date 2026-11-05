@@ -37,12 +37,10 @@
  },
  {
   "id": "calc",
-  "say": "Dreiundachtzig Follower: dreiundachtzig Euro. Vierundzwanzig Kommentare: achtundvierzig Euro. Plus fünfhundert in der Kasse.",
+  "say": "Dreiundachtzig Follower, vierundzwanzig Kommentare, plus fünfhundert in der Kasse.",
   "cap": [
-   "83 FOLLOWER:",
-   "*83 EURO.",
-   "24 KOMMENTARE:",
-   "*48 EURO.",
+   "83 FOLLOWER,",
+   "24 KOMMENTARE,",
    "PLUS *500",
    "IN DER KASSE."
   ]
@@ -105,13 +103,11 @@
  },
  {
   "id": "kasse0",
-  "say": "Achtzig Klappstühle: fünfhundert Euro. Die Plane: hunderteinunddreißig Euro. Vereinskasse: null Euro.",
+  "say": "Achtzig Stühle, eine Plane. Kasse: null Euro.",
   "cap": [
-   "80 KLAPPSTÜHLE:",
-   "!500 EURO,",
-   "DIE PLANE:",
-   "!131 EURO,",
-   "VEREINSKASSE:",
+   "*80 STÜHLE,",
+   "EINE *PLANE.",
+   "KASSE:",
    "!0 EURO."
   ]
  },
@@ -136,6 +132,16 @@
    "VOM *GELD KAUFEN?",
    "SCHREIB'S IN DIE",
    "*KOMMENTARE!"
+  ]
+ },
+ {
+  "id": "sunday2",
+  "say": "Sonntag ist unser erstes Spiel gegen den SC Heuballen. Wir brauchen euch!",
+  "cap": [
+   "*SONNTAG:",
+   "ERSTES SPIEL GEGEN DEN",
+   "*SC HEUBALLEN!",
+   "WIR BRAUCHEN *EUCH!"
   ]
  }
 ]

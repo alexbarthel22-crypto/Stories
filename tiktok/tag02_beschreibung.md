@@ -2,7 +2,7 @@
 
 ## Empfohlen (zum Kopieren)
 
-Tag 2: 83 Fans, aber nur 3 Klappstühle 😭 Mit eurem Geld (631 €) kaufen wir Stühle für alle und eine Plane gegen den Regen. Kasse: 0 €. Und unser Stürmer hat einfach den Bus genommen 🚌 Wer wird unsere neue Nummer 9? 👇 Danke @eikemzz @tobiii1911 @leo.hro1 für Klappstuhl 1–3!
+Tag 2: 83 Fans, aber nur 3 Klappstühle 😭 Mit eurem Geld (631 €) kaufen wir Stühle für alle und eine Plane gegen den Regen. Kasse: 0 €. Und unser Stürmer hat einfach den Bus genommen 🚌 Wer wird unsere neue Nummer 9 und was kaufen wir vom nächsten Geld? 👇 Sonntag geht's gegen den SC Heuballen! Danke @eikemzz @tobiii1911 @leo.hro1 für Klappstuhl 1–3!
 
 #fußballverein #kreisliga #fußball #amateurfußball #fußballhumor #animation #serie #fcschlammloch
 

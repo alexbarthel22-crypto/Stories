@@ -203,7 +203,9 @@ def build_sfx(segs, N):
             for x in (0.5, 0.9, 1.3, 1.7): L(x, pop() * 0.7)
         elif sid == 'calc':
             L(0.0, pop())
-            for x in (c[0], c[2], c[4]): L(x, whoosh())
+            for x in (c[0], c[1], c[2]): L(x, whoosh())
+        elif sid == 'sunday2':
+            L(0.0, pop()); L(0.25, pop()); L(0.5, thud()); L(0.7, pop()); L(1.0, whistle()); L(c[3], pop())
         elif sid == 'total': L(0.25, kaching())
         elif sid == 'chairs' and len(segs) > 16 and False:
             pass
@@ -212,8 +214,8 @@ def build_sfx(segs, N):
             for k in range(21): L(0.15 + k * 0.06, clack() * 0.5)
         elif sid == 'tarp': L(0.0, whoosh()); L(0.55, thud()); L(c[2], pop())
         elif sid == 'kasse0':
-            L(0.0, pop()); L(c[0], whoosh()); L(c[2], whoosh()); L(c[4], clack())
-            L(c[5], sad_trombone(max(0.5, (en - st) - c[5] - 0.12)))
+            L(0.0, pop()); L(c[0], whoosh()); L(c[1], whoosh()); L(c[2], clack())
+            L(c[3], sad_trombone(max(0.5, (en - st) - c[3] - 0.12)))
         elif sid == 'out': L(0.05, whoosh()); L(0.2, thud()); L(0.25, whoosh()); L(0.42, thud()); L(0.45, clack())
         elif sid == 'search': L(0.0, pop()); L(c[4], pop())
         elif sid == 'chairs':
@@ -243,7 +245,7 @@ def build_sfx(segs, N):
         elif sid == 'rule':
             L(c[0], pop()); L(c[3], pop())
             if len(c) >= 5:
-                L(c[3], pop()); L(c[4], pop())
+                L(c[0] + 0.1, pop()); L(c[3], pop()); L(c[4], pop())
                 for i in range(12):
                     t0 = c[3] + 0.1 + i * 0.3
                     if t0 + 0.6 < en - st: L(t0 + 0.6, coin(t0 >= c[4]))
