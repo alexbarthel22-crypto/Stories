@@ -82,6 +82,41 @@ const SCENES = {
       popG(t, 0.0, 540, 330, badge(540, 330, 'PLANE DRÜBER', {kind: 'pitch', fs: 56})) +
       popG(t, capT(2), 540, 470, badge(540, 470, 'KEINER WIRD NASS', {kind: 'orange', fs: 48, rot: -2}));
   },
+  bus(t, d, m) {
+    const x = 1500 - (t / d) * 2100;
+    const id = 'win' + (UID++);
+    const passenger = `<defs><clipPath id="${id}"><rect x="90" y="-300" width="120" height="120" rx="14"/></clipPath></defs>
+      <g clip-path="url(#${id})">${place(busguy({mood: 'smile'}), 150, -82, 0.33)}</g>
+      <g transform="translate(205 -250) rotate(${Math.sin(t * 12) * 20})"><circle r="16" fill="#E7C29C" stroke="#111" stroke-width="5"/></g>`;
+    let s = field(t, 1000, {goal: false});
+    s += `<rect x="-400" y="1080" width="1880" height="260" fill="#4E4E54"/><path d="M-400 1210 H1480" stroke="#F0EDE0" stroke-width="10" stroke-dasharray="70 50"/>`;
+    s += busStop(120, 1090, 0.9) + cityBus(x, 1290, 1.05, t, passenger);
+    return cam(1.0, 540, 960, s) + popG(t, 0.0, 540, 420, badge(540, 420, 'HEUTE MORGEN', {fs: 60}));
+  },
+  out(t, d, m) {
+    // Nr. 9 wird dramatisch durchgestrichen: zwei rote Pinselstriche, Bildschuetteln, roter Blitz
+    const k1 = clamp((t - 0.05) / 0.18, 0, 1), k2 = clamp((t - 0.25) / 0.18, 0, 1);
+    const shake = t < 0.6 ? Math.sin(t * 90) * 14 * Math.exp(-t * 5) : 0;
+    const L = 760;
+    const strokes = `<g stroke-linecap="round" fill="none">
+      <path d="M240 600 L840 1220" stroke="#111" stroke-width="64" stroke-dasharray="${L * 1.15}" stroke-dashoffset="${L * 1.15 * (1 - k1)}"/>
+      <path d="M240 600 L840 1220" stroke="#E5483A" stroke-width="48" stroke-dasharray="${L * 1.15}" stroke-dashoffset="${L * 1.15 * (1 - k1)}"/>
+      <path d="M840 600 L240 1220" stroke="#111" stroke-width="64" stroke-dasharray="${L * 1.15}" stroke-dashoffset="${L * 1.15 * (1 - k2)}"/>
+      <path d="M840 600 L240 1220" stroke="#E5483A" stroke-width="48" stroke-dasharray="${L * 1.15}" stroke-dashoffset="${L * 1.15 * (1 - k2)}"/></g>`;
+    const flash = t > 0.25 && t < 0.6 ? `<rect width="1080" height="1920" fill="#E5483A" opacity="${0.35 * (1 - (t - 0.25) / 0.35)}"/>` : '';
+    return `<g transform="translate(${shake} 0)">` + cam(1.0, 540, 960, field(t, 1080, {goalX: 780}) +
+        `<g opacity=".85">${place(busguy({mood: 'sad'}), 540, 1300, 1.0)}</g>`) +
+      nameCard(80, 400, '9', '???', 'STÜRMER · BUS GENOMMEN') + strokes +
+      popG(t, 0.45, 540, 1150, badge(540, 1150, 'RAUS!', {kind: 'red', fs: 90, rot: -8})) + `</g>` + flash;
+  },
+  search(t, d, m) {
+    const sway = Math.sin(t * 2) * 5;
+    const jersey = jersey9(540, 860, 1.05, sway);
+    const beam = `<path d="M540 0 L300 1100 L780 1100 Z" fill="#FFF3B0" opacity=".14"/>`;
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + beam) + jersey +
+      popG(t, 0.0, 540, 400, badge(540, 400, 'GESUCHT: NR. 9', {kind: 'pitch', fs: 62})) +
+      popG(t, capT(4), 540, 1150, badge(540, 1150, 'EINER VON EUCH!', {kind: 'orange', fs: 56, rot: -2}));
+  },
   kasse0(t, d, m) {
     const lines = [['80 KLAPPSTÜHLE', '−500 €', '#E5483A'], ['PLANE', '−131 €', '#E5483A']];
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(720, 1180, 0.95) + cashBox(720, 1015, 0.8, t >= capT(4) ? 'empty' : true) +
