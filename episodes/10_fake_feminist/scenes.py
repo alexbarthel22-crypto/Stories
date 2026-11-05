@@ -5,7 +5,7 @@ import math, random
 from alexlib import *
 
 AL = alex(top="#FFFFFF", top_style="tee", pants="#3F4A6B", shoes="#FFFFFF")
-FEET, AH = 1665, 560     # Alex größer
+FEET, AH = 1690, 560     # Alex größer, etwas tiefer
 LEA = person_spec(22, girl=True, top="#36B5C2", hair="#3B2A20", skin="#EBB894", pants="#3F4A6B", shoes="#2A2A2A")
 
 INTRO = dict(icon="📢", bg="#7A3FA8", spec=AL, expr="smug", pose="hips", hand_prop=None,

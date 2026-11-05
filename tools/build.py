@@ -31,6 +31,7 @@ import alexlib as _alexlib
 _alexlib.SAFE_MODE = getattr(script, "SAFE_MODE", "default")
 _alexlib.CAPTION_SIZE = getattr(script, "CAPTION_SIZE", 50)
 _alexlib.NAME_SCALE = getattr(script, "NAME_SCALE", 1.0)
+TITLE_SIZE = getattr(script, "TITLE_SIZE", 72)
 scenes = load("scenes")
 tts = json.load(open(os.path.join(EP, "build", "tts.json")))
 sfx_meta = json.load(open(os.path.join(ROOT, "assets", "sfx", "sfx_meta.json")))
@@ -178,9 +179,9 @@ def draw_frame(c, tg):
     if S.clock:
         clock_pill(c, S.clock, 118, pop(tl, 0.0, 0.25))
         if S.title:
-            title(c, S.title, 222, tcol, pop(tl, 0.06, 0.3), size=72)
+            title(c, S.title, 222 + (TITLE_SIZE - 72) * 0.4, tcol, pop(tl, 0.06, 0.3), size=TITLE_SIZE)
     elif S.title:
-        title(c, S.title, 170, tcol, pop(tl, 0.0, 0.3), size=72)
+        title(c, S.title, 170 + (TITLE_SIZE - 72) * 0.4, tcol, pop(tl, 0.0, 0.3), size=TITLE_SIZE)
     scenes.SCENE_DRAW[S.id](c, ctx)
     # Untertitel
     cur, since = None, 0

@@ -230,8 +230,9 @@ SAFE_SCALE, SAFE_PIVOT = 0.9, (W / 2, 1720)
 # SAFE_MODE "strict": kompletter Inhalt in TikToks freier Zone
 # (oben 160 px, unten ~470 px, rechts ~140 px, links ~60 px frei bei 1080x1920)
 SAFE_MODE = "default"
-STRICT = dict(scale=0.75, x0=500 - 540 * 0.75, y0=160 - 60 * 0.75)
-SAFE_BOX = (60, 160, 940, 1450)   # x0, y0, x1, y1 der freien Zone
+STRICT = dict(scale=0.78, x0=500 - 540 * 0.78, y0=160 - 60 * 0.78)
+SAFE_BOX = (60, 160, 940, 1500)   # x0, y0, x1, y1 der freien Zone (unten ~420 px für TikTok-Text)
+TITLE_SIZE = 72
 
 
 def safe_zone(c):
@@ -270,8 +271,12 @@ def clock_pill(c, label, y=118, s=1.0):
 
 
 def title(c, s_txt, y, color, s=1.0, size=70):
+    # längstes Einzelwort darf nicht breiter als die freie Fläche sein -> Größe anpassen
+    widest = max(text_width(c, wd, size, FONT_HEAD) for wd in s_txt.split())
+    if widest > 1000:
+        size = size * 1000 / widest
     def draw():
-        text_block(c, s_txt, W / 2, y, size, 980, color, FONT_HEAD)
+        text_block(c, s_txt, W / 2, y, size, 1000, color, FONT_HEAD)
     scaled(c, W / 2, y, s, draw)
 
 
@@ -1234,17 +1239,8 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
     sel = len(shuffle) if revealed else k
     last_tick = reveal_t if revealed else (ticks[k] if t >= ticks[0] else 0)
     slide = 1 - ease_out_cubic((t - last_tick) / 0.06)
-    yb = 330
-    c.save(); c.rectangle(0, yb - 52, W, 104); c.clip()      # Leiste nur im freien Bereich
-    rrect(c, -200, yb - 50, W + 400, 100, 0); src(c, "#000000", 0.55); c.fill()
-    for j in range(-7, 8):
-        idx = (sel + j) % len(icons)
-        x = W / 2 + (j + slide) * 96
-        c.arc(x, yb, 36, 0, 2 * math.pi); fill(c, shade(cols[idx], 0.85))
-        c.arc(x, yb, 36, 0, 2 * math.pi); c.set_line_width(3); src(c, "#FFFFFF", 0.35); c.stroke()
-        emoji(c, icons[idx], x, yb, 38)
-    c.restore()
-    c.arc(W / 2, yb, 44, 0, 2 * math.pi); c.set_line_width(7); src(c, "#F7C948"); c.stroke()
+    _, band_y = c.user_to_device(W / 2, 330)
+    band_x, _ = c.user_to_device(W / 2, 330)
     # Alex
     fx, fy, hh = W / 2, 1640, 700
     if revealed:
@@ -1262,6 +1258,17 @@ def draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, cfg
         person(c, fx, fy, hh, alex(top=top, top_style="hoodie", pants="#2F3B52"), t, "happy", "idle")
         emoji(c, det[0], fx + 190, fy - 300, 110, rot=0.15)
     c.restore()
+    # Auswahl-Band über die volle Bildschirmbreite (darf rechts in den Sicherheitsbereich)
+    yb = band_y + 22
+    rrect(c, 0, yb - 78, W, 156, 0); src(c, "#000000", 0.6); c.fill()
+    step = 150
+    for j in range(-5, 6):
+        idx = (sel + j) % len(icons)
+        x = band_x + (j + slide) * step
+        c.arc(x, yb, 58, 0, 2 * math.pi); fill(c, shade(cols[idx], 0.85))
+        c.arc(x, yb, 58, 0, 2 * math.pi); c.set_line_width(4); src(c, "#FFFFFF", 0.4); c.stroke()
+        emoji(c, icons[idx], x, yb, 62)
+    c.arc(band_x, yb, 68, 0, 2 * math.pi); c.set_line_width(10); src(c, "#F7C948"); c.stroke()
     if flash_start <= t < reveal_t + 0.3:
         a = clamp((t - flash_start) / 0.04) if t < reveal_t else 1 - ease_out_cubic((t - reveal_t) / 0.3)
         c.set_source_rgba(1, 1, 1, a); c.paint()
