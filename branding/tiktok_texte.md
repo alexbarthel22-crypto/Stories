@@ -111,3 +111,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Fake-Feminist 📢 Shirt: „The future is female“ ✨ Realität: Leas Idee klauen, Jana putzen lassen und „Alle Männer sind das Problem!“ … außer ihm natürlich 😇🤡 Welche Red Flag hast du schon live erlebt? 1, 2, 3 oder 4? 👇 Kennst du auch so einen Fake-Feministen? Markier ihn! Und was soll Alex morgen sein?
 
 #fakefeminist #redflags #feminismus #performativeally #dating #relatable #comedy #fürdich #fyp
+
+## TikTok Folge 5 – Dorfmatratze
+Cover: `episodes/11_dorfmatratze/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+eine Dorfmatratze 🏘️ Beim Bäcker: die Ex. Im Bus: drei Exen. Der Busfahrer: Onkel von einer 💀 Und Oma Hilde hat sowieso alles gesehen 👵👀 Bei welcher Szene hast du an dein Dorf gedacht? 👇 Kennst du auch so ein Dorf, wo jeder jeden kennt? Markier sie oder ihn! Und was soll Alex morgen sein?
+
+#dorfleben #dorfkind #jederkenntjeden #landleben #schützenfest #relatable #comedy #fürdich #fyp
