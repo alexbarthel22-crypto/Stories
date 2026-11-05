@@ -26,7 +26,7 @@ const SCENES = {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
     return cam(z, 540, 1060 - 30 * e, field(t, 1060, {goalX: 790}) + place(coach({mouth: m, blink: blinkAt(t)}), 470, 1290, 0.6)) +
       `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${popG(t, 0.3, 540, 440, badge(540, 440, 'TAG 2', {kind: 'pitch', fs: 150, pad: 120}))}</g>` +
-      popG(t, 0.6, 540, 610, badge(540, 610, 'ICH GRÜNDE EINEN FUSSBALLVEREIN', {bg: '#FFD31A', fs: 44, ball: true})) +
+      popG(t, 0.55, 540, 640, twoLineBadge(540, 640, 'ICH GRÜNDE EINEN', 'FUSSBALLVEREIN', 52)) +
       introBall(t);
   },
   first3(t, d, m) {
@@ -34,8 +34,8 @@ const SCENES = {
     let s = field(t, 960, {goal: false, touchY: 1265});
     [220, 540, 860].forEach((x, i) => { s += place(seatedFan(i, t), x, 1210, 0.82); });
     let tags = '';
-    FIRST_FANS.forEach((f, i) => { tags += popG(t, capT(i + 1), [220, 540, 860][i], 600 + (i % 2) * 70, handleTag([220, 540, 860][i], 600 + (i % 2) * 70, f.handle, 1.15)); });
-    return cam(z, 540, 1000, s) + popG(t, 0.0, 540, 380, badge(540, 380, 'TRIBÜNE', {fs: 70})) + tags;
+    FIRST_FANS.forEach((f, i) => { const x = [220, 540, 860][i]; tags += popG(t, capT(i + 1), x, 500, profilePic(x, 440, i, 100) + handleTag(x, 600, f.handle, i === 1 ? 0.95 : 1.05)); });
+    return cam(z, 540, 1000, s) + tags;
   },
   fans83(t, d, m) {
     const n = Math.round(83 * easeOut(clamp((t - 0.3) / 1.4, 0, 1)));
@@ -46,14 +46,17 @@ const SCENES = {
   problem(t, d, m) {
     let s = field(t, 960, {goal: false, touchY: 1150});
     [380, 540, 700].forEach((x, i) => { s += place(seatedFan(i, t), x, 1120, 0.42); });
-    s += crowd(t, 70, 1330, 9, 4, 118, 105, 0.7);
-    return cam(1.0, 540, 960, s) +
+    s += crowd(t, 70, 1330, 9, 4, 118, 105, 0.7, true);
+    const bub = [[200, 1180, 'NASS!', -6, 0.5], [560, 1140, 'WILL SITZEN!', 4, 0.9], [880, 1200, 'MIR IST KALT!', -3, 1.3], [420, 1290, 'BUUUH!', 5, 1.7]];
+    let bubbles = ''; bub.forEach(([x, y, txt, r, t0]) => { bubbles += popG(t, t0, x, y, speech(x, y, txt, r)); });
+    return cam(1.0, 540, 960, s + bubbles) +
       popG(t, 0.1, 540, 420, badge(540, 420, 'TRIBÜNE: 3 PLÄTZE', {kind: 'red', fs: 54})) +
       popG(t, capT(2), 540, 560, badge(540, 560, 'FANS: 83', {kind: 'pitch', fs: 50, rot: -2}));
   },
   calc(t, d, m) {
     const lines = [['83 FOLLOWER × 1 €', '83 €'], ['24 KOMMENTARE × 2 €', '48 €'], ['VEREINSKASSE', '500 €']];
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1660, 1.05)) +
+    const vx = 860 + Math.sin(t * 2.6) * 115, vflip = Math.cos(t * 2.6) < 0;
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(vlad({blink: blinkAt(t)}), vx, 1124 - Math.abs(Math.sin(t * 10)) * 6, 0.3, vflip) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1660, 1.05)) +
       popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(2), capT(4)]));
   },
   total(t, d, m) {

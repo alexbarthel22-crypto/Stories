@@ -9,21 +9,21 @@
   ]
  },
  {
-  "id": "first3",
-  "say": "Auf der Tribüne sitzen: Eike, Tobi und Leo.",
-  "cap": [
-   "AUF DER TRIBÜNE SITZEN:",
-   "*EIKE,",
-   "*TOBI",
-   "UND *LEO."
-  ]
- },
- {
   "id": "fans83",
   "say": "Und jetzt sind wir schon dreiundachtzig Fans!",
   "cap": [
    "UND JETZT SIND WIR",
    "SCHON *83 FANS!"
+  ]
+ },
+ {
+  "id": "first3",
+  "say": "Unsere ersten drei Fans: Eike, Tobi und Leo!",
+  "cap": [
+   "UNSERE ERSTEN *3 FANS:",
+   "*EIKE,",
+   "*TOBI",
+   "UND *LEO!"
   ]
  },
  {

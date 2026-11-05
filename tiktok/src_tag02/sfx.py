@@ -193,13 +193,14 @@ def build_sfx(segs, N):
         if sid == 'intro': L(0.0, whoosh()); L(0.3, thud()); L(0.3, pop()); L(0.6, pop()); L(0.0, stadium_rec() / 0.6)
         elif sid == 'follow': L(0.6, pop())
         elif sid == 'first3':
-            L(0.0, pop())
             for x in c[1:4]: L(x, pop())
         elif sid == 'fans83':
             L(0.0, pop())
             for i in range(12): L(0.3 + i * 0.11, click() * 0.6)
             L(1.7, ding())
-        elif sid == 'problem': L(0.1, pop()); L(c[2], pop())
+        elif sid == 'problem':
+            L(0.1, pop()); L(c[2], pop())
+            for x in (0.5, 0.9, 1.3, 1.7): L(x, pop() * 0.7)
         elif sid == 'calc':
             L(0.0, pop())
             for x in (c[0], c[2], c[4]): L(x, whoosh())

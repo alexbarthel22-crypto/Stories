@@ -47,7 +47,7 @@ function handleTag(x, y, text, s = 1) {
 }
 
 // Kleiner stehender Fan (fuer die Menge der 83)
-function miniFan(x, y, s, k) {
+function miniFan(x, y, s, k, sad) {
   const shirts = ['#E5483A', '#2F7FD8', '#F28A2E', '#58B044', '#9AA3AE', '#7B3FE4', '#FFD31A', '#2A2A2E'];
   const skins = ['#F5D3AE', '#E7B98E', '#C98E62', '#8D5A3B', '#F2CCA6'];
   const hairs = ['#2B1D16', '#6B4226', '#E0A23A', '#111', '#A8A8A8', '#B5651D'];
@@ -60,14 +60,15 @@ function miniFan(x, y, s, k) {
     <circle cx="0" cy="-124" r="40" fill="${sk}" stroke="#111" stroke-width="6"/>
     <path d="M-40 -130 Q-38 -168 0 -168 Q38 -168 40 -130 Q20 -148 0 -146 Q-20 -148 -40 -130Z" fill="${hr}"/>
     <circle cx="-14" cy="-124" r="6" fill="#111"/><circle cx="14" cy="-124" r="6" fill="#111"/>
-    <path d="M-12 -104 Q0 -96 12 -104" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/></g>`;
+    ${sad ? `<path d="M-12 -98 Q0 -108 12 -98" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-24 -140 l10 6 M24 -140 l-10 6" stroke="#111" stroke-width="4"/><path d="M22 -118 q4 10 0 14 q-4 -4 0 -14z" fill="#8EC9F2"/>`
+          : `<path d="M-12 -104 Q0 -96 12 -104" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/>`}</g>`;
 }
 
-function crowd(t, x0, y0, cols, rows, dx, dy, s) {
+function crowd(t, x0, y0, cols, rows, dx, dy, s, sad) {
   let out = '';
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
     const k = r * cols + c, bob = Math.sin(t * 6 + k) * 4;
-    out += miniFan(x0 + c * dx + (r % 2) * dx / 2, y0 + r * dy + bob, s * (1 + r * 0.06), k);
+    out += miniFan(x0 + c * dx + (r % 2) * dx / 2, y0 + r * dy + bob, s * (1 + r * 0.06), k, sad);
   }
   return out;
 }
@@ -149,4 +150,25 @@ function jersey9(cx, cy, s, sway) {
     <text x="0" y="150" text-anchor="middle" ${FONT} font-size="230" fill="#FFD31A" stroke="#111" stroke-width="12" paint-order="stroke">9</text>
     <text x="0" y="-60" text-anchor="middle" ${FONT} font-size="44" fill="#fff" stroke="#111" stroke-width="6" paint-order="stroke" letter-spacing="3">STURM</text>
   </g>`;
+}
+
+function speech(x, y, text, rot = 0, s = 1) {
+  const w = text.length * 22 + 50;
+  return `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${s})">
+    <path d="M${-w / 2} -40 h${w} a20 20 0 0 1 20 20 v40 a20 20 0 0 1 -20 20 h${-w / 2 + 30} l-24 26 l-6 -26 h${-w / 2 + 0} a20 20 0 0 1 -20 -20 v-40 a20 20 0 0 1 20 -20z" fill="#fff" stroke="#3A2316" stroke-width="7"/>
+    <text x="10" y="14" text-anchor="middle" ${FONT} font-size="40" fill="#3A2316">${text}</text></g>`;
+}
+
+function profilePic(x, y, i, r = 72) {
+  const id = 'pp' + (UID++);
+  return `<defs><clipPath id="${id}"><circle cx="${x}" cy="${y}" r="${r}"/></clipPath></defs>
+    <circle cx="${x + 4}" cy="${y + 8}" r="${r + 8}" fill="#3A2316"/>
+    <image href="${FAN_PICS[i]}" x="${x - r}" y="${y - r}" width="${2 * r}" height="${2 * r}" clip-path="url(#${id})"/>
+    <circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#fff" stroke-width="8"/><circle cx="${x}" cy="${y}" r="${r + 5}" fill="none" stroke="#3A2316" stroke-width="5"/>`;
+}
+
+function twoLineBadge(cx, cy, l1, l2, fs) {
+  const w = Math.max(l1.length, l2.length) * fs * 0.6 + fs * 2.6, h = fs * 2.7;
+  return `${box(cx - w / 2, cy - h / 2, w, h, 'orange', 8)}${ballIcon(cx - w / 2 + fs * 1.0, cy, fs * 0.55)}
+    ${label(cx + fs * 0.6, cy - fs * 0.12, l1, fs, '#fff')}${label(cx + fs * 0.6, cy + fs * 1.0, l2, fs, '#fff')}`;
 }
