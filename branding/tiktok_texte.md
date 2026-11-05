@@ -96,13 +96,12 @@ Friedrich Merz 🎙️ Fliegt selbst zum Bäcker 🛩️🥐, jedes Thema endet 
 
 ## TikTok Folge 3 – Gaslighter
 Cover: `episodes/09_gaslighter/thumbnail.png`
-Stimme: exakt wie Folge 1 (gemini-3.8-flash-tts, Puck, gleiche Regieanweisung)
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein Gaslighter 🌀 „Das hab ich nie gesagt.“ – „Du bist zu empfindlich.“ – „Du bildest dir das ein.“ 🚩 Welchen Satz hast du schon mal gehört? 👇 Kennst du jemanden, der auch immer sagt „Das hab ich nie gesagt“? Markier sie oder ihn! Und was soll Alex morgen sein? 🤍
+ein Gaslighter 🌀 Er vergisst dich abzuholen – und plötzlich wolltest DU den Bus nehmen 🤷 Du zeigst ihm seine Nachricht? „Hast du falsch verstanden.“ 🙄 Welchen dieser Sätze hast du schon mal gehört? 1, 2, 3 oder 4? 👇 Kennst du jemanden, der auch immer sagt „Das hab ich nie gesagt“? Markier sie oder ihn! 🤍 Und was soll Alex morgen sein?
 
-#gaslighting #redflags #toxischebeziehung #beziehung #selbstwert #relatable #fürdich #fyp
+#gaslighting #redflags #toxischebeziehung #beziehung #selbstwert #relatable #storytime #fürdich #fyp
 
 ## TikTok Folge 3 – Fake-Feminist
 Cover: `episodes/10_fake_feminist/thumbnail.png`

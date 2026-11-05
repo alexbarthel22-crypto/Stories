@@ -46,8 +46,8 @@ SHUFFLE = [
 ]
 
 # Cover: Anordnung wie Pick-me-Boy, Farben zum Thema (verwirrendes Lila, Gaslampen-Orange)
-THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="GASLIGHTER", bg="#4A2E6B", accent="#FFB547",
-             pill="#1E1230", pill_text="#FFFFFF", expr="smug", pose="shrug", prop=None,
+THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="GASLIGHTER", bg="#3A2A5C", accent="#FFB547",
+             pill="#1E1230", pill_text="#FFFFFF", expr="smug", pose="shrug", prop=None, extras=True,
              emojis=("🌀", "🚩", "🤷", "🙄"))
 
 SCENES = [
