@@ -71,9 +71,86 @@ def walk_pose(ph, amount=1.0):
     return legs, arms
 
 
+def _cap(cv, a, b, w, col):
+    cv.line([a, b], col, w)
+
+
+def draw_hand(cv, wrist, d, f, u, skin, pose="relaxed", point=None, outline=True):
+    """detailed hand with a soft contour (so it reads in front of the face)"""
+    if outline:
+        _hand(cv, wrist, d, f, u, sh(skin, 0.38), sh(skin, 0.38), pose, point, 0.16 * u)
+    return _hand(cv, wrist, d, f, u, skin, sh(skin, 0.18), pose, point, 0.0)
+
+
+def _hand(cv, wrist, d, f, u, skin, skin_d, pose, point, g):
+    dx, dy = d
+    nx, ny = -dy * f, dx * f
+    P = (wrist[0] + dx * u * 0.75, wrist[1] + dy * u * 0.75)
+    det = g == 0
+
+    def at(a, b):
+        return (P[0] + dx * a * u + nx * b * u, P[1] + dy * a * u + ny * b * u)
+    pts = [at(0.75 * math.cos(k * math.pi / 10) * (1 + g / u * 0.7), 0.62 * math.sin(k * math.pi / 10) * (1 + g / u * 0.9))
+           for k in range(20)]
+    if pose == "open":
+        for b, ln, sp in ((0.42, 1.05, 0.16), (0.14, 1.2, 0.05), (-0.14, 1.12, -0.05), (-0.42, 0.92, -0.16)):
+            base = at(0.55, b)
+            tip = (base[0] + (dx + nx * sp) * ln * u, base[1] + (dy + ny * sp) * ln * u)
+            _cap(cv, base, tip, 0.3 * u + g, skin)
+    elif pose == "relaxed":
+        for b in (0.36, 0.12, -0.12, -0.36):
+            cv.line([at(0.55, b), at(1.05, b * 0.9), at(1.0, b * 0.8 - 0.25)], skin, 0.3 * u + g)
+    cv.poly(pts, fill=skin)
+    if pose in ("fist", "point", "pinch"):
+        for k, b in enumerate((0.36, 0.12, -0.12, -0.36)):
+            if pose in ("point", "pinch") and k == 0:
+                continue
+            c = at(0.68, b)
+            cv.circle(c[0], c[1], 0.19 * u + g / 2, fill=skin)
+        if det:
+            for b in (0.24, 0.0, -0.24):
+                cv.line([at(0.5, b), at(0.82, b)], skin_d, 0.05 * u)
+    if pose in ("point", "pinch"):
+        base = at(0.6, 0.36)
+        ln = 1.7
+        if point is not None and point[0] == "to":
+            vx, vy = point[1][0] - base[0], point[1][1] - base[1]
+            dd = math.hypot(vx, vy) or 1
+            pd = (vx / dd, vy / dd)
+            ln = clamp(dd / u, 1.1, 2.2)
+        else:
+            pd = point if point is not None else (dx, dy)
+        tip = (base[0] + pd[0] * ln * u, base[1] + pd[1] * ln * u)
+        _cap(cv, base, tip, 0.3 * u + g, skin)
+        if det:
+            mx, my = (base[0] + tip[0]) / 2, (base[1] + tip[1]) / 2
+            cv.line([(mx - pd[1] * 0.1 * u, my + pd[0] * 0.1 * u), (mx + pd[1] * 0.1 * u, my - pd[0] * 0.1 * u)], skin_d, 0.05 * u)
+            cv.circle(tip[0] - pd[0] * 0.06 * u, tip[1] - pd[1] * 0.06 * u, 0.09 * u, fill=hl(skin, 0.35))
+    if pose == "open" and det:
+        for b, ln, sp in ((0.42, 1.05, 0.16), (0.14, 1.2, 0.05), (-0.14, 1.12, -0.05), (-0.42, 0.92, -0.16)):
+            base = at(0.55, b)
+            m = (base[0] + (dx + nx * sp) * ln * u * 0.55, base[1] + (dy + ny * sp) * ln * u * 0.55)
+            cv.line([(m[0] - nx * 0.1 * u, m[1] - ny * 0.1 * u), (m[0] + nx * 0.1 * u, m[1] + ny * 0.1 * u)], skin_d, 0.05 * u)
+    tb = at(0.0, 0.5)
+    if pose == "open":
+        tt = (tb[0] + (dx * 0.5 + nx * 0.85) * u, tb[1] + (dy * 0.5 + ny * 0.85) * u)
+    elif pose in ("fist", "point"):
+        tt = at(0.6, 0.12)
+    elif pose == "pinch":
+        tip_i = tip
+        tt = (tip_i[0] - pd[0] * 0.25 * u + nx * 0.28 * u, tip_i[1] - pd[1] * 0.25 * u + ny * 0.28 * u)
+    else:
+        tt = (tb[0] + (dx * 0.75 + nx * 0.3) * u, tb[1] + (dy * 0.75 + ny * 0.3) * u)
+    _cap(cv, tb, tt, 0.32 * u + g, skin)
+    if det:
+        cv.line([at(-0.1, 0.35), at(0.45, 0.2)], skin_d, 0.05 * u)
+    return P
+
+
 def draw_char(cv, x, y, L, h, f=1, t=0.0, arm_b=None, arm_f=None, walk=None, walk_amt=1.0, lean=0.0, talk=0.0,
               mood="smile", blink=None, look=(0.0, 0.0), brows=0.0, breathe=1.0, sway=1.0, bounce=0.0, squash=0.0,
-              head_tilt=0.0, stance=1.0, hold=None):
+              head_tilt=0.0, stance=1.0, hold=None, hand_f="relaxed", hand_b="relaxed",
+              point_f=None, glasses_dy=0.0, shrug=0.0):
     ink = INK
     r = 0.084 * h
     # ---- procedural life
@@ -115,7 +192,7 @@ def draw_char(cv, x, y, L, h, f=1, t=0.0, arm_b=None, arm_f=None, walk=None, wal
         leg_pts = [((a[0], a[1] + dy), (b[0], b[1] + dy), (c[0], c[1] + dy)) for a, b, c in tmp]
     # ---- torso frame
     lean_a = lean + 0.015 * sw
-    sh_y = hip_y - 0.30 * h - 0.004 * h * br - squash * 0.04 * h
+    sh_y = hip_y - 0.30 * h - 0.004 * h * br - squash * 0.04 * h - shrug * 0.025 * h
     sh_x = hip_x + f * math.sin(lean_a) * 0.29 * h
     neck = (sh_x + f * 0.01 * h, sh_y - 0.01 * h)
     hb = math.sin(t * 9) * 0.012 * h * clamp(talk)               # head bob while talking
@@ -133,8 +210,9 @@ def draw_char(cv, x, y, L, h, f=1, t=0.0, arm_b=None, arm_f=None, walk=None, wal
             return _ik(sx, sy_, spec[1][0], spec[1][1], la1, la2, f)
         return _chain(sx, sy_, spec[1], spec[2], la1, la2, f)
 
+    hand_b_pose = hand_b
     eb, hand_b = arm_pts(arm_b, sx_b, -1)
-    ef, hand_f = arm_pts(arm_f, sx_f, 1)
+    ef, hand_f_pt = arm_pts(arm_f, sx_f, 1)
     top, top_d = L.top, sh(L.top, 0.22)
     skin, skin_d = L.skin, sh(L.skin, 0.16)
     pants, pants_d = L.pants, sh(L.pants, 0.25)
@@ -160,24 +238,25 @@ def draw_char(cv, x, y, L, h, f=1, t=0.0, arm_b=None, arm_f=None, walk=None, wal
             lx = ank[0] + f * (0.012 + k * 0.016) * h
             cv.line([(lx - 0.008 * h, ank[1] + 0.0 * h), (lx + 0.008 * h, ank[1] + 0.006 * h)], hl(shoe, 0.5), 0.004 * h)
 
-    def draw_arm(sh_pt, el, hand, back):
+    def draw_arm(sh_pt, el, hand, back, pose="relaxed", point=None):
         col = top_d if back else top
         cv.line([sh_pt, el], col, aw)
-        sleeve_end = (el[0] + (hand[0] - el[0]) * 0.72, el[1] + (hand[1] - el[1]) * 0.72)
-        cv.line([el, sleeve_end], col, aw * 0.92)
-        if L.top_style in ("bomber", "hoodie"):
-            cv.line([(el[0] + (hand[0] - el[0]) * 0.62, el[1] + (hand[1] - el[1]) * 0.62), sleeve_end],
-                    sh(L.trim, 0.1 if not back else 0.3), aw * 0.9, cap=False)   # ribbed cuff
-        cv.line([(el[0] - 0.01 * h, el[1] - 0.01 * h), (el[0] + 0.008 * h, el[1] + 0.012 * h)], sh(col, 0.18), 0.006 * h)
-        cv.line([sleeve_end, hand], skin_d if back else skin, aw * 0.55)
-        cv.circle(hand[0], hand[1], 0.03 * h, fill=skin_d if back else skin)
         dx, dy = hand[0] - el[0], hand[1] - el[1]
         n = math.hypot(dx, dy) or 1
-        tx, ty = hand[0] + (-dy / n) * f * 0.022 * h + dx / n * 0.01 * h, hand[1] + (dx / n) * f * 0.022 * h + dy / n * 0.01 * h
-        cv.circle(tx, ty, 0.013 * h, fill=skin_d if back else skin)       # thumb
-        cv.line([(hand[0] + dx / n * 0.012 * h - (-dy / n) * f * 0.012 * h, hand[1] + dy / n * 0.012 * h - (dx / n) * f * 0.012 * h),
-                 (hand[0] + dx / n * 0.03 * h - (-dy / n) * f * 0.006 * h, hand[1] + dy / n * 0.03 * h - (dx / n) * f * 0.006 * h)],
-                skin_d, 0.004 * h)                                   # finger crease
+        d = (dx / n, dy / n)
+        if pose == "pocket":
+            cv.line([el, hand], col, aw * 0.92)
+            cv.line([(hand[0] - 0.02 * h, hand[1] + 0.005 * h), (hand[0] + 0.025 * h, hand[1] - 0.01 * h)],
+                    sh(pants, 0.35), 0.008 * h)
+            return hand
+        sleeve_end = (el[0] + dx * 0.78, el[1] + dy * 0.78)
+        cv.line([el, sleeve_end], col, aw * 0.92)
+        if L.top_style in ("bomber", "hoodie"):
+            cv.line([(el[0] + dx * 0.66, el[1] + dy * 0.66), sleeve_end], sh(L.trim, 0.1 if not back else 0.3), aw * 0.9,
+                    cap=False)
+        cv.line([(el[0] - 0.01 * h, el[1] - 0.01 * h), (el[0] + 0.008 * h, el[1] + 0.012 * h)], sh(col, 0.18), 0.006 * h)
+        cv.line([sleeve_end, hand], skin_d if back else skin, aw * 0.5)
+        return draw_hand(cv, hand, d, f if not back else -f, 0.034 * h, skin_d if back else skin, pose, point)
 
     # ---- back hair (long styles) behind everything of the head
     if L.hair_style in ("long", "ponytail"):
@@ -195,7 +274,7 @@ def draw_char(cv, x, y, L, h, f=1, t=0.0, arm_b=None, arm_f=None, walk=None, wal
             cv.line([(px, py), (px - f * r * 0.5, py + r * 0.9), (px - f * r * (0.45 - swing), py + r * 1.9)], hair_d,
                     r * 0.55)
     # ---- draw order: back arm, back leg, front leg, torso, head, front arm
-    draw_arm((sx_b, sy_), eb, hand_b, True)
+    draw_arm((sx_b, sy_), eb, hand_b, True, hand_b_pose)
     draw_leg(leg_pts[0], True)
     draw_leg(leg_pts[1], False)
     # hips / pants block
@@ -276,11 +355,13 @@ def draw_char(cv, x, y, L, h, f=1, t=0.0, arm_b=None, arm_f=None, walk=None, wal
         tilt = (0.05 if mood == "angry" else -0.02) * r * (1 if exx < fx else -1)
         cv.line([(exx - r * 0.17, bry + tilt), (exx + r * 0.16, bry - r * 0.04 - tilt)], hair_d, 0.075 * r)
         if L.glasses:
-            cv.circle(exx, ey, r * 0.27 * s, outline=ink, width=0.05 * r)
-            cv.arc(exx - r * 0.2 * s, ey - r * 0.2, exx + r * 0.05, ey + r * 0.05, 200, 260, (255, 255, 255, 200), 0.04 * r)
+            gy = ey - glasses_dy * r
+            cv.circle(exx, gy, r * 0.27 * s, outline=ink, width=0.05 * r)
+            cv.arc(exx - r * 0.2 * s, gy - r * 0.2, exx + r * 0.05, gy + r * 0.05, 200, 260, (255, 255, 255, 200), 0.04 * r)
     if L.glasses:
-        cv.line([(fx - r * 0.07, ey - r * 0.02), (fx + r * 0.07, ey - r * 0.02)], ink, 0.05 * r)
-        cv.line([(fx - f * r * 0.6, ey - r * 0.03), (hx - f * r * 0.65, ey - r * 0.05)], ink, 0.045 * r)
+        gy = ey - glasses_dy * r
+        cv.line([(fx - r * 0.07, gy - r * 0.02), (fx + r * 0.07, gy - r * 0.02)], ink, 0.05 * r)
+        cv.line([(fx - f * r * 0.6, gy - r * 0.03), (hx - f * r * 0.65, gy - r * 0.05)], ink, 0.045 * r)
     # nose
     nx = fx + f * r * 0.1
     cv.line([(nx, ey + r * 0.05), (nx + f * r * 0.1, ey + r * 0.32), (nx - f * r * 0.02, ey + r * 0.36)], skin_d, 0.07 * r)
@@ -343,9 +424,9 @@ def draw_char(cv, x, y, L, h, f=1, t=0.0, arm_b=None, arm_f=None, walk=None, wal
                 fill=hair)
     # ---- front arm (+ held prop under the hand)
     if hold:
-        hold(cv, hand_f)
-    draw_arm((sx_f, sy_), ef, hand_f, False)
-    return dict(head=(hx, hcy), r=r, fx=fx, ey=ey, hand_f=hand_f, hand_b=hand_b, chest=chest, sh_y=sh_y, sh_x=sh_x,
+        hold(cv, hand_f_pt)
+    draw_arm((sx_f, sy_), ef, hand_f_pt, False, hand_f, point_f)
+    return dict(head=(hx, hcy), r=r, fx=fx, ey=ey, hand_f=hand_f_pt, hand_b=hand_b, chest=chest, sh_y=sh_y, sh_x=sh_x,
                 hip=(hip_x, hip_y), neck=neck, top=hcy - r * 1.4)
 
 

@@ -23,7 +23,7 @@ def cover():
     for i in range(10):
         mv.banknote(cv, 80 + (i * 97) % 380, 1150 + (i * 53) % 300, 0.8, i * 0.7)
     mv.leon(cv, 250, 1470, 450, 1, t=t, shades=True, chain=True, wave=1.0, talk=0.8)
-    mv.mia(cv, 840, 1470, 450, -1, talk=0.3)
+    mv.mia(cv, 840, 1470, 450, -1, mood="smirk")
     img = lay.convert("RGB").resize((OUT_W, OUT_H), Image.LANCZOS)
     mv.option_card(img, 300, 780, 0.76, "million", t)
     mv.option_card(img, 770, 780, 0.76, "cent", t)

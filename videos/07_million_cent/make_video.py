@@ -14,6 +14,7 @@ from toolkit import *  # noqa
 from toolkit import _shade
 from fx3d import BCanvas, pill3d, pop_pill, burst, karaoke
 from people import Look, draw_char, talk_arm
+from money import note_sprite, coin_sprite, paste_sprite
 
 CACHE = os.path.join(HERE, "cache")
 os.makedirs(CACHE, exist_ok=True)
@@ -92,7 +93,8 @@ def _char_kw(h, f, t, kw):
     if kw.get("wave"):
         w = kw["wave"]
         out["arm_f"] = ("ang", 2.45 + 0.2 * math.sin(w), 0.55 + 0.45 * math.sin(w))
-    for k in ("arm_f", "arm_b", "look", "brows", "head_tilt", "squash"):
+    for k in ("arm_f", "arm_b", "look", "brows", "head_tilt", "squash", "hand_f", "hand_b", "point_f", "shrug",
+              "glasses_dy", "breathe", "sway"):
         if k in kw:
             out[k] = kw[k]
     if out["talk"] > 0.05 and "arm_f" not in out and "walk" not in out:
@@ -152,19 +154,15 @@ def shadow(cv, x, y, w):
 
 
 def coin(cv, x, y, r, rot=0.0):
-    w = r * max(0.15, abs(math.cos(rot)))
-    cv.ellipse(x - w, y - r, x + w, y + r, fill=hexc("#c98b2e"))
-    cv.ellipse(x - w * 0.86, y - r * 0.9, x + w * 0.86, y + r * 0.9, fill=hexc("#f0b545"))
-    if w > r * 0.5:
-        cv.text(x, y + r * 0.04, "1", r * 1.1, hexc("#a8691f"))
+    """real-looking 1 euro cent (flips with rot)"""
+    paste_sprite(cv, coin_sprite(), x, y, 2 * r, squash=math.cos(rot))
 
 
-def banknote(cv, x, y, s, rot):
-    c, sn = math.cos(rot), math.sin(rot)
-    pts = [(-1, -0.5), (1, -0.5), (1, 0.5), (-1, 0.5)]
-    P = [(x + (px * c - py * sn) * 60 * s, y + (px * sn + py * c) * 60 * s) for px, py in pts]
-    cv.poly(P, fill=hexc("#7bd389"))
-    cv.circle(x, y, 14 * s, fill=hexc("#4caf6a"))
+def banknote(cv, x, y, s, rot, value=None):
+    """real-looking euro banknote"""
+    if value is None:
+        value = (100, 50, 200, 100)[int(abs(x * 7 + y * 3)) % 4]
+    paste_sprite(cv, note_sprite(value), x, y, 130 * s, rot=rot)
 
 
 def stopwatch(cv, x, y, r, t):
@@ -793,12 +791,12 @@ def option_card(img, cx, cy, sc, kind, t):
     cv.rect(0, 0, w, h, outline=INK, width=5, r=40)
     if kind == "million":
         for i in range(5):
-            banknote(cv, w / 2 - 10 + i * 6, 170 - i * 14, 1.8, -0.12 + i * 0.04)
+            banknote(cv, w / 2 - 40 + i * 20, 175 - i * 10, 2.2, -0.25 + i * 0.12, value=(200, 100, 100, 200, 100)[i])
         cv.text(w / 2, 320, "1.000.000 €", 66, hexc("#ffffff"))
         cv.rect(w / 2 - 120, 370, w / 2 + 120, 440, fill=hexc("#ffd34d"), r=30)
         cv.text(w / 2, 406, "SOFORT", 44, INK)
     else:
-        coin(cv, w / 2 - 80, 160, 75, t * 2)
+        coin(cv, w / 2 - 80, 160, 75, 0.35 * math.sin(t * 2))
         stopwatch(cv, w / 2 + 95, 175, 62, t * 0.8)
         cv.text(w / 2, 300, "1 CENT / SEK.", 56, hexc("#ffffff"))
         cv.rect(w / 2 - 140, 370, w / 2 + 140, 440, fill=hexc("#ffd34d"), r=30)
@@ -839,7 +837,8 @@ def sc_roof(t):
     a1, a2, a3, a4, a5, a6, a7, a8 = (st(k) for k in ("Leon muss", "Die Million", "Ein Cent?", "Aber Mia", "Ich nehme",
                                                        "Viel Glück", "Wetten", "Und das Rennen"))
     cams = [(a1 - 0.3, (540, 1060, 1500)), (a1 + 0.5, (ROOF_L + 40, 1120, 1100)), (a3 + 0.8, (ROOF_L + 60, 1120, 1080)),
-            (a4, (ROOF_L + 60, 1120, 1080)), (a4 + 0.5, (ROOF_M - 40, 1120, 1080)), (a6, (ROOF_M - 40, 1120, 1080)),
+            (a4, (ROOF_L + 60, 1120, 1080)), (a4 + 0.5, (ROOF_M - 30, 1020, 800)), (a5 + 0.1, (ROOF_M - 30, 1020, 800)),
+            (a5 + 0.5, (ROOF_M - 40, 1120, 1080)), (a6, (ROOF_M - 40, 1120, 1080)),
             (a6 + 0.5, (ROOF_L + 80, 1120, 1150)), (a7, (ROOF_L + 80, 1120, 1150)), (a7 + 0.5, (540, 1100, 1500))]
     cam = drift(keyframes(t, cams), t)
     eis_t = wt("Viel Glück", "Eis", 0.1)
@@ -849,32 +848,45 @@ def sc_roof(t):
         lk, mk = {}, {}
         if a2 <= t < a3:                         # "Die Million! Sofort!"
             lk = dict(arms_up=1.0, bounce=14 * abs(math.sin(t * 9)), talk=0.8)
-        elif a3 <= t < a4:                       # "Ein Cent? nicht mal den Finger"
-            lk = dict(talk=0.5 + 0.5 * math.sin(t * 12), lean=-8, reach=(ROOF_L - 120, FEET - 300))
+        elif a3 <= t < a4:                       # "Ein Cent?" -> shrug, then hands in pockets
+            H_ = 430 * 1.12
+            if t < wt("Ein Cent?", "Dafür", 0.0):
+                k = smooth(prog(t, a3, a3 + 0.35))
+                lk = dict(talk=0.6, shrug=k, arm_f=("ang", 0.3 * k, 0.2 + 1.5 * k), arm_b=("ang", -0.3 * k, -(0.2 + 1.5 * k)),
+                          hand_f="open", hand_b="open", mood="smirk", head_tilt=0.1)
+            else:
+                lk = dict(talk=0.6, arm_f=("ik", (ROOF_L + 0.06 * H_, FEET - 0.45 * H_)),
+                          arm_b=("ik", (ROOF_L - 0.05 * H_, FEET - 0.45 * H_)), hand_f="pocket", hand_b="pocket",
+                          lean=-10, mood="smirk")
         elif a6 <= t < a7:                       # laughing at Mia
             lk = dict(talk=1.0, blink=True, bounce=8 * abs(math.sin(t * 12)), reach=(ROOF_M - 80, FEET - 300))
         elif a7 <= t:                            # handshake
             p = smooth(prog(t, a7 + 0.3, a7 + 1.0))
             lk = dict(reach=(ROOF_L + (545 - ROOF_L) * p + 60 * (1 - p), FEET - 230))
             mk = dict(reach=(ROOF_M + (555 - ROOF_M) * p - 60 * (1 - p), FEET - 230))
-        if a4 <= t < a5 + 0.4:                   # adjusts glasses
+        if a4 + 0.3 <= t < a5 + 0.2:             # adjusts her glasses at the frame (thumb + index)
             g = head_geo(ROOF_M, FEET, MIA, 430, -1)
-            mk = dict(reach=(g["fx"] - 20, g["ey"] + 6 * math.sin(t * 6)))
+            r_, fx_, ey_ = g["r"], g["fx"], g["ey"]
+            up = smooth(prog(t, a4 + 0.3, a4 + 0.8)) * (1 - smooth(prog(t, a5 - 0.1, a5 + 0.2)))
+            gd = 0.1 * smooth(prog(t, a4 + 0.75, a4 + 1.1))
+            hx_ = fx_ - 1.05 * r_
+            wrist = (hx_ * up + (ROOF_M - 60) * (1 - up), (ey_ + 1.15 * r_) * up + (FEET - 230) * (1 - up))
+            mk = dict(arm_f=("ik", wrist), hand_f="pinch" if up > 0.7 else "relaxed",
+                      point_f=("to", (fx_ - 0.62 * r_, ey_ - gd * r_)), glasses_dy=gd, mood="smirk", breathe=0.3, sway=0.2)
         if a5 <= t < a6:
             mk = dict(talk=0.4 + 0.4 * math.sin(t * 14))
         if t >= a1:
             roof_people(cv, t, lk, mk)
-        if a4 <= t < a5 + 0.4:
+        if a4 + 1.1 <= t < a4 + 1.6:            # glint across the lenses
             g = head_geo(ROOF_M, FEET, MIA, 430, -1)
-            s = max(0, math.sin((t - a4) * 5))
-            for k in range(4):
-                a = k * math.pi / 2 + t
-                cv.line([(g["fx"] - 60 + math.cos(a) * 14, g["ey"] - 30 + math.sin(a) * 14),
-                         (g["fx"] - 60 + math.cos(a) * (14 + 30 * s), g["ey"] - 30 + math.sin(a) * (14 + 30 * s))],
-                        (255, 255, 255, 230), 5)
+            p = prog(t, a4 + 1.1, a4 + 1.6)
+            for ex in (g["fx"] - 0.33 * g["r"], g["fx"] + 0.33 * g["r"]):
+                x0 = ex - 0.25 * g["r"] + 0.5 * g["r"] * p
+                cv.line([(x0 - 0.06 * g["r"], g["ey"] + 0.12 * g["r"]), (x0 + 0.06 * g["r"], g["ey"] - 0.22 * g["r"])],
+                        (255, 255, 255, int(230 * math.sin(math.pi * p))), 0.07 * g["r"])
         if a3 <= t < a4:                          # a lonely cent on the ground
-            coin(cv, ROOF_L - 170, FEET - 26, 24, t * 3)
-        if a2 <= t < a3 + 0.5:                    # money rain
+            coin(cv, ROOF_L - 170, FEET - 26, 26, 0.35 * math.sin(t * 2))
+        if a2 <= t < a3 + 0.05:                   # money rain
             for i in range(14):
                 rng = np.random.default_rng(i)
                 x = ROOF_L + rng.uniform(-260, 260)
@@ -1352,7 +1364,7 @@ def sc_formula(t):
             if a > 0:
                 col = (255, 255, 255, int(235 * a)) if i < 5 else (255, 211, 77, int(255 * a))
                 cv.text(540, 480 + i * 150, txt, 92 if i < 5 else 130, col)
-        coin(cv, 200, 1330, 70, t * 2)
+        coin(cv, 200, 1330, 70, 0.35 * math.sin(t * 2))
         stopwatch(cv, 880, 1330, 80, t * 0.5)
     img, _ = stage("board", (540, 960, 1920), act)
     return img
@@ -1364,8 +1376,14 @@ def sc_count(t):
     def act(cv):
         shadow(cv, 540, 1450, 120)
         g = head_geo(540, 1450, LEON, 480, 1)
-        leon(cv, 540, 1450, 480, 1, t=t, chain=True, reach=(g["fx"] + 30, g["ey"] + 90 + 20 * math.sin(t * 6)),
-             lean=6 * math.sin(t * 2))
+        H_ = 480 * 1.12
+        n = int(max(0.0, t - t0) / 0.45)
+        tap = 0.5 - 0.5 * math.cos(((t - t0) % 0.45) / 0.45 * 2 * math.pi)
+        fh = (540 + 0.2 * H_, 1450 - 0.66 * H_)                 # open hand held up in front of the chest
+        tip = (fh[0] + 0.02 * H_ - (n % 4) * 0.012 * H_, fh[1] - 0.06 * H_ + 0.02 * H_ * tap)
+        leon(cv, 540, 1450, 480, 1, t=t, chain=True, arm_f=("ik", fh), hand_f="open",
+             arm_b=("ik", (540 + 0.1 * H_, 1450 - 0.55 * H_ + 0.015 * H_ * tap)), hand_b="point", point_f=("to", tip),
+             mood="worried", brows=0.6, look=(0.6, 0.8), head_tilt=0.08)
         for k, sym in enumerate(("+", "×", "?", "÷", "=", "?")):
             a = t * 0.9 + k * 1.05
             cv.text(540 + math.cos(a) * 260, g["hy"] - 40 + math.sin(a) * 120, sym, 80,
