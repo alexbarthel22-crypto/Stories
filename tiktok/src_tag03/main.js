@@ -119,7 +119,7 @@ const SCENES = {
     let tags = '';
     [0, 1, 2].forEach(i => { const [x, y] = standSeatPos(i); const sx = 540 + z * (x - cx), sy = 960 + z * (y - 10 - cy);
       tags += popG(t, 0.75 + i * 0.15, sx, sy - 260, profilePic(sx, sy - 300, i, 62) + handleTag(sx, sy - 200, FIRST_FANS[i].handle, 0.75)); });
-    return s + tags + popG(t, 0.6, 540, 1250, badge(540, 1250, '★ EHRENPLÄTZE ★', {kind: 'orange', fs: 54})) + confetti(t, 0.7, 30);
+    return s + tags + popG(t, 0.6, 540, 1250, badge(540, 1250, '★ EHRENPLÄTZE ★', {kind: 'orange', fs: 54})) + popG(t, capT(3), 540, 1110, badge(540, 1110, 'UNSERE ERSTEN FANS!', {kind: 'pitch', fs: 46, rot: -2})) + confetti(t, 0.7, 30);
   },
   kasse3(t, d, m) {
     const lines = [['FERTIG-TRIBÜNE', '-836 €', '#E5483A', true]];
@@ -202,7 +202,11 @@ const SCENES = {
       siren(150) + siren(930) + popG(t, 0.0, 540, 360, title3d('DRINGEND', 540, 400, 130)) +
       popG(t, 0.15, 540, 470, title3d('GESUCHT!', 540, 520, 96)) + sign(150, 860) + sign(930, 860) +
       popG(t, c[1], 540, 870, tools) +
-      popG(t, c[2], 540, 620, `<g transform="rotate(-3 540 620)">${title3d('PLATZWART', 540, 650, 110)}</g>`) +
+      popG(t, c[2], 540, 640, `<g transform="translate(540 640) scale(${1 + 0.05 * Math.abs(Math.sin(t * 6))}) rotate(-4) translate(-540 -640)">
+        <rect x="150" y="560" width="780" height="160" rx="34" fill="#5E120C" transform="translate(10 14)"/>
+        <rect x="150" y="560" width="780" height="160" rx="34" fill="url(#pwRed)" stroke="#fff" stroke-width="10"/>
+        <rect x="170" y="574" width="740" height="46" rx="20" fill="#fff" opacity=".2"/>
+        <text x="540" y="684" text-anchor="middle" ${FONT} font-size="124" fill="#fff" stroke="#5E120C" stroke-width="12" paint-order="stroke" letter-spacing="3">PLATZWART</text></g>`) +
       inbox + letters + (t >= c[5] ? `<g opacity="${Math.sin(t * 16) > -0.3 ? 1 : 0.25}" transform="translate(540 1330) scale(${1 + 0.06 * Math.abs(Math.sin(t * 8))}) translate(-540 -1330)">${badge(540, 1330, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 50, rot: -2})}</g>` : '');
   },
   opa(t, d, m) {
