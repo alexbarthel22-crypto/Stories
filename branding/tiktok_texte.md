@@ -120,3 +120,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 eine Dorfmatratze 🏘️ Wentorf bei Hamburg, 463 Einwohner, die Auswahl wird schnell klein 😅 Motto: alles rammeln, was nicht bei 3 auf dem Baum ist 🌳 Beim Bäcker die Ex … und ihre Mutter 🤫 Im Bus drei Exen, und der Busfahrer? Auch schon was gehabt 💀 Oma Hilde hat natürlich alles gesehen 👵👀 Welches der 4 Anzeichen kennst du aus deinem Dorf? 1, 2, 3 oder 4? 👇 Kennst du auch eine Dorfmatratze? Markier sie oder ihn! Und was soll Alex morgen sein?
 
 #wentorf #hamburg #dorfleben #jederkenntjeden #dorfkind #redflags #relatable #comedy #fürdich #fyp
+
+## TikTok Folge 5 – Arbeitszeit-Betrüger
+Cover: `episodes/12_arbeitszeitbetrueger/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Arbeitszeit-Betrüger ⏰ 8 Stunden anwesend, 40 Minuten gearbeitet 😅 Einstempeln, dann erst mal frühstücken 🥐 Im Meeting Kamera aus, in Wahrheit noch im Bett 🛏️ „Sorry, Netzprobleme“ 📶 Die Maus wackelt von allein, Status grün 🟢 und Alex sitzt beim Friseur 💇 Welches Anzeichen kennst du aus deinem Büro? 1, 2, 3 oder 4? 👇 Kennst du auch einen Arbeitszeit-Betrüger? Markier sie oder ihn! Und was soll Alex morgen sein?
+
+#arbeitszeitbetrug #homeoffice #büroalltag #kollegen #arbeit #relatable #comedy #fürdich #fyp
