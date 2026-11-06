@@ -126,6 +126,6 @@ Cover: `episodes/12_arbeitszeitbetrueger/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein Arbeitszeit-Betrüger ⏰ 8 Stunden anwesend, 40 Minuten gearbeitet 😅 Einstempeln, dann erst mal frühstücken 🥐 Im Meeting Kamera aus, in Wahrheit noch im Bett 🛏️ „Sorry, Netzprobleme“ 📶 Die Maus wackelt von allein, Status grün 🟢 und Alex sitzt beim Friseur 💇 Welches Anzeichen kennst du aus deinem Büro? 1, 2, 3 oder 4? 👇 Kennst du auch einen Arbeitszeit-Betrüger? Markier sie oder ihn! Und was soll Alex morgen sein?
+ein Arbeitszeit-Betrüger ⏰ 6 Uhr einstempeln, dann 2 Stunden schlafen 😴 Im Meeting Kamera aus, in Wahrheit noch im Bett 🛏️ „Sorry, Netzprobleme“ 📶 45 Minuten Klo mit Candy Crush 🍬 Die Maus wackelt von allein, während er beim Friseur sitzt 💇 Feierabend um 4, ausgestempelt um 10: Überstunden sammeln 📈 Welches Anzeichen kennst du aus deinem Büro? 1, 2, 3 oder 4? 👇 Kennst du auch einen Arbeitszeit-Betrüger? Markier sie oder ihn! Und was soll Alex morgen sein?
 
-#arbeitszeitbetrug #homeoffice #büroalltag #kollegen #arbeit #relatable #comedy #fürdich #fyp
+#heuteistalex #homeoffice #büroalltag #kollegen #comedy
