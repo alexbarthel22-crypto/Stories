@@ -75,7 +75,7 @@ def alex_extras(c, x, feet, h, t, u):
 INTRO = dict(icon="🥡", bg="#D9762B", spec=AL, expr="smug", pose="hips", hand_prop=None,
              house=dict(sky=("#F29A4A", "#FFE1B8"), walls="#FFF1DE", roof="#8A4A1E", door="#5A2E0E", lawn="#5DAA5E",
                         accent=("#E07A2E", "#2FA36B"), sun=True),
-             umbrella=False, title_lines=["SCHMA-", "ROTZER."], fill="#6FB7E8", decor=intro_decor,
+             umbrella=False, title_lines=["SCHMAROTZER."], fill="#6FB7E8", decor=intro_decor,
              alex_extras=alex_extras, burst=["💸", "🍕", "🥡", "🍺", "🎂", "🔑", "🥩", "🤞"])
 
 

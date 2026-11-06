@@ -1,5 +1,5 @@
 """TikTok Folge 6: Heute ist Alex ... ein Schmarotzer. Alltags-Comedy, keine echten Personen.
-Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.15 0.2.
+Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.08 0.22 (Tempo + Lautstärke exakt wie Folge 1 Pick-me-Boy, keine LINE_TEMPO-Sonderwerte).
 """
 TTS_PROFILE = "pickme"
 SAFE_MODE = "strict"
@@ -48,7 +48,7 @@ SHUFFLE = [
     ("EIN ROCKSTAR.", "🎸", "#151515", "#5C5C66"),
 ]
 
-THUMB = dict(head="HEUTE IST ALEX EIN…", l1="SCHMA-", l2="ROTZER", bg="#D9762B", color1="#FFFFFF",
+THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="SCHMAROTZER", bg="#D9762B", color1="#FFFFFF",
              accent="#FFE14D", pill="#5A2E0E", pill_text="#FFFFFF", expr="smug", pose="hips", prop=None, extras=True,
              emojis=("💸", "🍕", "🥡", "🚩"))
 
@@ -99,4 +99,4 @@ GEMINI_LINE_TEXT = {
 GEMINI_LINE_MOOD = {"fridge_1": "erst den Zettel streng vorlesen, dann frech und gespielt unschuldig" + _ALEX,
                     "food_0": "genießerisch" + _ALEX}
 
-LINE_TEMPO = {"intro_role": 1.22, "signs_0": 1.26, "signs_1": 1.28, "signs_2": 1.28, "signs_3": 1.28, "signs_4": 1.24}
+LINE_TEMPO = {}   # wie Pick-me-Boy: alle Zeilen 1.08
