@@ -554,12 +554,12 @@ def sc_hook(t):
         img = Image.blend(img, Image.new("RGB", img.size, (255, 250, 230)), 0.4 * (1 - t / 0.15))
     c1 = ease_out_back(prog(t, wt("Eine Million", "Million") - 0.1, wt("Eine Million", "Million") + 0.2))
     c2 = ease_out_back(prog(t, wt("Eine Million", "Cent") - 0.1, wt("Eine Million", "Cent") + 0.2))
-    option_card(img, 280, 1150, 0.95 * c1, "million", t)
-    option_card(img, 800 - 0, 1150, 0.95 * c2, "cent", t)
+    option_card(img, 318, 1150, 0.8 * c1, "million", t)
+    option_card(img, 752, 1150, 0.8 * c2, "cent", t)
     if c2 > 0.3:
         vs = ease_out_back(prog(t, wt("Eine Million", "Cent") + 0.1, wt("Eine Million", "Cent") + 0.4))
         burst(img, 540, 1150, 0.6 * vs, t, 60, 170, (255, 255, 255), 12)
-        pill3d(img, 540, 1150, "VS", 70, bg="#1d1b33", fg="#ffd34d", scale=vs, rot=-6)
+        pill3d(img, 535, 1150, "VS", 60, bg="#1d1b33", fg="#ffd34d", scale=vs, rot=-6)
     karaoke(img, t, HOOK, t0, t1, [420, 560, 700])
     return img
 
@@ -693,7 +693,7 @@ def sc_mia_start(t):
                     coin(cv, 470, 860 + 90 * p * p, 20, t * 8)
         shadow(cv, 790, 1440, 100)
         mia(cv, 790, 1440, 420, -1, reach=(560, 1040), blink=(t % 2.6) < 0.12)
-        stopwatch(cv, 900, 300, 70, (t - t0) * 0.5)
+        stopwatch(cv, 900, 1180, 60, (t - t0) * 0.5)
     img, _ = stage("mia", drift((560, 940, 1650), t), act)
     pop_pill(img, t, t0, 540, 300, "SEKUNDE 1", 70, t1=sec2 - 0.1, bg="#fff6e6", rot=-2)
     pop_pill(img, t, sec2, 540, 300, "SEKUNDE 2", 70, bg="#fff6e6", rot=2)
@@ -935,8 +935,8 @@ def sc_both(t):
     leon(cv, 270, 1450, 440, 1, t=t, shades=True, chain=True, blink=False, arms_up=0.4 + 0.1 * math.sin(t * 4))
     mia(cv, 810, 1450, 440, -1, blink=(t % 2.6) < 0.12, reach=(700, 1150))
     img = lay.convert("RGB").resize((OUT_W, OUT_H), Image.LANCZOS)
-    pop_pill(img, t, t0 + 0.4, 270, 760, "GEWONNEN!", 48, bg="#ffffff", rot=-5, depth=6)
-    pop_pill(img, t, t0 + 0.7, 810, 760, "GEWONNEN!", 48, bg="#ffffff", rot=5, depth=6)
+    pop_pill(img, t, t0 + 0.4, 270, 680, "GEWONNEN!", 48, bg="#ffffff", rot=-5, depth=6)
+    pop_pill(img, t, t0 + 0.7, 790, 680, "GEWONNEN!", 48, bg="#ffffff", rot=5, depth=6)
     pop_pill(img, t, t0 + 0.1, 540, 330, "BEIDE SIND SICH SICHER", 56, bg="#fff6e6", rot=-2)
     return img
 
