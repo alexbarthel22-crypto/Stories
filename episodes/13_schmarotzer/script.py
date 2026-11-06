@@ -62,7 +62,7 @@ SCENES = [
     ]),
     dict(id="hotspot", bg="#36B5C2", clock="08:00", title="DER HOTSPOT", lines=[
         ("Acht Uhr, in der Bahn. Sein Datenvolumen ist leer. Wie immer.", None),
-        ("Also hängt er in Janas Hotspot und schaut TikTok in HD. Jana hat jetzt kein Netz mehr.", None),
+        ("Also hängt er in Janas Hotspot und schaut TikTok in HD. Jana hat jetzt kein Datenvolumen mehr.", None),
     ]),
     dict(id="stream", bg="#5B6BC9", clock="11:00", title="SERIEN-MARATHON", dark=True, lines=[
         ("Elf Uhr. Serien gucken. Mit dem Account seiner Ex. Seit drei Jahren.", None),
@@ -81,7 +81,7 @@ SCENES = [
         ("Woran du einen Schmarotzer erkennst:", None),
         ("Er hat nie seine Karte dabei. Und Handy-Bezahlen geht auch nie.", None),
         ("Er sagt immer: Ich geb's dir morgen wieder.", None),
-        ("Er kommt immer genau zur Essenszeit.", None),
+        ("Er taucht immer pünktlich zum Essen auf. Und isst den anderen alles weg.", None),
         ("Und er hat immer Tupperdosen im Rucksack.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[

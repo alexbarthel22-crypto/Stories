@@ -316,10 +316,10 @@ def sc_hotspot(c, S):
         def jp():
             rrect(c, 640, 425, 260, 150, 18); fill(c, "#FFFFFF")
             rrect(c, 640, 425, 260, 150, 18); c.set_line_width(4); src(c, INK); c.stroke()
-            text(c, "Janas Daten", 770, 455, 26, INK, FONT_HEAD)
+            text(c, "Janas Datenvolumen", 770, 455, 22, INK, FONT_HEAD)
             rrect(c, 660, 480, 220, 30, 10); fill(c, "#EEF0F4")
             rrect(c, 660, 480, max(2, 220 * (1 - k)), 30, 10); fill(c, "#2FD16B" if k < 0.7 else "#E23B3B")
-            text(c, f"{10 * (1 - k):.1f} GB" if k < 1 else "KEIN NETZ 😭", 770, 545, 30,
+            text(c, f"{10 * (1 - k):.1f} GB" if k < 1 else "0 GB – LEER 😭", 770, 545, 30,
                  "#E23B3B" if k > 0.7 else INK, FONT_HEAD)
         scaled(c, 770, 500, pop(t, a1 + 0.1), jp, rot=0.04)
         # Daten fließen von Jana zu Alex
@@ -454,7 +454,7 @@ def sc_party(c, S):
 def sc_signs(c, S):
     t = S.t
     items = [("Nie Karte & Handy-Pay dabei", "💳"), ("„Ich geb's dir morgen wieder“", "🤞"),
-             ("Kommt immer zur Essenszeit", "🍽️"), ("Tupperdosen im Rucksack", "🥡")]
+             ("Zum Essen da – isst alles weg", "🍽️"), ("Tupperdosen im Rucksack", "🥡")]
     for i, (lab, ic) in enumerate(items):
         y = 400 + i * 175
         row_card(c, W / 2, y, 1000, 160, pop(t, S.at(i + 1, 0.0)), lab, ic, 40, num=i + 1, rot=(-0.02 if i % 2 else 0.02) + 0.012 * math.sin(t * 3 + i))
