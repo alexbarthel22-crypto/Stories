@@ -86,7 +86,7 @@ const SCENES = {
       popG(tt, 0.3, 760, 450, `<g transform="rotate(12 760 450)">${badge(760, 450, 'NEU!', {kind: 'red', fs: 60})}</g>`);
   },
   money3(t, d, m) {
-    const lines = [['408 FOLLOWER × 1 €', '+408 €'], ['214 KOMMENTARE × 2 €', '+428 €'], ['VEREINSKASSE', '836 €', '#2FA84A', true]];
+    const lines = [['345 FOLLOWER × 1 €', '+345 €'], ['227 KOMMENTARE × 2 €', '+454 €'], ['VEREINSKASSE', '799 €', '#2FA84A', true]];
     let coins = '';
     const t3 = capT(2);
     for (let i = 0; i < 18; i++) { const t0 = t3 + rnd(i + 900) * 1.2, k = (t - t0) / 0.9; if (k > 0 && k < 1) coins += coin(80 + rnd(i + 950) * 920, -60 + k * 1500, 34, i % 2); }
@@ -122,7 +122,7 @@ const SCENES = {
     return s + tags + popG(t, 0.6, 540, 1250, badge(540, 1250, '★ EHRENPLÄTZE ★', {kind: 'orange', fs: 54})) + popG(t, capT(3), 540, 1110, badge(540, 1110, 'UNSERE ERSTEN FANS!', {kind: 'pitch', fs: 46, rot: -2})) + confetti(t, 0.7, 30);
   },
   kasse3(t, d, m) {
-    const lines = [['FERTIG-TRIBÜNE', '-836 €', '#E5483A', true]];
+    const lines = [['FERTIG-TRIBÜNE', '-799 €', '#E5483A', true]];
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(780, 1290, 0.75) + cashBox(780, 1160, 0.62, 'empty') +
         place(coach({mouth: m, mood: 'sad', blink: blinkAt(t)}), 240, 1600, 0.95)) + moth(t, capT(1) + 0.1) +
       popG(t, 0.0, 540, 340, calcBoard(t, 70, 290, lines, [0.1])) +
@@ -236,11 +236,12 @@ const SCENES = {
     let run = '';
     const runners = [vlad({blink: blinkAt(t)}), lkz({}), teamPlayer(1, t), teamPlayer(2, t), teamPlayer(0, t), teamPlayer(6, t), teamPlayer(4, t), teamPlayer(5, t)];
     runners.forEach((svg, k) => { const x = ((t * 230 + k * 190) % 1520) - 220; run += place(svg, x, 1180 - Math.abs(Math.sin(t * 10 + k)) * 14, 0.36); });
-    const t2 = capT(2);
+    const t2 = capT(4), tk = capT(2);
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + run + place(coach({mouth: m, blink: blinkAt(t)}), 220, 1680, 0.9)) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'HÄRTER TRAINIEREN!', {kind: 'red', fs: 56, rot: -2})) +
       (t >= t2 ? popG(t, t2, 540, 600, `<g opacity="${Math.sin(t * 14) > -0.4 ? 1 : 0.35}" transform="translate(540 600) scale(${1 + 0.07 * Math.abs(Math.sin(t * 7))}) translate(-540 -600)"><ellipse cx="540" cy="600" rx="${380 + 30 * Math.sin(t * 7)}" ry="110" fill="#FFD31A" opacity="${0.25 + 0.2 * Math.abs(Math.sin(t * 7))}"/>${bigText(540, 640, 'NOCH 3 TAGE', '#FFE45A', 110)}</g>`) : '') +
-      popG(t, capT(4), 540, 820, `<g transform="translate(330 830) scale(0.42) translate(-300 -300)">${LOGO}</g>` + bigText(540, 860, 'VS', '#FFD31A', 100) + heuLogo(750, 830, 0.6));
+      (t >= tk && t < t2 ? popG(t, tk, 540, 640, `<g transform="rotate(-3 540 640)">${badge(540, 640, 'KASSE SCHNELLER FÜLLEN!', {kind: 'orange', fs: 48})}</g>` + Array.from({length: 8}, (_, i) => { const k = ((t - tk) * 1.4 + i / 8) % 1; return coin(200 + i * 95, 520 + k * 300, 30, i % 2); }).join('')) : '') +
+      popG(t, capT(6), 540, 820, `<g transform="translate(330 830) scale(0.42) translate(-300 -300)">${LOGO}</g>` + bigText(540, 860, 'VS', '#FFD31A', 100) + heuLogo(750, 830, 0.6));
   },
   rule3(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);

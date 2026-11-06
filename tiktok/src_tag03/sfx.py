@@ -249,7 +249,7 @@ def build_sfx(segs, N):
         elif sid == 'ikea':
             L(0.0, whoosh()); L(0.45, thud()); L(0.45, clack()); L(0.9, whoosh())
             for k in range(8): L(0.95 + k * 0.08, clack() * 0.5)
-            L(1.6, ding()); L(1.5, stadium_rec(-27.0)[:int(max(0.5, en - st - 1.5) * SR)])
+            L(1.6, ding()); L(1.4, (lambda _s: _s * np.minimum(1, np.arange(len(_s)) / (0.25 * SR)) * np.minimum(1, (len(_s) - np.arange(len(_s))) / (0.3 * SR)))(stadium_rec(-17.0)[:int(max(0.5, en - st - 1.4) * SR)]))
         elif sid == 'honor': L(0.0, whoosh()); L(0.6, ding()); L(0.9, ding() * 0.7); [L(0.75 + i * 0.15, pop()) for i in range(3)]
         elif sid == 'ultras': L(0.0, whoosh()); L(0.2, pop()); L(0.0, drum(en - st) * 0.8); L(0.0, stadium_rec(-28.0)[:int((en - st) * SR)]); L(c[2], pop()); L(c[3], ding())
         elif sid == 'kasse3': L(0.0, pop()); L(c[0], clack()); L(c[1], sad_trombone(max(0.5, (en - st) - c[1] - 0.12)))
@@ -270,7 +270,7 @@ def build_sfx(segs, N):
         elif sid == 'abwehr': L(0.0, pop())
         elif sid == 'news': L(0.0, whoosh()); L(0.3, whoosh()); L(0.6, thud()); L(0.62, shutter()); L(c[2], ding()); L(c[4], thud()); L(c[4], clack())
         elif sid == 'train':
-            L(0.0, whistle()); L(0.05, pop()); L(c[2], pop()); L(c[4], thud())
+            L(0.0, whistle()); L(0.05, pop()); L(c[2], pop()); L(c[2] + 0.1, kaching()); L(c[4], pop()); L(c[min(6, len(c) - 1)], thud())
             for k in range(int((en - st) / 0.3)): L(k * 0.3, squelch() * 0.35)
         elif sid == 'rule3':
             L(c[0], pop()); L(c[1], pop())
