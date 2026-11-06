@@ -12,6 +12,28 @@ MIA = person_spec(14, girl=True, top="#F07FB0", hair="#5A3A22", skin="#F1C9A8")
 SVEN = person_spec(77, top="#3E7BDA", hair="#8A5A2B")
 
 
+import os as _os
+_BR = [cairo.ImageSurface.create_from_png(_os.path.join(_os.path.dirname(__file__), "assets", f"brainrot_{i}.png"))
+       for i in (1, 2, 3)]
+
+
+def brainrot_feed(c, t, t0, x, y, w, h):
+    """TikTok-Feed im Handy: die 3 Brainrot-Bilder, alle ~1 s nach oben gewischt."""
+    c.save(); rrect(c, x, y, w, h, 18); c.clip()
+    u = max(0.0, t - t0); per = 1.0
+    n = int(u / per); f = (u / per) % 1
+    sw = ease_in_out(clamp((f - 0.75) / 0.25))               # letzte 25 % = Wisch
+    for j, off in ((n, 0.0), (n + 1, 1.0)):
+        img = _BR[j % 3]
+        sc = max(w / img.get_width(), h / img.get_height()) * (1 + 0.04 * math.sin(t * 5 + j))
+        iw, ih = img.get_width() * sc, img.get_height() * sc
+        yy = y + (off - sw) * h
+        c.save(); c.translate(x + (w - iw) / 2, yy + (h - ih) / 2); c.scale(sc, sc)
+        c.set_source_surface(img, 0, 0); c.paint(); c.restore()
+    c.restore()
+    rrect(c, x, y, w, h, 18); c.set_line_width(3); src(c, "#FFFFFF", 0.5); c.stroke()
+
+
 # ---------------------------------------------------------------- Intro: Haus
 def _sign(c, x, y, txt, col, rot, size=40, w=330, post=70, hh=130):
     c.save(); c.translate(x, y); c.rotate(rot)
@@ -345,10 +367,10 @@ def sc_hotspot(c, S):
     else:
         text(c, "📶 Janas iPhone ✅", 300, y0 + 60, 24, "#2FD16B", FONT_HEAD)
         text(c, "TikTok · Brainrot 🧠", 300, y0 + 110, 26, "#FFFFFF", FONT_HEAD)
+        brainrot_feed(c, t, a1 + 0.2, x0 + 14, y0 + 135, w - 28, h - 150)
         for i in range(5):
             uu = (t * 0.8 + i / 5) % 1
-            emoji(c, "❤️", x0 + w - 40, y0 + h - 40 - uu * 200, 30, alpha=1 - uu)
-        emoji(c, "🫠" if int(t * 2) % 2 else "🤪", 290, y0 + 220 + math.sin(t * 8) * 10, 90, rot=math.sin(t * 6) * 0.2)
+            emoji(c, "❤️", x0 + w - 30, y0 + h - 30 - uu * 200, 30, alpha=1 - uu)
     # Jana (rechts) mit ihrem Handy
     jana_expr = "angry" if t > a1 + S.S.durs[1] * 0.6 else "neutral"
     person(c, 770, 1030, 420, JANA, t, jana_expr, bob=False, name="Jana", blink_seed=7)
@@ -467,7 +489,23 @@ def sc_party(c, S):
     t, a1, a2 = S.t, S.at(1), S.at(2)
     s = pop(t, S.at(0, 0.0))
     # Einrichtung, die Alex heimlich mitgehen lässt: (emoji, x, y im Raum, size)
-    loot = [("🪴", 120, 930, 80), ("🖼️", 800, 620, 80), ("🪩", 600, 625, 70)]
+    loot = [("plant", 125, 930, 1.0), ("laptop", 640, 640, 1.0), ("desk", 640, 690, 1.0)]
+
+    def item(kind, x, y, k, alpha=1.0):
+        if k <= 0:
+            return
+        if kind == "plant":
+            emoji(c, "🪴", x, y, 80 * k)
+        elif kind == "laptop":
+            emoji(c, "💻", x, y, 70 * k)
+        else:                                                 # Schreibtisch
+            c.save(); c.translate(x, y); c.scale(k, k)
+            rrect(c, -90, -10, 180, 20, 5); fill(c, "#A86B3C")
+            rrect(c, -90, -10, 180, 20, 5); c.set_line_width(3); src(c, INK); c.stroke()
+            for lx in (-78, 64):
+                rrect(c, lx, 10, 14, 80, 3); fill(c, "#8A5530")
+                rrect(c, lx, 10, 14, 80, 3); c.set_line_width(3); src(c, INK); c.stroke()
+            c.restore()
     def gone_k(i):
         return clamp((t - a2 - 0.3 - i * 0.45) / 0.35) if t > a2 else 0
     def room():
@@ -486,14 +524,13 @@ def sc_party(c, S):
         text(c, "BUFFET", 710, 830, 30, INK, FONT_HEAD)
         for i, (e, x, y, sz) in enumerate(loot):
             g = gone_k(i)
-            if i == 2:                                        # Discokugel hängt an einer Schnur
-                c.move_to(x, 548); c.line_to(x, y - 30); c.set_line_width(3); src(c, INK, 1 - g); c.stroke()
             if g < 1:
-                emoji(c, e, x, y + (math.sin(t * 2) * 4 if i == 2 else 0), sz * (1 - g), rot=(t * 2 if i == 2 else 0))
+                item(e, x, y, 1 - g)
             if 0 < g < 1 or (t > a2 and 1 <= g and (t - a2 - 0.65 - i * 0.45) < 0.4):
                 emoji(c, "💨", x, y, 70, alpha=1 - g * 0.5)
             if g >= 1:                                        # leerer Umriss, wo es mal war
-                c.save(); c.set_dash([10, 8]); rrect(c, x - sz / 2, y - sz / 2, sz, sz, 10)
+                bw, bh = (180, 100) if e == "desk" else (80, 80)
+                c.save(); c.set_dash([10, 8]); rrect(c, x - bw / 2, y - (10 if e == "desk" else bh / 2), bw, bh, 10)
                 c.set_line_width(3); src(c, "#7A3FA8", 0.6); c.stroke(); c.restore()
         k = clamp((t - a1 - 0.2) / 1.5) if t > a1 else 0
         food = ["🍗", "🥗", "🍝", "🎂", "🥨", "🍰"]
@@ -524,7 +561,8 @@ def sc_party(c, S):
         for i, (e, x, y, sz) in enumerate(loot):
             ti = a2 + 0.3 + i * 0.45 + 0.35
             if t > ti:
-                emoji(c, e, 250, 1460 - i * 110 + math.sin(t * 3 + i) * 4, 100 * pop(t, ti), rot=0.1 * math.sin(t * 2 + i))
+                yy = (1470, 1235, 1290)[i] + math.sin(t * 3 + i) * 4
+                item(e, 250, yy, (1.2, 1.1, 1.0)[i] * pop(t, ti))
         tag(c, 260, 1150, "PSST 🤫", "#2B2F3A", s=pop(t, a2 + 0.4))
 
 

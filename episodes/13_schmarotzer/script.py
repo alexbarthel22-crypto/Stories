@@ -76,7 +76,7 @@ SCENES = [
     dict(id="party", bg="#8E5BE0", clock="19:00", title="GEBURTSTAG", dark=True, lines=[
         ("Abends Geburtstag. Er kennt das Geburtstagskind nicht mal.", None),
         ("Aber nach Hause geht er mit drei vollen Tupperdosen.", None),
-        ("Und heimlich nimmt er noch Svens Pflanze, das Bild und die Discokugel mit.", None),
+        ("Und heimlich nimmt er noch Svens Pflanze, den Laptop und den Schreibtisch mit.", None),
     ]),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen Schmarotzer erkennst:", None),
