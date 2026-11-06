@@ -203,7 +203,7 @@ const SCENES = {
       popG(t, 0.15, 540, 470, title3d('GESUCHT!', 540, 520, 96)) + sign(150, 860) + sign(930, 860) +
       popG(t, c[1], 540, 870, tools) +
       popG(t, c[2], 540, 620, `<g transform="rotate(-3 540 620)">${title3d('PLATZWART', 540, 650, 110)}</g>`) +
-      inbox + letters + (t >= c[5] ? `<g opacity="${Math.sin(t * 16) > -0.3 ? 1 : 0.25}" transform="translate(540 1330) scale(${1 + 0.06 * Math.abs(Math.sin(t * 8))}) translate(-540 -1330)"><rect x="110" y="1268" width="860" height="124" rx="30" fill="#FFD31A" opacity=".35"/>${badge(540, 1330, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 50, rot: -2})}</g>` : '');
+      inbox + letters + (t >= c[5] ? `<g opacity="${Math.sin(t * 16) > -0.3 ? 1 : 0.25}" transform="translate(540 1330) scale(${1 + 0.06 * Math.abs(Math.sin(t * 8))}) translate(-540 -1330)">${badge(540, 1330, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 50, rot: -2})}</g>` : '');
   },
   opa(t, d, m) {
     let s = field(t, 960, {goal: false, touchY: 1320});
@@ -235,7 +235,7 @@ const SCENES = {
     const t2 = capT(2);
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + run + place(coach({mouth: m, blink: blinkAt(t)}), 220, 1680, 0.9)) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'HÄRTER TRAINIEREN!', {kind: 'red', fs: 56, rot: -2})) +
-      (t >= t2 ? popG(t, t2, 540, 600, bigText(540, 640, 'NOCH 3 TAGE', '#FFD31A', 110)) : '') +
+      (t >= t2 ? popG(t, t2, 540, 600, `<g opacity="${Math.sin(t * 14) > -0.4 ? 1 : 0.35}" transform="translate(540 600) scale(${1 + 0.07 * Math.abs(Math.sin(t * 7))}) translate(-540 -600)"><ellipse cx="540" cy="600" rx="${380 + 30 * Math.sin(t * 7)}" ry="110" fill="#FFD31A" opacity="${0.25 + 0.2 * Math.abs(Math.sin(t * 7))}"/>${bigText(540, 640, 'NOCH 3 TAGE', '#FFE45A', 110)}</g>`) : '') +
       popG(t, capT(4), 540, 820, `<g transform="translate(330 830) scale(0.42) translate(-300 -300)">${LOGO}</g>` + bigText(540, 860, 'VS', '#FFD31A', 100) + heuLogo(750, 830, 0.6));
   },
   rule3(t, d, m) {

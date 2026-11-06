@@ -96,7 +96,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Nächstes Spiel: **Sonntag, 1. Spiel gegen den SC Heuballen** (Gegner-Wappen: gelber Schild mit Heuballen, grüner Kopfbalken)
 
 ## Folge 3 (Tag 3)
-- Datei: `tiktok/tag03_fc_schlammloch_v6.mp4` (1:10; schneller gesprochen, „TAG DREI!“ schneller und lauter, kein Logo im Intro, Tore in Seitenansicht, blinkendes „TOP-KOMMENTAR GEWINNT!“, Bewerbungen auch für den Verteidiger; Intro nur „TAG DREI!“ sehr laut gerufen, Stadionjubel ab 0 s laut, Vereinslogo + kleiner Frodo im Intro, kurzer Alarm beim schwimmenden Tor, Konfetti, ständiger leichter Kamera-Drift), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
+- Datei: `tiktok/tag03_fc_schlammloch_v7.mp4` (1:09; Stimme lauter, „Tag drei!“ euphorisch jubelnd in derselben Stimme, kürzere Pausen, „NOCH 3 TAGE“ leuchtet; schneller gesprochen, „TAG DREI!“ schneller und lauter, kein Logo im Intro, Tore in Seitenansicht, blinkendes „TOP-KOMMENTAR GEWINNT!“, Bewerbungen auch für den Verteidiger; Intro nur „TAG DREI!“ sehr laut gerufen, Stadionjubel ab 0 s laut, Vereinslogo + kleiner Frodo im Intro, kurzer Alarm beim schwimmenden Tor, Konfetti, ständiger leichter Kamera-Drift), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
 - Intro: „TAG DREI!!!“ laut, Trainer vor der Klappstuhl-Tribüne mit Plane aus Folge 2 (Stühle in realistischer Größe), Stadionjubel lauter
 - Fans: gestern 83 → heute **400 (+317)**
 - Neuer Stürmer Nr. 9: **Leberkaaszerfetzer** (sein Kommentar wird nachgebaut gezeigt, mit Profilbild)
