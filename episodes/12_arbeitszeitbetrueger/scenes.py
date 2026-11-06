@@ -514,20 +514,19 @@ def sc_mail(c, S):
         emoji(c, "🌙", 900, 1120, 90 * pop(t, tn), rot=math.sin(t * 2) * 0.1)
         bubble(c, "Wow, so fleißig! 👏", 270, 1045, pop(t, a1 + S.S.durs[1] * 0.6), tail=(0.5, 1), size=36, max_w=380)
         box_fx(c, t, tn, W / 2, 700, 940, 620, "shock")
+    if S.at(0, 0.55) < t < tn:                                   # Überstunden-Zähler springt hoch
+        n = min(6, 1 + int(6 * clamp((t - S.at(0, 0.55)) / 1.0)))
+        def ot():
+            rrect(c, 130, 1130, 300, 130, 24); fill(c, "#FFE14D")
+            rrect(c, 130, 1130, 300, 130, 24); c.set_line_width(5); src(c, INK); c.stroke()
+            text(c, "ÜBERSTUNDEN", 280, 1168, 28, INK, FONT_HEAD)
+            text(c, f"+{n} h 📈", 280, 1218, 50, "#C0392B", FONT_HEAD)
+        scaled(c, 280, 1195, pop(t, S.at(0, 0.55)) * (1 + 0.06 * math.sin(t * 8)), ot)
     if t < a1:
         alex_bottom(c, S, "happy", "wave")
         tag(c, W / 2, 900, "16:00 FEIERABEND 🏃", "#2FA36B", s=pop(t, S.at(0, 0.2)))
-        d0 = S.S.durs[0]
         if t > S.at(0, 0.4):
             tag(c, W / 2, 975, "AUSGESTEMPELT: 22:00 ⏰", "#E23B3B", s=pop(t, S.at(0, 0.4)))
-        if t > S.at(0, 0.7):                                   # Überstunden-Zähler springt hoch
-            n = min(6, 1 + int(6 * clamp((t - S.at(0, 0.7)) / max(0.4, d0 * 0.25))))
-            def ot():
-                rrect(c, 130, 1130, 300, 130, 24); fill(c, "#FFE14D")
-                rrect(c, 130, 1130, 300, 130, 24); c.set_line_width(5); src(c, INK); c.stroke()
-                text(c, "ÜBERSTUNDEN", 280, 1168, 28, INK, FONT_HEAD)
-                text(c, f"+{n} h 📈", 280, 1218, 50, "#C0392B", FONT_HEAD)
-            scaled(c, 280, 1195, pop(t, S.at(0, 0.7)) * (1 + 0.06 * math.sin(t * 8)), ot)
     else:
         alex_bottom(c, S, "smug", "hips")
 
