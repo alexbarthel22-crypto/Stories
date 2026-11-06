@@ -384,6 +384,67 @@ def splash():
     return x * np.exp(-tt * 9) * 0.35
 
 
+def kaching():
+    """cash register: bell + coin rattle"""
+    out = np.zeros(int(0.9 * SR))
+    tt = _t(0.8)
+    bell = sum(a * np.sin(2 * np.pi * f * tt) for f, a in ((2093, 1), (2637, .6), (3136, .4))) * np.exp(-tt * 5)
+    out[int(0.06 * SR):int(0.06 * SR) + len(bell)] += bell * 0.35
+    rng = np.random.default_rng(21)
+    for k in range(6):
+        n = int(0.05 * SR)
+        x = rng.standard_normal(n) * np.exp(-np.arange(n) / SR * 70) * 0.25
+        i = int(k * 0.03 * SR)
+        out[i:i + n] += x
+    return out
+
+
+def engine(dur=1.6):
+    """sports car rev: rising sawtooth + rumble"""
+    tt = _t(dur)
+    f = 55 + 140 * np.clip(tt / (dur * 0.6), 0, 1) ** 1.5 + 8 * np.sin(2 * np.pi * 7 * tt)
+    ph = np.cumsum(f) / SR
+    saw = 2 * (ph % 1) - 1
+    s = saw * 0.5 + 0.3 * np.sin(2 * np.pi * ph * 2)
+    s = np.convolve(s, np.ones(6) / 6, mode="same")
+    env = np.clip(tt / 0.1, 0, 1) * np.clip((dur - tt) / 0.4, 0, 1)
+    return s * env * 0.6
+
+
+def beep(f=880, d=0.18):
+    tt = _t(d)
+    return np.sin(2 * np.pi * f * tt) * np.clip((d - tt) / 0.03, 0, 1) * np.clip(tt / 0.005, 0, 1) * 0.4
+
+
+def cheer(dur=1.8):
+    """crowd cheer: band-passed noise swell with whistles"""
+    tt = _t(dur)
+    x = np.random.default_rng(31).standard_normal(len(tt))
+    lp = np.convolve(x, np.ones(4) / 4, mode="same") - np.convolve(x, np.ones(40) / 40, mode="same")
+    env = np.sin(np.pi * np.clip(tt / dur, 0, 1)) ** 0.6
+    wh = np.sin(2 * np.pi * np.cumsum(1800 + 700 * np.sin(tt * 9)) / SR) * 0.06 * (tt > 0.3) * (tt < 1.0)
+    return (lp * 0.9 + wh) * env * 0.6
+
+
+def notify():
+    out = np.zeros(int(0.45 * SR))
+    for k, f in enumerate((1318, 1760)):
+        b = beep(f, 0.14) * np.exp(-_t(0.14) * 8)
+        i = int(k * 0.12 * SR)
+        out[i:i + len(b)] += b
+    return out
+
+
+def heartbeat():
+    out = np.zeros(int(0.7 * SR))
+    for k, g in ((0, 1.0), (0.18, 0.7)):
+        tt = _t(0.25)
+        b = np.sin(2 * np.pi * (45 + 30 * np.exp(-tt * 30)) * tt) * np.exp(-tt * 14) * g
+        i = int(k * SR)
+        out[i:i + len(b)] += b * 0.8
+    return out
+
+
 def place(buf, s, t, gain=1.0):
     k = int(t * SR)
     if k >= len(buf):
@@ -392,12 +453,18 @@ def place(buf, s, t, gain=1.0):
     buf[k:e] += s[:e - k] * gain
 
 
-def load_music(path, n):
+def load_music(path, n, loop=False):
     """Decode any audio file to mono float at SR, trimmed/padded to n samples."""
     import subprocess
     raw = subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-f", "f32le", "-ac", "1", "-ar", str(SR), "-"],
                          capture_output=True, check=True).stdout
     m = np.frombuffer(raw, np.float32).astype(np.float64)
+    if loop and 0 < len(m) < n:            # loop with a 1 s crossfade
+        xf = SR
+        while len(m) < n:
+            seg = np.frombuffer(raw, np.float32).astype(np.float64)
+            r = np.linspace(0, 1, xf)
+            m = np.concatenate([m[:-xf], m[-xf:] * (1 - r) + seg[:xf] * r, seg[xf:]])
     out = np.zeros(n)
     out[:min(n, len(m))] = m[:n]
     return out
@@ -414,7 +481,7 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
     n = int(length * SR)
     voice = np.zeros(n); voice[:min(n, len(v))] = v[:n]
     if music_path:
-        mus = load_music(music_path, n)
+        mus = load_music(music_path, n, loop=True)
         speech = np.abs(voice) > 0.02
         v_rms = np.sqrt((voice[speech] ** 2).mean()) if speech.any() else 0.1
         m_rms = np.sqrt((mus ** 2).mean()) + 1e-9
@@ -435,7 +502,8 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
              "fw_crackle": fw_crackle, "creak": creak, "growl": growl, "buzzer": buzzer, "step": step,
              "drip": drip, "swish": swish, "shing": shing, "squawk": squawk, "wrong": wrong, "impact": impact, "drum": drum,
              "gong": gong, "chirp": chirp, "sparkle": sparkle, "riser": riser, "sistrum": sistrum, "rumble": rumble,
-             "owl": owl, "splash": splash}.get(kind)
+             "owl": owl, "splash": splash, "kaching": kaching,
+             "cheer": cheer, "notify": notify, "heartbeat": heartbeat, "beep": beep, "beep_hi": lambda: beep(1760, 0.4)}.get(kind)
         if kind == "file":          # external sound file: ("file", t, gain, path, duration)
             path, dur = extra[0], extra[1]
             s = load_music(path, int(dur * SR))
@@ -446,6 +514,8 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
             s = crackle_bed(extra[0])
         elif kind == "chainsaw":
             s = chainsaw(extra[0])
+        elif kind == "engine":
+            s = engine(extra[0])
         elif kind == "wind":
             s = wind(extra[0])
         elif kind == "rain":
