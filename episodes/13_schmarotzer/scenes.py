@@ -30,9 +30,9 @@ def intro_decor(c, t, u):
     rrect(c, 294, 904, 112, 102, 6); src(c, "#E8F7FF", s_); c.fill()
     rrect(c, 312, 914, 76, 84, 6); fill(c, "#FFFFFF")
     rrect(c, 312, 914, 76, 84, 6); c.set_line_width(3); src(c, INK); c.stroke()
-    emoji(c, "🥛", 335, 950, 30 * s_); emoji(c, "🍕", 368, 950, 30 * s_)
+    emoji(c, "🍕", 350, 945, 44 * s_)
     rrect(c, 316, 974, 68, 18, 4); fill(c, "#FFE14D")
-    text(c, "LENA", 350, 983, 13, INK, FONT_HEAD)
+    text(c, "GRATIS", 350, 983, 12, INK, FONT_HEAD)
     # Fenster rechts: fremdes WLAN mit Signal-Wellen
     rrect(c, 670, 900, 120, 110, 8); src(c, "#FFF4D6", s_); c.fill()
     for i in range(3):
@@ -221,10 +221,11 @@ def sc_what(c, S):
             text(c, val, 660, y + 40, 42, INK if f == 0 else "#FFFFFF", FONT_HEAD)
         if t > a1:
             def wal():
-                emoji(c, "👛", 330, 890, 110, rot=math.sin(t * 4) * 0.15)
-                text(c, "Portemonnaie:", 620, 865, 36, INK, FONT_BOLD)
-                text(c, "zu Hause 🏠", 620, 915, 46, "#E23B3B", FONT_HEAD)
-            scaled(c, W / 2, 890, pop(t, a1 + 0.1), wal)
+                emoji(c, "💳", 200, 870, 80, rot=math.sin(t * 4) * 0.15)
+                text(c, "Karte: vergessen", 260, 870, 38, "#E23B3B", FONT_HEAD, anchor="l")
+                emoji(c, "📱", 200, 950, 80, rot=-math.sin(t * 4) * 0.15)
+                text(c, "Handy-Pay: geht „nie“", 260, 950, 38, "#E23B3B", FONT_HEAD, anchor="l")
+            scaled(c, W / 2, 910, pop(t, a1 + 0.1), wal)
     scaled(c, W / 2, 700, s, card_)
     money_rain(c, t, S.at(0, 0.6), 760, 600, 340, 6)
     alex_bottom(c, S, "smug", "hips")
@@ -234,81 +235,100 @@ def sc_motto(c, S):
     t = S.t
     d0 = S.at(0, 0.0)
     s = pop(t, d0)
-    span = max(1.2, S.S.durs[0] * 0.9)
+    span = max(1.2, S.S.durs[0] * 0.8)
+    gone = int(7 * clamp((t - d0 - 0.4) / span))
     def pizza():
-        card(c, W / 2, 700, 900, 600, 1)
-        cx, cy, r = W / 2, 690, 230
+        card(c, W / 2, 700, 960, 640, 1)
+        # Quittung oben: wer hat bezahlt
+        rrect(c, 140, 405, 800, 70, 14); fill(c, "#2FA36B")
+        text(c, "🧾 BEZAHLT: TOM & MIA – 24 €", W / 2, 440, 38, "#FFFFFF", FONT_HEAD)
+        cx, cy, r = W / 2, 690, 190
         c.arc(cx, cy + 12, r + 18, 0, 2 * math.pi); fill(c, "#E0E0E6")
-        gone = int(8 * clamp((t - d0 - 0.4) / span))
         for i in range(8):
             a0 = i / 8 * 2 * math.pi - math.pi / 2
+            uu = clamp((t - d0 - 0.4 - span * i / 7) / 0.5) if i < gone + 1 and i < 7 else 0
             if i < gone:
-                uu = clamp((t - d0 - 0.4 - span * i / 8) / 0.5)
-                dx, dy = 0, 520 * ease_in_out(uu)                # Stück fliegt zu Alex nach unten
-            else:
-                dx = dy = 0
-                uu = 0
+                uu = max(uu, 1.0)
+            dy = 560 * ease_in_out(uu)                            # Stück fliegt runter zu Alex
             if uu >= 1:
                 continue
-            c.save(); c.translate(dx, dy)
+            c.save(); c.translate(0, dy)
             c.move_to(cx, cy); c.arc(cx, cy, r, a0, a0 + 2 * math.pi / 8); c.close_path()
             fill(c, "#F2B233"); c.move_to(cx, cy); c.arc(cx, cy, r, a0, a0 + 2 * math.pi / 8); c.close_path()
             c.set_line_width(5); src(c, "#C9852E"); c.stroke()
             am = a0 + math.pi / 8
             for rr in (0.45, 0.75):
-                c.arc(cx + math.cos(am) * r * rr, cy + math.sin(am) * r * rr, 20, 0, 2 * math.pi); fill(c, "#C0392B")
+                c.arc(cx + math.cos(am) * r * rr, cy + math.sin(am) * r * rr, 16, 0, 2 * math.pi); fill(c, "#C0392B")
             c.restore()
-        tag(c, cx, 940, f"{8 - gone}/8 FÜR DIE ANDEREN 🍕", "#2FA36B", s=1)
+        # Tom & Mia links/rechts mit Zählern
+        for x, sp, nm in ((215, TOM, "Tom"), (865, MIA, "Mia")):
+            person(c, x, 990, 300, sp, t, "angry" if gone >= 4 else "neutral", bob=False, name=nm, blink_seed=x)
+        tag(c, 215, 560, "zahlt 12 € 💸", "#555A66", s=1)
+        tag(c, 865, 560, "zahlt 12 € 💸", "#555A66", s=1)
+        tag(c, cx, 935, f"ALEX ISST: {gone}/8 🍕 · ZAHLT: 0 €", "#E23B3B", s=1)
     scaled(c, W / 2, 700, s, pizza)
-    alex_bottom(c, S, "happy", "hips")
+    if gone >= 4:
+        box_fx(c, t, d0 + 0.4 + span * 4 / 7, W / 2, 700, 960, 640, "anger")
+    alex_bottom(c, S, "happy", "hips", "🍕" if gone else None)
     if t > d0 + 0.6:
         bubble(c, "Danke fürs Teilen! 😋", 830, 1190, pop(t, d0 + 0.6), tail=(-0.5, 1), size=38, max_w=320)
 
 
-def sc_fridge(c, S):
+def sc_hotspot(c, S):
     t, a1 = S.t, S.at(1)
     s = pop(t, S.at(0, 0.0))
-    op = clamp((t - S.at(0, 0.1)) / 0.5)
-    def fr():
-        rrect(c, 290, 390, 500, 640, 26); fill(c, "#EEF3F7")
-        rrect(c, 290, 390, 500, 640, 26); c.set_line_width(6); src(c, INK); c.stroke()
-        # Innenraum + Licht
-        rrect(c, 315, 415, 450, 590, 14); fill(c, "#FFFDF0")
-        g = cairo.RadialGradient(540, 430, 10, 540, 430, 420)
-        g.add_color_stop_rgba(0, 1, 0.97, 0.75, 0.6 * op); g.add_color_stop_rgba(1, 1, 1, 1, 0)
-        rrect(c, 315, 415, 450, 590, 14); c.set_source(g); c.fill()
-        for y in (600, 790):
-            c.move_to(320, y); c.line_to(760, y); c.set_line_width(6); src(c, "#C9D3DC"); c.stroke()
-        emoji(c, "🥛", 380, 540, 80); emoji(c, "🧀", 700, 550, 70)
-        emoji(c, "🍕", 600, 730, 80); emoji(c, "🥚", 400, 735, 60)
-        emoji(c, "🍫", 680, 930, 70); emoji(c, "🍰", 400, 925, 70)
-        # Joghurt mit Namenszettel
-        rrect(c, 470, 830, 100, 120, 14); fill(c, "#FFFFFF")
-        rrect(c, 470, 830, 100, 120, 14); c.set_line_width(4); src(c, INK); c.stroke()
-        rrect(c, 470, 850, 100, 40, 6); fill(c, "#F07FB0")
-        # Tür (klappt auf)
-        c.save(); c.translate(790, 390)
-        rrect(c, 0, 0, 150 * op + 10, 640, 22); fill(c, "#DDE6EE")
-        rrect(c, 0, 0, 150 * op + 10, 640, 22); c.set_line_width(5); src(c, INK); c.stroke()
-        c.restore()
-    shake = math.sin(t * 40) * 5 if a1 < t < a1 + 0.5 else 0
-    c.save(); c.translate(shake, 0)
-    scaled(c, W / 2, 700, s, fr)
-    c.restore()
-    if t > a1:
-        def note():
-            rrect(c, 120, 460, 300, 150, 10); fill(c, "#FFE14D")
-            rrect(c, 120, 460, 300, 150, 10); c.set_line_width(4); src(c, INK); c.stroke()
-            text(c, "LENA!", 270, 500, 40, "#C0392B", FONT_HEAD)
-            text(c, "FINGER WEG! 😡", 270, 560, 32, INK, FONT_HEAD)
-        scaled(c, 270, 535, pop(t, a1 + 0.1), note, rot=-0.06 + math.sin(t * 3) * 0.02)
-        box_fx(c, t, a1 + 0.2, W / 2, 700, 700, 640, "anger")
-    if t > a1 + S.S.durs[1] * 0.55:
-        bubble(c, "Da stand ja nicht Alex drauf! 🤷", 770, 1020, pop(t, a1 + S.S.durs[1] * 0.55), tail=(-0.5, 1),
-               size=34, max_w=300)
-        alex_bottom(c, S, "smug", "shrug", "🥄")
+    def bahn():
+        rrect(c, 70, 390, 940, 640, 30); fill(c, "#DDEFF3")
+        rrect(c, 70, 390, 940, 640, 30); c.set_line_width(6); src(c, INK); c.stroke()
+        # Bahnfenster mit vorbeiziehender Landschaft
+        for i in range(3):
+            x = 120 + i * 300
+            rrect(c, x, 420, 240, 120, 16); fill(c, "#9FD8F0")
+            for k in range(3):
+                tx = x + ((k * 110 - t * 260) % 300) - 30
+                if x < tx < x + 230:
+                    emoji(c, "🌳", tx, 500, 46)
+            rrect(c, x, 420, 240, 120, 16); c.set_line_width(5); src(c, INK); c.stroke()
+        text(c, "🚆 S-BAHN", 540, 575, 30, "#2B5C66", FONT_HEAD)
+    scaled(c, W / 2, 710, s, bahn)
+    # Alex' Handy (links)
+    x0, y0, w, h = phone(c, 300, 790, 300, 440, pop(t, S.at(0, 0.2)), screen="#FFFFFF" if t < a1 else "#111114",
+                         rot=-0.05)
+    if t < a1:
+        text(c, "Datenvolumen", 300, y0 + 90, 30, INK, FONT_HEAD)
+        k = clamp((t - S.at(0, 0.4)) / 1.0)
+        rrect(c, x0 + 25, y0 + 125, w - 50, 40, 12); fill(c, "#EEF0F4")
+        rrect(c, x0 + 25, y0 + 125, max(2, (w - 50) * 0.3 * (1 - k)), 40, 12); fill(c, "#E23B3B")
+        text(c, "0 MB 🪫" if k >= 1 else f"{int(300 * (1 - k))} MB", 300, y0 + 215, 46, "#E23B3B", FONT_HEAD)
+        text(c, "WIE IMMER", 300, y0 + 285, 30, "#555A66", FONT_HEAD, alpha=k)
     else:
-        alex_bottom(c, S, "happy", "idle", "🥄")
+        text(c, "📶 Janas iPhone ✅", 300, y0 + 60, 24, "#2FD16B", FONT_HEAD)
+        text(c, "TikTok · HD", 300, y0 + 110, 32, "#FFFFFF", FONT_HEAD)
+        for i in range(5):
+            uu = (t * 0.8 + i / 5) % 1
+            emoji(c, "❤️", x0 + w - 40, y0 + h - 40 - uu * 200, 30, alpha=1 - uu)
+        emoji(c, "🕺", 290, y0 + 220 + math.sin(t * 8) * 10, 90, rot=math.sin(t * 6) * 0.2)
+    # Jana (rechts) mit ihrem Handy
+    jana_expr = "angry" if t > a1 + S.S.durs[1] * 0.6 else "neutral"
+    person(c, 770, 1030, 420, JANA, t, jana_expr, bob=False, name="Jana", blink_seed=7)
+    if t > a1:
+        k = clamp((t - a1 - 0.3) / max(1.0, S.S.durs[1] * 0.6))
+        def jp():
+            rrect(c, 640, 425, 260, 150, 18); fill(c, "#FFFFFF")
+            rrect(c, 640, 425, 260, 150, 18); c.set_line_width(4); src(c, INK); c.stroke()
+            text(c, "Janas Daten", 770, 455, 26, INK, FONT_HEAD)
+            rrect(c, 660, 480, 220, 30, 10); fill(c, "#EEF0F4")
+            rrect(c, 660, 480, max(2, 220 * (1 - k)), 30, 10); fill(c, "#2FD16B" if k < 0.7 else "#E23B3B")
+            text(c, f"{10 * (1 - k):.1f} GB" if k < 1 else "KEIN NETZ 😭", 770, 545, 30,
+                 "#E23B3B" if k > 0.7 else INK, FONT_HEAD)
+        scaled(c, 770, 500, pop(t, a1 + 0.1), jp, rot=0.04)
+        # Daten fließen von Jana zu Alex
+        for i in range(6):
+            uu = (t * 1.2 + i / 6) % 1
+            emoji(c, "📶", 640 - uu * 250, 700 + math.sin(uu * 6) * 30, 40, alpha=(1 - uu) * (1 - k * 0.5))
+        if k >= 1:
+            box_fx(c, t, a1 + 0.3 + max(1.0, S.S.durs[1] * 0.6), W / 2, 710, 940, 640, "anger")
+    alex_bottom(c, S, "smug" if t > a1 else "neutral", "idle")
 
 
 def sc_stream(c, S):
@@ -433,7 +453,7 @@ def sc_party(c, S):
 
 def sc_signs(c, S):
     t = S.t
-    items = [("Portemonnaie nie dabei", "👛"), ("„Ich geb's dir morgen wieder“", "🤞"),
+    items = [("Nie Karte & Handy-Pay dabei", "💳"), ("„Ich geb's dir morgen wieder“", "🤞"),
              ("Kommt immer zur Essenszeit", "🍽️"), ("Tupperdosen im Rucksack", "🥡")]
     for i, (lab, ic) in enumerate(items):
         y = 400 + i * 175
@@ -489,5 +509,5 @@ def sc_outro(c, S):
     alex_bottom(c, S, "happy", "wave")
 
 
-SCENE_DRAW = dict(what=sc_what, motto=sc_motto, fridge=sc_fridge, stream=sc_stream, food=sc_food, party=sc_party,
+SCENE_DRAW = dict(what=sc_what, motto=sc_motto, hotspot=sc_hotspot, stream=sc_stream, food=sc_food, party=sc_party,
                   signs=sc_signs, outro=sc_outro)

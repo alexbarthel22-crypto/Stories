@@ -13,7 +13,7 @@ BUBBLE_SCALE = 1.2
 INTRO_SFX_GAIN = 3.4   # Reveal-Effekt
 REVEAL_TAIL = (0.28, 0.0)   # Hintergrundstimme im Original-Reveal entfernt, Knall bleibt
 INTRO_TICK_GAIN = 6.0  # Auswahl-Klicks extra laut
-REACTIONS = {"fridge": ["🥛", "😠", "🚩"], "stream": ["📺", "🔑", "🚩"], "food": ["🥩", "💸", "🚩"],
+REACTIONS = {"hotspot": ["📶", "😤", "🚩"], "stream": ["📺", "🔑", "🚩"], "food": ["🥩", "💸", "🚩"],
              "party": ["🎂", "🥡", "🚩"]}
 
 ROLE = "EIN SCHMAROTZER."
@@ -25,7 +25,7 @@ MOODS = {
     "intro_role": "völlig überrascht und amüsiert, wie ungläubig ausgerufen, zügig gesprochen",
     "what": "erklärend und amüsiert, die Pointe trocken",
     "motto": "verschmitzt und stolz, wie eine Lebensweisheit, die Pointe trocken",
-    "fridge": "beiläufig, dann frech und gespielt unschuldig",
+    "hotspot": "beiläufig, dann trocken und amüsiert, die Pointe mit Jana trocken",
     "stream": "ungläubig amüsiert, die Pointe trocken",
     "food": "erst genießerisch, dann trocken, am Ende frech",
     "party": "fröhlich, dann trocken",
@@ -55,14 +55,14 @@ THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="SCHMAROTZER", bg="#D9762B"
 SCENES = [
     dict(id="what", bg="#D9762B", clock=None, title="WAS IST EIN SCHMAROTZER?", dark=True, lines=[
         ("Ein Schmarotzer lebt richtig gut. Bezahlen tun nur immer die anderen.", None),
-        ("Sein Portemonnaie hat er leider immer zu Hause vergessen.", None),
+        ("Seine Karte hat er leider immer vergessen. Und mit dem Handy bezahlen geht bei ihm komischerweise nie.", None),
     ]),
     dict(id="motto", bg="#2FA36B", clock=None, title="SEIN MOTTO", dark=True, lines=[
-        ("Sein Motto: Teilen ist wichtig. Vor allem, wenn die anderen teilen.", None),
+        ("Sein Motto: Teilen ist wichtig. Vor allem, wenn die anderen bezahlen.", None),
     ]),
-    dict(id="fridge", bg="#36B5C2", clock="08:00", title="DER KÜHLSCHRANK", lines=[
-        ("Acht Uhr. Frühstück aus dem Kühlschrank seiner Mitbewohnerin.", None),
-        ("Auf dem Joghurt steht: Lena, Finger weg! Alex sagt: Da stand ja nicht Alex drauf.", None),
+    dict(id="hotspot", bg="#36B5C2", clock="08:00", title="DER HOTSPOT", lines=[
+        ("Acht Uhr, in der Bahn. Sein Datenvolumen ist leer. Wie immer.", None),
+        ("Also hängt er in Janas Hotspot und schaut TikTok in HD. Jana hat jetzt kein Netz mehr.", None),
     ]),
     dict(id="stream", bg="#5B6BC9", clock="11:00", title="SERIEN-MARATHON", dark=True, lines=[
         ("Elf Uhr. Serien gucken. Mit dem Account seiner Ex. Seit drei Jahren.", None),
@@ -79,7 +79,7 @@ SCENES = [
     ]),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen Schmarotzer erkennst:", None),
-        ("Sein Portemonnaie ist nie dabei.", None),
+        ("Er hat nie seine Karte dabei. Und Handy-Bezahlen geht auch nie.", None),
         ("Er sagt immer: Ich geb's dir morgen wieder.", None),
         ("Er kommt immer genau zur Essenszeit.", None),
         ("Und er hat immer Tupperdosen im Rucksack.", None),
@@ -93,10 +93,8 @@ SCENES = [
 # Nur für die Stimme: "Aleks" geschrieben -> deutsches A statt englischem "Äläx"
 _ALEX = "; den Namen deutsch aussprechen: A-leks mit offenem A wie in 'Alexander', niemals englisch 'Äläx'; kein Lachen"
 GEMINI_LINE_TEXT = {
-    "fridge_1": "Auf dem Joghurt steht: Lena, Finger weg! Aleks sagt: Da stand ja nicht Aleks drauf.",
     "food_0": "Mittags essen mit Freunden. Aleks bestellt Steak, Vorspeise und drei Cocktails.",
 }
-GEMINI_LINE_MOOD = {"fridge_1": "erst den Zettel streng vorlesen, dann frech und gespielt unschuldig" + _ALEX,
-                    "food_0": "genießerisch" + _ALEX}
+GEMINI_LINE_MOOD = {"food_0": "genießerisch" + _ALEX}
 
 LINE_TEMPO = {}   # wie Pick-me-Boy: alle Zeilen 1.08
