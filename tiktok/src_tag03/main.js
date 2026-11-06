@@ -43,6 +43,18 @@ function confetti(t, t0, n = 46) {
   return s;
 }
 
+// Bewerbungs-Box mit fliegenden Umschlaegen (wiederverwendbar)
+function bewerbungen(t, t0, y) {
+  if (t < t0) return '';
+  const pulse = 0.5 + 0.5 * Math.sin(t * 10);
+  let letters = '';
+  for (let i = 0; i < 8; i++) { const k = (t - t0 - i * 0.12) / 0.7;
+    if (k > 0 && k < 1) { const x0 = 80 + rnd(i + 60) * 900, x = x0 + (540 - x0) * k, yy = 1800 - k * (1800 - y), fl = Math.cos(k * 8);
+      letters += `<g transform="translate(${x} ${yy}) rotate(${(1 - k) * 35 * (i % 2 ? 1 : -1)}) scale(${0.85 - k * 0.35} ${(0.85 - k * 0.35) * Math.max(0.15, Math.abs(fl))})"><rect x="-60" y="-40" width="120" height="80" rx="8" fill="#fff" stroke="#3A2316" stroke-width="6"/>${fl > 0 ? '<path d="M-60 -40 L0 10 L60 -40" stroke="#3A2316" stroke-width="6" fill="none"/><circle cx="34" cy="16" r="10" fill="#E5483A"/>' : ''}</g>`; } }
+  return popG(t, t0, 540, y, `<g transform="translate(540 ${y}) scale(${1 + 0.05 * pulse}) translate(-540 ${-y})">${box(170, y - 65, 740, 130, 'red', 10)}
+    ${label(500, y + 25, 'BEWERBUNGEN', 72, '#fff')}<text x="830" y="${y + 30 + 10 * Math.abs(Math.sin(t * 6))}" text-anchor="middle" font-family="Noto Color Emoji" font-size="68">👇</text></g>`) + letters;
+}
+
 const SCENES = {
   intro(t, d, m) {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
@@ -51,7 +63,7 @@ const SCENES = {
       place(frog({blink: blinkAt(t, .4)}), 760, 1430 - Math.abs(Math.sin(t * 7)) * 30, 0.2);
     return cam(z, 540, 1110 - 40 * e, world) +
       `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${badge(540, 440, 'TAG 3', {kind: 'pitch', fs: 150, pad: 120})}</g>` +
-      popG(t, 0.9, 900, 980, `<g transform="translate(900 980) scale(0.36) rotate(${Math.sin(t * 3) * 4}) translate(-300 -300)">${LOGO}</g>`) + introBall(t);
+      introBall(t);
   },
   fans3(t, d, m) {
     const t0 = capT(2), n = t < t0 ? 83 : Math.round(83 + 317 * easeOut(clamp((t - t0) / 1.0, 0, 1)));
@@ -59,19 +71,19 @@ const SCENES = {
       popG(t, 0.0, 540, 360, badge(540, 360, 'GESTERN: 83 FANS', {fs: 46})) +
       popG(t, t0, 540, 500, badge(540, 500, 'HEUTE', {kind: 'pitch', fs: 56})) +
       (t >= t0 ? bigText(540, 760, String(n), '#6BF06B', 240) : '') +
-      popG(t, t0 + 1.0, 870, 640, `<g transform="translate(870 640)"><circle r="70" fill="#3A2316"/><circle r="62" fill="#58B044" stroke="#fff" stroke-width="7"/>
-        <path d="M0 -40 L32 0 L14 0 L14 34 L-14 34 L-14 0 L-32 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>` + badge(870, 750, '+317', {kind: 'pitch', fs: 44})) + confetti(t, t0 + 1.0);
+      popG(t, t0 + 1.0, 800, 640, `<g transform="translate(800 640)"><circle r="70" fill="#3A2316"/><circle r="62" fill="#58B044" stroke="#fff" stroke-width="7"/>
+        <path d="M0 -40 L32 0 L14 0 L14 34 L-14 34 L-14 0 L-32 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>` + badge(800, 750, '+317', {kind: 'pitch', fs: 44})) + confetti(t, t0 + 1.0);
   },
   striker(t, d, m) {
     const t1 = capT(2);
     if (t < t1) return cam(1.0, 540, 960, field(t, 1080, {goalX: 780})) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'TOP-KOMMENTAR GESTERN', {kind: 'red', fs: 46})) +
-      popG(t, 0.25, 540, 600, tiktokComment(80, 460, t)) +
+      popG(t, 0.25, 520, 600, `<g transform="translate(70 460) scale(0.9) translate(-70 -460)">${tiktokComment(70, 460, t)}</g>`) +
       popG(t, 0.8, 540, 900, jerseyNum(540, 1000, 0.55, Math.sin(t * 2) * 4, '9', 'STURM'));
     const tt = t - t1;
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 780}) + place(lkz({blink: blinkAt(t)}), 540, 1660 - Math.abs(Math.sin(tt * 8)) * 20 * Math.exp(-tt * 2), 1.45)) +
       popG(tt, 0.0, 500, 600, nameCard(80, 520, '9', 'LEBERKAASZERFETZER', 'STURM · NEUZUGANG').replace('font-size="72"', 'font-size="46"')) +
-      popG(tt, 0.3, 860, 470, `<g transform="rotate(12 860 470)">${badge(860, 470, 'NEU!', {kind: 'red', fs: 60})}</g>`);
+      popG(tt, 0.3, 760, 450, `<g transform="rotate(12 760 450)">${badge(760, 450, 'NEU!', {kind: 'red', fs: 60})}</g>`);
   },
   money3(t, d, m) {
     const lines = [['408 FOLLOWER × 1 €', '+408 €'], ['214 KOMMENTARE × 2 €', '+428 €'], ['VEREINSKASSE', '836 €', '#2FA84A', true]];
@@ -79,8 +91,8 @@ const SCENES = {
     const t3 = capT(2);
     for (let i = 0; i < 18; i++) { const t0 = t3 + rnd(i + 900) * 1.2, k = (t - t0) / 0.9; if (k > 0 && k < 1) coins += coin(80 + rnd(i + 950) * 920, -60 + k * 1500, 34, i % 2); }
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(coach({mouth: m, wave: t > t3 ? Math.sin(t * 10) : 0, blink: blinkAt(t)}), 540, 1660, 1.05)) +
-      popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(1), t3])) +
-      (t >= t3 ? `<path d="M150 ${290 + 106 + 110 + 30} H930" stroke="#3A2316" stroke-width="7"/>` : '') + coins + confetti(t, t3 + 0.3, 30);
+      popG(t, 0.0, 540, 340, calcBoard(t, 70, 290, lines, [capT(0), capT(1), t3])) +
+      (t >= t3 ? `<path d="M110 ${290 + 106 + 110 + 30} H890" stroke="#3A2316" stroke-width="7"/>` : '') + coins + confetti(t, t3 + 0.3, 30);
   },
   ikea(t, d, m) {
     const tb = 0.9, build = easeOut(clamp((t - tb) / 0.6, 0, 1)), fill = clamp((t - tb - 0.6) / 1.4, 0, 1);
@@ -88,7 +100,7 @@ const SCENES = {
     let box = '';
     if (t < tb) { const k = easeOut(clamp(t / 0.45, 0, 1)); box = flatpack(540, -300 + k * 1000, 1.0, (1 - k) * -25); }
     else if (t < tb + 0.25) box = `<circle cx="540" cy="700" r="${(t - tb) * 2400}" fill="#fff" opacity="${1 - (t - tb) / 0.25}"/>`;
-    return cam(1.0, 540, 960, s) + box +
+    return cam(0.82, 540, 820, s) + box +
       popG(t, 0.0, 540, 1150, badge(540, 1150, 'FERTIG-TRIBÜNE', {kind: 'pitch', fs: 54})) +
       popG(t, capT(3), 540, 1280, badge(540, 1280, '500 PLÄTZE!', {kind: 'orange', fs: 54, rot: -2})) +
       popG(t, 2.2, 240, 960, badge(240, 960, 'MIT ULTRAS!', {kind: 'red', fs: 40, rot: -4}));
@@ -99,7 +111,7 @@ const SCENES = {
     return cam(z, cx, cy, wholePitch(t) + bigStand(t, 1, 1)) +
       popG(t, 0.2, 540, 340, badge(540, 340, 'ULTRA-BLOCK', {kind: 'red', fs: 60, rot: -2})) +
       popG(t, capT(2), 540, 480, badge(540, 480, 'NEUES LOGO AUS TAG 1', {kind: 'pitch', fs: 42})) +
-      popG(t, capT(3), 820, 640, profilePic(820, 640, 0, 95) + `<g transform="rotate(-4 820 780)">${badge(820, 780, 'DANKE, EIKE!', {kind: 'orange', fs: 50})}</g>`);
+      popG(t, capT(3), 600, 640, profilePic(600, 640, 0, 95) + `<g transform="rotate(-4 600 780)">${badge(600, 780, 'DANKE, EIKE!', {kind: 'orange', fs: 50})}</g>`);
   },
   honor(t, d, m) {
     const z = 1 + 2.4 * easeOut(clamp(t / 0.7, 0, 1)), [cx, cy] = standSeatPos(1);
@@ -113,7 +125,7 @@ const SCENES = {
     const lines = [['FERTIG-TRIBÜNE', '-836 €', '#E5483A', true]];
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(780, 1290, 0.75) + cashBox(780, 1160, 0.62, 'empty') +
         place(coach({mouth: m, mood: 'sad', blink: blinkAt(t)}), 240, 1600, 0.95)) + moth(t, capT(1) + 0.1) +
-      popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [0.1])) +
+      popG(t, 0.0, 540, 340, calcBoard(t, 70, 290, lines, [0.1])) +
       popG(t, capT(0), 540, 640, badge(540, 620, 'VEREINSKASSE', {fs: 46})) +
       popG(t, capT(1), 540, 800, bigText(540, 900, '0 €', '#FF4A4A', 250));
   },
@@ -191,19 +203,19 @@ const SCENES = {
       popG(t, 0.15, 540, 470, title3d('GESUCHT!', 540, 520, 96)) + sign(150, 860) + sign(930, 860) +
       popG(t, c[1], 540, 870, tools) +
       popG(t, c[2], 540, 620, `<g transform="rotate(-3 540 620)">${title3d('PLATZWART', 540, 650, 110)}</g>`) +
-      inbox + letters + popG(t, c[4] + 0.2, 540, 1268, badge(540, 1268, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 34, rot: -2}));
+      inbox + letters + (t >= c[5] ? `<g opacity="${Math.sin(t * 16) > -0.3 ? 1 : 0.25}" transform="translate(540 1330) scale(${1 + 0.06 * Math.abs(Math.sin(t * 8))}) translate(-540 -1330)"><rect x="110" y="1268" width="860" height="124" rx="30" fill="#FFD31A" opacity=".35"/>${badge(540, 1330, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 50, rot: -2})}</g>` : '');
   },
   opa(t, d, m) {
     let s = field(t, 960, {goal: false, touchY: 1320});
     s += place(rockingOpa(t), 520, 1300, 0.95);
     return cam(1.0, 540, 960, s) +
       popG(t, 0.0, 500, 440, nameCard(80, 360, '4', 'OPA JÜRGEN', 'ABWEHR · IN RENTE')) +
-      popG(t, capT(2), 860, 640, `<g transform="rotate(10 860 640)">${badge(860, 640, 'RENTE!', {kind: 'red', fs: 60})}</g>`);
+      popG(t, capT(2), 740, 640, `<g transform="rotate(10 740 640)">${badge(740, 640, 'RENTE!', {kind: 'red', fs: 60})}</g>`);
   },
   abwehr(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + `<path d="M540 0 L300 1100 L780 1100 Z" fill="#FFF3B0" opacity=".14"/>`) +
       jerseyNum(540, 860, 1.05, Math.sin(t * 2) * 5, '4', 'ABWEHR') +
-      popG(t, 0.0, 540, 400, badge(540, 400, 'GESUCHT: VERTEIDIGER', {kind: 'pitch', fs: 52}));
+      popG(t, 0.0, 540, 400, badge(540, 400, 'GESUCHT: VERTEIDIGER', {kind: 'pitch', fs: 52})) + bewerbungen(t, capT(3), 1220);
   },
   news(t, d, m) {
     const k = clamp(t / 0.6, 0, 1), e = easeOut(k);
@@ -238,9 +250,9 @@ const SCENES = {
   end3(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1700, 1.15)) +
       `<g transform="translate(510 500) scale(${1 + 0.025 * Math.sin(t * 6)}) translate(-510 -500)">${popG(t, 0.0, 510, 500, commentCard(70, 300, t, 'ICH WERDE ...'))}</g>` +
-      popG(t, capT(1), 300, 790, badge(300, 790, 'PLATZWART?', {kind: 'pitch', fs: 44, rot: -3})) +
-      popG(t, capT(2), 760, 790, badge(760, 790, 'VERTEIDIGER?', {kind: 'pitch', fs: 44, rot: 3})) +
-      popG(t, capT(3), 540, 910, badge(540, 910, 'WAS VORM SPIEL KAUFEN?', {bg: '#FFD31A', fs: 44, rot: -1}));
+      popG(t, capT(1), 540, 780, badge(540, 780, 'PLATZWART?', {kind: 'pitch', fs: 44, rot: -3})) +
+      popG(t, capT(2), 540, 880, badge(540, 880, 'VERTEIDIGER?', {kind: 'pitch', fs: 44, rot: 2})) +
+      popG(t, capT(3), 540, 985, badge(540, 985, 'WAS VORM SPIEL KAUFEN?', {bg: '#FFD31A', fs: 44, rot: -1}));
   },
 };
 

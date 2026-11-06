@@ -221,7 +221,7 @@ def build_sfx(segs, N):
         L = lambda lt, snd: put(st + lt, snd)
         if k > 0: L(0, splat())
         sid = s['id']
-        if sid == 'intro': L(0.0, whoosh()); L(0.3, thud() * 0.55); L(0.3, pop()); L(0.6, pop()); L(0.0, stadium_rec() / 0.6)
+        if sid == 'intro': L(0.0, whoosh()); L(0.3, thud() * 0.55); L(0.3, pop()); L(0.6, pop()); L(0.0, (lambda _s: _s * np.minimum(1, (len(_s) - np.arange(len(_s))) / (0.3 * SR)) * np.where(np.arange(len(_s)) < 0.6 * SR, 0.5, 1.0))(stadium_rec()[:int((en - st) * SR)]) / 0.6)
         elif sid == 'follow': L(0.6, pop())
         elif sid == 'first3':
             for x in c[1:4]: L(x, pop())

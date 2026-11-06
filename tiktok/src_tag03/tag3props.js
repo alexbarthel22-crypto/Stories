@@ -88,11 +88,21 @@ function standSeatPos(i) {
 
 // Ganzer Platz von der Seite (unter der Tribuene)
 function wholePitch(t) {
-  let s = sky(t) + `<rect x="-400" y="740" width="1880" height="1600" fill="#6B4A30"/>`;
+  let s = sky(t) + `<rect x="-600" y="740" width="2280" height="1800" fill="#6B4A30"/>`;
   for (let i = 0; i < 18; i++) s += `<ellipse cx="${rnd(i + 40) * 1100}" cy="${800 + rnd(i + 50) * 900}" rx="${50 + rnd(i) * 80}" ry="${10 + rnd(i + 2) * 12}" fill="#4F8A3E" opacity=".8"/>`;
   s += `<g fill="none" stroke="#F0EDE0" stroke-width="7" opacity=".85"><path d="M60 780 L1020 780 L1080 1300 L0 1300 Z"/><path d="M540 780 V1300"/>
-    <ellipse cx="540" cy="1020" rx="150" ry="70"/><path d="M60 880 L200 880 L205 1150 L30 1150"/><path d="M1020 880 L880 880 L875 1150 L1050 1150"/></g>`;
-  s += goalPost(70, 1040, 0.55) + goalPost(1010, 1040, 0.55);
+    <ellipse cx="540" cy="1020" rx="150" ry="70"/><path d="M48 884 L190 884 L170 1150 L18 1150"/><path d="M1032 884 L890 884 L910 1150 L1062 1150"/></g>`;
+  // Tore in Seitenansicht: stehen auf der jeweiligen Torlinie, Netz zeigt nach aussen
+  const sideGoal = (x0, y0, x1, y1, dir) => {
+    const P = f => [x0 + (x1 - x0) * f, y0 + (y1 - y0) * f], [ax, ay] = P(0.40), [bx, by] = P(0.60);
+    const ha = 70 + (ay - 780) * 0.12, hb = 70 + (by - 780) * 0.12, d = 70 * dir;
+    return `<g fill="none" stroke-linejoin="round">
+      <path d="M${ax + d} ${ay} L${ax + d} ${ay - ha * 0.8} L${bx + d * 1.2} ${by - hb * 0.8} L${bx + d * 1.2} ${by}" stroke="#D8D8D8" stroke-width="3" opacity=".7"/>
+      <path d="M${ax} ${ay - ha} L${ax + d} ${ay - ha * 0.8} M${bx} ${by - hb} L${bx + d * 1.2} ${by - hb * 0.8} M${ax + d} ${ay} L${bx + d * 1.2} ${by}" stroke="#D8D8D8" stroke-width="3" opacity=".7"/>
+      <path d="M${ax} ${ay} L${ax} ${ay - ha} L${bx} ${by - hb} L${bx} ${by}" stroke="#111" stroke-width="12"/>
+      <path d="M${ax} ${ay} L${ax} ${ay - ha} L${bx} ${by - hb} L${bx} ${by}" stroke="#F3F3F3" stroke-width="6"/></g>`;
+  };
+  s += sideGoal(60, 780, 0, 1300, -1) + sideGoal(1020, 780, 1080, 1300, 1);
   [[260, 1180, 120, 22], [760, 1220, 160, 26], [480, 900, 110, 16]].forEach(p => { s += `<ellipse cx="${p[0]}" cy="${p[1]}" rx="${p[2]}" ry="${p[3]}" fill="#4A3828" stroke="#2C2018" stroke-width="5"/>`; });
   return s;
 }

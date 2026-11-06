@@ -52,6 +52,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Offene Frage an die Community: Flutlicht kaufen, Vereinshaus mieten oder etwas ganz anderes? Der Top-Kommentar entscheidet
 
 ## Videostil
+- Text-Boxen nie weiter rechts als x ≈ 930 (rechter TikTok-Sicherheitsbereich für Like/Follow-Icons)
 - Immer Bewegung im Bild: leichter Kamera-Drift (Zoom + minimale Neigung) in jeder Szene, Konfetti bei Erfolgen, Pop-ups, laufende Figuren
 - Format 1080×1920, 30 fps, maximal 59 s
 - Dauerregen, Untertitel Wort für Wort (Schrift Lilita One, weiß mit brauner Kontur, Schlüsselwörter gelb)
@@ -95,7 +96,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Nächstes Spiel: **Sonntag, 1. Spiel gegen den SC Heuballen** (Gegner-Wappen: gelber Schild mit Heuballen, grüner Kopfbalken)
 
 ## Folge 3 (Tag 3)
-- Datei: `tiktok/tag03_fc_schlammloch_v5.mp4` (1:15; Intro nur „TAG DREI!“ sehr laut gerufen, Stadionjubel ab 0 s laut, Vereinslogo + kleiner Frodo im Intro, kurzer Alarm beim schwimmenden Tor, Konfetti, ständiger leichter Kamera-Drift), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
+- Datei: `tiktok/tag03_fc_schlammloch_v6.mp4` (1:10; schneller gesprochen, „TAG DREI!“ schneller und lauter, kein Logo im Intro, Tore in Seitenansicht, blinkendes „TOP-KOMMENTAR GEWINNT!“, Bewerbungen auch für den Verteidiger; Intro nur „TAG DREI!“ sehr laut gerufen, Stadionjubel ab 0 s laut, Vereinslogo + kleiner Frodo im Intro, kurzer Alarm beim schwimmenden Tor, Konfetti, ständiger leichter Kamera-Drift), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
 - Intro: „TAG DREI!!!“ laut, Trainer vor der Klappstuhl-Tribüne mit Plane aus Folge 2 (Stühle in realistischer Größe), Stadionjubel lauter
 - Fans: gestern 83 → heute **400 (+317)**
 - Neuer Stürmer Nr. 9: **Leberkaaszerfetzer** (sein Kommentar wird nachgebaut gezeigt, mit Profilbild)
