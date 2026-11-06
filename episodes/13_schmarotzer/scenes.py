@@ -335,6 +335,104 @@ def sc_motto(c, S):
         bubble(c, "Danke fürs Teilen! 😋", 830, 1190, pop(t, d0 + 0.6), tail=(-0.5, 1), size=38, max_w=320)
 
 
+def _status_bar(c, x0, y0, w, col, bars, net):
+    text(c, "8:00", x0 + 34, y0 + 26, 17, col, FONT_HEAD, anchor="l")
+    bx = x0 + w - 98
+    for i in range(4):                                         # Signalbalken
+        hh = 5 + i * 3
+        rrect(c, bx + i * 6, y0 + 32 - hh, 4, hh, 1); src(c, col, 1 if i < bars else 0.3); c.fill()
+    text(c, net, bx + 30, y0 + 26, 12, col, FONT_HEAD, anchor="l")
+    rrect(c, x0 + w - 44, y0 + 19, 25, 13, 4); c.set_line_width(1.5); src(c, col, 0.6); c.stroke()
+    rrect(c, x0 + w - 42, y0 + 21, 17, 9, 2); src(c, col); c.fill()
+    rrect(c, x0 + w - 18, y0 + 23, 2, 5, 1); src(c, col, 0.6); c.fill()
+
+
+def real_phone(c, t, cx, cy, s, rot, mode, k_data=0.0, t_tok=0.0):
+    """Echt aussehendes Smartphone (Titanrahmen, Dynamic Island, Statusleiste, Glas-Spiegelung)."""
+    if s <= 0:
+        return
+    w, h, R = 250, 510, 40
+    c.save(); c.translate(cx, cy); c.rotate(rot); c.scale(s, s); c.translate(-w / 2, -h / 2)
+    rrect(c, 10, 16, w, h, R); src(c, "#000000", 0.28); c.fill()             # Schatten
+    for (bx, by, bh) in ((-4, 110, 34), (-4, 160, 52), (-4, 222, 52), (w - 1, 150, 78)):   # Tasten
+        rrect(c, bx, by, 5, bh, 2); fill(c, "#55565E")
+    g = cairo.LinearGradient(0, 0, w, h)
+    g.add_color_stop_rgb(0, 0.42, 0.42, 0.46); g.add_color_stop_rgb(0.5, 0.20, 0.20, 0.23); g.add_color_stop_rgb(1, 0.38, 0.38, 0.42)
+    rrect(c, 0, 0, w, h, R); c.set_source(g); c.fill()                         # Titanrahmen
+    rrect(c, 4, 4, w - 8, h - 8, R - 4); fill(c, "#050506")                    # schwarzer Rand
+    x0, y0, sw, sh = 9, 9, w - 18, h - 18
+    c.save(); rrect(c, x0, y0, sw, sh, R - 8); c.clip()
+    if mode == "data":
+        src(c, "#F2F2F7"); c.paint()
+        _status_bar(c, x0, y0, sw, "#000000", 0, "SOS")
+        text(c, "‹ Einstellungen", x0 + 16, y0 + 70, 15, "#0A84FF", FONT_BOLD, anchor="l")
+        text(c, "Mobilfunk", x0 + 16, y0 + 108, 30, "#000000", FONT_HEAD, anchor="l")
+        rrect(c, x0 + 12, y0 + 140, sw - 24, 150, 14); fill(c, "#FFFFFF")
+        text(c, "Datenvolumen", x0 + 28, y0 + 168, 16, "#6B6B70", FONT_BOLD, anchor="l")
+        rrect(c, x0 + 28, y0 + 188, sw - 56, 14, 7); fill(c, "#E5E5EA")
+        rrect(c, x0 + 28, y0 + 188, max(4, (sw - 56) * 0.3 * (1 - k_data)), 14, 7); fill(c, "#FF3B30")
+        text(c, "0 MB" if k_data >= 1 else f"{int(300 * (1 - k_data))} MB", x0 + sw / 2, y0 + 240, 40, "#FF3B30", FONT_HEAD)
+        text(c, "übrig von 5 GB", x0 + sw / 2, y0 + 272, 14, "#6B6B70", FONT_BOLD)
+        if k_data >= 1:
+            def warn():
+                rrect(c, x0 + 14, y0 + 320, sw - 28, 96, 16); src(c, "#FFFFFF", 0.97); c.fill()
+                text(c, "Datenvolumen", x0 + sw / 2, y0 + 345, 16, "#000000", FONT_HEAD)
+                text(c, "aufgebraucht 🪫", x0 + sw / 2, y0 + 368, 16, "#000000", FONT_HEAD)
+                text(c, "WIE IMMER", x0 + sw / 2, y0 + 398, 15, "#FF3B30", FONT_HEAD)
+            scaled(c, x0 + sw / 2, y0 + 368, 1, warn)
+    else:
+        src(c, "#000000"); c.paint()
+        brainrot_feed(c, t, t_tok, x0, y0, sw, sh - 52)
+        g2 = cairo.LinearGradient(0, y0, 0, y0 + 90)                          # Abdunklung oben/unten
+        g2.add_color_stop_rgba(0, 0, 0, 0, 0.55); g2.add_color_stop_rgba(1, 0, 0, 0, 0)
+        c.rectangle(x0, y0, sw, 90); c.set_source(g2); c.fill()
+        g3 = cairo.LinearGradient(0, y0 + sh - 170, 0, y0 + sh - 52)
+        g3.add_color_stop_rgba(0, 0, 0, 0, 0); g3.add_color_stop_rgba(1, 0, 0, 0, 0.6)
+        c.rectangle(x0, y0 + sh - 170, sw, 118); c.set_source(g3); c.fill()
+        _status_bar(c, x0, y0, sw, "#FFFFFF", 4, "🔗")
+        text(c, "Folge ich", x0 + sw / 2 - 44, y0 + 62, 13, "#FFFFFF", FONT_BOLD, alpha=0.7)
+        text(c, "Für dich", x0 + sw / 2 + 40, y0 + 62, 14, "#FFFFFF", FONT_HEAD)
+        rrect(c, x0 + sw / 2 + 26, y0 + 74, 28, 3, 1.5); fill(c, "#FFFFFF")
+        rx = x0 + sw - 26                                                     # rechte Icon-Leiste
+        c.arc(rx, y0 + 200, 17, 0, 2 * math.pi); fill(c, "#FFFFFF")
+        emoji(c, "🧠", rx, y0 + 200, 20)
+        c.arc(rx, y0 + 218, 7, 0, 2 * math.pi); fill(c, "#FE2C55")
+        text(c, "+", rx, y0 + 217, 12, "#FFFFFF", FONT_HEAD)
+        likes = 1.2 + 0.1 * max(0.0, t - t_tok)
+        for j, (ic, lab) in enumerate((("❤️", f"{likes:.1f} Mio"), ("💬", "8.431"), ("🔖", "92K"), ("↪️", "Teilen"))):
+            yy = y0 + 255 + j * 52
+            pulse = 1 + (0.25 * max(0, math.sin(t * 6)) if j == 0 else 0)
+            emoji(c, ic, rx, yy, 24 * pulse)
+            text(c, lab, rx, yy + 21, 10, "#FFFFFF", FONT_HEAD)
+        text(c, "@brainrot.daily", x0 + 14, y0 + sh - 100, 14, "#FFFFFF", FONT_HEAD, anchor="l")
+        text(c, "#brainrot #fyp 🧠💀", x0 + 14, y0 + sh - 78, 12, "#FFFFFF", FONT_BOLD, anchor="l")
+        rrect(c, x0, y0 + sh - 52, sw, 52, 0); fill(c, "#000000")                   # Navigationsleiste
+        for j, lab in enumerate(("Start", "Freunde", "", "Postf.", "Profil")):
+            nx = x0 + 22 + j * (sw - 44) / 4
+            if j == 2:
+                rrect(c, nx - 18, y0 + sh - 44, 36, 24, 7); fill(c, "#FFFFFF")
+                rrect(c, nx - 18, y0 + sh - 44, 6, 24, 3); fill(c, "#25F4EE")
+                rrect(c, nx + 12, y0 + sh - 44, 6, 24, 3); fill(c, "#FE2C55")
+                text(c, "+", nx, y0 + sh - 33, 20, "#000000", FONT_HEAD)
+            else:
+                text(c, lab, nx, y0 + sh - 30, 10, "#FFFFFF", FONT_HEAD, alpha=1 if j == 0 else 0.65)
+        if t - t_tok < 1.6:                                                    # "Verbunden mit Janas iPhone"
+            a = clamp((1.6 - (t - t_tok)) / 0.3)
+            rrect(c, x0 + 14, y0 + 92, sw - 28, 52, 14); src(c, "#1C1C1E", 0.92 * a); c.fill()
+            text(c, "🔗 Hotspot verbunden", x0 + sw / 2, y0 + 109, 13, "#30D158", FONT_HEAD, alpha=a)
+            text(c, "„Janas iPhone“", x0 + sw / 2, y0 + 129, 13, "#FFFFFF", FONT_HEAD, alpha=a)
+    rrect(c, x0 + sw / 2 - 40, y0 + sh - 10, 80, 4, 2); src(c, "#FFFFFF" if mode != "data" else "#000000", 0.8); c.fill()
+    rrect(c, x0 + sw / 2 - 44, y0 + 10, 88, 24, 12); fill(c, "#000000")           # Dynamic Island
+    c.arc(x0 + sw / 2 + 28, y0 + 22, 5, 0, 2 * math.pi); src(c, "#1A2236"); c.fill()
+    gl = cairo.LinearGradient(0, 0, sw, sh)                                     # Glas-Spiegelung
+    gl.add_color_stop_rgba(0, 1, 1, 1, 0.16); gl.add_color_stop_rgba(0.35, 1, 1, 1, 0.0)
+    gl.add_color_stop_rgba(0.36, 1, 1, 1, 0.07); gl.add_color_stop_rgba(0.5, 1, 1, 1, 0.0)
+    c.rectangle(x0, y0, sw, sh); c.set_source(gl); c.fill()
+    c.restore()
+    rrect(c, 0.5, 0.5, w - 1, h - 1, R); c.set_line_width(1.5); src(c, "#8C8D94", 0.8); c.stroke()
+    c.restore()
+
+
 def sc_hotspot(c, S):
     t, a1 = S.t, S.at(1)
     s = pop(t, S.at(0, 0.0))
@@ -354,23 +452,9 @@ def sc_hotspot(c, S):
     t_leer = a1 + 0.3 + max(1.0, S.S.durs[1] * 0.6)
     c.save(); box_move(c, W / 2, 710, t, "rumble", t_leer)
     scaled(c, W / 2, 710, s, bahn)
-    # Alex' Handy (links)
-    x0, y0, w, h = phone(c, 300, 790, 300, 440, pop(t, S.at(0, 0.2)), screen="#FFFFFF" if t < a1 else "#111114",
-                         rot=-0.05)
-    if t < a1:
-        text(c, "Datenvolumen", 300, y0 + 90, 30, INK, FONT_HEAD)
-        k = clamp((t - S.at(0, 0.4)) / 1.0)
-        rrect(c, x0 + 25, y0 + 125, w - 50, 40, 12); fill(c, "#EEF0F4")
-        rrect(c, x0 + 25, y0 + 125, max(2, (w - 50) * 0.3 * (1 - k)), 40, 12); fill(c, "#E23B3B")
-        text(c, "0 MB 🪫" if k >= 1 else f"{int(300 * (1 - k))} MB", 300, y0 + 215, 46, "#E23B3B", FONT_HEAD)
-        text(c, "WIE IMMER", 300, y0 + 285, 30, "#555A66", FONT_HEAD, alpha=k)
-    else:
-        text(c, "📶 Janas iPhone ✅", 300, y0 + 60, 24, "#2FD16B", FONT_HEAD)
-        text(c, "TikTok · Brainrot 🧠", 300, y0 + 110, 26, "#FFFFFF", FONT_HEAD)
-        brainrot_feed(c, t, a1 + 0.2, x0 + 14, y0 + 135, w - 28, h - 150)
-        for i in range(5):
-            uu = (t * 0.8 + i / 5) % 1
-            emoji(c, "❤️", x0 + w - 30, y0 + h - 30 - uu * 200, 30, alpha=1 - uu)
+    # Alex' Handy (links) – realistisches Smartphone
+    real_phone(c, t, 300, 775, pop(t, S.at(0, 0.2)), -0.05, "data" if t < a1 else "tiktok",
+               k_data=clamp((t - S.at(0, 0.4)) / 1.0), t_tok=a1 + 0.2)
     # Jana (rechts) mit ihrem Handy
     jana_expr = "angry" if t > a1 + S.S.durs[1] * 0.6 else "neutral"
     person(c, 770, 1030, 420, JANA, t, jana_expr, bob=False, name="Jana", blink_seed=7)
