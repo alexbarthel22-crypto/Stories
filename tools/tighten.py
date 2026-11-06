@@ -13,9 +13,11 @@ import importlib.util
 _sp = importlib.util.spec_from_file_location("script", os.path.join(ep, "script.py"))
 _script = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_script)
 LINE_TEMPO = getattr(_script, "LINE_TEMPO", {})
+LINE_MAXPAUSE = getattr(_script, "LINE_MAXPAUSE", {})   # {"what_1": 0.06} -> Pausen in dieser Zeile kürzer
 
 def process(f):
     tempo_ = LINE_TEMPO.get(os.path.basename(f)[:-4], tempo)
+    maxp_ = LINE_MAXPAUSE.get(os.path.basename(f)[:-4], maxp)
     orig = f[:-4] + ".orig.wav"
     if not os.path.exists(orig):
         shutil.copy(f, orig)
@@ -31,9 +33,9 @@ def process(f):
             while j < len(quiet) and quiet[j]:
                 j += 1
             n = j - i
-            if n * 0.01 > maxp:
-                cut0 = (i + int(maxp / 2 / 0.01)) * hop
-                cut1 = (j - int(maxp / 2 / 0.01)) * hop
+            if n * 0.01 > maxp_:
+                cut0 = (i + int(maxp_ / 2 / 0.01)) * hop
+                cut1 = (j - int(maxp_ / 2 / 0.01)) * hop
                 keep[cut0:cut1] = False
             i = j
         else:

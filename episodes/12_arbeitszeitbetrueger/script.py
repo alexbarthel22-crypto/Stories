@@ -13,7 +13,7 @@ BUBBLE_SCALE = 1.2
 INTRO_SFX_GAIN = 3.4   # Reveal-Effekt
 REVEAL_TAIL = (0.28, 0.0)   # Hintergrundstimme im Original-Reveal entfernt, Knall bleibt
 INTRO_TICK_GAIN = 6.0  # Auswahl-Klicks extra laut
-REACTIONS = {"stamp": ["⏰", "🥐", "🚩"], "meeting": ["📵", "😴", "🚩"], "toilet": ["🚽", "📱", "🚩"],
+REACTIONS = {"stamp": ["⏰", "😴", "🚩"], "meeting": ["📵", "😴", "🚩"], "toilet": ["🚽", "📱", "🚩"],
              "mouse": ["🖱️", "💇", "🚩"], "mail": ["📧", "🌙", "🚩"]}
 
 ROLE = "EIN ARBEITSZEIT-BETRÜGER."
@@ -61,9 +61,9 @@ SCENES = [
     dict(id="motto", bg="#2FA36B", clock=None, title="SEIN MOTTO", dark=True, lines=[
         ("Sein Motto: Hauptsache, der Status ist grün.", None),
     ]),
-    dict(id="stamp", bg="#E9A23B", clock="08:00", title="EINSTEMPELN", lines=[
-        ("Acht Uhr. Alex stempelt pünktlich ein.", None),
-        ("Und dann geht er erst mal frühstücken. Eine Stunde.", None),
+    dict(id="stamp", bg="#E9A23B", clock="06:00", title="EINSTEMPELN", lines=[
+        ("Sechs Uhr. Alex stempelt pünktlich ein.", None),
+        ("Und dann schläft er erst mal zwei Stunden. Status: rot. Beschäftigt.", None),
     ]),
     dict(id="meeting", bg="#5B6BC9", clock="10:00", title="TEAMS-MEETING", lines=[
         ("Zehn Uhr, Meeting. Kamera aus, Mikro aus.", None),
@@ -71,8 +71,8 @@ SCENES = [
         ("Der Chef fragt: Alex, was meinst du? Und Alex sagt: Sorry, ich hatte kurz Netzprobleme.", None),
     ]),
     dict(id="toilet", bg="#36B5C2", clock="12:00", title="DIE PAUSE", lines=[
-        ("Mittags geht er aufs Klo. Für fünfundzwanzig Minuten.", None),
-        ("Mit Handy. Er ist jetzt Level dreihundert.", None),
+        ("Mittags geht er aufs Klo. Für fünfundvierzig Minuten.", None),
+        ("Mit Handy. Candy Crash, Level dreihundert.", None),
     ]),
     dict(id="mouse", bg="#8E5BE0", clock="15:00", title="DIE MAUS", dark=True, lines=[
         ("Nachmittags bewegt sich seine Maus von ganz allein.", None),
@@ -87,7 +87,7 @@ SCENES = [
         ("Sein Status ist immer grün.", None),
         ("Er hat ständig Netzprobleme.", None),
         ("Bei allem sagt er: Ich nehm das mal mit.", None),
-        ("Und er tippt am schnellsten, wenn der Chef vorbeikommt.", None),
+        ("Und er ist die Hälfte der Arbeitszeit auf dem Klo.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du auch einen Arbeitszeitbetrüger? Markier sie oder ihn!", None),
@@ -96,11 +96,14 @@ SCENES = [
 ]
 
 # Nur für die Stimme: "Aleks" geschrieben -> deutsches A statt englischem "Äläx"
-GEMINI_LINE_TEXT = {"stamp_0": "Acht Uhr. Aleks stempelt pünktlich ein.",
+GEMINI_LINE_TEXT = {"stamp_0": "Sechs Uhr. Aleks stempelt pünktlich ein.",
+                    "mouse_1": "Status: grün. Aleks: beim Friseur.",
                     "meeting_2": "Der Chef fragt: Aleks, was meinst du? Und Aleks sagt: Sorry, ich hatte kurz Netzprobleme."}
 _ALEX = "; den Namen deutsch aussprechen: A-leks mit offenem A wie in 'Alexander', niemals englisch 'Äläx'; kein Lachen"
 GEMINI_LINE_MOOD = {"stamp_0": "gut gelaunt" + _ALEX,
+                    "mouse_1": "trocken, kurze Pointe" + _ALEX,
                     "meeting_2": "erst den Chef ernst nachmachen, dann Alex gespielt unschuldig" + _ALEX}
 
 # Verkündung und Aufzählung zügig
-LINE_TEMPO = {"intro_role": 1.2, "signs_0": 1.2, "signs_1": 1.22, "signs_2": 1.22, "signs_3": 1.22, "signs_4": 1.18}
+LINE_MAXPAUSE = {"what_1": 0.06}   # keine lange Kunstpause vor "40 Minuten"
+LINE_TEMPO = {"what_1": 1.12, "intro_role": 1.2, "signs_0": 1.2, "signs_1": 1.22, "signs_2": 1.22, "signs_3": 1.22, "signs_4": 1.18}
