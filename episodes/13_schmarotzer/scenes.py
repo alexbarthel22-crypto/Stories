@@ -344,11 +344,11 @@ def sc_hotspot(c, S):
         text(c, "WIE IMMER", 300, y0 + 285, 30, "#555A66", FONT_HEAD, alpha=k)
     else:
         text(c, "📶 Janas iPhone ✅", 300, y0 + 60, 24, "#2FD16B", FONT_HEAD)
-        text(c, "TikTok · HD", 300, y0 + 110, 32, "#FFFFFF", FONT_HEAD)
+        text(c, "TikTok · Brainrot 🧠", 300, y0 + 110, 26, "#FFFFFF", FONT_HEAD)
         for i in range(5):
             uu = (t * 0.8 + i / 5) % 1
             emoji(c, "❤️", x0 + w - 40, y0 + h - 40 - uu * 200, 30, alpha=1 - uu)
-        emoji(c, "🕺", 290, y0 + 220 + math.sin(t * 8) * 10, 90, rot=math.sin(t * 6) * 0.2)
+        emoji(c, "🫠" if int(t * 2) % 2 else "🤪", 290, y0 + 220 + math.sin(t * 8) * 10, 90, rot=math.sin(t * 6) * 0.2)
     # Jana (rechts) mit ihrem Handy
     jana_expr = "angry" if t > a1 + S.S.durs[1] * 0.6 else "neutral"
     person(c, 770, 1030, 420, JANA, t, jana_expr, bob=False, name="Jana", blink_seed=7)
@@ -464,8 +464,12 @@ def sc_food(c, S):
 
 
 def sc_party(c, S):
-    t, a1 = S.t, S.at(1)
+    t, a1, a2 = S.t, S.at(1), S.at(2)
     s = pop(t, S.at(0, 0.0))
+    # Einrichtung, die Alex heimlich mitgehen lässt: (emoji, x, y im Raum, size)
+    loot = [("🪴", 120, 930, 80), ("🖼️", 800, 620, 80), ("🪩", 600, 625, 70)]
+    def gone_k(i):
+        return clamp((t - a2 - 0.3 - i * 0.45) / 0.35) if t > a2 else 0
     def room():
         rrect(c, 70, 390, 940, 640, 30); fill(c, "#F3EAFE")
         rrect(c, 70, 390, 940, 640, 30); c.set_line_width(6); src(c, INK); c.stroke()
@@ -480,6 +484,17 @@ def sc_party(c, S):
         rrect(c, 470, 800, 480, 200, 16); fill(c, "#FFFFFF")
         rrect(c, 470, 800, 480, 200, 16); c.set_line_width(5); src(c, INK); c.stroke()
         text(c, "BUFFET", 710, 830, 30, INK, FONT_HEAD)
+        for i, (e, x, y, sz) in enumerate(loot):
+            g = gone_k(i)
+            if i == 2:                                        # Discokugel hängt an einer Schnur
+                c.move_to(x, 548); c.line_to(x, y - 30); c.set_line_width(3); src(c, INK, 1 - g); c.stroke()
+            if g < 1:
+                emoji(c, e, x, y + (math.sin(t * 2) * 4 if i == 2 else 0), sz * (1 - g), rot=(t * 2 if i == 2 else 0))
+            if 0 < g < 1 or (t > a2 and 1 <= g and (t - a2 - 0.65 - i * 0.45) < 0.4):
+                emoji(c, "💨", x, y, 70, alpha=1 - g * 0.5)
+            if g >= 1:                                        # leerer Umriss, wo es mal war
+                c.save(); c.set_dash([10, 8]); rrect(c, x - sz / 2, y - sz / 2, sz, sz, 10)
+                c.set_line_width(3); src(c, "#7A3FA8", 0.6); c.stroke(); c.restore()
         k = clamp((t - a1 - 0.2) / 1.5) if t > a1 else 0
         food = ["🍗", "🥗", "🍝", "🎂", "🥨", "🍰"]
         for i, e in enumerate(food):
@@ -492,7 +507,7 @@ def sc_party(c, S):
     if t > S.at(0, 0.4):
         tag(c, 300, 1060, "WER IST SVEN? 🤷", "#7A3FA8", s=pop(t, S.at(0, 0.4)))
     box_fx(c, t, 0.2, W / 2, 710, 940, 640, "party")
-    alex_bottom(c, S, "happy", "idle")
+    alex_bottom(c, S, "smug" if t > a2 else "happy", "idle")
     if t > a1:                                                # Tupperdosen stapeln sich
         for i in range(3):
             ti = a1 + 0.3 + i * 0.35
@@ -505,6 +520,12 @@ def sc_party(c, S):
                     emoji(c, ["🍗", "🍝", "🍰"][i], 795, y + 36, 40)
                 scaled(c, 795, 1420 - i * 70, pop(t, ti), box)
         tag(c, 795, 1150, "3 DOSEN 🥡", "#E23B3B", s=pop(t, a1 + 1.4))
+    if t > a2:
+        for i, (e, x, y, sz) in enumerate(loot):
+            ti = a2 + 0.3 + i * 0.45 + 0.35
+            if t > ti:
+                emoji(c, e, 250, 1460 - i * 110 + math.sin(t * 3 + i) * 4, 100 * pop(t, ti), rot=0.1 * math.sin(t * 2 + i))
+        tag(c, 260, 1150, "PSST 🤫", "#2B2F3A", s=pop(t, a2 + 0.4))
 
 
 def sc_signs(c, S):

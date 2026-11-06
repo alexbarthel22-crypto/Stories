@@ -28,7 +28,7 @@ MOODS = {
     "hotspot": "beiläufig, dann trocken und amüsiert, die Pointe mit Jana trocken",
     "stream": "ungläubig amüsiert, die Pointe trocken",
     "food": "erst genießerisch, dann trocken, am Ende frech",
-    "party": "fröhlich, dann trocken",
+    "party": "fröhlich, dann trocken, am Ende verschwörerisch leise und frech",
     "signs": "energisch und zügig wie ein Countdown, jedes Anzeichen mit Nachdruck",
     "outro": "freundlich, aufgedreht, direkt an die Zuschauer, auffordernd",
 }
@@ -62,7 +62,7 @@ SCENES = [
     ]),
     dict(id="hotspot", bg="#36B5C2", clock="08:00", title="DER HOTSPOT", lines=[
         ("Acht Uhr, in der Bahn. Sein Datenvolumen ist leer. Wie immer.", None),
-        ("Also hängt er in Janas Hotspot und schaut TikTok in HD. Jana hat jetzt kein Datenvolumen mehr.", None),
+        ("Also hängt er in Janas Hotspot und schaut Brainrot-Videos auf TikTok. Jana hat jetzt kein Datenvolumen mehr.", None),
     ]),
     dict(id="stream", bg="#5B6BC9", clock="11:00", title="SERIEN-MARATHON", dark=True, lines=[
         ("Elf Uhr. Serien gucken. Mit dem Account seiner Ex. Seit drei Jahren.", None),
@@ -76,6 +76,7 @@ SCENES = [
     dict(id="party", bg="#8E5BE0", clock="19:00", title="GEBURTSTAG", dark=True, lines=[
         ("Abends Geburtstag. Er kennt das Geburtstagskind nicht mal.", None),
         ("Aber nach Hause geht er mit drei vollen Tupperdosen.", None),
+        ("Und heimlich nimmt er noch Svens Pflanze, das Bild und die Discokugel mit.", None),
     ]),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen Schmarotzer erkennst:", None),
