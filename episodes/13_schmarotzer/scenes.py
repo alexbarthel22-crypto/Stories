@@ -194,6 +194,34 @@ def clock_face(c, x, y, r, hours, minutes):
 
 
 # ---------------------------------------------------------------- Szenen
+def box_move(c, cx, cy, t, kind, t0=0.0):
+    """Bewegung der großen Box (vorher c.save(), danach c.restore()).
+    wobble: sanftes Wackeln · rumble: Bahn-Vibration · bounce: Party-Beat · shake: hartes Rütteln ab t0 · chomp: Puls"""
+    dx = dy = rot = 0.0; sc = 1.0
+    if kind == "wobble":
+        rot = 0.018 * math.sin(t * 3.2); sc = 1 + 0.012 * math.sin(t * 2.1)
+    elif kind == "rumble":
+        dx = 3 * math.sin(t * 37); dy = 4 * math.sin(t * 23) * abs(math.sin(t * 1.7))
+    elif kind == "bounce":
+        b = abs(math.sin(t * math.pi * 2.0)); sc = 1 + 0.025 * b; rot = 0.02 * math.sin(t * math.pi)
+    elif kind == "chomp":
+        sc = 1 + 0.03 * max(0, math.sin(t * 9)); rot = 0.012 * math.sin(t * 4.5)
+    elif kind == "flicker":
+        dx = (4 if int(t * 14) % 7 == 0 else 0)
+    if kind == "shake" or (t0 and t > t0):
+        u = t - t0
+        if 0 <= u < 0.6:
+            amp = 14 * (1 - u / 0.6); dx += amp * math.sin(u * 70); rot += 0.025 * (1 - u / 0.6) * math.sin(u * 55)
+    c.translate(cx + dx, cy + dy); c.rotate(rot); c.scale(sc, sc); c.translate(-cx, -cy)
+
+
+def box_flash(c, x, y, w, h, t, t0, col="#FFFFFF", d=0.35):
+    """Kurzes Aufblitzen über der Box."""
+    if t0 <= t < t0 + d:
+        a = 0.75 * (1 - (t - t0) / d)
+        rrect(c, x - w / 2, y - h / 2, w, h, 30); src(c, col, a); c.fill()
+
+
 def money_rain(c, t, t0, x, y, w, n=10):
     if t < t0:
         return
@@ -207,7 +235,7 @@ def sc_what(c, S):
     t, a1 = S.t, S.at(1)
     s = pop(t, S.at(0, 0.0))
     def card_():
-        card(c, W / 2, 700, 980, 620, 1)
+        card(c, W / 2, 720, 980, 660, 1)
         text(c, "WER HAT BEZAHLT?", W / 2, 445, 46, INK, FONT_HEAD)
         k = clamp((t - S.at(0, 0.3)) / 1.6)
         rows = [("ALEX", 0.0, "#E23B3B"), ("FREUNDE", 1.0, "#2FA36B")]
@@ -221,12 +249,21 @@ def sc_what(c, S):
             text(c, val, 660, y + 40, 42, INK if f == 0 else "#FFFFFF", FONT_HEAD)
         if t > a1:
             def wal():
-                emoji(c, "💳", 200, 870, 80, rot=math.sin(t * 4) * 0.15)
-                text(c, "Karte: vergessen", 260, 870, 38, "#E23B3B", FONT_HEAD, anchor="l")
-                emoji(c, "📱", 200, 950, 80, rot=-math.sin(t * 4) * 0.15)
-                text(c, "Handy-Pay: geht „nie“", 260, 950, 38, "#E23B3B", FONT_HEAD, anchor="l")
+                for i, (ic, lab, col) in enumerate((("💳", "Karte: vergessen", "#E23B3B"),
+                                                    ("📱", "Handy-Pay: geht „nie“", "#D9762B"))):
+                    yy = 870 + i * 82
+                    pl = 1 + 0.04 * math.sin(t * 6 + i * 1.5)
+                    def pill_(yy=yy, ic=ic, lab=lab, col=col, i=i):
+                        rrect(c, 120, yy - 34, 840, 68, 34); fill(c, col)
+                        rrect(c, 120, yy - 34, 840, 68, 34); c.set_line_width(4); src(c, INK); c.stroke()
+                        emoji(c, ic, 175, yy, 52, rot=math.sin(t * 4 + i) * 0.2)
+                        text(c, lab, 225, yy, 40, "#FFFFFF", FONT_HEAD, anchor="l")
+                    scaled(c, W / 2, yy, pl, pill_)
             scaled(c, W / 2, 910, pop(t, a1 + 0.1), wal)
+    c.save(); box_move(c, W / 2, 700, t, "wobble", a1)
     scaled(c, W / 2, 700, s, card_)
+    box_flash(c, W / 2, 700, 980, 620, t, a1, "#FFE14D")
+    c.restore()
     money_rain(c, t, S.at(0, 0.6), 760, 600, 340, 6)
     alex_bottom(c, S, "smug", "hips")
 
@@ -266,7 +303,9 @@ def sc_motto(c, S):
         tag(c, 215, 560, "zahlt 12 € 💸", "#555A66", s=1)
         tag(c, 865, 560, "zahlt 12 € 💸", "#555A66", s=1)
         tag(c, cx, 935, f"ALEX ISST: {gone}/8 🍕 · ZAHLT: 0 €", "#E23B3B", s=1)
+    c.save(); box_move(c, W / 2, 700, t, "chomp" if gone else "wobble", d0 + 0.4 + span * 4 / 7)
     scaled(c, W / 2, 700, s, pizza)
+    c.restore()
     if gone >= 4:
         box_fx(c, t, d0 + 0.4 + span * 4 / 7, W / 2, 700, 960, 640, "anger")
     alex_bottom(c, S, "happy", "hips", "🍕" if gone else None)
@@ -290,6 +329,8 @@ def sc_hotspot(c, S):
                     emoji(c, "🌳", tx, 500, 46)
             rrect(c, x, 420, 240, 120, 16); c.set_line_width(5); src(c, INK); c.stroke()
         text(c, "🚆 S-BAHN", 540, 575, 30, "#2B5C66", FONT_HEAD)
+    t_leer = a1 + 0.3 + max(1.0, S.S.durs[1] * 0.6)
+    c.save(); box_move(c, W / 2, 710, t, "rumble", t_leer)
     scaled(c, W / 2, 710, s, bahn)
     # Alex' Handy (links)
     x0, y0, w, h = phone(c, 300, 790, 300, 440, pop(t, S.at(0, 0.2)), screen="#FFFFFF" if t < a1 else "#111114",
@@ -327,7 +368,10 @@ def sc_hotspot(c, S):
             uu = (t * 1.2 + i / 6) % 1
             emoji(c, "📶", 640 - uu * 250, 700 + math.sin(uu * 6) * 30, 40, alpha=(1 - uu) * (1 - k * 0.5))
         if k >= 1:
-            box_fx(c, t, a1 + 0.3 + max(1.0, S.S.durs[1] * 0.6), W / 2, 710, 940, 640, "anger")
+            box_flash(c, W / 2, 710, 940, 640, t, t_leer, "#FF3B3B")
+    c.restore()
+    if t > a1 and t > t_leer:
+        box_fx(c, t, t_leer, W / 2, 710, 940, 640, "anger")
     alex_bottom(c, S, "smug" if t > a1 else "neutral", "idle")
 
 
@@ -367,7 +411,13 @@ def sc_stream(c, S):
             pw = ["jana123", "Jana1234!", "JanaNeu99", "N1ch7Al3x", "AlexRaus!!"][n - 1]
             rrect(c, 260, 800, 560, 90, 16); fill(c, "#2A2A33")
             text(c, "🔑 " + pw, W / 2, 845, 42, "#FFE14D", FONT_HEAD)
+    kk = clamp((t - a1 - 0.2) / max(0.8, S.S.durs[1] * 0.8)) if t > a1 else -1
+    t_pw = a1 + 0.2 + (min(4, int(5 * kk)) / 5) * max(0.8, S.S.durs[1] * 0.8) if t > a1 else 0
+    c.save(); box_move(c, W / 2, 680, t, "flicker", t_pw)
     scaled(c, W / 2, 680, s, tv)
+    if t > a1:
+        box_flash(c, W / 2, 680, 920, 560, t, t_pw, "#FFE14D", 0.25)
+    c.restore()
     if t < a1:
         for i in range(4):
             rr = random.Random(i); uu = (t * 0.5 + rr.random()) % 1
@@ -399,7 +449,10 @@ def sc_food(c, S):
                 c.move_to(330, 625); c.line_to(750, 625); c.set_line_width(3); src(c, INK); c.stroke()
                 text(c, "÷ 4 = je 44,35 € 😇", W / 2, 675, 40, "#2E7D4F", FONT_HEAD)
             scaled(c, W / 2, 580, pop(t, a2 + 0.2), bill, rot=math.sin(t * 2) * 0.02)
+    c.save(); box_move(c, W / 2, 710, t, "wobble", a2 + 0.2)
     scaled(c, W / 2, 710, s, table)
+    box_flash(c, W / 2, 710, 940, 640, t, a2 + 0.2, "#FFFFFF")
+    c.restore()
     # Alex' Bestellung wächst auf dem Tisch (vorne)
     items = [("🥩", 0.15), ("🍤", 0.35), ("🍹", 0.55), ("🍹", 0.7), ("🍹", 0.85)]
     for i, (e, f) in enumerate(items):
@@ -432,7 +485,10 @@ def sc_party(c, S):
         for i, e in enumerate(food):
             if i < int(6 * (1 - k) + 0.999):
                 emoji(c, e, 530 + i * 75, 920, 60)
+    c.save(); box_move(c, W / 2, 710, t, "bounce", a1 + 0.3)
     scaled(c, W / 2, 710, s, room)
+    box_flash(c, W / 2, 710, 940, 640, t, a1 + 0.3, "#FFE14D")
+    c.restore()
     if t > S.at(0, 0.4):
         tag(c, 300, 1060, "WER IST SVEN? 🤷", "#7A3FA8", s=pop(t, S.at(0, 0.4)))
     box_fx(c, t, 0.2, W / 2, 710, 940, 640, "party")
