@@ -12,7 +12,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "engine"))
 from toolkit import *  # noqa
 from toolkit import _shade
-from fx3d import BCanvas, pill3d, pop_pill, burst, karaoke
+from fx3d import BCanvas, pill3d, burst, karaoke
+from fx3d import pop_pill as _pop_pill
 from people import Look, draw_char, talk_arm
 from money import note_sprite, coin_sprite, paste_sprite
 
@@ -64,6 +65,38 @@ def wt(key, word, frac=0.3):
 
 
 # ------------------------------------------------------------------ helpers
+def pop_pill(img, t, t0, cx, cy, text, size, **kw):
+    _pop_pill(img, t, t0, cx, cy, text, int(size * 1.15), **kw)
+
+
+def ftext(cv, x, y, txt, size, max_w, col, anchor="mm"):
+    """text that always fits into max_w (world units)"""
+    while font(int(size)).getbbox(txt)[2] > max_w and size > 8:
+        size *= 0.95
+    cv.text(x, y, txt, size, col, anchor=anchor)
+
+
+def toon_note(cv, x, y, s, rot, flip):
+    """animated cartoon banknote that flutters (flip = 3D turn)"""
+    c, sn = math.cos(rot), math.sin(rot)
+    k = 0.25 + 0.75 * abs(math.cos(flip))
+    front = math.cos(flip) > 0
+    col = hexc("#7bd389") if front else hexc("#5fb872")
+
+    def P(px, py):
+        px *= k
+        return (x + (px * c - py * sn) * 64 * s, y + (px * sn + py * c) * 64 * s)
+    cv.poly([P(-1, -0.52), P(1, -0.52), P(1, 0.52), P(-1, 0.52)], fill=hexc("#3e9a57"))
+    cv.poly([P(-0.94, -0.44), P(0.94, -0.44), P(0.94, 0.44), P(-0.94, 0.44)], fill=col)
+    if front and k > 0.5:
+        cx, cy = P(0, 0)
+        cv.circle(cx, cy, 20 * s * k, fill=hexc("#3e9a57"))
+        cv.text(cx, cy + 1, "€", 26 * s * k, hexc("#d9f5df"))
+        for sx_ in (-0.7, 0.7):
+            px, py = P(sx_, 0)
+            cv.circle(px, py, 7 * s * k, fill=hexc("#a5e3b2"))
+
+
 def money(v):
     return f"{v:,.0f}".replace(",", ".") + " €"
 
@@ -792,13 +825,13 @@ def option_card(img, cx, cy, sc, kind, t):
     if kind == "million":
         for i in range(5):
             banknote(cv, w / 2 - 40 + i * 20, 175 - i * 10, 2.2, -0.25 + i * 0.12, value=(200, 100, 100, 200, 100)[i])
-        cv.text(w / 2, 320, "1.000.000 €", 66, hexc("#ffffff"))
+        ftext(cv, w / 2, 320, "1.000.000 €", 66, w - 50, hexc("#ffffff"))
         cv.rect(w / 2 - 120, 370, w / 2 + 120, 440, fill=hexc("#ffd34d"), r=30)
         cv.text(w / 2, 406, "SOFORT", 44, INK)
     else:
         coin(cv, w / 2 - 80, 160, 75, 0.35 * math.sin(t * 2))
         stopwatch(cv, w / 2 + 95, 175, 62, t * 0.8)
-        cv.text(w / 2, 300, "1 CENT / SEK.", 56, hexc("#ffffff"))
+        ftext(cv, w / 2, 300, "1 CENT / SEK.", 56, w - 50, hexc("#ffffff"))
         cv.rect(w / 2 - 140, 370, w / 2 + 140, 440, fill=hexc("#ffd34d"), r=30)
         cv.text(w / 2, 406, "1 JAHR LANG", 42, INK)
     tile = tile.resize((int(tile.width * sc / Z), int(tile.height * sc / Z)), Image.LANCZOS)
@@ -806,10 +839,11 @@ def option_card(img, cx, cy, sc, kind, t):
     log_ui("card " + kind, cx - w / 2 * sc, cy - h / 2 * sc, cx + w / 2 * sc, cy + h / 2 * sc)
 
 
-HOOK = [(["EINE", "MILLION", "EURO"], "#ffd34d", "#2b2140", -2, 100),
-        (["SOFORT", "–", "ODER"], "#fff6e6", "#2b2140", 2, 96),
-        (["1 CENT", "PRO", "SEKUNDE,"], "#fff6e6", "#2b2140", -2, 96),
-        (["EIN", "GANZES", "JAHR", "LANG?"], "#e2574c", "#ffffff", 2, 96)]
+HOOK = [(["EINE", "MILLION"], "#ffd34d", "#2b2140", -3, 132),
+        (["EURO", "SOFORT"], "#ffd34d", "#2b2140", 2, 128),
+        (["ODER", "1 CENT"], "#fff6e6", "#2b2140", -2, 124),
+        (["PRO", "SEKUNDE,"], "#fff6e6", "#2b2140", 2, 120),
+        (["EIN", "GANZES", "JAHR", "LANG?"], "#e2574c", "#ffffff", -2, 104)]
 
 
 def sc_hook(t):
@@ -823,13 +857,13 @@ def sc_hook(t):
         img = Image.blend(img, Image.new("RGB", img.size, (255, 250, 230)), 0.4 * (1 - t / 0.15))
     c1 = ease_out_back(prog(t, wt("Eine Million", "Million") - 0.1, wt("Eine Million", "Million") + 0.2))
     c2 = ease_out_back(prog(t, wt("Eine Million", "Cent") - 0.1, wt("Eine Million", "Cent") + 0.2))
-    option_card(img, 318, 1200, 0.74 * c1, "million", t)
-    option_card(img, 752, 1200, 0.74 * c2, "cent", t)
+    option_card(img, 318, 1290, 0.66 * c1, "million", t)
+    option_card(img, 752, 1290, 0.66 * c2, "cent", t)
     if c2 > 0.3:
         vs = ease_out_back(prog(t, wt("Eine Million", "Cent") + 0.1, wt("Eine Million", "Cent") + 0.4))
-        burst(img, 540, 1200, 0.6 * vs, t, 60, 170, (255, 255, 255), 12)
-        pill3d(img, 535, 1200, "VS", 60, bg="#1d1b33", fg="#ffd34d", scale=vs, rot=-6)
-    karaoke(img, t, HOOK, t0, t1, [380, 525, 670, 815], pop_k=0.55, first_pop=False)
+        burst(img, 540, 1290, 0.6 * vs, t, 60, 170, (255, 255, 255), 12)
+        pill3d(img, 535, 1290, "VS", 60, bg="#1d1b33", fg="#ffd34d", scale=vs, rot=-6)
+    karaoke(img, t, HOOK, t0, t1, [340, 505, 665, 820, 975], pop_k=0.5, first_pop=False, stagger=0.06)
     return img
 
 
@@ -891,7 +925,7 @@ def sc_roof(t):
                 rng = np.random.default_rng(i)
                 x = ROOF_L + rng.uniform(-260, 260)
                 y = 700 + ((t - a2) * 380 + rng.uniform(0, 500)) % 800
-                banknote(cv, x, y, 0.8, math.sin(t * 3 + i))
+                toon_note(cv, x, y, 1.0, 0.5 * math.sin(t * 3 + i), t * (5 + i % 4) + i)
 
     img, box = stage("fair", cam, act, t)
     pop_pill(img, t, a1 + 0.1, 540, 330, "LEON", 70, t1=a2 - 0.1, bg="#ff7a2f", fg="#ffffff", rot=-3)
@@ -1190,13 +1224,13 @@ def sc_yacht(t):
             leon(cv, x + 40 * s, y - 230 * s, 230 * s, 1, t=t, shades=True, chain=True, arms_up=0.8)
 
         def screen(cv2, px, py, s):
-            cv2.text(px, py - 200 * s, "YACHT-URLAUB", 30 * s, INK)
+            ftext(cv2, px, py - 200 * s, "YACHT-URLAUB", 30 * s, 230 * s, INK)
             cv2.rect(px - 110 * s, py - 160 * s, px + 110 * s, py - 20 * s, fill=hexc("#bfe6ff"), r=16 * s)
-            cv2.text(px, py - 90 * s, "⛵" if False else "135.000 €", 34 * s, INK)
+            ftext(cv2, px, py - 90 * s, "135.000 €", 34 * s, 200 * s, INK)
             booked = t > t0 + 1.0
             cv2.rect(px - 110 * s, py + 20 * s, px + 110 * s, py + 90 * s, fill=hexc("#37b26c" if booked else "#ff7a2f"),
                      r=30 * s)
-            cv2.text(px, py + 55 * s, "GEBUCHT ✓" if booked else "BUCHEN", 30 * s, hexc("#ffffff"))
+            ftext(cv2, px, py + 55 * s, "GEBUCHT ✓" if booked else "BUCHEN", 30 * s, 200 * s, hexc("#ffffff"))
         if t < t0 + 1.4:
             ps = ease_out_back(prog(t, t0, t0 + 0.3)) * (1 - prog(t, t0 + 1.1, t0 + 1.4))
             if ps > 0.01:
@@ -1286,10 +1320,10 @@ def sc_reveal(t):
     zoom = smooth(prog(t, t0 + 0.2, t0 + 1.0))
 
     def screen(cv, px, py, s):
-        cv.text(px, py - 220 * s, "MEINE BANK", 30 * s, hexc("#6c5ce7"))
+        ftext(cv, px, py - 220 * s, "MEINE BANK", 30 * s, 230 * s, hexc("#6c5ce7"))
         cv.text(px, py - 170 * s, "KONTOSTAND", 24 * s, (120, 120, 140, 255))
         show = t > wt("Leon öffnet", "vierhundert", 0.0)
-        cv.text(px, py - 110 * s, "420.000 €" if show else "· · ·", 52 * s, hexc("#37b26c"))
+        ftext(cv, px, py - 110 * s, "420.000 €" if show else "· · ·", 46 * s, 230 * s, hexc("#37b26c"))
         for i, (n, v) in enumerate((("Auto", "-280.000"), ("Kette", "-45.000"), ("Party", "-120.000"),
                                     ("Yacht", "-135.000"))):
             yy = py - 30 * s + i * 60 * s

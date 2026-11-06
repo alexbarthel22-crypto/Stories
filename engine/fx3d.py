@@ -1,5 +1,6 @@
 """Shared 'channel look' overlays: extruded 3D text pills, karaoke title, burst, blend-correct canvas."""
 import math
+import numpy as np
 from PIL import Image, ImageDraw
 from toolkit import Canvas, font, hexc, log_ui, OUT_W, ease_out_back, prog, _shade
 
@@ -55,7 +56,8 @@ def pill_tile(words, base, bg, fg, pops=None, depth=12, Z=2, hl_col=None, pop_k=
     tw = sum(widths) + gap * (len(words) - 1)
     padx, pady = 0.42 * base, 0.24 * base
     x0, y0 = 30, 30
-    x1, y1 = x0 + tw + 2 * padx, y0 + base + 2 * pady
+    grow = base * pop_k * max(pops) if pops else 0.0
+    x1, y1 = x0 + tw + 2 * padx, y0 + base + grow + 2 * pady
     PW, PH = int(x1 + 40), int(y1 + depth + 50)
     tile = Image.new("RGBA", (PW * Z, PH * Z), (0, 0, 0, 0))
     d = ImageDraw.Draw(tile, "RGBA")
@@ -80,41 +82,114 @@ def pill_tile(words, base, bg, fg, pops=None, depth=12, Z=2, hl_col=None, pop_k=
             col = tuple(int(c0 + (c1 - c0) * min(1, pp * 1.6)) for c0, c1 in zip(hexc(bg), hl))
             d.rounded_rectangle([lx, cy - hh, rx, cy + hh], radius=int(hh), fill=col)
         col = (hexc("#ffe46b") if bg in ("#e2574c", "#1d1b33") else hexc("#d62828")) if pp > 0.3 else hexc(fg)
-        jump = -base * 0.08 * Z * pp
-        d.text((cxw + 3 * Z, cy + 4 * Z + jump), w, font=font(int(sizes[j] * Z)), fill=(0, 0, 0, 60), anchor="mm")
-        d.text((cxw, cy + jump), w, font=font(int(sizes[j] * Z)), fill=col, anchor="mm",
-               stroke_width=int(2 * Z * pp), stroke_fill=hexc("#1d1b33"))
+        jump = -base * 0.06 * Z * pp
+        fnt = font(int(sizes[j] * Z))
+        light = sum(col[:3]) > 600
+        if light:      # extruded 3D text with a dark outline (no ghosting)
+            for k in range(int(base * 0.06) + 1, 0, -1):
+                d.text((cxw, cy + jump + k * Z), w, font=fnt, fill=hexc("#1d1b33"), anchor="mm",
+                       stroke_width=int(2.5 * Z), stroke_fill=hexc("#1d1b33"))
+            d.text((cxw, cy + jump), w, font=fnt, fill=col, anchor="mm", stroke_width=int(2.5 * Z),
+                   stroke_fill=hexc("#1d1b33"))
+        else:
+            d.text((cxw, cy + jump), w, font=fnt, fill=col, anchor="mm",
+                   stroke_width=int(2 * Z * pp), stroke_fill=hexc("#1d1b33"))
         x += widths[j] + gap
     return tile, (x0, y0, x1, y1)
 
 
+def safe_half_width(cx, cy, half_h, overshoot=1.0):
+    """largest half width a centred element at (cx, cy) may have to stay out of the TikTok zones"""
+    right = 1040 if (cy + half_h < 760 or cy - half_h > 1480) else 930
+    return min(cx - 50, right - cx) / overshoot
+
+
+def _shine(tile, box, Z, p):
+    """diagonal light sweep across the pill (p = 0..1), clipped to the pill"""
+    if not (0 < p < 1):
+        return tile
+    x0, y0, x1, y1 = box
+    band = Image.new("RGBA", tile.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(band, "RGBA")
+    w = (x1 - x0)
+    cx = x0 - 0.3 * w + 1.6 * w * p
+    d.polygon([((cx - 30) * Z, y1 * Z), ((cx + 10) * Z, y0 * Z), ((cx + 60) * Z, y0 * Z), ((cx + 20) * Z, y1 * Z)],
+              fill=(255, 255, 255, 120))
+    m = Image.new("L", tile.size, 0)
+    ImageDraw.Draw(m).rounded_rectangle([x0 * Z, y0 * Z, x1 * Z, y1 * Z], radius=int((y1 - y0) / 2.6 * Z), fill=255)
+    band.putalpha(Image.fromarray((np.asarray(band.split()[3], np.uint16) * np.asarray(m, np.uint16) // 255).astype(np.uint8)))
+    tile.alpha_composite(band)
+    return tile
+
+
 def pill3d(img, cx, cy, text, size, bg="#fff6e6", fg="#2b2140", rot=0.0, scale=1.0, depth=10, max_w=860,
-           alpha=1.0):
+           alpha=1.0, sx=1.0, sy=1.0, shine=None, overshoot=1.18):
     if scale <= 0.01 or alpha <= 0.01:
         return
-    while font(size).getbbox(text)[2] + 0.84 * size > max_w and size > 24:
+    hw = safe_half_width(cx, cy, size * 0.9 * overshoot, overshoot)
+    max_w = min(max_w, 2 * hw)
+    while font(size).getbbox(text)[2] + 0.84 * size + 8 > max_w and size > 24:
         size -= 2
     tile, (x0, y0, x1, y1) = pill_tile([text], size, bg, fg, depth=depth)
+    if shine is not None:
+        tile = _shine(tile, (x0, y0, x1, y1), 2, shine)
     if rot:
         tile = tile.rotate(rot, resample=Image.BICUBIC, expand=True)
-    k = scale / 2
-    tile = tile.resize((max(1, int(tile.width * k)), max(1, int(tile.height * k))), Image.LANCZOS)
+    kx, ky = scale * sx / 2, scale * sy / 2
+    tile = tile.resize((max(1, int(tile.width * kx)), max(1, int(tile.height * ky))), Image.LANCZOS)
     if alpha < 1:
         tile.putalpha(tile.split()[3].point(lambda v: int(v * alpha)))
     img.paste(tile, (int(cx - tile.width / 2), int(cy - tile.height / 2)), tile)
     if scale > 0.6 and alpha > 0.5:
-        pw, ph = (x1 - x0) * scale, (y1 - y0 + depth) * scale
+        pw, ph = (x1 - x0) * scale * sx, (y1 - y0 + depth) * scale * sy
         log_ui("pill:" + text, cx - pw / 2, cy - ph / 2, cx + pw / 2, cy + ph / 2)
 
 
-def pop_pill(img, t, t0, cx, cy, text, size, t1=None, **kw):
-    """pill that pops in at t0 (and pops out at t1)"""
+def elastic(p):
+    if p <= 0:
+        return 0.0
+    if p >= 1:
+        return 1.0
+    return 1 + 2 ** (-10 * p) * math.sin((p * 10 - 0.75) * (2 * math.pi) / 3)
+
+
+def pop_pill(img, t, t0, cx, cy, text, size, t1=None, burst_col=None, **kw):
+    """modern pop-in: elastic scale, squash & stretch, light sweep, sparkle burst, gentle idle bob (+ pop-out at t1)"""
     if t < t0 or (t1 is not None and t > t1 + 0.2):
         return
-    sc = ease_out_back(prog(t, t0, t0 + 0.3))
+    p = prog(t, t0, t0 + 0.55)
+    sc = elastic(p)
+    st_ = math.sin(math.pi * min(1.0, p * 1.6)) * (1 - p)
+    sx, sy = 1 + 0.18 * st_, 1 - 0.15 * st_
     if t1 is not None:
         sc *= 1 - prog(t, t1, t1 + 0.2)
-    pill3d(img, cx, cy, text, size, scale=sc, **kw)
+    idle = t - t0
+    cy2 = cy + 4 * math.sin(idle * 2.4)
+    rot = kw.pop("rot", 0.0) + 0.8 * math.sin(idle * 1.9)
+    if p < 0.6:
+        sparkle(img, cx, cy2, p / 0.6, size, burst_col)
+    kw.setdefault("overshoot", 1.58)
+    pill3d(img, cx, cy2, text, size, scale=sc, sx=sx, sy=sy, rot=rot, shine=prog(t, t0 + 0.12, t0 + 0.75), **kw)
+
+
+def sparkle(img, cx, cy, p, size, col=None):
+    """little star / dot burst around a popping element"""
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay, "RGBA")
+    cols = [col or (255, 211, 77), (255, 255, 255), (255, 111, 174), (63, 167, 245)]
+    a = int(255 * (1 - p))
+    for i in range(12):
+        ang = i / 12 * 2 * math.pi + 0.3
+        r0 = size * 1.6 + size * 3.2 * p
+        x, y = cx + math.cos(ang) * r0 * 1.5, cy + math.sin(ang) * r0 * 0.55
+        rr = size * 0.09 * (1 - p * 0.6)
+        c = cols[i % 4] + (a,)
+        if i % 2:
+            d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=c)
+        else:
+            d.line([(x - rr * 1.8, y), (x + rr * 1.8, y)], fill=c, width=max(2, int(rr * 0.6)))
+            d.line([(x, y - rr * 1.8), (x, y + rr * 1.8)], fill=c, width=max(2, int(rr * 0.6)))
+    img.paste(lay, (0, 0), lay)
 
 
 def burst(img, cx, cy, a, t, r0=170, r1=430, col=(255, 222, 90), n=18):
@@ -132,8 +207,9 @@ def burst(img, cx, cy, a, t, r0=170, r1=430, col=(255, 222, 90), n=18):
     img.paste(lay, (0, 0), lay)
 
 
-def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=780, pop_k=0.28):
-    """lines: [(words, bg, fg, rot, base)]; whole sentence visible from frame 0; spoken word pops + highlight"""
+def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=900, pop_k=0.28, stagger=0.0):
+    """lines: [(words, bg, fg, rot, base)]; whole sentence visible; spoken word grows, jumps and lights up.
+    stagger>0: lines pop in one after another at the very start (still all visible within `stagger*len` s)"""
     words = [w for line, *_ in lines for w in line]
     weights = [len(w) + 2 for w in words]
     tot = sum(weights)
@@ -152,27 +228,40 @@ def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=780, pop_k=0.28):
             a_, b_ = spans[i + j]
             p = prog(t, a_ - 0.03, b_ + 0.08)
             pops.append(math.sin(math.pi * p) if 0 < p < 1 else 0.0)
+        hw = safe_half_width(OUT_W / 2, ys[li], base * 0.9 * (1 + pop_k), 1.0)
+        lim = min(max_w, 2 * hw)
         b = base
         while True:
             tile, box = pill_tile(line, b, bg, fg, pops, pop_k=pop_k)
-            if box[2] - box[0] <= max_w or b < 40:
+            if box[2] - box[0] <= lim or b < 40:
                 break
             b -= 3
         single = len(line) == 1
         sc = (1 + 0.12 * pops[0]) if single else 1.0
-        if li == 0 and first_pop:
-            sc *= 0.2 + 0.8 * ease_out_back(prog(t, t0, t0 + 0.36))
+        tl = t0 + li * stagger
+        p_in = prog(t, tl - (0.0 if stagger else 0.36), tl + 0.36) if (first_pop and li == 0) or stagger else 1.0
+        sx = sy = 1.0
+        if p_in < 1:
+            sc *= max(0.05, elastic(p_in)) if stagger else 0.2 + 0.8 * ease_out_back(p_in)
+            st_ = math.sin(math.pi * min(1.0, p_in * 1.6)) * (1 - p_in)
+            sx, sy = 1 + 0.2 * st_, 1 - 0.16 * st_
+        cap = lim / max(1.0, box[2] - box[0])
+        if sc * sx > cap:
+            sc *= cap / (sc * sx)
         if single:
             burst(frame, OUT_W / 2, ys[li], max(pops[0], 1 - prog(t, t0, t0 + 0.7)) * fade, t)
-        tile = tile.rotate(rot, resample=Image.BICUBIC, expand=True)
-        k = sc / 2
-        tile = tile.resize((max(1, int(tile.width * k)), max(1, int(tile.height * k))), Image.LANCZOS)
+        tile = _shine(tile, box, 2, prog(t, tl + 0.1, tl + 0.7))
+        tile = tile.rotate(rot + 0.6 * math.sin(t * 2 + li), resample=Image.BICUBIC, expand=True)
+        tile = tile.resize((max(1, int(tile.width * sc * sx / 2)), max(1, int(tile.height * sc * sy / 2))), Image.LANCZOS)
         if fade < 1:
             tile.putalpha(tile.split()[3].point(lambda v: int(v * fade)))
         sh = 12 * math.sin(t * 75) * pops[0] if single and pops[0] > 0.05 else 0
-        px, py = int(OUT_W / 2 - tile.width / 2 + sh), int(ys[li] - tile.height / 2)
+        yb = ys[li] + 3 * math.sin(t * 2.3 + li)
+        px, py = int(OUT_W / 2 - tile.width / 2 + sh), int(yb - tile.height / 2)
         frame.paste(tile, (px, py), tile)
-        bw, bh = (box[2] - box[0]) * sc, (box[3] - box[1] + 12) * sc
-        if fade > 0.5:
-            log_ui("karaoke " + str(li), OUT_W / 2 - bw / 2 + sh, ys[li] - bh / 2, OUT_W / 2 + bw / 2 + sh, ys[li] + bh / 2)
+        if stagger and p_in < 0.6:
+            sparkle(frame, OUT_W / 2, yb, p_in / 0.6, base * 0.8)
+        bw, bh = (box[2] - box[0]) * sc * sx, (box[3] - box[1] + 12) * sc * sy
+        if fade > 0.5 and sc > 0.6:
+            log_ui("karaoke " + str(li), OUT_W / 2 - bw / 2 + sh, yb - bh / 2, OUT_W / 2 + bw / 2 + sh, yb + bh / 2)
         i += len(line)

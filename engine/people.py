@@ -67,7 +67,7 @@ def walk_pose(ph, amount=1.0):
         th = 0.32 * math.sin(p) * amount
         kn = (0.1 + 0.6 * max(0.0, math.cos(p))) * amount   # knee bends while the leg swings forward
         legs.append((th, -kn))
-    arms = (("ang", 0.45 * s * amount, 0.35 + 0.15 * s), ("ang", -0.45 * s * amount, 0.35 - 0.15 * s))
+    arms = (("ang", 0.45 * s * amount - 0.18, 0.3 + 0.15 * s), ("ang", -0.45 * s * amount, 0.35 - 0.15 * s))
     return legs, arms
 
 
@@ -198,14 +198,14 @@ def draw_char(cv, x, y, L, h, f=1, t=0.0, arm_b=None, arm_f=None, walk=None, wal
     hb = math.sin(t * 9) * 0.012 * h * clamp(talk)               # head bob while talking
     hcx = neck[0] + f * 0.012 * h + f * math.sin(lean_a) * 0.05 * h
     hcy = sh_y - 0.105 * h - hb
-    sx_b, sx_f = sh_x - f * 0.07 * h, sh_x + f * 0.07 * h
+    sx_b, sx_f = sh_x - f * 0.088 * h, sh_x + f * 0.082 * h
     sy_ = sh_y + 0.025 * h
     la1, la2 = 0.16 * h, 0.145 * h
     aw = 0.058 * h
 
     def arm_pts(spec, sx, side):
         if spec is None:
-            spec = ("ang", -0.06 * side + 0.05 * math.sin(t * 1.3 + side), 0.22 + 0.04 * br)
+            spec = ("ang", (0.08 if side > 0 else -0.26) + 0.05 * math.sin(t * 1.3 + side), (0.22 if side > 0 else 0.12) + 0.04 * br)
         if spec[0] == "ik":
             return _ik(sx, sy_, spec[1][0], spec[1][1], la1, la2, f)
         return _chain(sx, sy_, spec[1], spec[2], la1, la2, f)
