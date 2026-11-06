@@ -411,7 +411,7 @@ def sc_toilet(c, S):
                     emoji(c, "✨", x0 + rr.uniform(30, w - 30), y0 + rr.uniform(220, h - 40), 40 * (1 - uu), alpha=1 - uu)
                 c.restore()
                 rrect(c, x0 + 10, y0 + 62, w - 20, 140, 20); src(c, "#000000", 0.45); c.fill()
-                text(c, "CANDY CRASH", 760, y0 + 102, 34, "#FF8AD8", FONT_HEAD)
+                text(c, "CANDY CRUSH", 760, y0 + 102, 34, "#FF8AD8", FONT_HEAD)
                 text(c, "LEVEL 300 🎉", 760, y0 + 160, 40, "#FFE14D", FONT_HEAD)
     scaled(c, W / 2, 700, s, stall)
     if t > a1:
@@ -516,7 +516,18 @@ def sc_mail(c, S):
         box_fx(c, t, tn, W / 2, 700, 940, 620, "shock")
     if t < a1:
         alex_bottom(c, S, "happy", "wave")
-        tag(c, W / 2, 940, "16:00 FEIERABEND 🏃", "#2FA36B", s=pop(t, S.at(0, 0.3)))
+        tag(c, W / 2, 900, "16:00 FEIERABEND 🏃", "#2FA36B", s=pop(t, S.at(0, 0.2)))
+        d0 = S.S.durs[0]
+        if t > S.at(0, 0.4):
+            tag(c, W / 2, 975, "AUSGESTEMPELT: 22:00 ⏰", "#E23B3B", s=pop(t, S.at(0, 0.4)))
+        if t > S.at(0, 0.7):                                   # Überstunden-Zähler springt hoch
+            n = min(6, 1 + int(6 * clamp((t - S.at(0, 0.7)) / max(0.4, d0 * 0.25))))
+            def ot():
+                rrect(c, 130, 1130, 300, 130, 24); fill(c, "#FFE14D")
+                rrect(c, 130, 1130, 300, 130, 24); c.set_line_width(5); src(c, INK); c.stroke()
+                text(c, "ÜBERSTUNDEN", 280, 1168, 28, INK, FONT_HEAD)
+                text(c, f"+{n} h 📈", 280, 1218, 50, "#C0392B", FONT_HEAD)
+            scaled(c, 280, 1195, pop(t, S.at(0, 0.7)) * (1 + 0.06 * math.sin(t * 8)), ot)
     else:
         alex_bottom(c, S, "smug", "hips")
 
@@ -524,7 +535,7 @@ def sc_mail(c, S):
 def sc_signs(c, S):
     t = S.t
     items = [("Status immer grün", "🟢"), ("Ständig Netzprobleme", "📶"),
-             ("„Ich nehm das mal mit“", "📝"), ("Halbe Arbeitszeit auf dem Klo", "🚽")]
+             ("„Ich nehm das mal mit“", "📝"), ("Halbe Arbeitszeit: Klo oder Rauchen", "🚬")]
     for i, (lab, ic) in enumerate(items):
         y = 400 + i * 175
         row_card(c, W / 2, y, 1000, 160, pop(t, S.at(i + 1, 0.0)), lab, ic, 40, num=i + 1, rot=(-0.02 if i % 2 else 0.02) + 0.012 * math.sin(t * 3 + i))

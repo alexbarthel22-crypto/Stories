@@ -29,7 +29,7 @@ MOODS = {
     "meeting": "erst sachlich, dann flüsternd verschwörerisch, am Ende gespielt unschuldig",
     "toilet": "trocken und ungläubig amüsiert",
     "mouse": "spannend-geheimnisvoll, dann trocken",
-    "mail": "beiläufig, dann frech stolz",
+    "mail": "beiläufig, dann frech stolz, 'Überstunden sammeln' verschmitzt",
     "signs": "energisch und zügig wie ein Countdown, jedes Anzeichen mit Nachdruck",
     "outro": "freundlich, aufgedreht, direkt an die Zuschauer, auffordernd",
 }
@@ -72,14 +72,14 @@ SCENES = [
     ]),
     dict(id="toilet", bg="#36B5C2", clock="12:00", title="DIE PAUSE", lines=[
         ("Mittags geht er aufs Klo. Für fünfundvierzig Minuten.", None),
-        ("Mit Handy. Candy Crash, Level dreihundert.", None),
+        ("Mit Handy. Candy Crush, Level dreihundert.", None),
     ]),
     dict(id="mouse", bg="#8E5BE0", clock="15:00", title="DIE MAUS", dark=True, lines=[
         ("Nachmittags bewegt sich seine Maus von ganz allein.", None),
         ("Status: grün. Alex: beim Friseur.", None),
     ]),
     dict(id="mail", bg="#26345E", clock="16:00", title="FEIERABEND", dark=True, lines=[
-        ("Um vier macht er Feierabend.", None),
+        ("Um vier macht er Feierabend. Ausgestempelt wird aber erst um zehn. Überstunden sammeln.", None),
         ("Seine Mail an den Chef geht trotzdem erst um zehn Uhr abends raus. Zeitgesteuert.", None),
     ]),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
@@ -87,7 +87,7 @@ SCENES = [
         ("Sein Status ist immer grün.", None),
         ("Er hat ständig Netzprobleme.", None),
         ("Bei allem sagt er: Ich nehm das mal mit.", None),
-        ("Und er ist die Hälfte der Arbeitszeit auf dem Klo.", None),
+        ("Und er ist die Hälfte der Arbeitszeit auf dem Klo oder rauchen.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du auch einen Arbeitszeitbetrüger? Markier sie oder ihn!", None),
@@ -106,4 +106,4 @@ GEMINI_LINE_MOOD = {"stamp_0": "gut gelaunt" + _ALEX,
 
 # Verkündung und Aufzählung zügig
 LINE_MAXPAUSE = {"what_1": 0.06}   # keine lange Kunstpause vor "40 Minuten"
-LINE_TEMPO = {"what_1": 1.12, "intro_role": 1.2, "signs_0": 1.2, "signs_1": 1.22, "signs_2": 1.22, "signs_3": 1.22, "signs_4": 1.18}
+LINE_TEMPO = {"what_1": 1.2, "intro_role": 1.22, "signs_0": 1.26, "signs_1": 1.28, "signs_2": 1.28, "signs_3": 1.28, "signs_4": 1.24}
