@@ -2,12 +2,12 @@
 // Gleiches Design jede Folge: grosser TAG-Kasten, Trainer gross, Fans (rot bei 0, sonst gruen), Vereinskasse gruen.
 const {chromium} = require('playwright');
 (async () => {
-  const [,, tag, fans, kasse, out, delta] = process.argv;
+  const [,, tag, fans, kasse, out, delta, kdelta] = process.argv;
   const b = await chromium.launch();
   const p = await b.newPage({viewport: {width: 1080, height: 1920}});
   await p.goto('file://' + __dirname + '/page.html');
   await p.evaluate(() => { render(0); return document.fonts.ready; });
-  await p.evaluate(([tag, fans, kasse, delta]) => {
+  await p.evaluate(([tag, fans, kasse, delta, kdelta]) => {
     UID = 0; PID = 0;
     const t = 0.3, f = +fans;
     let s = field(t, 1080, {goalX: 820});
@@ -32,13 +32,19 @@ const {chromium} = require('playwright');
     s += `<g transform="rotate(3 775 1390)">${box(570, 1280, 420, 230, +kasse > 0 ? 'pitch' : 'red', 12)}
       ${label(780, 1360, 'VEREINSKASSE', 50, '#fff')}${label(780, 1478, kasse + ' €', 104, '#fff')}</g>`;
     if (delta) {
-      s += `<g transform="rotate(-4 300 1390)"><g transform="translate(470 1290)">
+      s += `<g transform="rotate(-4 300 1390)"><g transform="translate(450 1225)">
         <circle r="62" fill="#3A2316"/><circle r="56" fill="#58B044" stroke="#fff" stroke-width="6"/>
         <path d="M0 -36 L28 0 L12 0 L12 30 L-12 30 L-12 0 L-28 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>
-        ${badge(470, 1385, delta, {kind: 'pitch', fs: 36, pad: 16})}</g>`;
+        ${badge(320, 1225, delta, {kind: 'pitch', fs: 40, pad: 16})}</g>`;
+    }
+    if (kdelta) {
+      s += `<g transform="rotate(3 775 1390)"><g transform="translate(910 1225)">
+        <circle r="62" fill="#3A2316"/><circle r="56" fill="#58B044" stroke="#fff" stroke-width="6"/>
+        <path d="M0 -36 L28 0 L12 0 L12 30 L-12 30 L-12 0 L-28 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>
+        ${badge(740, 1225, kdelta, {kind: 'pitch', fs: 40, pad: 16})}</g>`;
     }
     document.getElementById('root').innerHTML = `<defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E2438"/><stop offset="1" stop-color="#46506A"/></linearGradient></defs>${s}`;
-  }, [tag, fans, kasse, delta]);
+  }, [tag, fans, kasse, delta, kdelta]);
   await p.screenshot({path: out});
   await b.close();
 })();

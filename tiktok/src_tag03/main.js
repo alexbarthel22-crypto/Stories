@@ -66,13 +66,13 @@ const SCENES = {
       introBall(t);
   },
   fans3(t, d, m) {
-    const t0 = capT(2), n = t < t0 ? 83 : Math.round(83 + 317 * easeOut(clamp((t - t0) / 1.0, 0, 1)));
+    const t0 = capT(2), n = t < t0 ? 83 : Math.round(83 + 345 * easeOut(clamp((t - t0) / 1.0, 0, 1)));
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 420, 1640, 1.2)) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'GESTERN: 83 FANS', {fs: 46})) +
       popG(t, t0, 540, 500, badge(540, 500, 'HEUTE', {kind: 'pitch', fs: 56})) +
       (t >= t0 ? bigText(540, 760, String(n), '#6BF06B', 240) : '') +
       popG(t, t0 + 1.0, 800, 640, `<g transform="translate(800 640)"><circle r="70" fill="#3A2316"/><circle r="62" fill="#58B044" stroke="#fff" stroke-width="7"/>
-        <path d="M0 -40 L32 0 L14 0 L14 34 L-14 34 L-14 0 L-32 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>` + badge(800, 750, '+317', {kind: 'pitch', fs: 44})) + confetti(t, t0 + 1.0);
+        <path d="M0 -40 L32 0 L14 0 L14 34 L-14 34 L-14 0 L-32 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>` + badge(800, 750, '+345', {kind: 'pitch', fs: 44})) + confetti(t, t0 + 1.0);
   },
   striker(t, d, m) {
     const t1 = capT(2);

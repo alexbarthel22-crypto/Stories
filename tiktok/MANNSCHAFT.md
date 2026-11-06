@@ -38,7 +38,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Ohne Stadionjubel (die Variante mit Jubel, `gemini_v4`, wird nicht genutzt)
 
 ## Thumbnail-Vorlage (für jede Folge gleich)
-- `node src/thumb.js <Tag> <Fans> <Kasse in €> <ausgabe.png> [+Zuwachs]`, z. B. `node src/thumb.js 2 83 0 tag02_thumbnail.png +83`
+- `node src/thumb.js <Tag> <Fans> <Kasse in €> <ausgabe.png> [+Fan-Zuwachs] [Kassen-Differenz]`, z. B. `node src/thumb.js 3 428 799 tag03_thumbnail.png +345 "+799 €"`; die Plus-Anzeigen sitzen als grüner Pfeil mit Zahl oben auf dem jeweiligen Kasten
 - Großer Spielfeld-Kasten „TAG X“, darunter orange „⚽ FC SCHLAMMLOCH“, der Trainer groß und lachend, unten zwei Kästen: **FANS** (rot bei 0, sonst grün) und **VEREINSKASSE** (grün, bei 0 € rot), optional grüner Pfeil nach oben mit Fan-Zuwachs (z. B. „+83“) am Fans-Kasten
 - Alles Wichtige liegt im mittleren 3:4-Ausschnitt, der im TikTok-Profilraster sichtbar ist
 
@@ -96,9 +96,9 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Nächstes Spiel: **Sonntag, 1. Spiel gegen den SC Heuballen** (Gegner-Wappen: gelber Schild mit Heuballen, grüner Kopfbalken)
 
 ## Folge 3 (Tag 3)
-- Datei: `tiktok/tag03_fc_schlammloch_v10.mp4` (1:12; Zahlen korrigiert, lauter Jubel bei voller Tribüne, „…und unsere Vereinskasse schneller füllen“; „Tag drei!“ als Stadionsprecher-Ruf, Ehrenplätze-Satz deutsch neu, Schlamm-Szene beginnt mit „Problem:“; „Tag drei!“ natürlich laut gerufen, Ehrenplätze „weil sie unsere ersten Fans waren“, PLATZWART als rote Leuchttafel; Stimme lauter, „Tag drei!“ euphorisch jubelnd in derselben Stimme, kürzere Pausen, „NOCH 3 TAGE“ leuchtet; schneller gesprochen, „TAG DREI!“ schneller und lauter, kein Logo im Intro, Tore in Seitenansicht, blinkendes „TOP-KOMMENTAR GEWINNT!“, Bewerbungen auch für den Verteidiger; Intro nur „TAG DREI!“ sehr laut gerufen, Stadionjubel ab 0 s laut, Vereinslogo + kleiner Frodo im Intro, kurzer Alarm beim schwimmenden Tor, Konfetti, ständiger leichter Kamera-Drift), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
+- Datei: `tiktok/tag03_fc_schlammloch_v11.mp4` (1:12; 428 Fans (+345), Opa-Szene schneller; Zahlen korrigiert, lauter Jubel bei voller Tribüne, „…und unsere Vereinskasse schneller füllen“; „Tag drei!“ als Stadionsprecher-Ruf, Ehrenplätze-Satz deutsch neu, Schlamm-Szene beginnt mit „Problem:“; „Tag drei!“ natürlich laut gerufen, Ehrenplätze „weil sie unsere ersten Fans waren“, PLATZWART als rote Leuchttafel; Stimme lauter, „Tag drei!“ euphorisch jubelnd in derselben Stimme, kürzere Pausen, „NOCH 3 TAGE“ leuchtet; schneller gesprochen, „TAG DREI!“ schneller und lauter, kein Logo im Intro, Tore in Seitenansicht, blinkendes „TOP-KOMMENTAR GEWINNT!“, Bewerbungen auch für den Verteidiger; Intro nur „TAG DREI!“ sehr laut gerufen, Stadionjubel ab 0 s laut, Vereinslogo + kleiner Frodo im Intro, kurzer Alarm beim schwimmenden Tor, Konfetti, ständiger leichter Kamera-Drift), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
 - Intro: „TAG DREI!!!“ laut, Trainer vor der Klappstuhl-Tribüne mit Plane aus Folge 2 (Stühle in realistischer Größe), Stadionjubel lauter
-- Fans: gestern 83 → heute **400 (+317)**
+- Fans: gestern 83 → heute **428 (+345)**
 - Neuer Stürmer Nr. 9: **Leberkaaszerfetzer** (sein Kommentar wird nachgebaut gezeigt, mit Profilbild)
 - Geld: 345 neue Fans × 1 € = 345 € + 227 Kommentare × 2 € = 454 € + 0 € = **799 €** → **Fertig-Tribüne „TRIBÜNSTAD“** (Flachpaket, 500 Plätze, „Schlammloch-Arena“) für 799 € → **Kasse 0 €**
 - Neu gesprochen: „Mit eigenem Ultra-Block und dem neuen Ultra-Logo aus Tag eins. Danke, Eike!“ (Zoom auf das Banner, Eikes Profilbild)
@@ -111,6 +111,6 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Ende: „Wer wird unser neuer Platzwart und unser neuer Verteidiger? Und was müssen wir vorm Spiel noch unbedingt kaufen?“
 
 ## Stand nach Tag 3
-- Fans: 400 · Vereinskasse: 0 €
+- Fans: 428 · Vereinskasse: 0 € (Thumbnail zeigt die Einnahmen des Tages: 799 €, +799 €)
 - Liga-Konkurrenten: FC Asche, SV Kuhwiese, SC Heuballen (nächster Gegner, in 3 Tagen)
 - Offen: Platzwart, Verteidiger (Nr. 4)
