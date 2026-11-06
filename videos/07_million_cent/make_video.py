@@ -13,19 +13,26 @@ sys.path.insert(0, os.path.join(HERE, "..", "..", "engine"))
 from toolkit import *  # noqa
 from toolkit import _shade
 from fx3d import BCanvas, pill3d, pop_pill, burst, karaoke
+from people import Look, draw_char, talk_arm
 
 CACHE = os.path.join(HERE, "cache")
 os.makedirs(CACHE, exist_ok=True)
 Z = 2
 INK = hexc("#1d1b33")
 
-LEON = Style(205, "#f1c7a3", "#f2c94c", "#ff7a2f", "#2b2d42", hair_style="quiff", shoes="#ffffff",
-             accent="#ffb703", under="#1d1b33", shoe_accent="#ff7a2f")
-MIA = Style(205, "#a8714f", "#2a1b14", "#3cc9a4", "#34495e", hair_style="long", glasses=True, shoes="#ff6f91",
-            accent="#2a9d8f", under="#f4efe4")
-GUESTS = [Style(205, "#e0ac69", "#3b2a20", "#e84393", "#2d3436", hair_style="long", shoes="#ffffff"),
-          Style(205, "#8d5524", "#111111", "#00b894", "#2d3436", hair_style="short", shoes="#fdcb6e"),
-          Style(205, "#ffdbac", "#c0392b", "#6c5ce7", "#2d3436", hair_style="quiff", shoes="#ffffff")]
+LEON = Look("#f1c7a3", "#f2c94c", "#ff7a2f", "#2b3550", "#ffffff", hair_style="quiff", top_style="bomber",
+            under="#1d1b33", trim="#ffb703", shoe_trim="#ff7a2f", eyes="#3a7bd5")
+MIA = Look("#a8714f", "#2a1b14", "#3cc9a4", "#34495e", "#ff6f91", hair_style="long", top_style="hoodie",
+           trim="#2a9d8f", glasses=True, lashes=True, eyes="#4a2c1a")
+GUESTS = [Look("#e0ac69", "#3b2a20", "#e84393", "#2d3436", "#ffffff", hair_style="ponytail", top_style="tee", lashes=True),
+          Look("#8d5524", "#111111", "#00b894", "#2d3436", "#fdcb6e", hair_style="curly", top_style="hoodie"),
+          Look("#ffdbac", "#c0392b", "#6c5ce7", "#2d3436", "#ffffff", hair_style="short", top_style="bomber",
+               trim="#a29bfe")]
+WALKERS = [Look("#f3d2b5", "#7b4a2a", "#e17055", "#3b3b58", "#f5f6fa", hair_style="bun", top_style="tee", lashes=True),
+           Look("#c68642", "#1b1b1b", "#0984e3", "#2d3436", "#dfe6e9", hair_style="short", top_style="hoodie"),
+           Look("#ffe0bd", "#d4a373", "#fdcb6e", "#6c5ce7", "#ffffff", hair_style="ponytail", top_style="tee", lashes=True),
+           Look("#8d5524", "#2d1e12", "#00b894", "#34495e", "#ffeaa7", hair_style="curly", top_style="bomber",
+                trim="#55efc4")]
 
 # ------------------------------------------------------------------ timing
 TIM = json.load(open(os.path.join(HERE, "timing.json"), encoding="utf-8"))
@@ -60,54 +67,84 @@ def money(v):
     return f"{v:,.0f}".replace(",", ".") + " €"
 
 
-def head_geo(x, y, sty, h, f=1, lean=0.0, bounce=0.0):
-    x = x + lean
-    y = y - bounce
-    hip_y = y - sty.leg * h
-    sh_y = hip_y - sty.torso * h
-    r = sty.head * h
-    hy = sh_y - 0.03 * h - r * 0.92
-    hx = x + f * r * 0.08
-    fx = hx + f * r * 0.32
-    return dict(x=x, sh_y=sh_y, hip_y=hip_y, r=r, hy=hy, hx=hx, fx=fx, ey=hy + r * 0.02, tw=sty.width * h)
+def head_geo(x, y, look, h, f=1, lean=0.0, bounce=0.0):
+    h = h * 1.12
+    r = 0.084 * h
+    hy = y - bounce - 0.875 * h
+    hx = x + f * 0.017 * h
+    fx = hx + f * r * 0.3
+    return dict(hx=hx, hy=hy, r=r, fx=fx, ey=hy + r * 0.05)
+
+
+def _char_kw(h, f, t, kw):
+    out = dict(t=t, talk=kw.get("talk", 0.0), bounce=kw.get("bounce", 0.0), blink=kw.get("blink"),
+               mood=kw.get("mood", "smile"))
+    if kw.get("lean"):
+        out["lean"] = math.asin(clamp(kw["lean"] / (0.3 * h), -0.6, 0.6))
+    if kw.get("phase") is not None:
+        out["walk"] = kw["phase"]
+    if kw.get("reach") is not None:
+        out["arm_f"] = ("ik", kw["reach"])
+    a = kw.get("arms_up", 0.0)
+    if a:
+        out["arm_f"] = ("ang", 0.25 + 2.45 * a, 0.25 + 0.1 * math.sin(t * 7))
+        out["arm_b"] = ("ang", -(0.25 + 2.45 * a), -0.25 - 0.1 * math.sin(t * 7 + 1))
+    if kw.get("wave"):
+        w = kw["wave"]
+        out["arm_f"] = ("ang", 2.45 + 0.2 * math.sin(w), 0.55 + 0.45 * math.sin(w))
+    for k in ("arm_f", "arm_b", "look", "brows", "head_tilt", "squash"):
+        if k in kw:
+            out[k] = kw[k]
+    if out["talk"] > 0.05 and "arm_f" not in out and "walk" not in out:
+        out["arm_f"] = talk_arm(t, 0.8, x_seed(h))
+    return out
+
+
+def x_seed(h):
+    return (h * 0.37) % 6.28
 
 
 def leon(cv, x, y, h=420, f=1, t=0.0, shades=False, chain=False, crown=0.0, **kw):
-    hand = draw_person(cv, x, y, LEON, face=f, h=h, **kw)
-    g = head_geo(x, y, LEON, h, f, kw.get("lean", 0.0), kw.get("bounce", 0.0))
+    g = draw_char(cv, x, y, LEON, h * 1.12, f, **_char_kw(h * 1.12, f, t, kw))
     r = g["r"]
+    hx, hy = g["head"]
     if chain:
-        x0 = g["x"] + f * g["tw"] * 0.18
-        pts = [(x0 + math.sin(a) * g["tw"] * 0.42, g["sh_y"] + g["tw"] * 0.1 + (1 - math.cos(a)) * g["tw"] * 0.9)
-               for a in np.linspace(-1.2, 1.2, 14)]
+        nx, sy = g["neck"][0], g["sh_y"]
+        pts = [(nx + f * 0.01 * h + math.sin(a) * 0.05 * h, sy + 0.02 * h + (1 - math.cos(a)) * 0.1 * h)
+               for a in np.linspace(-1.1, 1.1, 14)]
         for p in pts:
             cv.circle(p[0], p[1], h * 0.009, fill=hexc("#ffd34d"))
-        bx, by = x0, g["sh_y"] + g["tw"] * 1.05
-        cv.poly([(bx, by - h * 0.025), (bx + h * 0.02, by), (bx, by + h * 0.03), (bx - h * 0.02, by)],
+        bx, by = nx + f * 0.01 * h, sy + 0.08 * h
+        cv.poly([(bx, by - h * 0.022), (bx + h * 0.018, by), (bx, by + h * 0.027), (bx - h * 0.018, by)],
                 fill=hexc("#bdf3ff"))
         if math.sin(t * 5) > 0.6:
             cv.line([(bx - h * 0.03, by - h * 0.03), (bx + h * 0.03, by + h * 0.03)], (255, 255, 255, 220), 2)
     if shades:
-        for k, ex in enumerate((g["fx"] - r * 0.30, g["fx"] + r * 0.30)):
-            cv.rect(ex - r * 0.24, g["ey"] - r * 0.17, ex + r * 0.24, g["ey"] + r * 0.17, fill=hexc("#111522"), r=r * 0.08)
-            cv.line([(ex - r * 0.14, g["ey"] - r * 0.08), (ex - r * 0.02, g["ey"] - r * 0.12)], (255, 255, 255, 160),
-                    r * 0.05)
-        cv.line([(g["fx"] - r * 0.08, g["ey"] - r * 0.08), (g["fx"] + r * 0.08, g["ey"] - r * 0.08)], hexc("#111522"),
-                r * 0.06)
+        for ex in (g["fx"] - r * 0.33, g["fx"] + r * 0.33):
+            cv.rect(ex - r * 0.25, g["ey"] - r * 0.18, ex + r * 0.25, g["ey"] + r * 0.17, fill=hexc("#111522"), r=r * 0.09)
+            cv.line([(ex - r * 0.15, g["ey"] - r * 0.08), (ex - r * 0.03, g["ey"] - r * 0.12)], (255, 255, 255, 170), r * 0.05)
+        cv.line([(g["fx"] - r * 0.1, g["ey"] - r * 0.08), (g["fx"] + r * 0.1, g["ey"] - r * 0.08)], hexc("#111522"), r * 0.07)
+        cv.line([(g["fx"] - f * r * 0.58, g["ey"] - r * 0.06), (hx - f * r * 0.68, g["ey"] - r * 0.1)], hexc("#111522"), r * 0.06)
     if crown > 0.02:
-        cy = g["hy"] - r * 1.05 - (1 - crown) * r * 2
+        cy = hy - r * 1.55 - (1 - crown) * r * 2
         cw = r * 0.75 * crown
-        cv.poly([(g["hx"] - cw, cy + r * 0.35), (g["hx"] - cw, cy - r * 0.1), (g["hx"] - cw * 0.5, cy + r * 0.12),
-                 (g["hx"], cy - r * 0.3), (g["hx"] + cw * 0.5, cy + r * 0.12), (g["hx"] + cw, cy - r * 0.1),
-                 (g["hx"] + cw, cy + r * 0.35)], fill=hexc("#ffd34d"))
+        cv.poly([(hx - cw, cy + r * 0.35), (hx - cw, cy - r * 0.1), (hx - cw * 0.5, cy + r * 0.12),
+                 (hx, cy - r * 0.3), (hx + cw * 0.5, cy + r * 0.12), (hx + cw, cy - r * 0.1),
+                 (hx + cw, cy + r * 0.35)], fill=hexc("#ffd34d"))
         for k in (-1, 0, 1):
-            cv.circle(g["hx"] + k * cw * 0.5, cy + r * 0.24, r * 0.07, fill=hexc("#e2574c" if k else "#3fa7f5"))
-    return hand, g
+            cv.circle(hx + k * cw * 0.5, cy + r * 0.24, r * 0.07, fill=hexc("#e2574c" if k else "#3fa7f5"))
+    g.update(hx=hx, hy=hy)
+    return g["hand_f"], g
 
 
-def mia(cv, x, y, h=420, f=-1, **kw):
-    hand = draw_person(cv, x, y, MIA, face=f, h=h, **kw)
-    return hand, head_geo(x, y, MIA, h, f, kw.get("lean", 0.0), kw.get("bounce", 0.0))
+def mia(cv, x, y, h=420, f=-1, t=None, **kw):
+    t = kw.pop("tt", t if t is not None else _T[0])
+    g = draw_char(cv, x, y, MIA, h * 1.12, f, **_char_kw(h * 1.12, f, t, kw))
+    g.update(hx=g["head"][0], hy=g["head"][1])
+    return g["hand_f"], g
+
+
+_T = [0.0]
 
 
 def shadow(cv, x, y, w):
@@ -395,13 +432,242 @@ def bg_board(img, cv):
         cv.line([(x, y), (x + rng.uniform(-60, 60), y + rng.uniform(-6, 6))], (255, 255, 255, 18), 6)
 
 
+# ------------------------------------------------------------------ fairground (main set)
+WHEEL = (800, 560, 300)
+TRACK = lambda x: 800 + 110 * math.sin(x / 150 + 0.6) - 60 * math.sin(x / 61)
+
+
+def bg_fair(img, cv):
+    grad(img, [(0, "#17194f"), (0.22, "#4a2a84"), (0.42, "#c9467e"), (0.52, "#ff9d5c"), (0.57, "#ffc387"), (1, "#ffc387")])
+    for i in range(40):
+        rng = np.random.default_rng(i)
+        cv.circle(rng.uniform(0, 1080), rng.uniform(40, 520), rng.uniform(1.5, 3), fill=(255, 255, 255, 160))
+    skyline(cv, 1030, ["#3b2468", "#45297a", "#33205e"], 9, 0.35, 90, 300)
+    # roller coaster lattice
+    xs = list(range(-20, 1101, 10))
+    for x in range(0, 1081, 54):
+        y = TRACK(x)
+        cv.line([(x, y), (x, 1040)], hexc("#3a2a6a"), 7, cap=False)
+        cv.line([(x, y + 40), (x + 54, min(1040, TRACK(x + 54) + 140))], hexc("#3a2a6a"), 4, cap=False)
+    cv.line([(x, TRACK(x)) for x in xs], hexc("#e2574c"), 12, cap=False)
+    cv.line([(x, TRACK(x) + 14) for x in xs], hexc("#2b1d4f"), 6, cap=False)
+    # Ferris wheel legs + hub
+    wx, wy, R = WHEEL
+    for dx in (-150, 150):
+        cv.line([(wx, wy), (wx + dx, 1060)], hexc("#efe9ff"), 18)
+        cv.line([(wx, wy), (wx + dx, 1060)], hexc("#b9b0d8"), 6)
+    cv.line([(wx - 110, 920), (wx + 110, 920)], hexc("#efe9ff"), 10)
+    # booths
+    for i, (x0, x1, name, c1) in enumerate(((440, 640, "POPCORN", "#e2574c"), (660, 860, "LOSE", "#3fa7f5"),
+                                           (880, 1100, "ZUCKERWATTE", "#ff6fae"))):
+        cv.rect(x0, 960, x1, 1110, fill=hexc("#fff3dc"))
+        cv.rect(x0, 1040, x1, 1110, fill=hexc(c1))
+        cv.rect(x0 + 20, 980, x1 - 20, 1035, fill=hexc("#3d2a1e"))
+        n = 6
+        for k in range(n):
+            xa, xb = x0 + (x1 - x0) * k / n, x0 + (x1 - x0) * (k + 1) / n
+            cv.rect(xa, 900, xb, 965, fill=hexc(c1 if k % 2 == 0 else "#ffffff"))
+            cv.pieslice(xa, 940, xb, 990, 0, 180, fill=hexc(c1 if k % 2 == 0 else "#ffffff"))
+        cv.rect(x0 + 10, 860, x1 - 10, 902, fill=hexc("#ffd34d"), r=10)
+        fs = 30
+        while font(fs).getbbox(name)[2] > (x1 - x0) - 40:
+            fs -= 2
+        cv.text((x0 + x1) / 2, 881, name, fs, hexc("#2b2140"))
+    # carousel roof + pole + platform
+    cx = 210
+    cv.rect(cx - 10, 760, cx + 10, 1080, fill=hexc("#ffd34d"))
+    cv.ellipse(cx - 200, 1050, cx + 200, 1110, fill=hexc("#7a3f8f"))
+    cv.ellipse(cx - 200, 1040, cx + 200, 1095, fill=hexc("#a45bbd"))
+    for k in range(10):
+        xa, xb = cx - 210 + 42 * k, cx - 210 + 42 * (k + 1)
+        cv.poly([(cx, 700), (xa, 860), (xb, 860)], fill=hexc("#e2574c" if k % 2 == 0 else "#fff3dc"))
+        cv.pieslice(xa, 840, xb, 885, 0, 180, fill=hexc("#e2574c" if k % 2 == 0 else "#fff3dc"))
+    cv.circle(cx, 696, 14, fill=hexc("#ffd34d"))
+    cv.line([(cx, 682), (cx, 640)], hexc("#2b2140"), 4)
+    cv.poly([(cx, 640), (cx + 40, 652), (cx, 664)], fill=hexc("#3cc9a4"))
+    # plaza ground
+    cv.rect(0, 1110, 1080, 1920, fill=hexc("#b88e6a"))
+    vg = vgradient(1080 * Z, 810 * Z, [(0, "#9c7656"), (1, "#d2a983")])
+    img.paste(vg, (0, 1110 * Z))
+    for row in range(16):
+        y = 1120 + row * row * 3.3 + row * 14
+        hgt = 10 + row * 2.2
+        off = (row % 2) * 30
+        for x in range(-60, 1140, 60 + row * 4):
+            cv.ellipse(x + off, y, x + off + 46 + row * 4, y + hgt, fill=(120, 85, 60, 60))
+    # lamp posts
+    for x in (30, 1050):
+        cv.rect(x - 8, 820, x + 8, 1330, fill=hexc("#2b2140"))
+        cv.rect(x - 26, 800, x + 26, 830, fill=hexc("#2b2140"), r=8)
+
+
+def fair_life(cv, t, crowd=True):
+    wx, wy, R = WHEEL
+    a0 = t * 0.22
+    # wheel
+    cv.circle(wx, wy, R, outline=hexc("#efe9ff"), width=10)
+    cv.circle(wx, wy, R - 26, outline=hexc("#c9c1ea"), width=5)
+    for k in range(16):
+        a = a0 + k * math.pi / 8
+        cv.line([(wx, wy), (wx + math.cos(a) * R, wy + math.sin(a) * R)], hexc("#d9d2f2"), 4, cap=False)
+    for k in range(32):
+        a = a0 + k * math.pi / 16
+        on = 0.5 + 0.5 * math.sin(t * 5 + k * 0.9)
+        cv.circle(wx + math.cos(a) * R, wy + math.sin(a) * R, 9, fill=(255, 226, 140, int(120 + 135 * on)))
+    for k in range(8):
+        a = a0 + k * math.pi / 4
+        px, py = wx + math.cos(a) * R, wy + math.sin(a) * R
+        sw = 0.08 * math.sin(t * 1.6 + k)
+        gx = px + math.sin(sw) * 50
+        cv.line([(px, py), (gx, py + 46)], hexc("#2b2140"), 4)
+        col = hexc(["#e2574c", "#3fa7f5", "#ffd34d", "#3cc9a4", "#ff6fae", "#a29bfe", "#ff9f43", "#55efc4"][k])
+        cv.rect(gx - 38, py + 40, gx + 38, py + 96, fill=col, r=16)
+        cv.rect(gx - 30, py + 48, gx + 30, py + 68, fill=hexc("#2b2140"), r=6)
+        cv.circle(gx - 10, py + 60, 7, fill=hexc("#f1c7a3"))
+        cv.circle(gx + 12, py + 60, 7, fill=hexc("#8d5524"))
+    cv.circle(wx, wy, 30, fill=hexc("#ffd34d"))
+    cv.circle(wx, wy, 12, fill=hexc("#2b2140"))
+    # coaster train
+    for c in range(4):
+        x = (t * 300) % 2000 - 400 - c * 70
+        if -80 < x < 1160:
+            y = TRACK(x)
+            dx = TRACK(x + 5) - TRACK(x - 5)
+            ang = math.atan2(dx, 10)
+            cv.rect(x - 30, y - 42, x + 30, y - 6, fill=hexc("#ffd34d" if c else "#3fa7f5"), r=10)
+            for k in (-1, 1):
+                hx = x + k * 13
+                cv.circle(hx, y - 52, 9, fill=hexc(["#f1c7a3", "#8d5524", "#ffe0bd"][c % 3]))
+                up = abs(math.sin(t * 6 + c + k))
+                cv.line([(hx, y - 48), (hx + k * 8, y - 70 - 12 * up)], hexc(["#e2574c", "#0984e3", "#00b894"][c % 3]), 5)
+    # carousel horses + lights
+    cx = 210
+    for k in range(5):
+        a = t * 1.1 + k * 2 * math.pi / 5
+        depth = math.sin(a)
+        if depth < -0.2:
+            continue
+        hx = cx + math.cos(a) * 160
+        hy = 980 + 28 * math.sin(t * 3 + k)
+        s = 0.8 + 0.25 * depth
+        cv.line([(hx, 860), (hx, hy - 30 * s)], hexc("#ffd34d"), 5)
+        col = hexc(["#ffffff", "#ffd9e6", "#e1f5ff", "#fff3c4", "#e8ddff"][k])
+        cv.ellipse(hx - 44 * s, hy - 22 * s, hx + 44 * s, hy + 18 * s, fill=col)
+        d = 1 if math.cos(a + math.pi / 2) > 0 else -1
+        cv.line([(hx + d * 34 * s, hy - 6 * s), (hx + d * 50 * s, hy - 38 * s)], col, 18 * s)
+        cv.ellipse(hx + d * 42 * s, hy - 52 * s, hx + d * 70 * s, hy - 32 * s, fill=col)
+        cv.line([(hx + d * 36 * s, hy - 40 * s), (hx + d * 30 * s, hy - 20 * s)], hexc("#e2574c"), 6 * s)
+        for lx in (-28, -14, 16, 30):
+            cv.line([(hx + lx * s, hy + 10 * s), (hx + lx * s + d * 6 * s * math.sin(t * 6 + lx), hy + 40 * s)], col, 7 * s)
+    for k in range(10):
+        on = 0.5 + 0.5 * math.sin(t * 6 + k)
+        cv.circle(cx - 190 + 42 * k, 862, 7, fill=(255, 236, 160, int(100 + 155 * on)))
+    # booth + lamp glow
+    for k, x in enumerate((30, 1050)):
+        cv.circle(x, 815, 70, fill=(255, 210, 120, 40))
+        cv.circle(x, 815, 16, fill=hexc("#fff3c0"))
+    for i, x0 in enumerate((440, 660, 880)):
+        for k in range(8):
+            on = 0.5 + 0.5 * math.sin(t * 4 + k * 1.3 + i)
+            cv.circle(x0 + 15 + k * 26, 855, 6, fill=(255, 230, 150, int(110 + 145 * on)))
+    # bunting
+    for row, (y0, sag) in enumerate(((240, 60), (180, 40))):
+        pts = [(x, y0 + sag * math.sin(math.pi * x / 1080) + 4 * math.sin(t * 2 + x * 0.02 + row)) for x in range(-30, 1111, 40)]
+        cv.line(pts, hexc("#2b2140"), 3, cap=False)
+        for i, (x, y) in enumerate(pts[:-1]):
+            col = hexc(["#e2574c", "#ffd34d", "#3fa7f5", "#3cc9a4", "#ff6fae"][(i + row) % 5])
+            sw = 6 * math.sin(t * 3 + i)
+            cv.poly([(x, y), (x + 34, y + 2), (x + 17 + sw, y + 44)], fill=col)
+    # balloons drifting up
+    for i in range(4):
+        ph = (t * 0.09 + i * 0.27) % 1
+        bx = 120 + i * 250 + 30 * math.sin(t + i)
+        by = 1100 - ph * 1200
+        col = hexc(["#e2574c", "#3fa7f5", "#ffd34d", "#ff6fae"][i])
+        cv.line([(bx, by + 40), (bx + 6 * math.sin(t * 2 + i), by + 120)], (255, 255, 255, 160), 2)
+        cv.ellipse(bx - 30, by - 38, bx + 30, by + 40, fill=col)
+        cv.ellipse(bx - 16, by - 26, bx - 4, by - 6, fill=(255, 255, 255, 120))
+    if crowd:
+        for i, look in enumerate(WALKERS):
+            d = 1 if i % 2 == 0 else -1
+            sp = 70 + i * 12
+            x = ((t * sp * d + i * 330) % 1500) - 210 if d > 0 else 1290 - ((t * sp + i * 330) % 1500)
+            y = 1175 + (i % 2) * 34
+            shadow(cv, x, y, 40)
+            draw_char(cv, x, y, look, 250 + (i % 2) * 20, d, t=t + i, walk=t * 6.5 + i, talk=0.4 if i == 2 else 0.0)
+            if i == 2:
+                hx, hy = x + d * 30, y - 170
+                cv.line([(hx, hy), (hx + 4 * math.sin(t * 2), hy - 140)], (255, 255, 255, 180), 2)
+                cv.ellipse(hx - 26, hy - 205, hx + 26, hy - 135, fill=hexc("#ff6fae"))
+
+
+def cat(cv, x, y, t):
+    """sleeping cat with breathing body and swishing tail"""
+    b = 1 + 0.04 * math.sin(t * 2.2)
+    col, cd = hexc("#f4a259"), hexc("#d9823b")
+    tail = [(x + 60, y - 10), (x + 110, y - 20 + 10 * math.sin(t * 2)), (x + 130 + 10 * math.sin(t * 2.5), y - 60)]
+    cv.line(tail, col, 16)
+    cv.ellipse(x - 70, y - 60 * b, x + 80, y + 4, fill=col)
+    for k in range(3):
+        cv.arc(x - 30 + k * 30, y - 58 * b, x + 10 + k * 30, y - 10, 200, 340, cd, 5)
+    cv.circle(x - 70, y - 30, 34, fill=col)
+    cv.poly([(x - 98, y - 52), (x - 92, y - 84), (x - 74, y - 60)], fill=col)
+    cv.poly([(x - 66, y - 62), (x - 52, y - 88), (x - 44, y - 56)], fill=col)
+    for ex in (-84, -62):
+        cv.arc(x + ex - 8, y - 36, x + ex + 8, y - 26, 20, 160, hexc("#3d2a1e"), 3)
+    z = (t * 0.7) % 1
+    cv.text(x - 40 + 30 * z, y - 110 - 60 * z, "z", 30 + 16 * z, (90, 90, 140, int(255 * (1 - z))))
+
+
+def room_life(cv, t):
+    cat(cv, 380, 1290, t)
+    a = 0.06 * math.sin(t * 1.4)
+    for k in range(6):                          # swaying plant leaves
+        ang = -math.pi / 2 + (k - 2.5) * 0.35 + a
+        cv.line([(840, 1200), (840 + math.cos(ang) * 110, 1200 + math.sin(ang) * 110)], hexc("#3f8a4c"), 14)
+
+
+def loft_life(cv, t):
+    x = (t * 70) % 1200 - 60
+    cv.line([(x - 40, 420), (x + 40, 410)], (220, 220, 240, 255), 6)
+    if math.sin(t * 8) > 0:
+        cv.circle(x + 40, 410, 6, fill=hexc("#ff4f4f"))
+    for k in range(5):                          # car lights on the street far below
+        cx = (t * (120 + k * 30) + k * 260) % 1000 + 120
+        cv.circle(cx, 1040, 5, fill=hexc("#fff3b0" if k % 2 else "#ff5a5a"))
+
+
+def street_life(cv, t):
+    for i, look in enumerate(WALKERS[:2]):
+        d = 1 if i == 0 else -1
+        x = (t * 80 + i * 500) % 1400 - 160 if d > 0 else 1240 - (t * 80 + i * 500) % 1400
+        draw_char(cv, x, 1215, look, 230, d, t=t + i, walk=t * 6.5 + i)
+    for k in range(3):
+        x = (t * 90 + k * 400) % 1300 - 100
+        y = 300 + 40 * k + 10 * math.sin(t * 2 + k)
+        w = 10 * math.sin(t * 10 + k)
+        cv.line([(x - 16, y - w), (x, y), (x + 16, y - w)], hexc("#2b2140"), 4)
+
+
+def sea_life(cv, t):
+    for k in range(3):
+        x = (t * 60 + k * 380) % 1300 - 100
+        y = 420 + 50 * k + 14 * math.sin(t * 1.5 + k)
+        w = 14 * math.sin(t * 6 + k)
+        cv.line([(x - 26, y - w), (x, y), (x + 26, y - w)], hexc("#ffffff"), 6)
+    for k in range(12):
+        x = (k * 97 + t * 50) % 1080
+        y = 1300 + (k * 41) % 400
+        cv.arc(x - 30, y - 8, x + 30, y + 8, 200, 340, (255, 255, 255, 140), 4)
+
+
 def bg_plain(stops):
     def fn(img, cv):
         grad(img, stops)
     return fn
 
 
-BGS = {"roof": bg_roof, "mia": bg_mia_room, "loft": bg_loft, "street": bg_street, "show": bg_showroom,
+BGS = {"fair": bg_fair, "roof": bg_roof, "mia": bg_mia_room, "loft": bg_loft, "street": bg_street, "show": bg_showroom,
        "jewel": bg_jeweler, "pool": bg_pool, "sea": bg_sea, "night": bg_night, "board": bg_board,
        "race": bg_plain([(0, "#101629"), (1, "#26305a")]), "cal": bg_plain([(0, "#ffb36b"), (1, "#ff7a59")]),
        "phone": bg_plain([(0, "#1a1440"), (1, "#3b2a7a")])}
@@ -423,8 +689,12 @@ def stage(name, cam, actors=None, t=0.0):
     cy = clamp(cy, vh / 2, OUT_H - vh / 2)
     box = (cx - vw / 2, cy - vh / 2, cx + vw / 2, cy + vh / 2)
     crop = bg(name).crop(tuple(int(round(v * Z)) for v in box)).convert("RGBA")
+    cvs = BCanvas(crop, box[0], box[1], Z)
+    life = {"loft": loft_life, "street": street_life, "sea": sea_life}.get(name)
+    if life:
+        life(cvs, _T[0])
     if actors:
-        actors(BCanvas(crop, box[0], box[1], Z))
+        actors(cvs)
     return crop.convert("RGB").resize((OUT_W, OUT_H), Image.LANCZOS), box
 
 
@@ -538,29 +808,30 @@ def option_card(img, cx, cy, sc, kind, t):
     log_ui("card " + kind, cx - w / 2 * sc, cy - h / 2 * sc, cx + w / 2 * sc, cy + h / 2 * sc)
 
 
-HOOK = [(["EINE", "MILLION", "EURO", "SOFORT"], "#ffd34d", "#2b2140", -2, 82),
-        (["ODER", "1 CENT", "PRO", "SEKUNDE,"], "#fff6e6", "#2b2140", 2, 78),
-        (["EIN", "GANZES", "JAHR", "LANG?"], "#e2574c", "#ffffff", -2, 82)]
+HOOK = [(["EINE", "MILLION", "EURO"], "#ffd34d", "#2b2140", -2, 100),
+        (["SOFORT", "–", "ODER"], "#fff6e6", "#2b2140", 2, 96),
+        (["1 CENT", "PRO", "SEKUNDE,"], "#fff6e6", "#2b2140", -2, 96),
+        (["EIN", "GANZES", "JAHR", "LANG?"], "#e2574c", "#ffffff", 2, 96)]
 
 
 def sc_hook(t):
     t0, t1 = st("Eine Million"), en("Eine Million")
 
     def act(cv):
-        string_lights(cv, t)
-    img, _ = stage("roof", drift((540, 1000, 1920), t), act)
+        fair_life(cv, t)
+    img, _ = stage("fair", drift((540, 1000, 1920), t), act)
     img = dim(img, 0.35)
     if t < 0.15:
         img = Image.blend(img, Image.new("RGB", img.size, (255, 250, 230)), 0.4 * (1 - t / 0.15))
     c1 = ease_out_back(prog(t, wt("Eine Million", "Million") - 0.1, wt("Eine Million", "Million") + 0.2))
     c2 = ease_out_back(prog(t, wt("Eine Million", "Cent") - 0.1, wt("Eine Million", "Cent") + 0.2))
-    option_card(img, 318, 1150, 0.8 * c1, "million", t)
-    option_card(img, 752, 1150, 0.8 * c2, "cent", t)
+    option_card(img, 318, 1200, 0.74 * c1, "million", t)
+    option_card(img, 752, 1200, 0.74 * c2, "cent", t)
     if c2 > 0.3:
         vs = ease_out_back(prog(t, wt("Eine Million", "Cent") + 0.1, wt("Eine Million", "Cent") + 0.4))
-        burst(img, 540, 1150, 0.6 * vs, t, 60, 170, (255, 255, 255), 12)
-        pill3d(img, 535, 1150, "VS", 60, bg="#1d1b33", fg="#ffd34d", scale=vs, rot=-6)
-    karaoke(img, t, HOOK, t0, t1, [420, 560, 700])
+        burst(img, 540, 1200, 0.6 * vs, t, 60, 170, (255, 255, 255), 12)
+        pill3d(img, 535, 1200, "VS", 60, bg="#1d1b33", fg="#ffd34d", scale=vs, rot=-6)
+    karaoke(img, t, HOOK, t0, t1, [380, 525, 670, 815], pop_k=0.55, first_pop=False)
     return img
 
 
@@ -574,7 +845,7 @@ def sc_roof(t):
     eis_t = wt("Viel Glück", "Eis", 0.1)
 
     def act(cv):
-        string_lights(cv, t)
+        fair_life(cv, t)
         lk, mk = {}, {}
         if a2 <= t < a3:                         # "Die Million! Sofort!"
             lk = dict(arms_up=1.0, bounce=14 * abs(math.sin(t * 9)), talk=0.8)
@@ -610,7 +881,7 @@ def sc_roof(t):
                 y = 700 + ((t - a2) * 380 + rng.uniform(0, 500)) % 800
                 banknote(cv, x, y, 0.8, math.sin(t * 3 + i))
 
-    img, box = stage("roof", cam, act, t)
+    img, box = stage("fair", cam, act, t)
     pop_pill(img, t, a1 + 0.1, 540, 330, "LEON", 70, t1=a2 - 0.1, bg="#ff7a2f", fg="#ffffff", rot=-3)
     pop_pill(img, t, a2, 540, 330, "DIE MILLION! SOFORT!", 64, t1=a3 - 0.1, bg="#ffd34d", rot=-2)
     pop_pill(img, t, a3, 540, 330, "1 CENT?!", 70, t1=a4 - 0.1, bg="#fff6e6", rot=2)
@@ -684,6 +955,7 @@ def sc_mia_start(t):
 
     def act(cv):
         mia_window(cv, t)
+        room_life(cv, t)
         mia_counter(cv, t, f"0,0{1 if t < sec2 else 2} €")
         piggy(cv, 470, 1060, 0.9)
         for k, tc in enumerate((t0 + 0.3, sec2 + 0.2)):
@@ -790,8 +1062,9 @@ def sc_pool(t):
             cv.rect(x, y, x + 30, y + 4, fill=(255, 255, 255, int(150 * max(0, math.sin(t * 3 + k)))))
         for i, sty in enumerate(GUESTS):        # dancing guests on the deck
             x = 180 + i * 360
-            draw_person(cv, x, 1100, sty, face=1 if i < 1 else -1, h=300, arms_up=0.6 + 0.4 * abs(math.sin(t * 6 + i)),
-                        bounce=10 * abs(math.sin(t * 6 + i)))
+            up = 0.6 + 0.4 * abs(math.sin(t * 6 + i))
+            draw_char(cv, x, 1100, sty, 320, 1 if i < 1 else -1, t=t + i, arm_f=("ang", 0.3 + 2.3 * up, 0.3),
+                      arm_b=("ang", -(0.3 + 2.3 * up), -0.3), bounce=10 * abs(math.sin(t * 6 + i)), mood="laugh")
         if t >= t1 - 0.3:
             shadow(cv, 540, 1600, 130)
             leon(cv, 540, 1600, 520, 1, t=t, arms_up=1.0, shades=True, chain=True, bounce=14 * abs(math.sin(t * 9)),
@@ -820,6 +1093,7 @@ def sc_mia_counter(t):
 
     def act(cv):
         mia_window(cv, t, cyc)
+        room_life(cv, t)
         mia_counter(cv, t, f"???.???,{digits} €")
         cv.circle(470, 600, 0, fill=(0, 0, 0, 0))
         piggy(cv, 470, 1060, 0.9)
@@ -1055,12 +1329,12 @@ def sc_genius(t):
     cam = keyframes(t, [(t0, (ROOF_L + 80, 1120, 1150)), (sit - 0.2, (ROOF_L + 80, 1120, 1150)), (sit + 0.3, (ROOF_M - 60, 1110, 1050))])
 
     def act(cv):
-        string_lights(cv, t)
+        fair_life(cv, t)
         lk = dict(shades=True, chain=True, reach=(ROOF_M - 100, FEET - 300), talk=0.5 + 0.5 * math.sin(t * 12)) if t < sit \
             else dict(shades=True, chain=True)
         mk = dict(talk=0.4 + 0.4 * math.sin(t * 13), reach=(ROOF_L + 100, FEET - 220)) if t >= sit else {}
         roof_people(cv, t, lk, mk)
-    img, _ = stage("roof", drift(cam, t), act)
+    img, _ = stage("fair", drift(cam, t), act)
     pop_pill(img, t, t0 + 0.1, 540, 330, "„UND DU, RECHENGENIE?“", 56, t1=sit - 0.1, bg="#ffd34d", rot=-2)
     pop_pill(img, t, sit, 540, 330, "„SETZ DICH LIEBER HIN.“", 56, bg="#3cc9a4", fg="#ffffff", rot=2)
     return img
@@ -1153,6 +1427,7 @@ SCENES = [(0.0, sc_hook), (st("Leon muss") - 0.1, sc_roof), (st("Und das Rennen"
 
 
 def frame_at(t):
+    _T[0] = t
     idx = max(i for i, (s0, _) in enumerate(SCENES) if t >= s0)
     img = SCENES[idx][1](t)
     if idx > 0:

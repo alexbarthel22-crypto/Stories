@@ -46,11 +46,11 @@ class BCanvas(Canvas):
         self._blend("arc", [(x0, y0), (x1, y1)], width, x0, y0, x1, y1, a0, a1, fill, width)
 
 
-def pill_tile(words, base, bg, fg, pops=None, depth=12, Z=2, hl_col=None):
+def pill_tile(words, base, bg, fg, pops=None, depth=12, Z=2, hl_col=None, pop_k=0.28):
     """extruded pill with words (spoken word: capsule highlight + colour); returns (tile at Z x, pill box at 1x)"""
     pops = pops or [0.0] * len(words)
     gap = 0.28 * base
-    sizes = [base * (1 + 0.28 * pp) for pp in pops]
+    sizes = [base * (1 + pop_k * pp) for pp in pops]
     widths = [font(int(sz)).getbbox(w)[2] for sz, w in zip(sizes, words)]
     tw = sum(widths) + gap * (len(words) - 1)
     padx, pady = 0.42 * base, 0.24 * base
@@ -80,8 +80,9 @@ def pill_tile(words, base, bg, fg, pops=None, depth=12, Z=2, hl_col=None):
             col = tuple(int(c0 + (c1 - c0) * min(1, pp * 1.6)) for c0, c1 in zip(hexc(bg), hl))
             d.rounded_rectangle([lx, cy - hh, rx, cy + hh], radius=int(hh), fill=col)
         col = (hexc("#ffe46b") if bg in ("#e2574c", "#1d1b33") else hexc("#d62828")) if pp > 0.3 else hexc(fg)
-        d.text((cxw + 3 * Z, cy + 4 * Z), w, font=font(int(sizes[j] * Z)), fill=(0, 0, 0, 60), anchor="mm")
-        d.text((cxw, cy), w, font=font(int(sizes[j] * Z)), fill=col, anchor="mm",
+        jump = -base * 0.08 * Z * pp
+        d.text((cxw + 3 * Z, cy + 4 * Z + jump), w, font=font(int(sizes[j] * Z)), fill=(0, 0, 0, 60), anchor="mm")
+        d.text((cxw, cy + jump), w, font=font(int(sizes[j] * Z)), fill=col, anchor="mm",
                stroke_width=int(2 * Z * pp), stroke_fill=hexc("#1d1b33"))
         x += widths[j] + gap
     return tile, (x0, y0, x1, y1)
@@ -131,7 +132,7 @@ def burst(img, cx, cy, a, t, r0=170, r1=430, col=(255, 222, 90), n=18):
     img.paste(lay, (0, 0), lay)
 
 
-def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=780):
+def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=780, pop_k=0.28):
     """lines: [(words, bg, fg, rot, base)]; whole sentence visible from frame 0; spoken word pops + highlight"""
     words = [w for line, *_ in lines for w in line]
     weights = [len(w) + 2 for w in words]
@@ -153,7 +154,7 @@ def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=780):
             pops.append(math.sin(math.pi * p) if 0 < p < 1 else 0.0)
         b = base
         while True:
-            tile, box = pill_tile(line, b, bg, fg, pops)
+            tile, box = pill_tile(line, b, bg, fg, pops, pop_k=pop_k)
             if box[2] - box[0] <= max_w or b < 40:
                 break
             b -= 3

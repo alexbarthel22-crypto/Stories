@@ -1,7 +1,7 @@
 # Jede Zeile = ein Sprechsegment. {emotion} = Regieanweisung.
-{fast} Eine Million Euro sofort – oder ein Cent pro Sekunde, ein ganzes Jahr lang?
+Eine Million Euro sofort – oder ein Cent pro Sekunde, ein ganzes Jahr lang?
 Leon muss nicht mal nachdenken.
-{excited} Die Million! Sofort!
+Die Million! Sofort!
 {amused} Ein Cent? Dafür heb ich nicht mal den Finger.
 Aber Mia rückt nur ihre Brille zurecht.
 Ich nehme die Sekunden.
@@ -14,7 +14,7 @@ Und weil er sich schon als Sieger sieht, gönnt er sich sofort was.
 Einen Sportwagen für zweihundertachtzigtausend Euro.
 Eine Diamantkette für fünfundvierzigtausend Euro.
 Und eine Poolparty für hundertzwanzigtausend Euro, über die die ganze Stadt redet.
-{excited} Ich bin Millionär, Baby!
+{amused} Ich bin Millionär, Baby!
 Während Leon feiert, läuft Mias Zähler. Tag und Nacht. Cent für Cent.
 Sechs Monate später treffen sie sich wieder.
 {amused} Na, Mia? Ich hab immer noch über eine halbe Million. Gibst du schon auf?
