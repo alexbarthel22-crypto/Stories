@@ -57,7 +57,9 @@ fx = build_sfx(out, N)
 from music2 import make_music
 mus = make_music(total, v)[:N] * 1.35
 if len(mus) < N: mus = np.pad(mus, (0, N - len(mus)))
-mix = np.clip(v * 0.95 + rain + drops + fx + mus, -1, 1)
+mix = v * 0.95 + rain + drops + fx + mus
+_m = np.abs(mix); mix = np.where(_m > 0.85, np.sign(mix) * (0.85 + 0.14 * np.tanh((_m - 0.85) / 0.14)), mix)
+mix = np.clip(mix, -1, 1)
 o = wave.open('mix.wav', 'w'); o.setnchannels(1); o.setsampwidth(2); o.setframerate(SR)
 o.writeframes((mix[:int(total * SR)] * 32767).astype(np.int16).tobytes()); o.close()
 

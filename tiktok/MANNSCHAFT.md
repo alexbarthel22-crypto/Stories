@@ -52,6 +52,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Offene Frage an die Community: Flutlicht kaufen, Vereinshaus mieten oder etwas ganz anderes? Der Top-Kommentar entscheidet
 
 ## Videostil
+- Immer Bewegung im Bild: leichter Kamera-Drift (Zoom + minimale Neigung) in jeder Szene, Konfetti bei Erfolgen, Pop-ups, laufende Figuren
 - Format 1080×1920, 30 fps, maximal 59 s
 - Dauerregen, Untertitel Wort für Wort (Schrift Lilita One, weiß mit brauner Kontur, Schlüsselwörter gelb)
 - Boxen im Spielfeld-Look oder orange, dicke braune Kontur, harter Schatten
@@ -59,7 +60,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Tor immer auf der Torlinie am Spielfeldrand, mit Fünfmeterraum, Strafraum und Elfmeterpunkt davor
 - Oberste Text-Boxen beginnen frühestens bei y ≈ 280 (oberer TikTok-Sicherheitsbereich)
 - Namenskarten und Info-Boxen sitzen nah am Geschehen (direkt über Kopf bzw. Objekt), nicht ganz oben am Bildrand
-- Intro jeder Folge: euphorisch gesprochen „Tag X! Ich gründe einen Fußballverein!“, darunter die orange Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“ (Tag 1: „⚽ VEREIN GEGRÜNDET“). Weitwinkel auf den Platz mit Tor und Strafraum, der Trainer steht darauf; die Kamera zoomt während der ersten Szene auf ihn. Ein Fußball fliegt von unten links ins Bild, trifft das „TAG X“-Feld (ab Tag 2 ist es ab Sekunde 0 sichtbar) und springt oben rechts raus (mit Aufprall-Geräusch)
+- Intro ab Tag 3: nur „TAG X!“ – sehr laut, fast erschreckend gerufen, Stadionjubel ab Sekunde 0 laut, dann direkt zur Fan-Entwicklung. (Davor: euphorisch gesprochen „Tag X! Ich gründe einen Fußballverein!“, darunter die orange Box „⚽ ICH GRÜNDE EINEN FUSSBALLVEREIN“ (Tag 1: „⚽ VEREIN GEGRÜNDET“).) Weitwinkel auf den Platz mit Tor und Strafraum, der Trainer steht darauf; die Kamera zoomt während der ersten Szene auf ihn. Ein Fußball fliegt von unten links ins Bild, trifft das „TAG X“-Feld (ab Tag 2 ist es ab Sekunde 0 sichtbar) und springt oben rechts raus (mit Aufprall-Geräusch)
 - Untertitel bei y 1420 (unter den Mündern), TikTok-Sicherheitsbereiche: Inhalte zwischen y 240 und y 1450, rechts nicht über x 940
 
 ## Untertitel-Synchronisierung
@@ -94,7 +95,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Nächstes Spiel: **Sonntag, 1. Spiel gegen den SC Heuballen** (Gegner-Wappen: gelber Schild mit Heuballen, grüner Kopfbalken)
 
 ## Folge 3 (Tag 3)
-- Datei: `tiktok/tag03_fc_schlammloch_v4.mp4` (1:15; etwas langsamer gesprochen, „Tag drei“ tiefer und lauter, Vereinslogo + kleiner Frodo im Intro, Alarm beim schwimmenden Tor), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
+- Datei: `tiktok/tag03_fc_schlammloch_v5.mp4` (1:15; Intro nur „TAG DREI!“ sehr laut gerufen, Stadionjubel ab 0 s laut, Vereinslogo + kleiner Frodo im Intro, kurzer Alarm beim schwimmenden Tor, Konfetti, ständiger leichter Kamera-Drift), Titelbild `tag03_thumbnail.png`, Beschreibung `tag03_beschreibung.md`, Code `src_tag03/`
 - Intro: „TAG DREI!!!“ laut, Trainer vor der Klappstuhl-Tribüne mit Plane aus Folge 2 (Stühle in realistischer Größe), Stadionjubel lauter
 - Fans: gestern 83 → heute **400 (+317)**
 - Neuer Stürmer Nr. 9: **Leberkaaszerfetzer** (sein Kommentar wird nachgebaut gezeigt, mit Profilbild)

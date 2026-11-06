@@ -1,6 +1,8 @@
 // Tag 2 – Zeitachse und Szenen. DATA = {fps, segs:[{id,start,end,caps}], env, total}
+let LT = 0, LD = 1;
 function cam(z, cx, cy, inner) {
-  return `<g transform="translate(540 960) scale(${z}) translate(${-cx} ${-cy})">${inner}</g>`;
+  const zz = z * (1 + 0.05 * clamp(LT / LD, 0, 1)), rr = Math.sin(LT * 1.3) * 0.6;
+  return `<g transform="translate(540 960) rotate(${rr}) scale(${zz}) translate(${-cx} ${-cy})">${inner}</g>`;
 }
 function blinkAt(t, off = 0) { return ((t + off) % 3.3) < 0.12; }
 
@@ -29,6 +31,18 @@ function chairTribune(t) {
   return s + tarp(t, 45, 1035, 610, 1310, 1);
 }
 
+function confetti(t, t0, n = 46) {
+  if (t < t0) return '';
+  const k = t - t0, cols = ['#FFD31A', '#2F7FD8', '#E5483A', '#58B044', '#FF7EB6', '#fff'];
+  let s = '';
+  for (let i = 0; i < n; i++) {
+    const x = rnd(i + 1200) * 1080 + Math.sin(k * 3 + i) * 30, y = -50 + (k * (500 + rnd(i + 1300) * 500)) - rnd(i + 1400) * 300;
+    if (y < -60 || y > 1960) continue;
+    s += `<rect x="${x}" y="${y}" width="16" height="26" rx="3" fill="${cols[i % 6]}" stroke="#3A2316" stroke-width="2" transform="rotate(${k * 300 + i * 40} ${x} ${y})"/>`;
+  }
+  return s;
+}
+
 const SCENES = {
   intro(t, d, m) {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
@@ -37,7 +51,6 @@ const SCENES = {
       place(frog({blink: blinkAt(t, .4)}), 760, 1430 - Math.abs(Math.sin(t * 7)) * 30, 0.2);
     return cam(z, 540, 1110 - 40 * e, world) +
       `<g transform="rotate(${t > 0.3 ? Math.sin((t - 0.3) * 40) * 6 * Math.exp(-(t - 0.3) * 7) : 0} 540 440)">${badge(540, 440, 'TAG 3', {kind: 'pitch', fs: 150, pad: 120})}</g>` +
-      popG(t, 0.55, 540, 640, twoLineBadge(540, 640, 'ICH GRÜNDE EINEN', 'FUSSBALLVEREIN', 52)) +
       popG(t, 0.9, 900, 980, `<g transform="translate(900 980) scale(0.36) rotate(${Math.sin(t * 3) * 4}) translate(-300 -300)">${LOGO}</g>`) + introBall(t);
   },
   fans3(t, d, m) {
@@ -47,7 +60,7 @@ const SCENES = {
       popG(t, t0, 540, 500, badge(540, 500, 'HEUTE', {kind: 'pitch', fs: 56})) +
       (t >= t0 ? bigText(540, 760, String(n), '#6BF06B', 240) : '') +
       popG(t, t0 + 1.0, 870, 640, `<g transform="translate(870 640)"><circle r="70" fill="#3A2316"/><circle r="62" fill="#58B044" stroke="#fff" stroke-width="7"/>
-        <path d="M0 -40 L32 0 L14 0 L14 34 L-14 34 L-14 0 L-32 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>` + badge(870, 750, '+317', {kind: 'pitch', fs: 44}));
+        <path d="M0 -40 L32 0 L14 0 L14 34 L-14 34 L-14 0 L-32 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>` + badge(870, 750, '+317', {kind: 'pitch', fs: 44})) + confetti(t, t0 + 1.0);
   },
   striker(t, d, m) {
     const t1 = capT(2);
@@ -67,7 +80,7 @@ const SCENES = {
     for (let i = 0; i < 18; i++) { const t0 = t3 + rnd(i + 900) * 1.2, k = (t - t0) / 0.9; if (k > 0 && k < 1) coins += coin(80 + rnd(i + 950) * 920, -60 + k * 1500, 34, i % 2); }
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(coach({mouth: m, wave: t > t3 ? Math.sin(t * 10) : 0, blink: blinkAt(t)}), 540, 1660, 1.05)) +
       popG(t, 0.0, 540, 340, calcBoard(t, 110, 290, lines, [capT(0), capT(1), t3])) +
-      (t >= t3 ? `<path d="M150 ${290 + 106 + 110 + 30} H930" stroke="#3A2316" stroke-width="7"/>` : '') + coins;
+      (t >= t3 ? `<path d="M150 ${290 + 106 + 110 + 30} H930" stroke="#3A2316" stroke-width="7"/>` : '') + coins + confetti(t, t3 + 0.3, 30);
   },
   ikea(t, d, m) {
     const tb = 0.9, build = easeOut(clamp((t - tb) / 0.6, 0, 1)), fill = clamp((t - tb - 0.6) / 1.4, 0, 1);
@@ -94,7 +107,7 @@ const SCENES = {
     let tags = '';
     [0, 1, 2].forEach(i => { const [x, y] = standSeatPos(i); const sx = 540 + z * (x - cx), sy = 960 + z * (y - 10 - cy);
       tags += popG(t, 0.75 + i * 0.15, sx, sy - 260, profilePic(sx, sy - 300, i, 62) + handleTag(sx, sy - 200, FIRST_FANS[i].handle, 0.75)); });
-    return s + tags + popG(t, 0.6, 540, 1250, badge(540, 1250, '★ EHRENPLÄTZE ★', {kind: 'orange', fs: 54}));
+    return s + tags + popG(t, 0.6, 540, 1250, badge(540, 1250, '★ EHRENPLÄTZE ★', {kind: 'orange', fs: 54})) + confetti(t, 0.7, 30);
   },
   kasse3(t, d, m) {
     const lines = [['FERTIG-TRIBÜNE', '-836 €', '#E5483A', true]];
@@ -107,7 +120,7 @@ const SCENES = {
   mud(t, d, m) {
     let s = field(t, 1000, {goalX: 600, noPost: true, puddles: [[160, 1400, 160, 30], [880, 1520, 180, 34]]}) + floatingGoal(t, 600, 1040, 1.0);
     s += place(coach({mouth: m, mood: 'sad', blink: blinkAt(t)}), 170, 1660, 0.75);
-    return cam(1.0, 540, 960, s) + alarmLights(t) +
+    return cam(1.0, 540, 960, s) + (t >= capT(3) - 0.2 && t < capT(3) + 1.6 ? alarmLights(t) : '') +
       popG(t, 0.0, 540, 360, badge(540, 360, 'PLATZ = SCHLAMMLOCH', {kind: 'red', fs: 52})) +
       popG(t, capT(3), 540, 520, badge(540, 520, 'DAS TOR SCHWIMMT WEG!', {kind: 'orange', fs: 46, rot: -3}));
   },
@@ -240,6 +253,7 @@ function render(f) {
   SEG = DATA.segs[si];
   const lt = t - SEG.start, d = SEG.end - SEG.start;
   const m = DATA.env[Math.min(f, DATA.env.length - 1)] || 0;
+  LT = lt; LD = d;
   let body = SCENES[SEG.id](lt, d, m);
   let r = rain(t, 150, 0.45);
   if (false) r = `<defs><mask id="tm"><rect width="1080" height="1920" fill="#fff"/><rect x="20" y="670" width="1040" height="640" fill="#000"/></mask></defs><g mask="url(#tm)">${r}</g>`;

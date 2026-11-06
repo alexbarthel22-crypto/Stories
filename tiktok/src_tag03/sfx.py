@@ -166,7 +166,7 @@ def croak():
     return np.concatenate(out) * 0.5
 
 
-def stadium_rec(target_db=-20.0):
+def stadium_rec(target_db=-14.0):
     """Stadionjubel aus Pixabay-Aufnahme (crowd-cheering-379666, Pixabay-Lizenz), Ausschnitt 1,85-4,36 s (sofort laut), nur Szene 1."""
     import wave
     w = wave.open('stadion_jubel.wav')
@@ -237,7 +237,7 @@ def build_sfx(segs, N):
             _b = _b[:int(((en - st) - 0.15) * SR)]; _b = _b * np.minimum(1, (len(_b) - np.arange(len(_b))) / (0.3 * SR))
             L(0.15, _b * 0.35 / 0.6)
         elif sid == 'fans3':
-            L(0.0, pop()); L(c[2], pop())
+            L(0.0, pop()); L(c[2], pop()); L(c[2] + 1.0, stadium_rec(-24.0)[:int(1.2 * SR)])
             for i in range(10): L(c[2] + i * 0.1, click() * 0.6)
             L(c[2] + 1.0, ding())
         elif sid == 'striker':
@@ -255,9 +255,9 @@ def build_sfx(segs, N):
         elif sid == 'kasse3': L(0.0, pop()); L(c[0], clack()); L(c[1], sad_trombone(max(0.5, (en - st) - c[1] - 0.12)))
         elif sid == 'mud':
             L(0.0, pop()); L(c[3], pop())
-            tt = _t(en - st); tone = np.where(np.sin(2 * np.pi * 1.6 * tt) > 0, 960, 720)
-            al = np.sin(2 * np.pi * np.cumsum(tone) / SR); al = (al + 0.3 * np.sign(al)) * 0.045 * np.minimum(1, tt / 0.1) * np.minimum(1, (tt[-1] - tt) / 0.2)
-            L(0.0, al)
+            tt = _t(1.6); tone = np.where(np.sin(2 * np.pi * 1.6 * tt) > 0, 960, 720)
+            al = np.sin(2 * np.pi * np.cumsum(tone) / SR); al = (al + 0.3 * np.sign(al)) * 0.045 * np.minimum(1, tt / 0.1) * np.minimum(1, (tt[-1] - tt) / 0.3)
+            L(max(0, c[3] - 0.2), al)
         elif sid == 'platzwart':
             L(0.0, thud()); L(0.15, thud()); L(c[1], whoosh()); L(c[2], thud()); L(c[3], ding())
             tt = _t(min(2.0, en - st)); siren_s = np.sin(2 * np.pi * (700 + 250 * np.sign(np.sin(2 * np.pi * 3 * tt))) * tt) * 0.03 * np.minimum(1, (tt[-1] - tt) / 0.3)
