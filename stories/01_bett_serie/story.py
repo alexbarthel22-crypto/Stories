@@ -57,10 +57,47 @@ def frame(c, t):
         g4.add_color_stop_rgba(0, 0.9, 0.97, 1, 0.75); g4.add_color_stop_rgba(1, 0.9, 0.97, 1, 0)
         c.arc(cx_, cy_, 90, 0, 2 * math.pi); c.set_source(g4); c.fill()
     c.restore()
-    emoji(c, "🌡️", wx + ww + 70, wy + 120, 90, rot=math.sin(t * 6) * 0.08)
+    emoji(c, "🌡️", wx + ww + 60, wy + 120, 80, rot=math.sin(t * 6) * 0.08)
+    # Fitness-Ecke: Poster mit Trainingsplan
+    px, py = 650, 320
+    rrect(c, px, py, 320, 300, 10); fill(c, "#FFFFFF")
+    rrect(c, px, py, 320, 300, 10); c.set_line_width(5); src(c, INK); c.stroke()
+    text(c, "NO PAIN", px + 160, py + 40, 34, "#E23B3B", FONT_HEAD)
+    text(c, "NO GAIN 💪", px + 160, py + 80, 34, "#E23B3B", FONT_HEAD)
+    for i, d in enumerate(("MO", "DI", "MI", "DO", "FR")):
+        yy = py + 125 + i * 33
+        text(c, d, px + 70, yy, 24, INK, FONT_HEAD)
+        text(c, "GYM", px + 150, yy, 22, "#555A66", FONT_BOLD)
+        k = clamp((t - 1.0 - i * 0.25) / 0.2)
+        if k > 0:
+            text(c, "❌", px + 240, yy, 26 * (0.6 + 0.4 * k), "#E23B3B", FONT_HEAD)
+    c.arc(px + 160, py + 6, 8, 0, 2 * math.pi); fill(c, "#E23B3B")             # Pinnnadel
+    # Regal mit Hanteln, Shaker, Kettlebell (eingestaubt)
+    sy = 740
+    rrect(c, 620, sy, 380, 22, 6); fill(c, "#8A5A2B")
+    rrect(c, 620, sy, 380, 22, 6); c.set_line_width(4); src(c, INK); c.stroke()
+    for hx in (670, 760):                                                        # Kurzhanteln
+        rrect(c, hx - 34, sy - 26, 68, 12, 5); fill(c, "#555A66")
+        for ox in (-44, 28):
+            rrect(c, hx + ox, sy - 54, 16, 54, 4); fill(c, "#2B2F3A")
+    c.arc(880, sy - 36, 34, 0, 2 * math.pi); fill(c, "#2B2F3A")                 # Kettlebell
+    c.arc(880, sy - 72, 18, math.pi, 2 * math.pi); c.set_line_width(9); src(c, "#2B2F3A"); c.stroke()
+    text(c, "12kg", 880, sy - 34, 18, "#FFFFFF", FONT_HEAD)
+    emoji(c, "🥤", 960, sy - 40, 60)
+    for i in range(6):                                                            # Staub / Spinnweben
+        r = random.Random(i + 40)
+        c.arc(650 + r.uniform(0, 300), sy - 50 + r.uniform(-20, 10), 3, 0, 2 * math.pi); src(c, "#CFCFD6", 0.6); c.fill()
+    emoji(c, "🕸️", 985, sy - 95, 46, alpha=0.8)
+    # Klimmzugstange in der Ecke, Handtuch drüber
+    rrect(c, 20, 800, 240, 14, 7); fill(c, "#B8BCC8")
+    rrect(c, 60, 812, 70, 90, 8); fill(c, "#7FD0FF")
+    # zusammengerollte Yogamatte am Bett
+    rrect(c, 40, 990, 70, 330, 35); fill(c, "#8E5BE0")
+    rrect(c, 40, 990, 70, 330, 35); c.set_line_width(5); src(c, INK); c.stroke()
+    c.arc(75, 1000, 26, 0, 2 * math.pi); fill(c, "#B98CFF")
     # Bett
-    rrect(c, 110, 930, 860, 420, 40); fill(c, "#6B4A2E")
-    rrect(c, 110, 930, 860, 420, 40); c.set_line_width(6); src(c, INK); c.stroke()
+    rrect(c, 130, 930, 840, 420, 40); fill(c, "#6B4A2E")
+    rrect(c, 130, 930, 840, 420, 40); c.set_line_width(6); src(c, INK); c.stroke()
     for px, rot in ((330, -0.06), (750, 0.06)):
         def pil(px=px):
             rrect(c, px - 170, 1030, 340, 170, 60); fill(c, "#F5F0FF")
@@ -71,7 +108,7 @@ def frame(c, t):
     person(c, W / 2, FEET, AH, AL, t, "happy" if t < 6.5 else "smug", "idle", None, bob=True)
     glow = 0.18 + 0.08 * math.sin(t * 7) + 0.06 * math.sin(t * 13)
     g3 = cairo.RadialGradient(W / 2, 1180, 20, W / 2, 1000, 420)
-    g3.add_color_stop_rgba(0, 0.45, 0.75, 1.0, glow * 1.6); g3.add_color_stop_rgba(1, 0.45, 0.75, 1.0, 0)
+    g3.add_color_stop_rgba(0, 0.95, 0.25, 0.25, glow * 1.3); g3.add_color_stop_rgba(1, 0.95, 0.25, 0.25, 0)
     c.rectangle(0, 700, W, 700); c.set_source(g3); c.fill()
     # dicke Decke
     c.move_to(-60, 1300)
@@ -89,7 +126,7 @@ def frame(c, t):
     # Laptop auf der Decke (Rückseite, leuchtet)
     rrect(c, 380, 1185, 320, 200, 18); fill(c, "#C9CCD6")
     rrect(c, 380, 1185, 320, 200, 18); c.set_line_width(5); src(c, INK); c.stroke()
-    emoji(c, "🍿", 540, 1285, 70)
+    c.arc(540, 1285, 26, 0, 2 * math.pi); src(c, "#FFFFFF", 0.7); c.fill()       # Logo-Punkt auf dem Deckel
     rrect(c, 350, 1380, 380, 30, 10); fill(c, "#A9ADB8")
     # Tee mit Dampf
     emoji(c, "☕", 830, 1340, 110)
@@ -99,19 +136,12 @@ def frame(c, t):
         c.curve_to(800 + i * 14, 1260 - u * 120, 850 + i * 14, 1240 - u * 120, 825 + i * 14, 1220 - u * 120)
         c.set_line_width(6); src(c, "#FFFFFF", 0.5 * (1 - u)); c.stroke()
     # Story-Sticker
-    sticker(c, "Draußen: -3 °C 🥶", 720, 470, pop(t, 0.5), -0.06, "#FFFFFF", INK, 46)
-    sticker(c, "Ich bis März: 🛌📺", 720, 610, pop(t, 2.6), 0.05, "#FFE14D", INK, 46)
-    if t > 4.6:
-        sticker(c, "Folge 7 von 12 ▶", 540, 830, pop(t, 4.6), -0.03, "#E23B3B", "#FFFFFF", 44)
-    # „Nächste Folge in …“-Karte
-    if t > 6.8:
-        n = max(1, 5 - int((t - 7.2) / 0.55))
-        def nk():
-            rrect(c, 620, 1430, 340, 120, 20); src(c, "#000000", 0.85); c.fill()
-            text(c, "Nächste Folge in", 790, 1468, 28, "#FFFFFF", FONT_BOLD)
-            text(c, str(n) if t < 9.4 else "▶ Folge 8", 790, 1515, 40, "#FFFFFF", FONT_HEAD)
-        scaled(c, 790, 1490, pop(t, 6.8), nk)
-        sticker(c, "Nur noch eine … 🫣", 330, 1490, pop(t, 7.6), -0.05, "#FFFFFF", INK, 40)
+    sticker(c, "Draußen: 3 °C 🥶", 280, 790, pop(t, 0.5), -0.06, "#FFFFFF", INK, 44)
+    sticker(c, "Gym? Morgen. 💪", 800, 810, pop(t, 2.4), 0.05, "#FFE14D", INK, 42)
+    if t > 4.0:
+        sticker(c, "Netflix: Folge 7 von 12 ▶", 540, 1460, pop(t, 4.0), 0.02, "#E50914", "#FFFFFF", 46)
+    if t > 7.4:
+        sticker(c, "Nur noch eine … 🫣", 330, 1340, pop(t, 7.4), -0.05, "#FFFFFF", INK, 38)
     if t < 0.4:                                            # Einblenden
         c.rectangle(0, 0, W, H); src(c, "#000000", 1 - t / 0.4); c.fill()
 
