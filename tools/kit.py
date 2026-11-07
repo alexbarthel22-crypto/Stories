@@ -271,7 +271,9 @@ def sc_stage(c, S, v, spec):
     for li, bb in enumerate(v.get("bubbles", [])):
         if bb and t > S.at(li, 0.5):
             if isinstance(bb, tuple):                       # (text, x, y) – z. B. bei einer Person in der Box
-                bubble(c, bb[0], bb[1], _Y(bb[2]), pop(t, S.at(li, 0.5)), tail=(0, 1), size=40, max_w=360)
+                tl = bb[3] if len(bb) > 3 else (0, 1)
+                bubble(c, bb[0], bb[1], _Y(bb[2]), pop(t, S.at(li, 0.5)), tail=tl,
+                       size=bb[4] if len(bb) > 4 else 40, max_w=bb[5] if len(bb) > 5 else 360)
             else:
                 bubble(c, bb, 830, LAYOUT["feet"] - 500, pop(t, S.at(li, 0.5)), tail=(-0.5, 1), size=36, max_w=320)
     ex = v.get("alex", ("smug", "idle", None))
@@ -534,7 +536,9 @@ def sc_messenger(c, S, v, spec):
                 def row(yy=yy, nm=nm, prev=prev, tm=tm, unread=unread, col=col):
                     _avatar(c, x0 + 66, yy + 50, 36, nm, col)
                     text(c, nm, x0 + 118, yy + 32, 26, "#111B21", FONT_HEAD, anchor="l")
-                    text(c, prev, x0 + 118, yy + 68, 20, "#667781", FONT_BOLD, anchor="l")
+                    pls = wrap(c, prev, 20, w - 190, FONT_BOLD)[:2]           # Vorschau max. 2 Zeilen
+                    for j, pl in enumerate(pls):
+                        text(c, pl, x0 + 118, yy + (68 if len(pls) == 1 else 60 + j * 24), 20, "#667781", FONT_BOLD, anchor="l")
                     text(c, tm, x0 + w - 24, yy + 32, 17, "#1FA855" if unread else "#667781", FONT_BOLD, anchor="r")
                     if unread:
                         c.arc(x0 + w - 42, yy + 66, 15, 0, 2 * math.pi); fill(c, "#25D366")

@@ -11,7 +11,8 @@ MOODS = dict(MOODS_BASE, star="verträumt und sicher, dann trocken", cafe="verli
              chat="euphorisch, dann trocken", job="selbstbewusst, die Pointe trocken")
 SHUFFLE = SHUFFLE_BASE
 INTRO_LEN = 3.3
-LAYOUT = dict(feet=1732, ky=1.2, phone=1.12)   # Alex tiefer, Animationsbox größer
+LINE_TEMPO = {k: 1.2 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
+LAYOUT = dict(feet=1732, ky=1.15, phone=1.06)   # Alex tiefer, Animationsbox größer
 CAPTION_Y = 1650   # Untertitel etwas tiefer (bleibt im Sicherheitsbereich)
 DAYBAR_Y = 1755   # Tagesleiste unter Alex, noch im Sicherheitsbereich
 _BIG = dict(tag_size=52, head_size=54, item_scale=1.45)
@@ -51,14 +52,15 @@ SCENES = [
         ("Er wartet bis Ladenschluss auf sie. Sie hat ja eindeutig Interesse.", None),
     ], viz=dict(kind="stage", **_BIG, box="#FFF4E0", head="☕ CAFÉ", head_col="#6B4A2E",
                 people=[(KELLNERIN, 790, "Kellnerin", "neutral", 1)],
-                items=[("☕", 330, 820, 100, 0, "bob"), ("💘", 520, 620, 110, 0, "pulse"), ("⏰", 330, 640, 110, 1, "spin")],
+                items=[("☕", 290, 860, 100, 0, "bob"), ("💘", 330, 610, 100, 0, "pulse"), ("⏰", 450, 860, 100, 1, "spin")],
                 tags=[None, ("WARTET BIS 20 UHR ⏰", "#E23B3B", 540, 980)], fx="shock", move="wobble",
-                bubbles=[("Schönen Tag noch! 😊", 640, 560), None], alex=("happy", "idle", None))),
+                bubbles=[("Schönen Tag noch! 😊", 545, 700, (1, 0.25), 30, 200), None], alex=("happy", "idle", None))),
     dict(id="chat", bg="#36B5C2", clock="16:00", title="DER CRUSH", lines=[
         ("Nachmittags antwortet sein Crush. Nach drei Tagen. Mit: ok.", None),
         ("Er schickt einen Screenshot an alle: Sie steht auf mich!", None),
     ], viz=dict(kind="messenger", switch=1,
                 list=[(0, "Mia 💖💘💕😍", "ok", "16:02", 1, "#F07FB0"),
+                      (0, "Papa 👨", "Hast du wieder daneben gepinkelt?!?!!??", "15:58", 3, "#555A66"),
                       (0, "Die Jungs 🍻", "Tom: wer kommt heute?", "15:40", 0, "#3E7BDA"),
                       (0, "Mama ❤️", "Hast du gegessen?", "Di.", 0, "#E07A2E")],
                 chat=dict(name="Die Jungs 🍻", col="#3E7BDA", msgs=[(1, True, "📸 [Screenshot von Mia]", "16:03"),
@@ -86,3 +88,8 @@ SCENES = [
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ], viz=dict(kind="outro", q="Kennst du auch jemanden, der delulu ist?", handle="@delulu_alex", icon="🦄", col="#9B6BE0")),
 ]
+
+# Nur für die Stimme: Betonung auf „ihn“
+GEMINI_LINE_TEXT = {"star_1": "Er ist sich sicher: Das war für … IHN! Er hat schon Namen für die Kinder."}
+GEMINI_LINE_MOOD = {"star_1": "verträumt und felsenfest überzeugt; die Wörter 'Das war für' leise und unbetont, kurze Pause, dann das Wort 'IHN' laut, lang gezogen und stark betont, als wäre es selbstverständlich; danach trocken",
+                    "intro_role": "völlig überrascht und amüsiert, flüssig in einem Zug ohne Stottern oder Wiederholung ausgerufen"}
