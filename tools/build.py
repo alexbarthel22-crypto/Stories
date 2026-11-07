@@ -125,12 +125,20 @@ def draw_extras(c, S, tg, tl):
         # Tages-Fortschritt unten
         hh, mm = map(int, S.clock.split(":"))
         f = clamp((hh + mm / 60 - 6) / 18)
-        y = 1730
-        rrect(c, 140, y - 9, 800, 18, 9); src(c, "#000000", 0.35); c.fill()
-        rrect(c, 140, y - 9, max(18, 800 * f), 18, 9); src(c, "#FFFFFF", 0.9); c.fill()
-        emoji(c, "☀️" if hh < 18 else "🌙", 140 + 800 * f, y, 46)
-        text(c, "06:00", 140, y + 34, 24, "#FFFFFF", FONT_BOLD, alpha=0.8)
-        text(c, "24:00", 940, y + 34, 24, "#FFFFFF", FONT_BOLD, alpha=0.8)
+        if getattr(script, "DAYBAR_Y", None):            # tiefer, Beschriftung links/rechts neben der Leiste
+            y, bx0, bw = script.DAYBAR_Y, 250, 580
+            rrect(c, bx0, y - 9, bw, 18, 9); src(c, "#000000", 0.35); c.fill()
+            rrect(c, bx0, y - 9, max(18, bw * f), 18, 9); src(c, "#FFFFFF", 0.9); c.fill()
+            emoji(c, "☀️" if hh < 18 else "🌙", bx0 + bw * f, y, 38)
+            text(c, "06:00", bx0 - 60, y, 24, "#FFFFFF", FONT_BOLD, alpha=0.85)
+            text(c, "24:00", bx0 + bw + 60, y, 24, "#FFFFFF", FONT_BOLD, alpha=0.85)
+        else:
+            y = 1730
+            rrect(c, 140, y - 9, 800, 18, 9); src(c, "#000000", 0.35); c.fill()
+            rrect(c, 140, y - 9, max(18, 800 * f), 18, 9); src(c, "#FFFFFF", 0.9); c.fill()
+            emoji(c, "☀️" if hh < 18 else "🌙", 140 + 800 * f, y, 46)
+            text(c, "06:00", 140, y + 34, 24, "#FFFFFF", FONT_BOLD, alpha=0.8)
+            text(c, "24:00", 940, y + 34, 24, "#FFFFFF", FONT_BOLD, alpha=0.8)
     # Reaktions-Emojis steigen rechts auf
     for rt, ems in REACT_TIMES:
         u = (tg - rt) / 1.6

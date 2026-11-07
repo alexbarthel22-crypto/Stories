@@ -1,5 +1,5 @@
 """TikTok-Folge: Heute ist Alex ... delulu. Alltags-Comedy über Klischees (Jugendsprache: delulu = in einer Fantasiewelt).
-Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), erst nach Freigabe. Vorschau: Ersatzstimme."""
+Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level wie Folge 1. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
@@ -11,8 +11,9 @@ MOODS = dict(MOODS_BASE, star="verträumt und sicher, dann trocken", cafe="verli
              chat="euphorisch, dann trocken", job="selbstbewusst, die Pointe trocken")
 SHUFFLE = SHUFFLE_BASE
 INTRO_LEN = 3.3
-LAYOUT = dict(feet=1760, ky=1.2, phone=1.12)   # Alex tiefer, Animationsbox größer
-CAPTION_Y = 1665   # Untertitel etwas tiefer (bleibt im Sicherheitsbereich)
+LAYOUT = dict(feet=1732, ky=1.2, phone=1.12)   # Alex tiefer, Animationsbox größer
+CAPTION_Y = 1650   # Untertitel etwas tiefer (bleibt im Sicherheitsbereich)
+DAYBAR_Y = 1755   # Tagesleiste unter Alex, noch im Sicherheitsbereich
 _BIG = dict(tag_size=52, head_size=54, item_scale=1.45)
 REACTIONS = {"star": ["🤳", "💍", "🚩"], "cafe": ["☕", "⏰", "🚩"], "chat": ["📸", "💀", "🚩"], "job": ["👔", "🎓", "🚩"]}
 THUMB = dict(head="HEUTE IST ALEX…", l1="", l2="DELULU", bg="#F06FA8", color1="#FFFFFF", accent="#FFE14D",
