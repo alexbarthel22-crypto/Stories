@@ -138,3 +138,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Schmarotzer 🥡 Karte vergessen, Handy-Pay geht „nie“ 💳 Tom & Mia zahlen die Pizza, Alex isst 6 von 8 Stücken 🍕 Brainrot-Videos über Janas Hotspot, bis sie kein Datenvolumen mehr hat 📶 Steak und drei Cocktails, aber „wir teilen durch alle“ 💸 Und bei Sven nimmt er nicht nur Essen mit … sondern auch Pflanze, Laptop und Schreibtisch 🤫 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch einen Schmarotzer? Markier sie oder ihn! Und was soll Alex morgen sein?
 
 #heuteistalex #schnorrer #freunde #wgleben #comedy
+
+## TikTok Folge 7 – Fremdgeher
+Cover: `episodes/19_fremdgeher/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Fremdgeher 💔 Denkt mehr mit der Hose als mit dem Kopf 👖🧠 „Guten Morgen, Schatz 😘“ an drei Mädchen gleichzeitig … und dann der falsche Name 😳 „Bin beim Zahnarzt“, sagt er, und landet in Mias Story im Freibad 🏊 Jana ist als „Mama“ eingespeichert und er hat gleich drei Handys 📱📱📱 Kino um 18 Uhr mit Mia, um 20 Uhr der gleiche Film mit Jana 🎬 Und im Handy? „Alles meine Cousinen. Alle zwölf.“ 👭 Welches Anzeichen hast du schon erlebt? 1, 2, 3 oder 4? 👇 Kennst du auch einen Fremdgeher? Markier sie oder ihn! Und was soll Alex morgen sein?
+
+#heuteistalex #fremdgehen #redflags #beziehung #comedy

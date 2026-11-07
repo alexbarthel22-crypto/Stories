@@ -1,5 +1,5 @@
 """TikTok-Folge: Heute ist Alex ... ein Fremdgeher. Alltags-Comedy, jugendfrei.
-Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck, tighten 1.08 0.22, match_level). Vorschau: Ersatzstimme."""
+Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.15 0.18, match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
@@ -11,8 +11,8 @@ MOODS = dict(MOODS_BASE, mama="verschwörerisch, dann trocken", ego="ehrlich, da
 SHUFFLE = SHUFFLE_BASE
 INTRO_LEN = 3.3   # kürzere Pause nach der Verkündung
 REACTIONS = {"mama": ["📞", "🤫", "🚩"], "ego": ["🪫", "❤️", "🚩"], "handy": ["😘", "😱", "🚩"], "ausrede": ["🦷", "🏊", "🚩"], "kino": ["🎬", "🍿", "🚩"], "check": ["📱", "👭", "🚩"]}
-THUMB = dict(head="HEUTE IST ALEX EIN…", l1="FREMD-", l2="GEHER", bg="#8C1C3A", color1="#FFFFFF", accent="#FFE14D",
-             pill="#4A0E1E", pill_text="#FFFFFF", expr="smug", pose="hips", prop=None, extras=True, emojis=("📱", "🤫", "💔", "🚩"))
+THUMB = dict(head="HEUTE IST ALEX EIN…", l1="FREMD-", l2="GEHER", bg="#D32F2F", color1="#FFFFFF", accent="#FFE14D",
+             pill="#7A0E0E", pill_text="#FFFFFF", expr="smug", pose="hips", prop=None, extras=True, emojis=("📱", "🤫", "💔", "🚩"))
 INTRO_CFG = dict(icon="💔", bg="#8C1C3A", title_lines=["FREMDGEHER."],
                  house=dict(sky=("#C93A5E", "#FFE1E8"), walls="#FFF0F3", roof="#5A1426", door="#3A0A18", lawn="#5DAA5E",
                             accent=("#E0457B", "#2B2F3A"), sun=True),
@@ -38,7 +38,7 @@ SCENES = [
                                                                (1, False, "Wer ist JANA??? 😡", "09:03")]),
                 fx="shock", alex=("shock", "idle", "📱"))),
     dict(id="ausrede", bg="#C0392B", clock="13:00", title="DIE AUSREDE", dark=True, lines=[
-        ("Mittags sagt er Lena: Ich bin beim Zahnarzt.", None),
+        ("Mittags schreibt er Lena: Bin beim Zahnarzt.", None),
         ("Dann sieht Lena ihn in Mias Story. Im Freibad.", None),
     ], viz=dict(kind="stage", box="#E8F7FF", head="📱 MIAS STORY", head_col="#2B5C66",
                 people=[(LENA, 790, "Lena", "neutral", 1)],
