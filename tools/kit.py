@@ -34,15 +34,36 @@ def row_card(c, x, y, w, h, s, label, icon=None, size=40, num=None, rot=0.0):
     scaled(c, x, y, s, d, rot)
 
 
-def tag(c, x, y, txt, col="#E23B3B", s=1.0, size=30):
+def _rgb(h):
+    h = h.lstrip("#")
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def _close(a, b, lim=90):
+    return sum((p - q) ** 2 for p, q in zip(_rgb(a), _rgb(b))) ** 0.5 < lim
+
+
+def tag_color(col, *avoid):
+    """Tag-Farbe darf nicht wie Szenen- oder Box-Hintergrund aussehen -> sonst dunkles Anthrazit."""
+    for a in avoid:
+        if a and _close(col, a):
+            return "#2B2F3A" if not _close("#2B2F3A", a) else "#FFFFFF"
+    return col
+
+
+def tag(c, x, y, txt, col="#E23B3B", s=1.0, size=30, ymax=None):
     def d():
         sz = size
-        while text_width(c, txt, sz, FONT_HEAD) + 1.2 * sz > 900 and sz > 24:
+        while text_width(c, txt, sz, FONT_HEAD) + 1.2 * sz > 820 and sz > 24:
             sz -= 2
         w = text_width(c, txt, sz, FONT_HEAD) + 1.2 * sz
-        xx = min(max(x, 70 + w / 2), 1010 - w / 2)               # nicht über den Boxrand hinaus
-        rrect(c, xx - w / 2, y - sz * 0.87, w, sz * 1.74, 14); fill(c, col)
-        text(c, txt, xx, y, sz, "#FFFFFF", FONT_HEAD)
+        xx = min(max(x, 70 + 34 + w / 2), 1010 - 34 - w / 2)     # immer Abstand zum Boxrand
+        yy = min(y, ymax - sz * 0.87 - 24) if ymax else y
+        tc = "#FFFFFF" if col != "#FFFFFF" else INK
+        rrect(c, xx - w / 2, yy - sz * 0.87, w, sz * 1.74, 14); fill(c, col)
+        if col == "#FFFFFF":
+            rrect(c, xx - w / 2, yy - sz * 0.87, w, sz * 1.74, 14); c.set_line_width(4); src(c, INK); c.stroke()
+        text(c, txt, xx, yy, sz, tc, FONT_HEAD)
     scaled(c, x, y, s, d)
 
 
@@ -238,7 +259,8 @@ def sc_stage(c, S, v, spec):
         for li, tg in enumerate(v.get("tags", [])):
             if tg and t > S.at(li, 0.35):
                 txt, col, x, y = (tg + (W / 2, 960))[:4] if len(tg) == 2 else tg
-                tag(c, x, _Y(y), txt, col, s=pop(t, S.at(li, 0.35)), size=v.get("tag_size", 30))
+                col = tag_color(col, S.S.bg, v.get("box", "#FFF4E0"))
+                tag(c, x, _Y(y), txt, col, s=pop(t, S.at(li, 0.35)), size=v.get("tag_size", 30), ymax=by + bh / 2)
     _ITEM_SCALE[0] = v.get("item_scale", 1.0)
     c.save(); box_move(c, bx, by, t, v.get("move", "wobble"), last)
     scaled(c, bx, by, s, box)

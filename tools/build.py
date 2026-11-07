@@ -197,7 +197,7 @@ def draw_frame(c, tg):
     if tl > S.starts[li] + S.durs[li] + 0.18:
         cur = None
     draw_extras(c, S, tg, tl)
-    caption(c, cur, since)
+    caption(c, cur, since, y=getattr(script, "CAPTION_Y", 1585))
     draw_wipe(c, tg)
 
 

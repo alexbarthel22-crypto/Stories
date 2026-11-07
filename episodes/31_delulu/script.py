@@ -12,6 +12,7 @@ MOODS = dict(MOODS_BASE, star="verträumt und sicher, dann trocken", cafe="verli
 SHUFFLE = SHUFFLE_BASE
 INTRO_LEN = 3.3
 LAYOUT = dict(feet=1760, ky=1.2, phone=1.12)   # Alex tiefer, Animationsbox größer
+CAPTION_Y = 1665   # Untertitel etwas tiefer (bleibt im Sicherheitsbereich)
 _BIG = dict(tag_size=52, head_size=54, item_scale=1.45)
 REACTIONS = {"star": ["🤳", "💍", "🚩"], "cafe": ["☕", "⏰", "🚩"], "chat": ["📸", "💀", "🚩"], "job": ["👔", "🎓", "🚩"]}
 THUMB = dict(head="HEUTE IST ALEX…", l1="", l2="DELULU", bg="#F06FA8", color1="#FFFFFF", accent="#FFE14D",
@@ -51,7 +52,7 @@ SCENES = [
                 people=[(KELLNERIN, 790, "Kellnerin", "neutral", 1)],
                 items=[("☕", 330, 820, 100, 0, "bob"), ("💘", 520, 620, 110, 0, "pulse"), ("⏰", 330, 640, 110, 1, "spin")],
                 tags=[None, ("WARTET BIS 20 UHR ⏰", "#E23B3B", 540, 980)], fx="shock", move="wobble",
-                bubbles=[("Schönen Tag noch! 😊", 760, 470), None], alex=("happy", "idle", None))),
+                bubbles=[("Schönen Tag noch! 😊", 640, 560), None], alex=("happy", "idle", None))),
     dict(id="chat", bg="#36B5C2", clock="16:00", title="DER CRUSH", lines=[
         ("Nachmittags antwortet sein Crush. Nach drei Tagen. Mit: ok.", None),
         ("Er schickt einen Screenshot an alle: Sie steht auf mich!", None),
