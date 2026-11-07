@@ -129,3 +129,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Arbeitszeit-Betrüger ⏰ 6 Uhr einstempeln, dann 2 Stunden schlafen 😴 Im Meeting Kamera aus, in Wahrheit noch im Bett 🛏️ „Sorry, Netzprobleme“ 📶 45 Minuten Klo mit Candy Crush 🍬 Die Maus wackelt von allein, während er beim Friseur sitzt 💇 Feierabend um 4, ausgestempelt um 10: Überstunden sammeln 📈 Welches Anzeichen kennst du aus deinem Büro? 1, 2, 3 oder 4? 👇 Kennst du auch einen Arbeitszeit-Betrüger? Markier sie oder ihn! Und was soll Alex morgen sein?
 
 #heuteistalex #homeoffice #büroalltag #kollegen #comedy
+
+## TikTok Folge 6 – Schmarotzer
+Cover: `episodes/13_schmarotzer/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Schmarotzer 🥡 Karte vergessen, Handy-Pay geht „nie“ 💳 Tom & Mia zahlen die Pizza, Alex isst 6 von 8 Stücken 🍕 Brainrot-Videos über Janas Hotspot, bis sie kein Datenvolumen mehr hat 📶 Steak und drei Cocktails, aber „wir teilen durch alle“ 💸 Und bei Sven nimmt er nicht nur Essen mit … sondern auch Pflanze, Laptop und Schreibtisch 🤫 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch einen Schmarotzer? Markier sie oder ihn! Und was soll Alex morgen sein?
+
+#heuteistalex #schnorrer #freunde #wgleben #comedy
