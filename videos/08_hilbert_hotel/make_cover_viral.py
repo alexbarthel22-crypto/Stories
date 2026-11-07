@@ -13,14 +13,15 @@ def cover():
     t = 0.3
 
     def ex(cv):
-        mv.bus(cv, 330, 1560, 0.95, t)
-        mv.queue(cv, t, 1.0, x_start=720)
-    img, _ = mv.street_scene(t, (540, 1060, 1700), ex, people=False)
-    img = mv.dim(img, 0.18)
-    burst(img, 540, 430, 0.45, t, 170, 430)
-    pill3d(img, 540, 280, "99% SCHEITERN", 52, bg="#e2574c", fg="#ffffff", rot=-2)
-    pill3d(img, 540, 420, "HOTEL VOLL –", 92, bg="#fff6e6", rot=-3)
-    pill3d(img, 540, 570, "+ ∞ GÄSTE?", 104, bg="#ffd34d", rot=2)
+        mv.bus(cv, 300, 1600, 0.9, t)
+        mv.queue(cv, t, 1.0, x_start=760)
+    img, _ = mv.street_scene(t, (540, 960, 1920), ex, people=False)
+    img = mv.dim(img, 0.12)
+    burst(img, 540, 470, 0.45, t, 170, 430)
+    pill3d(img, 540, 290, "99% SCHEITERN", 52, bg="#e2574c", fg="#ffffff", rot=-2)
+    pill3d(img, 540, 430, "HOTEL VOLL –", 96, bg="#fff6e6", rot=-3)
+    pill3d(img, 540, 585, "+ ∞ GÄSTE?", 108, bg="#ffd34d", rot=2)
+    pill3d(img, 540, 1390, "NUR 1 DURCHSAGE. WELCHE?", 46, bg="#a29bfe", fg="#ffffff", rot=-2)
     return img
 
 
