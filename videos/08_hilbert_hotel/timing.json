@@ -1,97 +1,92 @@
 [
  {
-  "text": "Dieses Hotel ist bis aufs letzte Zimmer ausgebucht – und trotzdem passen noch unendlich viele Gäste hinein.",
+  "text": "Dieses Hotel ist voll – und trotzdem passen noch unendlich viele Gäste rein.",
   "start": 0.0,
-  "end": 5.85
+  "end": 4.162
  },
  {
   "text": "Das Hotel Unendlichkeit hat unendlich viele Zimmer: eins, zwei, drei – immer weiter, ohne Ende.",
-  "start": 6.029,
-  "end": 11.228
+  "start": 4.341,
+  "end": 9.54
  },
  {
   "text": "Und heute Nacht ist jedes einzelne Zimmer belegt.",
-  "start": 11.406,
-  "end": 14.094
+  "start": 9.719,
+  "end": 12.407
  },
  {
   "text": "Da hält ein Bus mit unendlich vielen neuen Gästen.",
-  "start": 14.272,
-  "end": 17.012
+  "start": 12.586,
+  "end": 15.324
  },
  {
   "text": "Jeder will ein eigenes Zimmer, und keiner soll draußen bleiben.",
-  "start": 17.19,
-  "end": 20.36
+  "start": 15.503,
+  "end": 18.673
  },
  {
   "text": "Der Hotelchef darf nur eine einzige Durchsage machen – und alle bekommen ein Zimmer.",
-  "start": 20.538,
-  "end": 25.136
+  "start": 18.852,
+  "end": 23.449
  },
  {
   "text": "Welche Durchsage ist das?",
-  "start": 25.314,
-  "end": 26.687
+  "start": 23.628,
+  "end": 25.001
  },
  {
   "text": "PAUSE",
-  "start": 26.866,
-  "end": 28.295
- },
- {
-  "text": "Kleiner Tipp: Jeder Gast muss nur ein einziges Mal umziehen.",
-  "start": 28.295,
-  "end": 31.587
+  "start": 25.179,
+  "end": 26.608
  },
  {
   "text": "Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!",
-  "start": 31.765,
-  "end": 34.869
+  "start": 26.608,
+  "end": 29.712
  },
  {
   "text": "Hier kommt die Lösung.",
-  "start": 35.047,
-  "end": 36.231
+  "start": 29.89,
+  "end": 31.074
  },
  {
   "text": "Die Durchsage lautet: Bitte zieht alle in das Zimmer mit der doppelten Nummer!",
-  "start": 36.41,
-  "end": 40.685
+  "start": 31.253,
+  "end": 35.528
  },
  {
   "text": "Zimmer eins geht in Zimmer zwei, Zimmer zwei in Zimmer vier, Zimmer drei in Zimmer sechs, und so weiter.",
-  "start": 40.863,
-  "end": 46.557
+  "start": 35.706,
+  "end": 41.4
  },
  {
   "text": "Jetzt wohnen alle alten Gäste in den geraden Zimmern.",
-  "start": 46.736,
-  "end": 49.411
+  "start": 41.579,
+  "end": 44.254
  },
  {
   "text": "Und alle ungeraden Zimmer sind frei. Davon gibt es unendlich viele.",
-  "start": 49.589,
-  "end": 53.263
+  "start": 44.432,
+  "end": 48.105
  },
  {
   "text": "Eins für jeden neuen Gast aus dem Bus.",
-  "start": 53.442,
-  "end": 55.526
+  "start": 48.284,
+  "end": 50.369
  },
  {
   "text": "Dieses Rätsel heißt Hilberts Hotel, ein berühmtes Gedankenexperiment über die Unendlichkeit.",
-  "start": 55.704,
-  "end": 60.703
+  "start": 50.547,
+  "end": 55.546
  },
  {
   "text": "Und was machst du, wenn unendlich viele Busse kommen?",
-  "start": 60.881,
-  "end": 63.756
+  "start": 55.724,
+  "end": 58.599
  },
  {
   "text": "Schreib's in die Kommentare und folg mir für das nächste Rätsel!",
-  "start": 63.935,
-  "end": 66.651
+  "start": 58.778,
+  "end": 61.494
  }
 ]

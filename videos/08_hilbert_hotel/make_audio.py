@@ -18,7 +18,7 @@ ev = [
     ("ding", st("Der Hotelchef"), 0.6), ("notify", wt("Der Hotelchef", "Durchsage", 0.0), 0.4),
     ("whoosh", st("Welche") - 0.15, 0.6), ("pop", st("Welche"), 0.7), ("drum", st("Welche") + 0.25, 0.5),
     *[("tick", st("PAUSE") + 0.25 + k * 0.5, 0.9) for k in range(3)],
-    ("sparkle", st("Kleiner Tipp"), 0.45), ("pop", st("Schreib deine"), 0.6),
+    ("pop", st("Schreib deine"), 0.6),
     ("riser", st("Hier kommt") - 1.0, 0.4), ("whoosh", st("Hier kommt") - 0.15, 0.6), ("pop", st("Hier kommt"), 0.8),
     ("beep_hi", st("Die Durchsage") - 0.1, 0.3), ("tada", wt("Die Durchsage", "Nummer", 0.5), 0.7),
     *[("swish", ts[n], 0.5) for n in range(1, 11)], *[("pop", ts[n] + 0.85, 0.4) for n in range(1, 6)],

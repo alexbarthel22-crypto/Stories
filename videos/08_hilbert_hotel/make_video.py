@@ -45,7 +45,7 @@ NEW = [rand_look(100 + i) for i in range(1, 40)]
 # ------------------------------------------------------------------ timing
 TIM = json.load(open(os.path.join(HERE, "timing.json"), encoding="utf-8"))
 KEYS = ["Dieses Hotel ist", "Das Hotel", "Und heute", "Da hält", "Jeder will", "Der Hotelchef", "Welche", "PAUSE",
-        "Kleiner Tipp", "Schreib deine", "Hier kommt", "Die Durchsage", "Zimmer eins", "Jetzt wohnen", "Und alle",
+        "Schreib deine", "Hier kommt", "Die Durchsage", "Zimmer eins", "Jetzt wohnen", "Und alle",
         "Eins für", "Dieses Rätsel", "Und was", "Schreib's"]
 S, E = anchors(TIM, KEYS)
 K = {k: i for i, k in enumerate(KEYS)}
@@ -335,11 +335,20 @@ def arc_arrow(cv, x0, x1, y, p, col=(255, 90, 80)):
 
 
 # ------------------------------------------------------------------ scenes
-HOOK = [(["DIESES", "HOTEL", "IST"], "#fff6e6", "#2b2140", -3, 118),
-        (["BIS", "AUFS", "LETZTE"], "#fff6e6", "#2b2140", 2, 112),
-        (["ZIMMER", "AUSGEBUCHT"], "#e2574c", "#ffffff", -2, 112),
-        (["UND", "TROTZDEM", "PASSEN"], "#ffd34d", "#2b2140", 2, 108),
-        (["UNENDLICH", "VIELE", "GÄSTE", "HINEIN!"], "#ffd34d", "#2b2140", -2, 100)]
+HOOK = [(["HOTEL", "VOLL –"], "#fff6e6", "#2b2140", -3, 150),
+        (["TROTZDEM", "PASSEN"], "#ffd34d", "#2b2140", 2, 132),
+        (["∞ VIELE", "GÄSTE", "REIN!"], "#e2574c", "#ffffff", -2, 128)]
+
+
+def hook_times():
+    k = "Dieses Hotel ist"
+
+    def w(word, nxt=None):
+        a = wt(k, word, 0.0)
+        b = wt(k, nxt, 0.0) if nxt else wt(k, word, 1.0)
+        return (a, b)
+    return [w("Hotel", "ist"), w("voll", "und"), w("trotzdem", "passen"), w("passen", "noch"),
+            (wt(k, "unendlich", 0.0), wt(k, "Gäste", 0.0)), w("Gäste", "rein"), w("rein")]
 
 
 def sc_hook(t):
@@ -348,7 +357,7 @@ def sc_hook(t):
     img = dim(img, 0.38)
     if t < 0.15:
         img = Image.blend(img, Image.new("RGB", img.size, (255, 250, 230)), 0.4 * (1 - t / 0.15))
-    karaoke(img, t, HOOK, t0, t1, [330, 490, 650, 810, 965], pop_k=0.5, first_pop=False, stagger=0.06)
+    karaoke(img, t, HOOK, t0, t1, [560, 780, 990], pop_k=0.4, first_pop=False, stagger=0.06, times=hook_times())
     return img
 
 
@@ -529,7 +538,8 @@ def corridor(t, cam=(540, 960, 1920), actors=None, off=0.0, states=None, glows=N
 
 
 def sc_question(t):
-    t0, tp, ttip, tc = st("Welche"), st("PAUSE"), st("Kleiner Tipp"), st("Schreib deine")
+    t0, tp, tc = st("Welche"), st("PAUSE"), st("Schreib deine")
+    ttip = tc
 
     def act(cv):
         for n in range(1, 11):
@@ -547,8 +557,6 @@ def sc_question(t):
             r = 18 + 10 * a
             cx = OUT_W / 2 - 70 + i * 70
             d.ellipse([cx - r, 700 - r, cx + r, 700 + r], fill=(255, 255, 255, int(120 + 135 * a)))
-    if t > ttip:
-        pop_pill(img, t, ttip, 540, 700, "TIPP: JEDER ZIEHT 1× UM", 52, bg="#c5def5", rot=-2)
     if t > tc:
         pop_pill(img, t, tc, 540, 1420, "SCHREIB'S IN DIE KOMMENTARE", 40, bg="#ffffff")
     return img

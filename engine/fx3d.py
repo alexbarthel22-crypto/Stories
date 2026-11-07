@@ -163,9 +163,8 @@ def pop_pill(img, t, t0, cx, cy, text, size, t1=None, burst_col=None, **kw):
     sx, sy = 1 + 0.18 * st_, 1 - 0.15 * st_
     if t1 is not None:
         sc *= 1 - prog(t, t1, t1 + 0.2)
-    idle = t - t0
-    cy2 = cy + 4 * math.sin(idle * 2.4)
-    rot = kw.pop("rot", 0.0) + 0.8 * math.sin(idle * 1.9)
+    cy2 = cy                                   # no idle wobble: boxes stand still after popping in
+    rot = kw.pop("rot", 0.0)
     if p < 0.6:
         sparkle(img, cx, cy2, p / 0.6, size, burst_col)
     kw.setdefault("overshoot", 1.58)
@@ -207,7 +206,7 @@ def burst(img, cx, cy, a, t, r0=170, r1=430, col=(255, 222, 90), n=18):
     img.paste(lay, (0, 0), lay)
 
 
-def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=900, pop_k=0.28, stagger=0.0):
+def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=900, pop_k=0.28, stagger=0.0, times=None):
     """lines: [(words, bg, fg, rot, base)]; whole sentence visible; spoken word grows, jumps and lights up.
     stagger>0: lines pop in one after another at the very start (still all visible within `stagger*len` s)"""
     words = [w for line, *_ in lines for w in line]
@@ -218,6 +217,8 @@ def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=900, pop_k=0.28, 
         dd = (t1 - t0 - 0.06) * wgt / tot
         spans.append((acc, acc + dd))
         acc += dd
+    if times:                       # explicit (start, end) per displayed word
+        spans = list(times)
     fade = 1 - prog(t, t1 + 0.15, t1 + 0.5)
     if fade <= 0.01:
         return
@@ -251,12 +252,12 @@ def karaoke(frame, t, lines, t0, t1, ys, first_pop=True, max_w=900, pop_k=0.28, 
         if single:
             burst(frame, OUT_W / 2, ys[li], max(pops[0], 1 - prog(t, t0, t0 + 0.7)) * fade, t)
         tile = _shine(tile, box, 2, prog(t, tl + 0.1, tl + 0.7))
-        tile = tile.rotate(rot + 0.6 * math.sin(t * 2 + li), resample=Image.BICUBIC, expand=True)
+        tile = tile.rotate(rot, resample=Image.BICUBIC, expand=True)
         tile = tile.resize((max(1, int(tile.width * sc * sx / 2)), max(1, int(tile.height * sc * sy / 2))), Image.LANCZOS)
         if fade < 1:
             tile.putalpha(tile.split()[3].point(lambda v: int(v * fade)))
-        sh = 12 * math.sin(t * 75) * pops[0] if single and pops[0] > 0.05 else 0
-        yb = ys[li] + 3 * math.sin(t * 2.3 + li)
+        sh = 0
+        yb = ys[li]
         px, py = int(OUT_W / 2 - tile.width / 2 + sh), int(yb - tile.height / 2)
         frame.paste(tile, (px, py), tile)
         if stagger and p_in < 0.6:

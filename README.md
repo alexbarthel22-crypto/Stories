@@ -11,7 +11,7 @@ Vertikale Erklärvideos (1080×1920, 30 fps) im flachen Vektor-Look mit natürli
 | 5 | Die drei Türen im Kellergewölbe | `videos/05_tueren/video.mp4` | 0:57 |
 | 6 | Das Rätsel der Sphinx (altes Ägypten, 2.5D-Parallax-Look) | `videos/06_sphinx/video.mp4` | 0:43 |
 | 7 | Million sofort oder 1 Cent pro Sekunde (Jahrmarkt, Leon vs. Mia) | `videos/07_million_cent/video.mp4` | 1:28 |
-| 8 | Hilberts Hotel – voll belegt, unendlich viele neue Gäste | `videos/08_hilbert_hotel/video.mp4` | 1:07 |
+| 8 | Hilberts Hotel – voll belegt, unendlich viele neue Gäste | `videos/08_hilbert_hotel/video.mp4` | 1:02 |
 
 ## Kanal-Standard (für jedes neue Video)
 - Musik: standardmäßig `assets/music/raetsel_theme.mp3` (Lyria), 15 dB unter der Stimme; Ausnahme Video #5: `assets/music/grusel_keller.mp3` (leicht gruselig, ebenfalls Lyria)

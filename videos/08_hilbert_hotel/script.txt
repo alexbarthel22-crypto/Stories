@@ -1,5 +1,5 @@
 # Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden. {emotion} = Regieanweisung.
-Dieses Hotel ist bis aufs letzte Zimmer ausgebucht – und trotzdem passen noch unendlich viele Gäste hinein.
+Dieses Hotel ist voll – und trotzdem passen noch unendlich viele Gäste rein.
 Das Hotel Unendlichkeit hat unendlich viele Zimmer: eins, zwei, drei – immer weiter, ohne Ende.
 Und heute Nacht ist jedes einzelne Zimmer belegt.
 Da hält ein Bus mit unendlich vielen neuen Gästen.
@@ -7,7 +7,6 @@ Jeder will ein eigenes Zimmer, und keiner soll draußen bleiben.
 Der Hotelchef darf nur eine einzige Durchsage machen – und alle bekommen ein Zimmer.
 {surprised} Welche Durchsage ist das?
 [PAUSE 1.6]
-Kleiner Tipp: Jeder Gast muss nur ein einziges Mal umziehen.
 Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!
 Hier kommt die Lösung.
 {amused} Die Durchsage lautet: Bitte zieht alle in das Zimmer mit der doppelten Nummer!
