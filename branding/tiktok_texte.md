@@ -144,6 +144,6 @@ Cover: `episodes/19_fremdgeher/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein Fremdgeher 💔 Denkt mehr mit der Hose als mit dem Kopf 👖🧠 „Guten Morgen, Schatz 😘“ an drei Mädchen gleichzeitig … und dann der falsche Name 😳 „Bin beim Zahnarzt“, sagt er, und landet in Mias Story im Freibad 🏊 Jana ist als „Mama“ eingespeichert und er hat gleich drei Handys 📱📱📱 Kino um 18 Uhr mit Mia, um 20 Uhr der gleiche Film mit Jana 🎬 Und im Handy? „Alles meine Cousinen. Alle zwölf.“ 👭 Welches Anzeichen hast du schon erlebt? 1, 2, 3 oder 4? 👇 Kennst du auch einen Fremdgeher? Markier sie oder ihn! Und was soll Alex morgen sein?
+ein Fremdgeher 💔 Denkt mehr mit der Hose als mit dem Kopf 👖🧠 „Guten Morgen, Schatz 😘“ an drei Mädchen gleichzeitig … und dann der falsche Name 😳 „Bin beim Zahnarzt“, sagt er, und landet in Mias Story im Freibad 🏊 Jana ist als „Mama“ eingespeichert und er hat gleich drei Handys 📱📱📱 Kino um 18 Uhr mit Mia, um 20 Uhr der gleiche Film mit Jana 🎬 Und im Handy? „Alles meine Cousinen. Alle zwölf.“ 👭 Dabei braucht er eigentlich nur ständig Bestätigung 🪫❤️ Welches Anzeichen hast du schon erlebt? 1, 2, 3 oder 4? 👇 Kennst du auch einen Fremdgeher? Markier sie oder ihn! Und was soll Alex morgen sein?
 
 #heuteistalex #fremdgehen #redflags #beziehung #comedy
