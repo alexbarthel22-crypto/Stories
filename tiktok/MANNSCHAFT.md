@@ -116,7 +116,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Offen: Platzwart, Verteidiger (Nr. 4)
 
 ## Folge 4 (Tag 4)
-- Datei: `tiktok/tag04_fc_schlammloch.mp4` (1:15, Fenrir); Entwürfe `tag04_fc_schlammloch_entwurf*.mp4`, Code `src_tag04/`; Intro vor der Ikea-Tribüne
+- Datei: `tiktok/tag04_fc_schlammloch_v2.mp4` (1:10, Fenrir, etwas schneller); Entwürfe `tag04_fc_schlammloch_entwurf*.mp4`, Code `src_tag04/`; Intro vor der Ikea-Tribüne
 - Fans: 428 → **477 (+49)**; Geld: 49 € + 43 Kommentare × 2 € = **135 €** → **Schlammpumpe** (Preisschild −135 €) → Kasse 0 €; nach dem Pumpen keine Pfützen mehr auf dem Platz
 - Neu: **Luca** (Platzwart, Top-Kommentar „ich will Platzwart liekt bitte“) – olivgrüne Latzhose, orange Mütze, grüne Gummistiefel; **Denny** (Verteidiger Nr. 4)
 - Luca pumpt den Platz leer, das Tor treibt zurück auf die Torlinie
@@ -126,4 +126,4 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - „Unsere Helden“: alle Fans, die es ins Video geschafft haben (Eike, Tobi, Leo, Leberkaaszerfetzer, Luca, Denny) mit Profilbildern
 - Gesucht: **Co-Trainer** fürs Spiel (Top-Kommentar gewinnt)
 - „Morgen heißt es: alles geben! Wir brauchen jeden Fan!“
-- **Ziel: Stadionrasen für 5000 €** = 5000 neue Fans oder 2500 Kommentare (Fortschrittsbalken 0 € / 5000 €)
+- **Ziel: Stadionrasen für 1000 €** = 1000 neue Fans oder 500 Kommentare (Fortschrittsbalken 0 € / 1000 €)

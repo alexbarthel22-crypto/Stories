@@ -152,14 +152,22 @@
  },
  {
   "id": "goal5k",
-  "say": "Unser Ziel: ein richtiger Stadionrasen für fünftausend Euro. Das sind fünftausend neue Fans oder zweitausendfünfhundert Kommentare!",
+  "say": "Unser Ziel: ein richtiger Stadionrasen für tausend Euro. Das sind tausend neue Fans oder fünfhundert Kommentare!",
   "cap": [
    "UNSER *ZIEL:",
    "EIN RICHTIGER",
    "*STADIONRASEN",
-   "FÜR *5000 EURO.",
-   "DAS SIND *5000 NEUE FANS",
-   "ODER *2500 KOMMENTARE!"
+   "FÜR *1000 EURO.",
+   "DAS SIND *1000 NEUE FANS",
+   "ODER *500 KOMMENTARE!"
+  ],
+  "cap_off": [
+   0.0,
+   1.11,
+   2.11,
+   2.91,
+   4.11,
+   5.71
   ]
  },
  {

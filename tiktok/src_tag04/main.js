@@ -153,11 +153,14 @@ const SCENES = {
       (ph > 0.6 ? popG(t, n / 0.9 + 0.67, 540, 540, badge(540, 540, 'GEHALTEN!', {kind: 'pitch', fs: 54, rot: 3})) : '');
   },
   train2(t, d, m) {
-    const ph = clamp((t - 0.4) / 1.2, 0, 1), miss = t >= capT(2) - 0.6;
-    const bx = 540 + ph * (miss ? 520 : 60), by = 1500 - ph * (miss ? 900 : 380);
-    let s = field(t, 1000, {goalX: 540}) + place(vlad({blink: blinkAt(t)}), 540, 1060, 0.4) +
-      place(lkz({blink: blinkAt(t)}), 380, 1650 - (t < 0.5 ? 0 : 0), 1.0);
-    s += `<g transform="translate(${bx} ${by}) rotate(${t * 700})">${ballIcon(0, 0, 40)}</g>`;
+    const ph = clamp((t - 0.4) / 1.1, 0, 1), miss = t >= capT(2) - 0.6;
+    const gx = 540, gy = 1180, gs = 2.4;
+    const bx = 400 + ph * (miss ? 600 : 160), by = 1660 - ph * (miss ? 1100 : 560);
+    let s = field(t, 900, {goal: false}) +
+      `<g fill="none" stroke="#F0EDE0" stroke-width="7" opacity=".85"><path d="M-400 ${gy} H1480"/><path d="M${gx - 480} ${gy} L${gx - 520} ${gy + 170} L${gx + 520} ${gy + 170} L${gx + 480} ${gy}"/></g>` +
+      goalPost(gx, gy, gs) + place(vlad({blink: blinkAt(t)}), gx, gy, 0.44) +
+      place(lkz({blink: blinkAt(t)}), 330, 1720, 0.75);
+    s += `<g transform="translate(${bx} ${by}) rotate(${t * 700})">${ballIcon(0, 0, 30)}</g>`;
     return cam(1.0, 540, 960, s) +
       popG(t, capT(1), 760, 520, badge(760, 520, 'TOR?', {kind: 'pitch', fs: 56})) +
       popG(t, capT(2), 540, 660, badge(540, 660, '… MANCHMAL', {kind: 'red', fs: 54, rot: -4}));
@@ -230,14 +233,14 @@ const SCENES = {
     const prog = 0;
     const bar = `<g>${box(90, 1150, 900, 120, 'white', 9)}<rect x="120" y="1180" width="840" height="60" rx="30" fill="#E2DACA" stroke="#3A2316" stroke-width="5"/>
       <rect x="120" y="1180" width="${Math.max(30, 840 * prog)}" height="60" rx="30" fill="#58B044"/>
-      ${label(540, 1228, '0 € / 5000 €', 46, '#3A2316')}</g>`;
+      ${label(540, 1228, '0 € / 1000 €', 46, '#3A2316')}</g>`;
     return cam(1.0, 540, 960, s + rasen) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'UNSER ZIEL:', {kind: 'orange', fs: 54})) +
       popG(t, c[2], 540, 500, bigText(540, 540, 'STADIONRASEN', '#6BF06B', 110)) +
       popG(t, c[3], 540, 1210, bar) +
-      popG(t, c[4], 540, 680, badge(540, 680, '5000 NEUE FANS', {kind: 'pitch', fs: 50, rot: -2})) +
+      popG(t, c[4], 540, 680, badge(540, 680, '1000 NEUE FANS', {kind: 'pitch', fs: 50, rot: -2})) +
       popG(t, c[5], 540, 790, bigText(540, 805, 'ODER', '#fff', 60)) +
-      popG(t, c[5], 540, 900, badge(540, 900, '2500 KOMMENTARE', {kind: 'red', fs: 50, rot: 2}));
+      popG(t, c[5], 540, 900, badge(540, 900, '500 KOMMENTARE', {kind: 'red', fs: 50, rot: 2}));
   },
   rule3(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
