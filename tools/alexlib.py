@@ -110,6 +110,75 @@ _EMOJI_RE = re.compile(
 )
 
 
+
+# ---------------------------------------------------------------- moderne 3D-Emojis (Fluent Emoji 3D, MIT)
+import os as _os
+_EMO_DIR = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "assets", "emoji")
+_EMO_INDEX = {}
+if _os.path.isdir(_EMO_DIR):
+    for _f in _os.listdir(_EMO_DIR):
+        if _f.endswith(".webp"):
+            _k = _f[:-5]
+            _EMO_INDEX[_k] = _f
+            _EMO_INDEX.setdefault(_k.replace("-fe0f", ""), _f)
+_EMO_CACHE = {}
+_EMO_KEEP = []
+USE_EMOJI_IMAGES = True
+
+
+def _emo_key(cl):
+    return "-".join(f"{ord(ch):x}" for ch in cl)
+
+
+def _emo_surface(cl):
+    if not USE_EMOJI_IMAGES:
+        return None
+    if cl in _EMO_CACHE:
+        return _EMO_CACHE[cl]
+    k = _emo_key(cl)
+    f = _EMO_INDEX.get(k) or _EMO_INDEX.get(k.replace("-fe0f", "")) or _EMO_INDEX.get(k.replace("-fe0f", "") + "-fe0f")
+    surf = None
+    if f:
+        from PIL import Image
+        im = Image.open(_os.path.join(_EMO_DIR, f)).convert("RGBA")
+        r, g, b, a = im.split()
+        from PIL import ImageChops
+        pre = Image.merge("RGBA", [ImageChops.multiply(ch, a) for ch in (b, g, r)] + [a])   # BGRA, vormultipliziert
+        data = bytearray(pre.tobytes())
+        surf = cairo.ImageSurface.create_for_data(data, cairo.FORMAT_ARGB32, im.width, im.height, im.width * 4)
+        _EMO_KEEP.append(data)
+    _EMO_CACHE[cl] = surf
+    return surf
+
+
+def _clusters(s):
+    out, i, n = [], 0, len(s)
+    while i < n:
+        j = i + 1
+        if 0x1F1E6 <= ord(s[i]) <= 0x1F1FF and j < n and 0x1F1E6 <= ord(s[j]) <= 0x1F1FF:
+            j += 1
+        while j < n:
+            o = ord(s[j])
+            if o in (0xFE0F, 0x20E3) or 0x1F3FB <= o <= 0x1F3FF or 0xE0020 <= o <= 0xE007F:
+                j += 1
+            elif o == 0x200D and j + 1 < n:
+                j += 2
+            else:
+                break
+        out.append(s[i:j]); i = j
+    return out
+
+
+def _emo_draw(c, surf, cx, cy, size, rot=0.0, alpha=1.0):
+    d = size * 1.12
+    c.save(); c.translate(cx, cy); c.rotate(rot)
+    sc = d / surf.get_width(); c.scale(sc, sc)
+    c.set_source_surface(surf, -surf.get_width() / 2, -surf.get_height() / 2)
+    c.get_source().set_filter(cairo.FILTER_GOOD)
+    c.paint_with_alpha(alpha) if alpha < 1 else c.paint()
+    c.restore()
+
+
 def _runs(s):
     out = []
     for part in _EMOJI_RE.split(s):
@@ -124,11 +193,21 @@ def _font(c, emoji, font, size):
     c.set_font_size(size * (0.92 if emoji else 1.0))
 
 
+def _emo_adv(c, cl, size, font):
+    if _emo_surface(cl) is not None:
+        return size * 1.08
+    _font(c, True, font, size)
+    return c.text_extents(cl).x_advance
+
+
 def text_width(c, s, size, font=FONT_HEAD):
     w = 0
     for part, emo in _runs(s):
-        _font(c, emo, font, size)
-        w += c.text_extents(part).x_advance
+        if emo:
+            w += sum(_emo_adv(c, cl, size, font) for cl in _clusters(part))
+        else:
+            _font(c, emo, font, size)
+            w += c.text_extents(part).x_advance
     return w
 
 
@@ -145,8 +224,19 @@ def text(c, s, x, y, size, color=INK, font=FONT_HEAD, anchor="c", alpha=1.0):
         x0 = x
     yb = y + size * 0.36
     for part, emo in _runs(s):
+        if emo:
+            for cl in _clusters(part):
+                surf = _emo_surface(cl)
+                if surf is not None:
+                    _emo_draw(c, surf, x0 + size * 0.54, y, size * 0.95, alpha=alpha)
+                    x0 += size * 1.08
+                else:
+                    _font(c, True, font, size)
+                    c.move_to(x0, yb + size * 0.06); src(c, color, alpha); c.show_text(cl)
+                    x0 += c.text_extents(cl).x_advance
+            continue
         _font(c, emo, font, size)
-        c.move_to(x0, yb + (size * 0.06 if emo else 0))
+        c.move_to(x0, yb)
         src(c, color, alpha)
         c.show_text(part)
         x0 += c.text_extents(part).x_advance
@@ -178,6 +268,10 @@ def text_block(c, s, x, y, size, max_w, color=INK, font=FONT_HEAD, lh=1.15, anch
 
 def emoji(c, e, x, y, size, rot=0.0, alpha=1.0):
     if size < 0.5 or alpha <= 0.003:
+        return
+    surf = _emo_surface(e)
+    if surf is not None:
+        _emo_draw(c, surf, x, y, size, rot, alpha)
         return
     c.save()
     c.translate(x, y)

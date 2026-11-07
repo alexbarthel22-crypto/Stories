@@ -164,8 +164,29 @@ def money_rain(c, t, t0, x, y, w, n=10):
 
 
 # ======================================================================= generische Folge
+LAYOUT = dict(feet=1690, ky=1.0, phone=1.0)    # pro Folge über make_scenes(..., layout=...) änderbar
+
+
 def alex_bottom(c, S, spec, expr="smug", pose="idle", prop=None, x=W / 2, h=AH):
-    person(c, x, FEET, h, spec, S.t, expr, pose, prop, name="Alex")
+    person(c, x, LAYOUT["feet"], h, spec, S.t, expr, pose, prop, name="Alex")
+
+
+def _Y(y):
+    return 390 + (y - 390) * LAYOUT["ky"]
+
+
+def _swap_fx(c, t, ts):
+    """Verwandlung mit Wolken um Alex (ts = Zeitpunkt des Wechsels)."""
+    u = (t - ts + 0.3) / 0.8
+    if not 0 <= u <= 1:
+        return
+    cy = LAYOUT["feet"] - AH * 0.5
+    a = math.sin(u * math.pi)
+    for i in range(9):
+        ang = i / 9 * 2 * math.pi
+        r = 120 + 140 * u
+        emoji(c, "☁️", W / 2 + math.cos(ang) * r, cy + math.sin(ang) * r * 1.2, 150 * (0.6 + 0.6 * a), alpha=a)
+    emoji(c, "✨", W / 2, cy - 40, 160 * a, rot=u * 3, alpha=a)
 
 
 _ITEM_SCALE = [1.0]
@@ -175,6 +196,7 @@ def _items(c, t, S, items, li):
     """items: (emoji, x, y, size, ab_zeile[, anim]) – anim: bob/spin/pulse/shake/fly"""
     for it in items:
         e, x, y, sz, l0 = it[:5]
+        y = _Y(y)
         an = it[5] if len(it) > 5 else "bob"
         t0 = S.at(l0, 0.15)
         if t < t0:
@@ -198,11 +220,12 @@ def sc_stage(c, S, v, spec):
     s = pop(t, S.at(0, 0.0))
     n = len(S.S.starts)
     last = S.at(n - 1, 0.3)
-    bx, by, bw, bh = W / 2, 710, 940, 640
+    bh = 640 * LAYOUT["ky"]
+    bx, by, bw = W / 2, 390 + bh / 2, 940
     def box():
         rrect(c, bx - bw / 2, by - bh / 2, bw, bh, 30); fill(c, v.get("box", "#FFF4E0"))
         if v.get("floor"):
-            rrect(c, bx - bw / 2, by + 120, bw, bh / 2 - 120, 30); fill(c, v["floor"])
+            rrect(c, bx - bw / 2, _Y(830), bw, by + bh / 2 - _Y(830), 30); fill(c, v["floor"])
         rrect(c, bx - bw / 2, by - bh / 2, bw, bh, 30); c.set_line_width(6); src(c, INK); c.stroke()
         if v.get("head"):
             hs = v.get("head_size", 36)
@@ -210,12 +233,12 @@ def sc_stage(c, S, v, spec):
             text(c, v["head"], W / 2, 420 + hs / 2, hs, "#FFFFFF", FONT_HEAD)
         for (sp, x, nm, ex, l_angry) in v.get("people", []):
             e = ex if (l_angry is None or t < S.at(l_angry, 0.4)) else "angry"
-            person(c, x, 1000, 380, sp, t, e, bob=False, name=nm, blink_seed=int(x))
+            person(c, x, _Y(1000), 380 * LAYOUT["ky"], sp, t, e, bob=False, name=nm, blink_seed=int(x))
         _items(c, t, S, v.get("items", []), 0)
         for li, tg in enumerate(v.get("tags", [])):
             if tg and t > S.at(li, 0.35):
                 txt, col, x, y = (tg + (W / 2, 960))[:4] if len(tg) == 2 else tg
-                tag(c, x, y, txt, col, s=pop(t, S.at(li, 0.35)), size=v.get("tag_size", 30))
+                tag(c, x, _Y(y), txt, col, s=pop(t, S.at(li, 0.35)), size=v.get("tag_size", 30))
     _ITEM_SCALE[0] = v.get("item_scale", 1.0)
     c.save(); box_move(c, bx, by, t, v.get("move", "wobble"), last)
     scaled(c, bx, by, s, box)
@@ -225,9 +248,21 @@ def sc_stage(c, S, v, spec):
         box_fx(c, t, last, bx, by, bw, bh, v["fx"])
     for li, bb in enumerate(v.get("bubbles", [])):
         if bb and t > S.at(li, 0.5):
-            bubble(c, bb, 830, 1190, pop(t, S.at(li, 0.5)), tail=(-0.5, 1), size=36, max_w=320)
+            if isinstance(bb, tuple):                       # (text, x, y) – z. B. bei einer Person in der Box
+                bubble(c, bb[0], bb[1], _Y(bb[2]), pop(t, S.at(li, 0.5)), tail=(0, 1), size=40, max_w=360)
+            else:
+                bubble(c, bb, 830, LAYOUT["feet"] - 500, pop(t, S.at(li, 0.5)), tail=(-0.5, 1), size=36, max_w=320)
     ex = v.get("alex", ("smug", "idle", None))
+    sw = v.get("alex_swap")                                 # (zeile, anteil, spec2[, ausdruck]) – Outfit-Wechsel mit Wolken
+    if sw:
+        ts = S.at(sw[0], sw[1])
+        if t >= ts:
+            spec = sw[2]
+            if len(sw) > 3:
+                ex = (sw[3],) + tuple(ex[1:])
     alex_bottom(c, S, spec, *ex)
+    if sw:
+        _swap_fx(c, t, S.at(sw[0], sw[1]))
     _items(c, t, S, v.get("front", []), 0)
 
 
@@ -347,7 +382,9 @@ def sc_outro(c, S, v, spec):
 KINDS = dict(stage=sc_stage, bars=sc_bars, chat=sc_chat, signs=sc_signs, outro=sc_outro)
 
 
-def make_scenes(scenes_def, spec):
+def make_scenes(scenes_def, spec, layout=None):
+    if layout:
+        LAYOUT.update(layout)
     out = {}
     for sd in scenes_def:
         v = sd["viz"]; fn = KINDS[v["kind"]]
@@ -376,14 +413,28 @@ def make_intro(cfg):
             text(c, cfg["neon"][0], 330, 1094, 28, "#FFFFFF", FONT_HEAD, alpha=glow)
             text(c, cfg["neon"][1], 330, 1128, 22, "#FFFFFF", FONT_HEAD, alpha=glow)
         scaled(c, 330, 1110, s_, neon)
-        _sign(c, 230, 1640, cfg["signs"][0], "#FFFFFF", -0.1, 50, 420, 60, 170)
-        _sign(c, 850, 1640, cfg["signs"][1], "#FFE1B8", 0.08, 50, 420, 60, 170)
+        sw_ = cfg.get("sign_w", 420)
+        _sign(c, cfg.get("sign_x", (230, 850))[0], 1640, cfg["signs"][0], "#FFFFFF", -0.1, cfg.get("sign_size", 50), sw_, 60, 170)
+        _sign(c, cfg.get("sign_x", (230, 850))[1], 1640, cfg["signs"][1], "#FFE1B8", 0.08, cfg.get("sign_size", 50), sw_, 60, 170)
         for i in range(5):
             u2 = (t * 0.35 + i / 5) % 1
             emoji(c, cfg["fly"][i % len(cfg["fly"])], 120 + i * 210, 1250 - u2 * 160, 46, alpha=0.8 * (1 - u2))
 
     def extras(c, x, feet, h, t, u):
         k = h / 100.0
+        if cfg.get("rose_glasses"):                          # rosa-rote Brille wird beim Reveal aufgesetzt
+            uu = min(1.0, max(0.0, u))
+            gy = feet - cfg.get("glasses_y", 86) * k - (1 - uu) * 45 * k
+            ga = min(1.0, uu * 1.5)
+            for sx in (-1, 1):
+                c.save(); c.translate(x + sx * 9 * k, gy)
+                c.move_to(0, 4 * k)                          # Herzform-Glas
+                c.curve_to(-9 * k, -3 * k, -6 * k, -11 * k, 0, -6 * k)
+                c.curve_to(6 * k, -11 * k, 9 * k, -3 * k, 0, 4 * k)
+                c.close_path(); src(c, "#FF5FA8", 0.55 * ga); c.fill_preserve()
+                c.set_line_width(1.6 * k); src(c, "#D81B78", ga); c.stroke()
+                c.restore()
+            c.move_to(x - 3 * k, gy - 4 * k); c.line_to(x + 3 * k, gy - 4 * k); c.set_line_width(1.4 * k); src(c, "#D81B78", ga); c.stroke()
         for (e, dx, dy, sz) in cfg.get("extras", []):
             emoji(c, e, x + dx * k, feet - dy * k + math.sin(t * 3 + dx) * k, sz * k)
 
@@ -492,7 +543,9 @@ def sc_messenger(c, S, v, spec):
             text(c, "🎤", x0 + w - 48, y0 + h - 47, 22, "#FFFFFF", FONT_HEAD)
         c.restore()
     last = S.at(len(S.S.starts) - 1, 0.3)
+    ps = LAYOUT["phone"]
     c.save(); box_move(c, W / 2, 730, t, v.get("move", "wobble"), last)
+    c.translate(W / 2, 370); c.scale(ps, ps); c.translate(-W / 2, -370)
     scaled(c, W / 2, 730, s, ph)
     c.restore()
     if v.get("fx"):
