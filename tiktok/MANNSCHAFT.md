@@ -5,7 +5,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | Nr. | Name | Position | Aussehen |
 |---|---|---|---|
 | 1 | **Vlad** | Tor | schwarze Haare, Augenklappe immer auf **seinem rechten Auge** (vom Betrachter aus links, auch beim Laufen nie spiegeln), grünes Torwarttrikot, Handschuhe |
-| 4 | **Opa Jürgen** – **seit Tag 3 in Rente**, sitzt im Schaukelstuhl am Spielfeldrand (Decke, Tasse Tee). Neuer Verteidiger gesucht | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock, **kräftiger Körper mit Bierbauch** (breite Schultern, dicke Arme und Beine) |
+| 4 | **Denny** (Neuzugang Tag 4, Top-Kommentar „kann ich verteidiger“) – lange dunkle Haare mit Zopf, rotes Schweißband. Vorgänger: **Opa Jürgen** – **seit Tag 3 in Rente**, sitzt im Schaukelstuhl am Spielfeldrand (Decke, Tasse Tee). Neuer Verteidiger gesucht | Abwehr | Glatze mit weißen Haarresten, runde Brille, weißer Schnauzer, Gehstock, **kräftiger Körper mit Bierbauch** (breite Schultern, dicke Arme und Beine) |
 | 3 | Iro *(Platzhalter-Name)* | Abwehr | grüner Irokese, Ohrring |
 | 5 | Bulldozer *(Platzhalter-Name)* | Abwehr | Glatze, roter Vollbart |
 | 6 | Hipster *(Platzhalter-Name)* | Mittelfeld | Dutt, eckige Brille |
@@ -114,3 +114,12 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Fans: 428 · Vereinskasse: 0 € (Thumbnail zeigt die Einnahmen des Tages: 799 €, +799 €)
 - Liga-Konkurrenten: FC Asche, SV Kuhwiese, SC Heuballen (nächster Gegner, in 3 Tagen)
 - Offen: Platzwart, Verteidiger (Nr. 4)
+
+## Folge 4 (Tag 4) – Entwurf mit Vorschau-Stimme
+- Datei: `tiktok/tag04_fc_schlammloch_entwurf.mp4` (0:57, espeak-Stimme), Code `src_tag04/`
+- Fans: 428 → **478 (+50)**; Geld: 50 € + 40 Kommentare × 2 € = **130 €** → **Schlammpumpe** → Kasse 0 €
+- Neu: **Luca** (Platzwart, Top-Kommentar „ich will Platzwart liekt bitte“) – olivgrüne Latzhose, orange Mütze, grüne Gummistiefel; **Denny** (Verteidiger Nr. 4)
+- Luca pumpt den Platz leer, das Tor treibt zurück auf die Torlinie
+- Vereinsgelände: Fahnenmast mit Vereinsflagge, **Bauwagen als Kabine**, **Würstchengrill** („Wurst 2 €“), **Anzeigetafel aus Pappe** (HEIM 0 : 0 GAST)
+- Training: Vlad hält jeden Ball, Leberkaaszerfetzer trifft „manchmal“, Denny grätscht alles weg (Hütchen)
+- Noch 2 Tage bis zum Spiel gegen den SC Heuballen; Frage: Was brauchen wir noch fürs Spiel?

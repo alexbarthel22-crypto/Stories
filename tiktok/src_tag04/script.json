@@ -1,0 +1,16 @@
+[
+ {"id":"intro","say":"Tag vier! Ich gründe einen Fußballverein!","cap":["TAG VIER!","ICH GRÜNDE EINEN","*FUSSBALLVEREIN!"]},
+ {"id":"fans4","say":"Gestern hatten wir vierhundertachtundzwanzig Fans. Heute: vierhundertachtundsiebzig!","cap":["GESTERN:","428 FANS.","HEUTE:","*478!"]},
+ {"id":"luca","say":"Unser neuer Platzwart: Luca! Dein Kommentar hat gewonnen!","cap":["UNSER NEUER","*PLATZWART:","*LUCA!","DEIN KOMMENTAR","HAT *GEWONNEN!"]},
+ {"id":"denny","say":"Und unser neuer Verteidiger mit der Nummer vier: Denny!","cap":["UND UNSER NEUER","*VERTEIDIGER","MIT DER *NUMMER 4:","*DENNY!"]},
+ {"id":"money4","say":"Fünfzig neue Fans, vierzig Kommentare. Vereinskasse: hundertdreißig Euro!","cap":["50 NEUE *FANS,","40 *KOMMENTARE.","VEREINSKASSE:","*130 EURO!"]},
+ {"id":"pump","say":"Davon kaufen wir eine Schlammpumpe. Kasse: wieder null Euro.","cap":["DAVON KAUFEN WIR EINE","*SCHLAMMPUMPE.","KASSE:","WIEDER !0 EURO."]},
+ {"id":"pumpwork","say":"Luca pumpt den Platz leer. Und das Tor ist endlich zurück!","cap":["*LUCA PUMPT","DEN PLATZ LEER.","UND DAS TOR IST","ENDLICH *ZURÜCK!"]},
+ {"id":"tour","say":"Unser Vereinsgelände: ein Bauwagen als Kabine, ein Würstchengrill und eine Anzeigetafel aus Pappe.","cap":["UNSER *VEREINSGELÄNDE:","EIN *BAUWAGEN","ALS KABINE,","EIN *WÜRSTCHENGRILL","UND EINE *ANZEIGETAFEL","AUS PAPPE."]},
+ {"id":"train1","say":"Und jetzt: Training! Vlad hält heute jeden Ball.","cap":["UND JETZT:","*TRAINING!","*VLAD HÄLT HEUTE","JEDEN BALL."]},
+ {"id":"train2","say":"Leberkaas-Zerfetzer trifft. Manchmal.","cap":["*LEBERKAASZERFETZER","TRIFFT.","!MANCHMAL."]},
+ {"id":"train3","say":"Und Denny grätscht einfach alles weg.","cap":["UND *DENNY GRÄTSCHT","EINFACH *ALLES WEG."]},
+ {"id":"count2","say":"Noch zwei Tage bis zum Spiel gegen den SC Heuballen!","cap":["NOCH *2 TAGE BIS","ZUM SPIEL GEGEN DEN","*SC HEUBALLEN!"]},
+ {"id":"rule3","say":"Jeder neue Fan bringt einen Euro, jeder Kommentar zwei.","cap":["JEDER NEUE *FAN: *1 €,","JEDER *KOMMENTAR: *2 €."]},
+ {"id":"end4","say":"Was brauchen wir noch unbedingt fürs Spiel? Schreib es in die Kommentare!","cap":["WAS BRAUCHEN WIR","NOCH UNBEDINGT","*FÜRS SPIEL?","SCHREIB'S IN DIE *KOMMENTARE!"]}
+]
