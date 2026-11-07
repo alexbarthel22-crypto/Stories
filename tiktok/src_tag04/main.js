@@ -58,7 +58,7 @@ function bewerbungen(t, t0, y) {
 const SCENES = {
   intro(t, d, m) {
     const k = clamp(t / d, 0, 1), e = k * k * (3 - 2 * k), z = 0.7 + 0.3 * e;
-    const world = field(t, 900, {goal: false, touchY: 1210}) + `<g transform="translate(0 -100)">${chairTribune(t)}</g>` +
+    const world = field(t, 900, {goal: false, touchY: 1210}) + `<g transform="translate(0 450)">${bigStand(t, 1, 1)}</g>` +
       place(coach({mouth: m, blink: blinkAt(t)}), 540, 1420, 0.72) +
       place(frog({blink: blinkAt(t, .4)}), 760, 1430 - Math.abs(Math.sin(t * 7)) * 30, 0.2);
     return cam(z, 540, 1110 - 40 * e, world) +
@@ -170,22 +170,74 @@ const SCENES = {
   },
   count2(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1680, 0.9)) +
-      `<g opacity="${Math.sin(t * 14) > -0.4 ? 1 : 0.35}" transform="translate(540 520) scale(${1 + 0.07 * Math.abs(Math.sin(t * 7))}) translate(-540 -520)"><ellipse cx="540" cy="520" rx="${380 + 30 * Math.sin(t * 7)}" ry="110" fill="#FFD31A" opacity="${0.25 + 0.2 * Math.abs(Math.sin(t * 7))}"/>${bigText(540, 560, 'NOCH 2 TAGE', '#FFE45A', 110)}</g>` +
+      `<g opacity="${Math.sin(t * 14) > -0.4 ? 1 : 0.35}" transform="translate(540 520) scale(${1 + 0.07 * Math.abs(Math.sin(t * 7))}) translate(-540 -520)"><ellipse cx="540" cy="520" rx="${380 + 30 * Math.sin(t * 7)}" ry="110" fill="#FFD31A" opacity="${0.25 + 0.2 * Math.abs(Math.sin(t * 7))}"/>${bigText(540, 560, 'MORGEN!', '#FFE45A', 140)}</g>` +
       popG(t, capT(2), 540, 820, `<g transform="translate(330 830) scale(0.42) translate(-300 -300)">${LOGO}</g>` + bigText(540, 860, 'VS', '#FFD31A', 100) + heuLogo(750, 830, 0.6));
   },
-  rule3(t, d, m) {
+  heroes(t, d, m) {
+    const list = [[FAN_PICS[0], '@eikemzz'], [FAN_PICS[1], '@tobiii1911'], [FAN_PICS[2], '@leo.hro1'], [LKZ_PIC, 'Leberkaas…'], [LUCA_PIC, 'luca'], [DENNY_PIC, 'Denny']];
+    const times = [capT(3), capT(3) + 0.35, capT(3) + 0.7, capT(4), capT(5), capT(5) + 0.4];
+    let g = '';
+    list.forEach(([pic, name], i) => { const x = 230 + (i % 3) * 300, y = 640 + Math.floor(i / 3) * 330;
+      const id = 'hp' + i;
+      g += popG(t, times[i], x, y, `<defs><clipPath id="${id}"><circle cx="${x}" cy="${y}" r="100"/></clipPath></defs>
+        <circle cx="${x + 5}" cy="${y + 9}" r="112" fill="#3A2316"/><circle cx="${x}" cy="${y}" r="110" fill="url(#pwGold2)" stroke="#3A2316" stroke-width="6"/>
+        <image href="${pic}" x="${x - 100}" y="${y - 100}" width="200" height="200" clip-path="url(#${id})"/>
+        <text x="${x + 78}" y="${y - 70}" text-anchor="middle" font-family="Noto Color Emoji" font-size="54">⭐</text>` + handleTag(x, y + 150, name, 0.8)); });
+    const defs = `<defs><linearGradient id="pwGold2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF3A8"/><stop offset=".5" stop-color="#FFD31A"/><stop offset="1" stop-color="#C98A12"/></linearGradient></defs>`;
+    return defs + cam(1.0, 540, 960, field(t, 1080, {goal: false})) + `<rect width="1080" height="1920" fill="#000" opacity=".35"/>` +
+      `<g opacity=".25">${Array.from({length: 12}, (_, i) => { const a = i * 30 + t * 15; return `<path d="M540 800 L${540 + Math.cos(a * Math.PI / 180) * 1400} ${800 + Math.sin(a * Math.PI / 180) * 1400} L${540 + Math.cos((a + 12) * Math.PI / 180) * 1400} ${800 + Math.sin((a + 12) * Math.PI / 180) * 1400}Z" fill="#FFD31A"/>`; }).join('')}</g>` +
+      popG(t, 0.0, 540, 360, badge(540, 360, 'UNSERE HELDEN', {kind: 'orange', fs: 64, rot: -2})) + g + confetti(t, capT(3), 40);
+  },
+  cotrainer(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
-    let coins = '';
-    for (let i = 0; i < 10; i++) { const t0 = c[0] + 0.1 + i * 0.3, k = (t - t0) / 0.6, two = t0 >= c[1]; if (k > 0 && k < 1) coins += coin(470 + rnd(i + 700) * 140, 560 + k * 340, two ? 36 : 30, two); }
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(540, 1180, 0.95) + cashBox(540, 1015, 0.8, 'empty') + coins +
-        place(coach({mouth: m, blink: blinkAt(t)}), 170, 1600, 0.85)) +
-      popG(t, c[0], 520, 400, badge(520, 400, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 50})) +
-      popG(t, c[1], 520, 530, badge(520, 530, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 50, rot: -2}));
+    const board = `<g transform="translate(540 820) rotate(${Math.sin(t * 2) * 4})">
+      <rect x="-150" y="-200" width="300" height="400" rx="20" fill="#A8743F" stroke="#3A2316" stroke-width="10"/>
+      <rect x="-120" y="-160" width="240" height="330" fill="#fff"/>
+      <rect x="-60" y="-220" width="120" height="50" rx="10" fill="#9AA0A8" stroke="#3A2316" stroke-width="7"/>
+      <g stroke="#2F7FD8" stroke-width="7" fill="none"><circle cx="-50" cy="-80" r="18"/><circle cx="40" cy="-30" r="18"/><circle cx="-30" cy="40" r="18"/></g>
+      <g stroke="#E5483A" stroke-width="8"><path d="M30 -100 l24 24 M54 -100 l-24 24 M60 60 l24 24 M84 60 l-24 24"/></g>
+      <path d="M-50 -60 Q0 -40 30 -36 M40 -12 Q20 20 -20 34" stroke="#3A2316" stroke-width="5" fill="none" stroke-dasharray="10 8"/>
+      <g transform="translate(150 140) rotate(-20)"><rect x="-50" y="-22" width="90" height="44" rx="20" fill="#C0C6CC" stroke="#3A2316" stroke-width="6"/><circle cx="40" cy="0" r="26" fill="#C0C6CC" stroke="#3A2316" stroke-width="6"/><path d="M-50 0 Q-110 40 -150 -10" stroke="#E5483A" stroke-width="7" fill="none"/></g></g>`;
+    return cam(1.0, 540, 960, field(t, 1080, {goal: false})) + `<rect width="1080" height="1920" fill="#000" opacity=".3"/>` +
+      popG(t, 0.0, 540, 380, badge(540, 380, 'GESUCHT: CO-TRAINER', {kind: 'pitch', fs: 56})) + popG(t, 0.2, 540, 820, board) +
+      bewerbungen(t, c[3], 1180) +
+      (t >= c[3] + 0.4 ? `<g opacity="${Math.sin(t * 16) > -0.3 ? 1 : 0.25}">${badge(540, 1290, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 44, rot: -2})}</g>` : '');
+  },
+  allin(t, d, m) {
+    const z = 1.6, cx = 540, cy = 600;
+    return cam(z, cx, cy, wholePitch(t) + bigStand(t, 1, 1)) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1700, 1.0) +
+      popG(t, capT(1), 540, 420, bigText(540, 470, 'ALLES GEBEN!', '#FFD31A', 120)) +
+      popG(t, capT(3), 540, 620, badge(540, 620, 'WIR BRAUCHEN JEDEN FAN!', {kind: 'red', fs: 50, rot: -2})) + confetti(t, capT(1), 50);
+  },
+  goal5k(t, d, m) {
+    const c = SEG.caps.map(x => x.t0 - SEG.start);
+    const grow = easeOut(clamp((t - c[2]) / 1.2, 0, 1));
+    let s = field(t, 1000, {goalX: 540});
+    let rasen = '';
+    if (t >= c[2]) {
+      const w = 1080 * grow;
+      rasen = `<defs><clipPath id="rz"><rect x="0" y="1000" width="${w}" height="920"/></clipPath></defs><g clip-path="url(#rz)"><rect x="0" y="1000" width="1080" height="920" fill="#3FA34D"/>
+        ${Array.from({length: 9}, (_, i) => `<rect x="${i * 120}" y="1000" width="60" height="920" fill="#4DB85C"/>`).join('')}
+        <g fill="none" stroke="#fff" stroke-width="8" opacity=".9"><path d="M-400 1040 H1480"/><path d="M340 1040 L320 1170 L760 1170 L740 1040"/></g>
+        ${goalPost(540, 1040, 0.9)}</g>
+        <g transform="translate(${w} 1300)"><ellipse cx="0" cy="0" rx="40" ry="300" fill="#2E7D32" stroke="#1B4D1F" stroke-width="8"/></g>`;
+    }
+    const prog = 0;
+    const bar = `<g>${box(90, 1150, 900, 120, 'white', 9)}<rect x="120" y="1180" width="840" height="60" rx="30" fill="#E2DACA" stroke="#3A2316" stroke-width="5"/>
+      <rect x="120" y="1180" width="${Math.max(30, 840 * prog)}" height="60" rx="30" fill="#58B044"/>
+      ${label(540, 1228, '0 € / 5000 €', 46, '#3A2316')}</g>`;
+    return cam(1.0, 540, 960, s + rasen) +
+      popG(t, 0.0, 540, 360, badge(540, 360, 'UNSER ZIEL:', {kind: 'orange', fs: 54})) +
+      popG(t, c[2], 540, 500, bigText(540, 540, 'STADIONRASEN', '#6BF06B', 110)) +
+      popG(t, c[3], 540, 1210, bar) +
+      popG(t, c[4], 300, 700, badge(300, 700, '5000 FANS', {kind: 'pitch', fs: 48, rot: -3})) +
+      popG(t, c[5], 540, 790, bigText(540, 800, 'ODER', '#fff', 60)) +
+      popG(t, c[5], 760, 700, badge(760, 700, '2500 KOMMENTARE', {kind: 'red', fs: 38, rot: 3}));
   },
   end4(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1700, 1.15)) +
-      `<g transform="translate(510 500) scale(${1 + 0.025 * Math.sin(t * 6)}) translate(-510 -500)">${popG(t, 0.0, 510, 500, commentCard(70, 300, t, 'WIR BRAUCHEN ...'))}</g>` +
-      popG(t, capT(2), 540, 830, badge(540, 830, 'WAS FEHLT NOCH?', {bg: '#FFD31A', fs: 50, rot: -2}));
+      `<g transform="translate(510 500) scale(${1 + 0.025 * Math.sin(t * 6)}) translate(-510 -500)">${popG(t, 0.0, 510, 500, commentCard(70, 300, t, 'ICH WERDE ...'))}</g>` +
+      popG(t, capT(1), 540, 830, badge(540, 830, 'WER WIRD CO-TRAINER?', {bg: '#FFD31A', fs: 48, rot: -2}));
   },
 };
 

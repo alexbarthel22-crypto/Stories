@@ -298,7 +298,14 @@ def build_sfx(segs, N):
             for k in range(int((en - st) / 0.35)): L(k * 0.35, squelch() * 0.6)
             L(0.0, pop())
         elif sid == 'count2': L(0.0, pop()); L(c[2], thud())
-        elif sid == 'end4': L(0.0, ding()); L(c[2], pop())
+        elif sid == 'end4': L(0.0, ding()); L(c[1], pop())
+        elif sid == 'heroes':
+            L(0.0, pop()); L(c[3], ding()); L(c[3], stadium_rec(-26.0)[:int(2.0 * SR)])
+            for x in (c[3], c[3] + 0.35, c[3] + 0.7, c[4], c[5], c[5] + 0.4): L(x, pop())
+        elif sid == 'cotrainer': L(0.0, thud()); L(0.2, whistle()); L(c[3], ding())
+        elif sid == 'allin': L(0.0, drum(en - st) * 0.8); L(c[1], stadium_rec(-22.0)[:int(max(0.5, en - st - c[1]) * SR)]); L(c[3], pop())
+        elif sid == 'goal5k':
+            L(0.0, pop()); L(c[2], whoosh()); L(c[2] + 0.2, fanfare()); L(c[3], pop()); L(c[4], pop()); L(c[5], pop())
         elif sid == 'calc':
             L(0.0, pop())
             for x in (c[0], c[1], c[2]): L(x, whoosh())

@@ -116,10 +116,14 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Offen: Platzwart, Verteidiger (Nr. 4)
 
 ## Folge 4 (Tag 4) – Entwurf mit Vorschau-Stimme
-- Datei: `tiktok/tag04_fc_schlammloch_entwurf.mp4` (0:57, espeak-Stimme), Code `src_tag04/`
+- Datei: `tiktok/tag04_fc_schlammloch_entwurf2.mp4` (1:17, espeak-Stimme), Code `src_tag04/`; Intro vor der Ikea-Tribüne
 - Fans: 428 → **478 (+50)**; Geld: 50 € + 40 Kommentare × 2 € = **130 €** → **Schlammpumpe** → Kasse 0 €
 - Neu: **Luca** (Platzwart, Top-Kommentar „ich will Platzwart liekt bitte“) – olivgrüne Latzhose, orange Mütze, grüne Gummistiefel; **Denny** (Verteidiger Nr. 4)
 - Luca pumpt den Platz leer, das Tor treibt zurück auf die Torlinie
 - Vereinsgelände: Fahnenmast mit Vereinsflagge, **Bauwagen als Kabine**, **Würstchengrill** („Wurst 2 €“), **Anzeigetafel aus Pappe** (HEIM 0 : 0 GAST)
 - Training: Vlad hält jeden Ball, Leberkaaszerfetzer trifft „manchmal“, Denny grätscht alles weg (Hütchen)
-- Noch 2 Tage bis zum Spiel gegen den SC Heuballen; Frage: Was brauchen wir noch fürs Spiel?
+- **Morgen** ist das erste Spiel gegen den SC Heuballen
+- „Unsere Helden“: alle Fans, die es ins Video geschafft haben (Eike, Tobi, Leo, Leberkaaszerfetzer, Luca, Denny) mit Profilbildern
+- Gesucht: **Co-Trainer** fürs Spiel (Top-Kommentar gewinnt)
+- „Morgen heißt es: alles geben! Wir brauchen jeden Fan!“
+- **Ziel: Stadionrasen für 5000 €** = 5000 neue Fans oder 2500 Kommentare (Fortschrittsbalken 0 € / 5000 €)
