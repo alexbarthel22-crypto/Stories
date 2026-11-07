@@ -35,9 +35,9 @@ function commentReplica(x, y, t, pic, name, emoji, text) {
     <image href="${pic}" x="36" y="36" width="128" height="128" clip-path="url(#${id})"/>
     <text x="200" y="82" font-family="Inter" font-weight="700" font-size="40" fill="#9A9A9A">${name}</text>
     <text x="${210 + name.length * 22}" y="82" font-family="Noto Color Emoji" font-size="36">${emoji}</text>
-    <text x="200" y="152" font-family="Inter" font-weight="600" font-size="48" fill="#fff">${text}</text>
+    <text x="200" y="152" font-family="Inter" font-weight="600" font-size="${text.length > 24 ? 42 : 48}" fill="#fff">${text}</text>
     <text x="200" y="212" font-family="Inter" font-weight="700" font-size="30" fill="#8A8A8A">Antworten</text>
-    <g transform="translate(780 120) scale(${1 + 0.12 * Math.max(0, Math.sin(t * 9))})"><path d="M0 -14 c-22 -30 -64 -8 -46 24 l46 46 l46 -46 c18 -32 -24 -54 -46 -24z" fill="#FE2C55" stroke="#fff" stroke-width="4"/></g></g>`;
+    <g transform="translate(790 70) scale(${0.75 + 0.1 * Math.max(0, Math.sin(t * 9))})"><path d="M0 -14 c-22 -30 -64 -8 -46 24 l46 46 l46 -46 c18 -32 -24 -54 -46 -24z" fill="#FE2C55" stroke="#fff" stroke-width="4"/></g></g>`;
 }
 
 // Schlammpumpe mit Schlauch
@@ -80,11 +80,12 @@ function grill(x, y, s, t) {
 function pappeTafel(x, y, s) {
   return `<g transform="translate(${x} ${y}) scale(${s})">
     <path d="M-150 0 V120 M150 0 V120" stroke="#8A5A36" stroke-width="16"/>
-    <path d="M-200 -150 L200 -158 L196 10 L-196 14 Z" fill="#C8A26B" stroke="#3A2316" stroke-width="8"/>
-    <text x="-110" y="-90" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" font-size="38" fill="#3A2316">HEIM</text>
-    <text x="110" y="-92" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" font-size="38" fill="#3A2316">GAST</text>
-    <text x="0" y="-20" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" font-size="96" fill="#3A2316">0 : 0</text>
-    <path d="M-180 -140 l30 10" stroke="#A9824E" stroke-width="6"/></g>`;
+    <path d="M-210 -200 L210 -208 L206 10 L-206 14 Z" fill="#C8A26B" stroke="#3A2316" stroke-width="8"/>
+    <text x="-115" y="-150" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" font-size="38" fill="#3A2316">HEIM</text>
+    <text x="115" y="-152" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" font-size="38" fill="#3A2316">GAST</text>
+    <path d="M-185 -126 H185" stroke="#A9824E" stroke-width="5"/>
+    <text x="0" y="-22" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" font-size="88" fill="#3A2316">0 : 0</text>
+</g>`;
 }
 function flagPole(x, y, s, t) {
   const w = Math.sin(t * 4);
@@ -93,4 +94,15 @@ function flagPole(x, y, s, t) {
     <circle cx="0" cy="-526" r="14" fill="#FFD31A" stroke="#3A2316" stroke-width="5"/>
     <path d="M8 -500 Q${100 + w * 10} ${-520 + w * 14} 220 -500 L220 -360 Q${100 + w * 10} ${-380 + w * 14} 8 -360 Z" fill="#2F7FD8" stroke="#3A2316" stroke-width="6"/>
     <g transform="translate(114 -430) scale(0.17) translate(-300 -300)">${LOGO}</g></g>`;
+}
+
+// Preisschild an der Pumpe
+function priceTag(x, y, s, t, name, price) {
+  const sw = Math.sin(t * 3) * 6;
+  return `<g transform="translate(${x} ${y}) rotate(${sw}) scale(${s})">
+    <path d="M0 -120 L0 -40" stroke="#3A2316" stroke-width="5"/>
+    <path d="M-170 -40 L150 -40 L200 40 L150 120 L-170 120 Z" fill="#FFF8EC" stroke="#3A2316" stroke-width="9" stroke-linejoin="round"/>
+    <circle cx="160" cy="40" r="14" fill="#3A2316"/>
+    <text x="-10" y="20" text-anchor="middle" ${FONT} font-size="36" fill="#3A2316">${name}</text>
+    <text x="-10" y="98" text-anchor="middle" ${FONT} font-size="76" fill="#E5483A" stroke="#fff" stroke-width="5" paint-order="stroke">${price}</text></g>`;
 }

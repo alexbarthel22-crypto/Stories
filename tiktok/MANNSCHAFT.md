@@ -115,9 +115,9 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Liga-Konkurrenten: FC Asche, SV Kuhwiese, SC Heuballen (nächster Gegner, in 3 Tagen)
 - Offen: Platzwart, Verteidiger (Nr. 4)
 
-## Folge 4 (Tag 4) – Entwurf mit Vorschau-Stimme
-- Datei: `tiktok/tag04_fc_schlammloch_entwurf3.mp4` (1:21, espeak-Stimme, mit Geld-Regel), Code `src_tag04/`; Intro vor der Ikea-Tribüne
-- Fans: 428 → **478 (+50)**; Geld: 50 € + 40 Kommentare × 2 € = **130 €** → **Schlammpumpe** → Kasse 0 €
+## Folge 4 (Tag 4)
+- Datei: `tiktok/tag04_fc_schlammloch.mp4` (1:15, Fenrir); Entwürfe `tag04_fc_schlammloch_entwurf*.mp4`, Code `src_tag04/`; Intro vor der Ikea-Tribüne
+- Fans: 428 → **477 (+49)**; Geld: 49 € + 43 Kommentare × 2 € = **135 €** → **Schlammpumpe** (Preisschild −135 €) → Kasse 0 €; nach dem Pumpen keine Pfützen mehr auf dem Platz
 - Neu: **Luca** (Platzwart, Top-Kommentar „ich will Platzwart liekt bitte“) – olivgrüne Latzhose, orange Mütze, grüne Gummistiefel; **Denny** (Verteidiger Nr. 4)
 - Luca pumpt den Platz leer, das Tor treibt zurück auf die Torlinie
 - Vereinsgelände: Fahnenmast mit Vereinsflagge, **Bauwagen als Kabine**, **Würstchengrill** („Wurst 2 €“), **Anzeigetafel aus Pappe** (HEIM 0 : 0 GAST)

@@ -295,8 +295,9 @@ def build_sfx(segs, N):
             for k in range(int((en - st) * 0.9) + 1): L(k / 0.9 + 0.1, thud()); L(k / 0.9 + 0.7, clack())
         elif sid == 'train2': L(0.4, thud()); L(c[1], pop()); L(c[2], sad_trombone(0.8))
         elif sid == 'train3':
-            for k in range(int((en - st) / 0.35)): L(k * 0.35, squelch() * 0.6)
-            L(0.0, pop())
+            L(0.0, pop()); L(0.3, whoosh())
+            for k in range(5): L(0.3 + k * 0.22, squelch() * 0.6)
+            L(1.1, thud())
         elif sid == 'count2': L(0.0, pop()); L(c[2], thud())
         elif sid == 'end4': L(0.0, ding()); L(c[1], pop())
         elif sid == 'heroes':

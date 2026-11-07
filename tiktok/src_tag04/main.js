@@ -1,5 +1,5 @@
 // Tag 2 – Zeitachse und Szenen. DATA = {fps, segs:[{id,start,end,caps}], env, total}
-let LT = 0, LD = 1;
+let LT = 0, LD = 1, NOPUD = false;
 function cam(z, cx, cy, inner) {
   const zz = z * (1 + 0.05 * clamp(LT / LD, 0, 1)), rr = Math.sin(LT * 1.3) * 0.6;
   return `<g transform="translate(540 960) rotate(${rr}) scale(${zz}) translate(${-cx} ${-cy})">${inner}</g>`;
@@ -67,13 +67,13 @@ const SCENES = {
       introBall(t);
   },
   fans4(t, d, m) {
-    const t0 = capT(2), n = t < t0 ? 428 : Math.round(428 + 50 * easeOut(clamp((t - t0) / 0.8, 0, 1)));
+    const t0 = capT(2), n = t < t0 ? 428 : Math.round(428 + 49 * easeOut(clamp((t - t0) / 0.8, 0, 1)));
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 820}) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 420, 1640, 1.2)) +
       popG(t, 0.0, 540, 360, badge(540, 360, 'GESTERN: 428 FANS', {fs: 46})) +
       popG(t, t0, 540, 500, badge(540, 500, 'HEUTE', {kind: 'pitch', fs: 56})) +
       (t >= t0 ? bigText(540, 760, String(n), '#6BF06B', 240) : '') +
       popG(t, t0 + 0.8, 800, 640, `<g transform="translate(800 640)"><circle r="70" fill="#3A2316"/><circle r="62" fill="#58B044" stroke="#fff" stroke-width="7"/>
-        <path d="M0 -40 L32 0 L14 0 L14 34 L-14 34 L-14 0 L-32 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>` + badge(800, 750, '+50', {kind: 'pitch', fs: 44})) + confetti(t, t0 + 0.8);
+        <path d="M0 -40 L32 0 L14 0 L14 34 L-14 34 L-14 0 L-32 0 Z" fill="#fff" stroke="#3A2316" stroke-width="4" stroke-linejoin="round"/></g>` + badge(800, 750, '+49', {kind: 'pitch', fs: 44})) + confetti(t, t0 + 0.8);
   },
   luca(t, d, m) {
     const t1 = capT(2);
@@ -97,7 +97,7 @@ const SCENES = {
       popG(tt, 0.3, 760, 450, `<g transform="rotate(12 760 450)">${badge(760, 450, 'NEU!', {kind: 'red', fs: 60})}</g>`) + confetti(t, t1 + 0.1, 30);
   },
   money4(t, d, m) {
-    const lines = [['50 FOLLOWER × 1 €', '+50 €'], ['40 KOMMENTARE × 2 €', '+80 €'], ['VEREINSKASSE', '130 €', '#2FA84A', true]];
+    const lines = [['49 FOLLOWER × 1 €', '+49 €'], ['43 KOMMENTARE × 2 €', '+86 €'], ['VEREINSKASSE', '135 €', '#2FA84A', true]];
     const t3 = capT(2);
     let coins = '';
     for (let i = 0; i < 14; i++) { const t0 = t3 + rnd(i + 900) * 1.0, k = (t - t0) / 0.9; if (k > 0 && k < 1) coins += coin(80 + rnd(i + 950) * 860, -60 + k * 1500, 34, i % 2); }
@@ -107,16 +107,16 @@ const SCENES = {
   },
   pump(t, d, m) {
     const k = easeOut(clamp(t / 0.5, 0, 1));
-    const lines = [['SCHLAMMPUMPE', '-130 €', '#E5483A', true]];
+
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + place(coach({mouth: m, blink: blinkAt(t)}), 220, 1640, 0.9)) +
       mudPump(640, -200 + k * 1300, 1.3, t, false) + (t > 0.5 && t < 0.8 ? `<circle cx="640" cy="1150" r="${(t - 0.5) * 900}" fill="none" stroke="#fff" stroke-width="10" opacity="${1 - (t - 0.5) / 0.3}"/>` : '') +
-      popG(t, capT(0), 540, 340, calcBoard(t, 70, 290, lines, [capT(1)])) +
-      popG(t, capT(3), 540, 760, bigText(540, 840, '0 €', '#FF4A4A', 200));
+      popG(t, capT(1), 560, 520, priceTag(560, 560, 1.15, t, 'SCHLAMMPUMPE', '-135 €')) +
+      popG(t, capT(3), 300, 900, badge(300, 900, 'KASSE: 0 €', {kind: 'red', fs: 54, rot: -3}));
   },
   pumpwork(t, d, m) {
     const k = clamp(t / d, 0, 1), lake = 1 - easeOut(clamp((t - 0.3) / (d * 0.7), 0, 1));
     const gx = 600, gy = 1040, dx = 160 * lake, bob = Math.sin(t * 3) * 8 * lake;
-    let s = field(t, 1000, {goalX: gx, noPost: true, puddles: [[160, 1400, 120 * lake + 20, 20], [880, 1520, 140 * lake + 20, 24]]});
+    let s = field(t, 1000, {goalX: gx, noPost: true, puddles: [[160, 1400, 120 * lake + 1, 20 * lake + 1], [880, 1520, 140 * lake + 1, 24 * lake + 1]]});
     if (lake > 0.05) s += `<ellipse cx="${gx}" cy="${gy + 60}" rx="${300 * lake}" ry="${70 * lake}" fill="#4A3828" stroke="#2C2018" stroke-width="8"/>`;
     s += goalPost(gx + dx, gy + 8 + bob, 0.9);
     s += `<path d="M${880} 1380 Q${760} ${1300} ${gx + 40} ${gy + 70}" stroke="#2A2A2E" stroke-width="22" fill="none"/>` + mudPump(880, 1420, 0.7, t, true);
@@ -132,8 +132,8 @@ const SCENES = {
     let world = `<g transform="translate(${wx} 0)"><rect x="-400" y="-400" width="3000" height="2800" fill="url(#skyG)"/>` + sky(t) + `<g transform="translate(1100 0)">${sky(t + 7)}</g>` + `<rect x="0" y="1080" width="2400" height="900" fill="#4A8038"/>` + treeline(1086) +
       `<g transform="translate(1080 0)">${treeline(1086)}</g>` +
       `<rect x="0" y="1180" width="2400" height="740" fill="#6B4A30"/>` + `<path d="M0 1180 H2400" stroke="#F0EDE0" stroke-width="10"/>` +
-      flagPole(160, 1150, 0.9, t) + bauwagen(560, 1170, 1.0) + grill(1180, 1120, 1.0, t) + pappeTafel(1720, 1060, 1.0) +
-      place(luca({blink: blinkAt(t)}), 1420, 1180, 0.5) + place(frog({blink: blinkAt(t, .4)}), 2000, 1180 - Math.abs(Math.sin(t * 7)) * 40, 0.3) + `</g>`;
+      flagPole(110, 1150, 0.9, t) + bauwagen(600, 1180, 1.55) + grill(1290, 1150, 0.72, t) + pappeTafel(1820, 1080, 0.95) +
+      place(luca({blink: blinkAt(t)}), 1520, 1180, 0.5) + place(frog({blink: blinkAt(t, .4)}), 2000, 1180 - Math.abs(Math.sin(t * 7)) * 40, 0.3) + `</g>`;
     const lbl = (i, txt, x) => popG(t, capT(i), x, 520, badge(x, 520, txt, {kind: 'pitch', fs: 48, rot: -2}));
     return world + popG(t, 0.0, 540, 340, badge(540, 340, 'UNSER VEREINSGELÄNDE', {kind: 'orange', fs: 50})) +
       (t >= capT(1) && t < capT(3) ? lbl(1, 'BAUWAGEN = KABINE', 540) : '') +
@@ -141,13 +141,16 @@ const SCENES = {
       (t >= capT(4) ? lbl(4, 'ANZEIGETAFEL (PAPPE)', 540) : '');
   },
   train1(t, d, m) {
-    const ph = (t * 0.9) % 1, side = Math.floor(t * 0.9) % 2 ? 1 : -1;
-    const bx = 540 + side * 240 * ph, by = 1500 - ph * 420;
-    const vx = 540 + side * 200 * clamp((ph - 0.35) / 0.4, 0, 1), dive = clamp((ph - 0.35) / 0.3, 0, 1) * 70 * side;
-    let s = field(t, 1000, {goalX: 540}) + `<g transform="rotate(${dive} ${vx} 1200)">${place(vlad({blink: blinkAt(t)}), vx, 1250, 0.55)}</g>`;
-    if (ph < 0.85) s += `<g transform="translate(${bx} ${by}) rotate(${t * 600})">${ballIcon(0, 0, 38)}</g>`;
+    const n = Math.floor(t * 0.9), ph = (t * 0.9) % 1, side = n % 2 ? 1 : -1;
+    const gx = 540, gy = 1330, gs = 2.6;
+    const bx = gx + side * 330 * ph, by = 1820 - ph * (1820 - (gy - 220));
+    const vx = gx + side * 240 * clamp((ph - 0.3) / 0.4, 0, 1), dive = clamp((ph - 0.3) / 0.3, 0, 1) * 70 * side;
+    let s = field(t, 900, {goal: false}) +
+      `<g fill="none" stroke="#F0EDE0" stroke-width="7" opacity=".85"><path d="M-400 ${gy} H1480"/><path d="M${gx - 520} ${gy} L${gx - 560} ${gy + 180} L${gx + 560} ${gy + 180} L${gx + 520} ${gy}"/></g>` +
+      goalPost(gx, gy, gs) + `<g transform="rotate(${dive} ${vx} ${gy - 120})">${place(vlad({blink: blinkAt(t)}), vx, gy, 0.48)}</g>`;
+    if (ph < 0.82) s += `<g transform="translate(${bx} ${by}) rotate(${t * 600})">${ballIcon(0, 0, 30)}</g>`;
     return cam(1.0, 540, 960, s) + popG(t, 0.0, 540, 360, badge(540, 360, 'TRAINING!', {kind: 'red', fs: 76, rot: -2})) +
-      (ph > 0.6 ? popG(t, Math.floor(t * 0.9) / 0.9 + 0.67, 540, 560, badge(540, 560, 'GEHALTEN!', {kind: 'pitch', fs: 54, rot: 3})) : '');
+      (ph > 0.6 ? popG(t, n / 0.9 + 0.67, 540, 540, badge(540, 540, 'GEHALTEN!', {kind: 'pitch', fs: 54, rot: 3})) : '');
   },
   train2(t, d, m) {
     const ph = clamp((t - 0.4) / 1.2, 0, 1), miss = t >= capT(2) - 0.6;
@@ -160,13 +163,15 @@ const SCENES = {
       popG(t, capT(2), 540, 660, badge(540, 660, '… MANCHMAL', {kind: 'red', fs: 54, rot: -4}));
   },
   train3(t, d, m) {
-    const k = (t * 0.7) % 1, x = -200 + k * 1500;
-    let cones = '';
-    [250, 450, 650, 850].forEach((cx, i) => { const hit = x > cx; cones += `<g transform="translate(${cx} 1480) rotate(${hit ? 80 : 0})"><path d="M-30 0 L0 -70 L30 0 Z" fill="#F28A2E" stroke="#111" stroke-width="5"/><path d="M-18 -26 h36" stroke="#fff" stroke-width="8"/></g>`; });
+    const k = easeOut(clamp((t - 0.3) / 1.4, 0, 1)), x = -150 + k * 900, hit = x > 560;
+    const bx = hit ? 600 + (x - 560) * 2.2 : 600, by = hit ? 1240 - Math.sin(clamp((x - 560) / 300, 0, 1) * Math.PI) * 180 : 1240;
     let clods = '';
-    for (let i = 0; i < 8; i++) { const ph = (t * 2 + i / 8) % 1; clods += `<circle cx="${x - 120 - ph * 200}" cy="${1480 - Math.sin(ph * Math.PI) * 150}" r="${10 + rnd(i) * 10}" fill="#6B4A30" stroke="#3A2316" stroke-width="3"/>`; }
-    const s = field(t, 1000, {goalX: 860}) + cones + clods + `<g transform="rotate(-72 ${x} 1440)">${place(denny({blink: blinkAt(t)}), x, 1480, 0.55)}</g>`;
-    return cam(1.0, 540, 960, s) + popG(t, 0.0, 540, 360, badge(540, 360, 'GRÄTSCHE!', {kind: 'orange', fs: 70, rot: -3}));
+    if (k < 0.98) for (let i = 0; i < 7; i++) { const ph = (t * 2.4 + i / 7) % 1; clods += `<circle cx="${x - 120 - ph * 180}" cy="${1270 - Math.sin(ph * Math.PI) * 140}" r="${8 + rnd(i) * 9}" fill="#6B4A30" stroke="#3A2316" stroke-width="3"/>`; }
+    const trail = `<path d="M${-200} 1278 L${x - 80} 1278" stroke="#4A3828" stroke-width="22" stroke-linecap="round" opacity=".7"/>`;
+    const slide = `<g transform="rotate(-58 ${x} 1270)">${place(denny({blink: blinkAt(t)}), x, 1270, 0.72)}</g>`;
+    const s = field(t, 1000, {goalX: 860}) + trail + clods + `<g transform="translate(${bx} ${by}) rotate(${t * 500})">${ballIcon(0, 0, 40)}</g>` + slide;
+    return cam(1.0, 540, 960, s) + popG(t, 0.0, 540, 360, badge(540, 360, 'GRÄTSCHE!', {kind: 'orange', fs: 70, rot: -3})) +
+      (hit ? popG(t, 0.3 + 1.4 * Math.log(1 / (1 - 710 / 900)) / 6, 540, 520, badge(540, 520, 'BALL WEG!', {kind: 'pitch', fs: 54, rot: 2})) : '');
   },
   count2(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1680, 0.9)) +
@@ -200,8 +205,8 @@ const SCENES = {
       <g transform="translate(150 140) rotate(-20)"><rect x="-50" y="-22" width="90" height="44" rx="20" fill="#C0C6CC" stroke="#3A2316" stroke-width="6"/><circle cx="40" cy="0" r="26" fill="#C0C6CC" stroke="#3A2316" stroke-width="6"/><path d="M-50 0 Q-110 40 -150 -10" stroke="#E5483A" stroke-width="7" fill="none"/></g></g>`;
     return cam(1.0, 540, 960, field(t, 1080, {goal: false})) + `<rect width="1080" height="1920" fill="#000" opacity=".3"/>` +
       popG(t, 0.0, 540, 380, badge(540, 380, 'GESUCHT: CO-TRAINER', {kind: 'pitch', fs: 56})) + popG(t, 0.2, 540, 820, board) +
-      bewerbungen(t, c[3], 1180) +
-      (t >= c[3] + 0.4 ? `<g opacity="${Math.sin(t * 16) > -0.3 ? 1 : 0.25}">${badge(540, 1290, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 44, rot: -2})}</g>` : '');
+      bewerbungen(t, c[3], 1150) +
+      (t >= c[3] + 0.4 ? `<g opacity="${Math.sin(t * 16) > -0.3 ? 1 : 0.25}">${badge(540, 1300, 'TOP-KOMMENTAR GEWINNT!', {kind: 'orange', fs: 40, rot: -2})}</g>` : '');
   },
   allin(t, d, m) {
     const z = 1.6, cx = 540, cy = 600;
@@ -230,9 +235,9 @@ const SCENES = {
       popG(t, 0.0, 540, 360, badge(540, 360, 'UNSER ZIEL:', {kind: 'orange', fs: 54})) +
       popG(t, c[2], 540, 500, bigText(540, 540, 'STADIONRASEN', '#6BF06B', 110)) +
       popG(t, c[3], 540, 1210, bar) +
-      popG(t, c[4], 300, 700, badge(300, 700, '5000 FANS', {kind: 'pitch', fs: 48, rot: -3})) +
-      popG(t, c[5], 540, 790, bigText(540, 800, 'ODER', '#fff', 60)) +
-      popG(t, c[5], 760, 700, badge(760, 700, '2500 KOMMENTARE', {kind: 'red', fs: 38, rot: 3}));
+      popG(t, c[4], 540, 680, badge(540, 680, '5000 NEUE FANS', {kind: 'pitch', fs: 50, rot: -2})) +
+      popG(t, c[5], 540, 790, bigText(540, 805, 'ODER', '#fff', 60)) +
+      popG(t, c[5], 540, 900, badge(540, 900, '2500 KOMMENTARE', {kind: 'red', fs: 50, rot: 2}));
   },
   rule3(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);
@@ -259,7 +264,7 @@ function render(f) {
   SEG = DATA.segs[si];
   const lt = t - SEG.start, d = SEG.end - SEG.start;
   const m = DATA.env[Math.min(f, DATA.env.length - 1)] || 0;
-  LT = lt; LD = d;
+  LT = lt; LD = d; NOPUD = si > DATA.segs.findIndex(s => s.id === 'pumpwork');
   let body = SCENES[SEG.id](lt, d, m);
   let r = rain(t, 150, 0.45);
   if (false) r = `<defs><mask id="tm"><rect width="1080" height="1920" fill="#fff"/><rect x="20" y="670" width="1040" height="640" fill="#000"/></mask></defs><g mask="url(#tm)">${r}</g>`;

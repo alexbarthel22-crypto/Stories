@@ -10,12 +10,12 @@
  },
  {
   "id": "fans4",
-  "say": "Gestern hatten wir vierhundertachtundzwanzig Fans. Heute: vierhundertachtundsiebzig!",
+  "say": "Gestern hatten wir vierhundertachtundzwanzig Fans. Heute: vierhundertsiebenundsiebzig!",
   "cap": [
    "GESTERN:",
    "428 FANS.",
    "HEUTE:",
-   "*478!"
+   "*477!"
   ]
  },
  {
@@ -41,12 +41,12 @@
  },
  {
   "id": "money4",
-  "say": "Fünfzig neue Fans, vierzig Kommentare. Vereinskasse: hundertdreißig Euro!",
+  "say": "Neunundvierzig neue Fans, dreiundvierzig Kommentare. Vereinskasse: hundertfünfunddreißig Euro!",
   "cap": [
-   "50 NEUE *FANS,",
-   "40 *KOMMENTARE.",
+   "49 NEUE *FANS,",
+   "43 *KOMMENTARE.",
    "VEREINSKASSE:",
-   "*130 EURO!"
+   "*135 EURO!"
   ]
  },
  {
