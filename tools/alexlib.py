@@ -184,7 +184,11 @@ def _runs(s):
     for part in _EMOJI_RE.split(s):
         if not part:
             continue
-        out.append((part, bool(_EMOJI_RE.fullmatch(part))))
+        emo = bool(_EMOJI_RE.fullmatch(part))
+        if out and emo and out[-1][1]:                      # ZWJ-Sequenzen (z. B. 🏳️‍🌈) zusammenhalten
+            out[-1] = (out[-1][0] + part, True)
+        else:
+            out.append((part, emo))
     return out
 
 

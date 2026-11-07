@@ -11,7 +11,7 @@ MOODS = dict(MOODS_BASE, star="verträumt und sicher, dann trocken", cafe="verli
              chat="euphorisch, dann trocken", job="selbstbewusst, die Pointe trocken")
 SHUFFLE = SHUFFLE_BASE
 INTRO_LEN = 3.3
-LINE_TEMPO = {k: 1.2 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
+LINE_TEMPO = {k: 1.3 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
 LAYOUT = dict(feet=1732, ky=1.15, phone=1.06)   # Alex tiefer, Animationsbox größer
 CAPTION_Y = 1650   # Untertitel etwas tiefer (bleibt im Sicherheitsbereich)
 DAYBAR_Y = 1755   # Tagesleiste unter Alex, noch im Sicherheitsbereich
@@ -43,8 +43,11 @@ SCENES = [
         ("Acht Uhr. Seine Lieblings-Influencerin postet ein Herz.", None),
         ("Er ist sich sicher: Das war für ihn. Er hat schon Namen für die Kinder.", None),
     ], viz=dict(kind="stage", **_BIG, box="#FFF0F6", head="📱 NEUER POST VON @LILLY", head_col="#E0457B",
-                items=[("🤳", 330, 640, 140, 0, "bob"), ("❤️", 520, 660, 140, 0, "pulse"), ("💍", 720, 640, 110, 1, "bob"),
-                       ("👶", 700, 840, 90, 1, "bob"), ("👶", 820, 840, 90, 1, "bob")],
+                items=[("🤳", 230, 640, 120, 0, "bob"), ("❤️", 420, 650, 130, 0, "pulse"), ("💍", 300, 840, 90, 1, "bob"),
+                       ("👶", 450, 850, 80, 1, "bob"), ("👶", 560, 850, 80, 1, "bob")],
+                panels=[dict(line=0, at=0.3, x=765, y=690, w=400, title="📩 DMs an @lilly",
+                             rows=["Hey 😍 ✓", "Hallo?? 🥺 ✓", "Hast du mein Herz gesehen? ✓", "Lilly??? ✓"],
+                             foot="147 gesendet · 0 Antworten")],
                 tags=[None, ("„DAS WAR FÜR MICH!“ 💘", "#E0457B", 400, 980)], fx="love", move="wobble",
                 alex=("happy", "idle", "📱"))),
     dict(id="cafe", bg="#C0392B", clock="12:00", title="IM CAFÉ", dark=True, lines=[
@@ -65,8 +68,9 @@ SCENES = [
                       (0, "Mama ❤️", "Hast du gegessen?", "Di.", 0, "#E07A2E")],
                 chat=dict(name="Die Jungs 🍻", col="#3E7BDA", msgs=[(1, True, "📸 [Screenshot von Mia]", "16:03"),
                                                                   (1, True, "SIE STEHT SAFE AUF MICH!!! 💍", "16:03"),
-                                                                  (1, False, "Bro … das ist ein „ok“ 💀", "16:04")]),
-                fx="love", alex=("happy", "idle", "📱"))),
+                                                                  (1, False, "Bro … das ist ein „ok“ 💀", "16:04"),
+                                                                  (1, False, "Bro, die ist doch lesbisch??? 🏳️‍🌈", "16:04")]),
+                alex=("happy", "idle", "📱"))),
     dict(id="job", bg="#8E5BE0", clock="20:00", title="DIE BEWERBUNG", dark=True, lines=[
         ("Abends bewirbt er sich als Chef eines Weltkonzerns. Ohne Abschluss.", None),
         ("Er kauft schon mal einen Anzug für den ersten Arbeitstag.", None),
@@ -89,7 +93,4 @@ SCENES = [
     ], viz=dict(kind="outro", q="Kennst du auch jemanden, der delulu ist?", handle="@delulu_alex", icon="🦄", col="#9B6BE0")),
 ]
 
-# Nur für die Stimme: Betonung auf „ihn“
-GEMINI_LINE_TEXT = {"star_1": "Er ist sich sicher: Das war für … IHN! Er hat schon Namen für die Kinder."}
-GEMINI_LINE_MOOD = {"star_1": "verträumt und felsenfest überzeugt; die Wörter 'Das war für' leise und unbetont, kurze Pause, dann das Wort 'IHN' laut, lang gezogen und stark betont, als wäre es selbstverständlich; danach trocken",
-                    "intro_role": "völlig überrascht und amüsiert, flüssig in einem Zug ohne Stottern oder Wiederholung ausgerufen"}
+GEMINI_LINE_MOOD = {"intro_role": "völlig überrascht und amüsiert, flüssig in einem Zug ohne Stottern oder Wiederholung ausgerufen"}

@@ -256,6 +256,30 @@ def sc_stage(c, S, v, spec):
             e = ex if (l_angry is None or t < S.at(l_angry, 0.4)) else "angry"
             person(c, x, _Y(1000), 380 * LAYOUT["ky"], sp, t, e, bob=False, name=nm, blink_seed=int(x))
         _items(c, t, S, v.get("items", []), 0)
+        for pn in v.get("panels", []):                       # kleine Info-Karte, z. B. DM-Verlauf
+            if t < S.at(pn["line"], pn.get("at", 0.1)):
+                continue
+            px, py, pw = pn["x"], _Y(pn["y"]), pn.get("w", 340)
+            rows = pn["rows"]
+            ph = 64 + len(rows) * 46 + (52 if pn.get("foot") else 0)
+            def pnl(pn=pn, px=px, py=py, pw=pw, rows=rows, ph=ph):
+                rrect(c, px - pw / 2 + 5, py - ph / 2 + 8, pw, ph, 18); src(c, "#000000", 0.18); c.fill()
+                rrect(c, px - pw / 2, py - ph / 2, pw, ph, 18); fill(c, "#FFFFFF")
+                rrect(c, px - pw / 2, py - ph / 2, pw, ph, 18); c.set_line_width(4); src(c, INK); c.stroke()
+                text(c, pn["title"], px, py - ph / 2 + 32, 24, pn.get("title_col", INK), FONT_HEAD)
+                for j, rw in enumerate(rows):
+                    if t < S.at(pn["line"], pn.get("at", 0.1)) + 0.25 + j * 0.3:
+                        continue
+                    ry = py - ph / 2 + 80 + j * 46
+                    fs = 22
+                    while text_width(c, rw, fs, FONT_BOLD) + 28 > pw - 32 and fs > 14:
+                        fs -= 1
+                    tw = text_width(c, rw, fs, FONT_BOLD) + 28
+                    rrect(c, px + pw / 2 - 16 - tw, ry - 18, tw, 36, 14); fill(c, "#D9FDD3")
+                    text(c, rw, px + pw / 2 - 30, ry, fs, INK, FONT_BOLD, anchor="r")
+                if pn.get("foot"):
+                    text(c, pn["foot"], px, py + ph / 2 - 28, 22, pn.get("foot_col", "#E23B3B"), FONT_HEAD)
+            scaled(c, px, py, pop(t, S.at(pn["line"], pn.get("at", 0.1))), pnl)
         for li, tg in enumerate(v.get("tags", [])):
             if tg and t > S.at(li, 0.35):
                 txt, col, x, y = (tg + (W / 2, 960))[:4] if len(tg) == 2 else tg
