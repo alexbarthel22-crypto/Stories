@@ -44,7 +44,7 @@ SR = 44100
 TICKS = sfx_meta["tick_onsets"]
 FLASH = round(TICKS[-1] + 0.07, 3)        # weißer Blitz nach dem letzten Tick
 REVEAL = 1.57                              # Burst-Einsatz wie im Original
-INTRO_LEN = 3.75
+INTRO_LEN = getattr(script, "INTRO_LEN", 3.75)   # pro Folge kürzbar (Pause nach der Rollen-Verkündung)
 GAP, PRE, POST, END_HOLD = 0.15, 0.12, 0.28, 1.5
 
 

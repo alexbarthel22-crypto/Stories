@@ -1,5 +1,5 @@
 """TikTok Folge 6: Heute ist Alex ... ein Schmarotzer. Alltags-Comedy, keine echten Personen.
-Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.08 0.22 (Tempo + Lautstärke exakt wie Folge 1 Pick-me-Boy, keine LINE_TEMPO-Sonderwerte).
+Stimme exakt wie Pick-me-Boy: gemini-3.8-flash-tts, Puck, TTS_PROFILE="pickme", tighten 1.15 0.18 (etwas schneller als Pick-me-Boy, Lautstärke via match_level wie Folge 1).
 """
 TTS_PROFILE = "pickme"
 SAFE_MODE = "strict"
@@ -98,4 +98,5 @@ GEMINI_LINE_TEXT = {
 }
 GEMINI_LINE_MOOD = {"food_0": "genießerisch" + _ALEX}
 
-LINE_TEMPO = {}   # wie Pick-me-Boy: alle Zeilen 1.08
+LINE_TEMPO = {}   # alle Zeilen 1.15
+INTRO_LEN = 3.3   # kürzere Pause nach „ein Schmarotzer!“
