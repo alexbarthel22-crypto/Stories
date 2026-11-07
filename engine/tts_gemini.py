@@ -103,7 +103,7 @@ def trim(a, thr=0.006):
     return a[max(nz[0] - int(SR * 0.02), 0):nz[-1] + int(SR * 0.08)]
 
 
-def main(script, out_dir, voice, model, tempo=1.0, gap=0.08, cache_dir=None):
+def main(script, out_dir, voice, model, tempo=1.0, gap=0.08, cache_dir=None, match_cps=None):
     cache_dir = cache_dir or os.path.join(out_dir, "cache", "tts")
     os.makedirs(cache_dir, exist_ok=True)
     chunks, timing, t = [], [], 0.0
@@ -136,12 +136,18 @@ def main(script, out_dir, voice, model, tempo=1.0, gap=0.08, cache_dir=None):
                 raise RuntimeError("no clean take for: " + l)
             a = best
             sf.write(cp, a, SR)
-        if hint in LINE_TEMPO:
+        line_tempo = LINE_TEMPO.get(hint)
+        if match_cps:   # speed slow takes up to the reference speaking rate (chars per second, after --tempo)
+            cps = len(l) / (len(a) / SR / tempo)
+            f = min(1.35, match_cps / cps)
+            if f > 1.02:
+                line_tempo = (line_tempo or 1.0) * f
+        if line_tempo:
             import subprocess, tempfile
             with tempfile.TemporaryDirectory() as d:
                 sf.write(f"{d}/i.wav", a, SR)
                 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{d}/i.wav", "-af",
-                                f"atempo={LINE_TEMPO[hint]}", f"{d}/o.wav"], check=True)
+                                f"atempo={line_tempo}", f"{d}/o.wav"], check=True)
                 a = sf.read(f"{d}/o.wav", dtype="float32")[0]
         a = a / (np.abs(a).max() + 1e-9) * 0.9
         g = gap + (0.12 if l[-1] in ".!?" else 0.0)
@@ -169,5 +175,7 @@ if __name__ == "__main__":
     ap.add_argument("script"); ap.add_argument("out_dir")
     ap.add_argument("--voice", default="Puck"); ap.add_argument("--model", default="gemini-3.8-flash-tts")
     ap.add_argument("--tempo", type=float, default=1.0, help="speed factor, e.g. 1.12")
+    ap.add_argument("--match-cps", type=float, default=None,
+                    help="speed up slow lines to this speaking rate (chars/s), e.g. 18.3 = Alex video")
     a = ap.parse_args()
-    main(a.script, a.out_dir, a.voice, a.model, a.tempo)
+    main(a.script, a.out_dir, a.voice, a.model, a.tempo, match_cps=a.match_cps)
