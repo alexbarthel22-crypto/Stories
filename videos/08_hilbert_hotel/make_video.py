@@ -250,6 +250,14 @@ def neon(cv, t, booked=True):
         cv.text(x0 + 110, y0 + 30, "AUSGEBUCHT", 30, hexc("#ff5a4f") if on else hexc("#5a2a3a"))
 
 
+def tower_clouds(cv, t):
+    for k, (x, y, r) in enumerate(((330, 60, 110), (520, 20, 140), (740, 70, 120), (180, 150, 80), (900, 140, 90))):
+        dx = 20 * math.sin(t * 0.4 + k)
+        for ox, oy, rr in ((-0.8, 0.1, 0.7), (0, 0, 1.0), (0.8, 0.15, 0.75)):
+            cv.circle(x + dx + ox * r, y + oy * r, r * rr, fill=(226, 220, 255, 235))
+        cv.circle(x + dx, y + r * 0.35, r * 0.6, fill=(205, 198, 245, 235))
+
+
 def windows_life(cv, t):
     for fl, y in enumerate(range(GROUND - 300, -150, -130)):
         for k in range(4):
@@ -274,6 +282,7 @@ def passersby(cv, t, n=3):
 def street_scene(t, cam, extra=None, booked=True, people=True):
     def act(cv):
         windows_life(cv, t)
+        tower_clouds(cv, t)
         neon(cv, t, booked)
         for k, x in enumerate((90, 990)):
             cv.circle(x, GROUND - 338, 60, fill=(255, 220, 140, 45))
@@ -353,8 +362,10 @@ def hook_times():
 
 def sc_hook(t):
     t0, t1 = st("Dieses Hotel ist"), en("Dieses Hotel ist")
-    img, _ = street_scene(t, (540, 960, 1920))
-    img = dim(img, 0.38)
+    z = smooth(prog(t, 0.0, max(1.5, t1 - 0.3)))
+    cam = (540, 1180 + (960 - 1180) * z, 760 + (1920 - 760) * z)
+    img, _ = street_scene(t, cam)
+    img = dim(img, 0.32)
     if t < 0.15:
         img = Image.blend(img, Image.new("RGB", img.size, (255, 250, 230)), 0.4 * (1 - t / 0.15))
     karaoke(img, t, HOOK, t0, t1, [560, 780, 990], pop_k=0.4, first_pop=False, stagger=0.06, times=hook_times())
@@ -380,27 +391,27 @@ def sc_tower(t):
         x = 120 + k * 340
         for dx, r in ((-80, 60), (0, 80), (90, 60)):
             cv.circle(x + dx, y, r, fill=(220, 210, 255, 90))
-    x0, x1 = 300, 780
+    x0, x1 = HOTEL_X0, HOTEL_X1
     cv.rect(x0, 0, x1, 1920, fill=hexc("#e8c9a0"))
-    cv.rect(x1 - 60, 0, x1, 1920, fill=hexc("#c9a47a"))
-    fh = 210
+    cv.rect(x1 - 70, 0, x1, 1920, fill=hexc("#c9a47a"))
+    fh = 130
     base_floor = int(scroll // fh)
-    for j in range(-1, 11):
+    for j in range(-1, 17):
         fl = base_floor + j
         y = 1920 - ((j + 1) * fh - (scroll % fh)) - 40
-        cv.rect(x0 - 12, y + 170, x1 + 12, y + 186, fill=hexc("#b89066"))
-        for k in range(2):
-            wx = x0 + 70 + k * 200
-            cv.rect(wx, y + 20, wx + 140, y + 160, fill=hexc("#8b5a3c"), r=10)
-            cv.rect(wx + 8, y + 28, wx + 132, y + 152, fill=hexc("#ffd88a"), r=8)
-            cv.rect(wx + 8, y + 28, wx + 30, y + 152, fill=hexc("#c0392b"))
-            cv.rect(wx + 110, y + 28, wx + 132, y + 152, fill=hexc("#c0392b"))
-            n = max(1, fl * 2 + k + 1)
-            cv.rect(wx + 30, y - 18, wx + 110, y + 14, fill=hexc("#1d1b33"), r=6)
-            ftext(cv, wx + 70, y - 2, str(n), 26, 74, hexc("#ffe7a8"))
-            hx = wx + 70 + 20 * math.sin(t * 1.4 + n)
-            cv.circle(hx, y + 92, 18, fill=(80, 40, 60, 170))
-            cv.rect(hx - 20, y + 110, hx + 20, y + 152, fill=(80, 40, 60, 170), r=8)
+        cv.rect(x0 - 10, y + 104, x1 + 10, y + 116, fill=hexc("#b89066"))
+        for k in range(4):
+            wx = x0 + 50 + k * 132
+            cv.rect(wx, y, wx + 84, y + 96, fill=hexc("#8b5a3c"), r=8)
+            cv.rect(wx + 6, y + 6, wx + 78, y + 90, fill=hexc("#ffd88a"), r=6)
+            cv.rect(wx + 6, y + 6, wx + 22, y + 90, fill=hexc("#c0392b"))
+            cv.rect(wx + 62, y + 6, wx + 78, y + 90, fill=hexc("#c0392b"))
+            n = max(1, fl * 4 + k + 1)
+            cv.rect(wx + 14, y - 22, wx + 70, y - 2, fill=hexc("#3b2a20"), r=4)
+            ftext(cv, wx + 42, y - 12, str(n), 16, 52, hexc("#ffe7a8"))
+            hx = wx + 42 + 16 * math.sin(t * 1.3 + n * 1.7)
+            cv.circle(hx, y + 52, 12, fill=(80, 40, 60, 180))
+            cv.rect(hx - 14, y + 64, hx + 14, y + 90, fill=(80, 40, 60, 180), r=6)
     img = img.convert("RGB").resize((OUT_W, OUT_H), Image.LANCZOS)
     pop_pill(img, t, t0 + 0.1, 540, 330, "UNENDLICH VIELE ZIMMER", 58, bg="#ffd34d", rot=-2)
     if t > wt("Das Hotel", "eins", 0.0):
