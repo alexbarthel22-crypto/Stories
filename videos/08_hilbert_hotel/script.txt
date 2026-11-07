@@ -1,0 +1,20 @@
+# Jede Zeile = ein Sprechsegment. [PAUSE x] = Sprechpause in Sekunden. {emotion} = Regieanweisung.
+Dieses Hotel ist bis aufs letzte Zimmer ausgebucht – und trotzdem passen noch unendlich viele Gäste hinein.
+Das Hotel Unendlichkeit hat unendlich viele Zimmer: eins, zwei, drei – immer weiter, ohne Ende.
+Und heute Nacht ist jedes einzelne Zimmer belegt.
+Da hält ein Bus mit unendlich vielen neuen Gästen.
+Jeder will ein eigenes Zimmer, und keiner soll draußen bleiben.
+Der Hotelchef darf nur eine einzige Durchsage machen – und alle bekommen ein Zimmer.
+{surprised} Welche Durchsage ist das?
+[PAUSE 1.6]
+Kleiner Tipp: Jeder Gast muss nur ein einziges Mal umziehen.
+Schreib deine Antwort in die Kommentare, bevor du die Lösung hörst!
+Hier kommt die Lösung.
+{amused} Die Durchsage lautet: Bitte zieht alle in das Zimmer mit der doppelten Nummer!
+Zimmer eins geht in Zimmer zwei, Zimmer zwei in Zimmer vier, Zimmer drei in Zimmer sechs, und so weiter.
+Jetzt wohnen alle alten Gäste in den geraden Zimmern.
+Und alle ungeraden Zimmer sind frei. Davon gibt es unendlich viele.
+Eins für jeden neuen Gast aus dem Bus.
+Dieses Rätsel heißt Hilberts Hotel, ein berühmtes Gedankenexperiment über die Unendlichkeit.
+{surprised} Und was machst du, wenn unendlich viele Busse kommen?
+{amused} Schreib's in die Kommentare und folg mir für das nächste Rätsel!
