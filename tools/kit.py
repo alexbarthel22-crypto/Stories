@@ -34,11 +34,15 @@ def row_card(c, x, y, w, h, s, label, icon=None, size=40, num=None, rot=0.0):
     scaled(c, x, y, s, d, rot)
 
 
-def tag(c, x, y, txt, col="#E23B3B", s=1.0):
+def tag(c, x, y, txt, col="#E23B3B", s=1.0, size=30):
     def d():
-        w = text_width(c, txt, 30, FONT_HEAD) + 36
-        rrect(c, x - w / 2, y - 26, w, 52, 14); fill(c, col)
-        text(c, txt, x, y, 30, "#FFFFFF", FONT_HEAD)
+        sz = size
+        while text_width(c, txt, sz, FONT_HEAD) + 1.2 * sz > 900 and sz > 24:
+            sz -= 2
+        w = text_width(c, txt, sz, FONT_HEAD) + 1.2 * sz
+        xx = min(max(x, 70 + w / 2), 1010 - w / 2)               # nicht über den Boxrand hinaus
+        rrect(c, xx - w / 2, y - sz * 0.87, w, sz * 1.74, 14); fill(c, col)
+        text(c, txt, xx, y, sz, "#FFFFFF", FONT_HEAD)
     scaled(c, x, y, s, d)
 
 
@@ -164,6 +168,9 @@ def alex_bottom(c, S, spec, expr="smug", pose="idle", prop=None, x=W / 2, h=AH):
     person(c, x, FEET, h, spec, S.t, expr, pose, prop, name="Alex")
 
 
+_ITEM_SCALE = [1.0]
+
+
 def _items(c, t, S, items, li):
     """items: (emoji, x, y, size, ab_zeile[, anim]) – anim: bob/spin/pulse/shake/fly"""
     for it in items:
@@ -183,7 +190,7 @@ def _items(c, t, S, items, li):
             dx = math.sin(t * 40 + x) * 4; rot = math.sin(t * 30) * 0.08
         elif an == "fly":
             uu = ((t - t0) * 0.6 + (x % 7) / 7) % 1; dy = -uu * 120; k = 1 - uu * 0.5
-        emoji(c, e, x + dx, y + dy, sz * p * k, rot=rot)
+        emoji(c, e, x + dx, y + dy, sz * p * k * _ITEM_SCALE[0], rot=rot)
 
 
 def sc_stage(c, S, v, spec):
@@ -198,8 +205,9 @@ def sc_stage(c, S, v, spec):
             rrect(c, bx - bw / 2, by + 120, bw, bh / 2 - 120, 30); fill(c, v["floor"])
         rrect(c, bx - bw / 2, by - bh / 2, bw, bh, 30); c.set_line_width(6); src(c, INK); c.stroke()
         if v.get("head"):
-            rrect(c, 140, 405, 800, 70, 14); fill(c, v.get("head_col", "#2B2F3A"))
-            text(c, v["head"], W / 2, 440, 36, "#FFFFFF", FONT_HEAD)
+            hs = v.get("head_size", 36)
+            rrect(c, 110, 400, 860, 40 + hs, 14); fill(c, v.get("head_col", "#2B2F3A"))
+            text(c, v["head"], W / 2, 420 + hs / 2, hs, "#FFFFFF", FONT_HEAD)
         for (sp, x, nm, ex, l_angry) in v.get("people", []):
             e = ex if (l_angry is None or t < S.at(l_angry, 0.4)) else "angry"
             person(c, x, 1000, 380, sp, t, e, bob=False, name=nm, blink_seed=int(x))
@@ -207,7 +215,8 @@ def sc_stage(c, S, v, spec):
         for li, tg in enumerate(v.get("tags", [])):
             if tg and t > S.at(li, 0.35):
                 txt, col, x, y = (tg + (W / 2, 960))[:4] if len(tg) == 2 else tg
-                tag(c, x, y, txt, col, s=pop(t, S.at(li, 0.35)))
+                tag(c, x, y, txt, col, s=pop(t, S.at(li, 0.35)), size=v.get("tag_size", 30))
+    _ITEM_SCALE[0] = v.get("item_scale", 1.0)
     c.save(); box_move(c, bx, by, t, v.get("move", "wobble"), last)
     scaled(c, bx, by, s, box)
     box_flash(c, bx, by, bw, bh, t, last, v.get("flash", "#FFFFFF"))

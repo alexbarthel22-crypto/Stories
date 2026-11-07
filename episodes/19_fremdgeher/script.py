@@ -40,7 +40,7 @@ SCENES = [
     dict(id="ausrede", bg="#C0392B", clock="13:00", title="DIE AUSREDE", dark=True, lines=[
         ("Mittags schreibt er Lena: Bin beim Zahnarzt.", None),
         ("Dann sieht Lena ihn in Mias Story. Im Freibad.", None),
-    ], viz=dict(kind="stage", box="#E8F7FF", head="📱 MIAS STORY", head_col="#2B5C66",
+    ], viz=dict(kind="stage", tag_size=48, head_size=50, item_scale=1.35, box="#E8F7FF", head="📱 MIAS STORY", head_col="#2B5C66",
                 people=[(LENA, 790, "Lena", "neutral", 1)],
                 items=[("🦷", 300, 640, 130, 0, "bob"), ("🏊", 400, 830, 120, 1, "shake"), ("☀️", 260, 830, 90, 1, "spin")],
                 tags=[("„ZAHNARZT“ 🦷", "#3E7BDA", 300, 560), ("FREIBAD?! 🏊", "#E23B3B", 540, 980)], fx="anger",
@@ -48,7 +48,7 @@ SCENES = [
     dict(id="mama", bg="#3E7BDA", clock="15:00", title="MAMA RUFT AN", dark=True, lines=[
         ("Nachmittags ruft Mama an. Zum fünften Mal heute. Mama heißt eigentlich Jana.", None),
         ("Und damit keiner was merkt, hat er gleich drei Handys.", None),
-    ], viz=dict(kind="stage", box="#EAF2FF", head="📞 EINGEHENDER ANRUF", head_col="#2B2F3A",
+    ], viz=dict(kind="stage", tag_size=48, head_size=50, item_scale=1.35, box="#EAF2FF", head="📞 EINGEHENDER ANRUF", head_col="#2B2F3A",
                 items=[("📱", 330, 680, 170, 0, "shake"), ("👩", 520, 640, 100, 0, "bob"), ("📱", 620, 820, 110, 1, "bob"),
                        ("📱", 740, 820, 110, 1, "shake"), ("📱", 860, 820, 110, 1, "bob")],
                 tags=[("„MAMA“ = JANA 🤫", "#E0457B", 400, 560), ("HANDY 1 · 2 · 3 📱", "#2B2F3A", 740, 980)],
@@ -56,7 +56,7 @@ SCENES = [
     dict(id="kino", bg="#5B6BC9", clock="18:00", title="IM KINO", dark=True, lines=[
         ("Achtzehn Uhr. Kino mit Mia.", None),
         ("Zwanzig Uhr. Gleicher Film. Mit Jana. Er tut überrascht vom Ende.", None),
-    ], viz=dict(kind="stage", box="#1C1C22", head="🎬 KINO · SAAL 3", head_col="#E23B3B",
+    ], viz=dict(kind="stage", tag_size=48, head_size=50, item_scale=1.35, box="#1C1C22", head="🎬 KINO · SAAL 3", head_col="#E23B3B",
                 items=[("🎬", 540, 620, 130, 0, "pulse"), ("🍿", 300, 820, 100, 0, "bob"), ("🍿", 780, 820, 100, 1, "bob"),
                        ("😮", 540, 830, 90, 1, "shake")],
                 tags=[("18:00 MIT MIA 🎬", "#8E5BE0", 300, 960), ("20:00 MIT JANA 🎬", "#E0457B", 780, 960)],
@@ -64,7 +64,7 @@ SCENES = [
     dict(id="ego", bg="#E07A2E", clock="21:00", title="DIE BESTÄTIGUNG", dark=True, lines=[
         ("Dabei hat er eigentlich kaum Selbstbewusstsein.", None),
         ("Er braucht jedes Herz und jedes Kompliment. Von möglichst vielen.", None),
-    ], viz=dict(kind="stage", box="#FFF0E6", head="🪫 SELBSTBEWUSSTSEIN", head_col="#A8642E",
+    ], viz=dict(kind="stage", tag_size=48, head_size=50, item_scale=1.35, box="#FFF0E6", head="🪫 SELBSTBEWUSSTSEIN", head_col="#A8642E",
                 items=[("🪫", 330, 680, 170, 0, "shake"), ("❤️", 600, 620, 90, 1, "fly"), ("❤️", 720, 680, 90, 1, "fly"),
                        ("💬", 840, 620, 90, 1, "pulse"), ("😍", 680, 820, 90, 1, "bob")],
                 tags=[("NUR 5 % 🪫", "#E23B3B", 330, 860), ("MEHR LIKES! MEHR HERZEN! ❤️", "#E0457B", 600, 980)],
@@ -72,7 +72,7 @@ SCENES = [
     dict(id="check", bg="#8E5BE0", clock="22:00", title="DER HANDY-CHECK", dark=True, lines=[
         ("Abends nimmt Lena sein Handy.", None),
         ("Er sagt: Das sind alles meine Cousinen. Alle zwölf.", None),
-    ], viz=dict(kind="stage", box="#F3EAFE", head="📱 KONTAKTE", head_col="#7A3FA8",
+    ], viz=dict(kind="stage", tag_size=48, head_size=50, item_scale=1.35, box="#F3EAFE", head="📱 KONTAKTE", head_col="#7A3FA8",
                 people=[(LENA, 780, "Lena", "neutral", 1)],
                 items=[("📱", 330, 660, 150, 0, "shake"), ("👭", 330, 860, 110, 1, "pulse")],
                 tags=[None, ("12 „COUSINEN“ 👀", "#E23B3B", 400, 980)], fx="anger", move="rumble", flash="#FF3B3B",
@@ -80,11 +80,11 @@ SCENES = [
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen Fremdgeher erkennst:", None),
         ("Sein Handy liegt immer mit dem Display nach unten.", None),
-        ("Frauen speichert er als Mama ein.", None),
+        ("Er braucht ständig Bestätigung von anderen.", None),
         ("Er hat mehrere Handys.", None),
-        ("Und er braucht ständig Bestätigung von anderen.", None),
-    ], viz=dict(kind="signs", items=[("Handy: Display nach unten", "📱"), ("Frauen als „Mama“ gespeichert", "👩"),
-                                     ("Mehrere Handys", "📲"), ("Braucht ständig Bestätigung", "❤️")])),
+        ("Und Frauen speichert er als Mama ein.", None),
+    ], viz=dict(kind="signs", items=[("Handy: Display nach unten", "📱"), ("Braucht ständig Bestätigung", "❤️"),
+                                     ("Mehrere Handys", "📲"), ("Frauen als „Mama“ gespeichert", "👩")])),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du auch einen Fremdgeher? Markier sie oder ihn!", None),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
