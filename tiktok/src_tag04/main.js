@@ -174,7 +174,7 @@ const SCENES = {
       popG(t, capT(2), 540, 820, `<g transform="translate(330 830) scale(0.42) translate(-300 -300)">${LOGO}</g>` + bigText(540, 860, 'VS', '#FFD31A', 100) + heuLogo(750, 830, 0.6));
   },
   heroes(t, d, m) {
-    const list = [[FAN_PICS[0], '@eikemzz'], [FAN_PICS[1], '@tobiii1911'], [FAN_PICS[2], '@leo.hro1'], [LKZ_PIC, 'Leberkaas…'], [LUCA_PIC, 'luca'], [DENNY_PIC, 'Denny']];
+    const list = [[FAN_PICS[0], '@eikemzz'], [FAN_PICS[1], '@tobiii1911'], [FAN_PICS[2], '@leo.hro1'], [LKZ_PIC, 'Leberkaaszerfetzer'], [LUCA_PIC, 'luca'], [DENNY_PIC, 'Denny']];
     const times = [capT(3), capT(3) + 0.35, capT(3) + 0.7, capT(4), capT(5), capT(5) + 0.4];
     let g = '';
     list.forEach(([pic, name], i) => { const x = 230 + (i % 3) * 300, y = 640 + Math.floor(i / 3) * 330;
@@ -182,7 +182,7 @@ const SCENES = {
       g += popG(t, times[i], x, y, `<defs><clipPath id="${id}"><circle cx="${x}" cy="${y}" r="100"/></clipPath></defs>
         <circle cx="${x + 5}" cy="${y + 9}" r="112" fill="#3A2316"/><circle cx="${x}" cy="${y}" r="110" fill="url(#pwGold2)" stroke="#3A2316" stroke-width="6"/>
         <image href="${pic}" x="${x - 100}" y="${y - 100}" width="200" height="200" clip-path="url(#${id})"/>
-        <text x="${x + 78}" y="${y - 70}" text-anchor="middle" font-family="Noto Color Emoji" font-size="54">⭐</text>` + handleTag(x, y + 150, name, 0.8)); });
+        <text x="${x + 78}" y="${y - 70}" text-anchor="middle" font-family="Noto Color Emoji" font-size="54">⭐</text>` + handleTag(x, y + 150, name, name.length > 12 ? 0.6 : 0.8)); });
     const defs = `<defs><linearGradient id="pwGold2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF3A8"/><stop offset=".5" stop-color="#FFD31A"/><stop offset="1" stop-color="#C98A12"/></linearGradient></defs>`;
     return defs + cam(1.0, 540, 960, field(t, 1080, {goal: false})) + `<rect width="1080" height="1920" fill="#000" opacity=".35"/>` +
       `<g opacity=".25">${Array.from({length: 12}, (_, i) => { const a = i * 30 + t * 15; return `<path d="M540 800 L${540 + Math.cos(a * Math.PI / 180) * 1400} ${800 + Math.sin(a * Math.PI / 180) * 1400} L${540 + Math.cos((a + 12) * Math.PI / 180) * 1400} ${800 + Math.sin((a + 12) * Math.PI / 180) * 1400}Z" fill="#FFD31A"/>`; }).join('')}</g>` +
@@ -233,6 +233,15 @@ const SCENES = {
       popG(t, c[4], 300, 700, badge(300, 700, '5000 FANS', {kind: 'pitch', fs: 48, rot: -3})) +
       popG(t, c[5], 540, 790, bigText(540, 800, 'ODER', '#fff', 60)) +
       popG(t, c[5], 760, 700, badge(760, 700, '2500 KOMMENTARE', {kind: 'red', fs: 38, rot: 3}));
+  },
+  rule3(t, d, m) {
+    const c = SEG.caps.map(x => x.t0 - SEG.start);
+    let coins = '';
+    for (let i = 0; i < 10; i++) { const t0 = c[0] + 0.1 + i * 0.3, k = (t - t0) / 0.6, two = t0 >= c[1]; if (k > 0 && k < 1) coins += coin(470 + rnd(i + 700) * 140, 560 + k * 340, two ? 36 : 30, two); }
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 300}) + crate(540, 1180, 0.95) + cashBox(540, 1015, 0.8, 'empty') + coins +
+        place(coach({mouth: m, blink: blinkAt(t)}), 170, 1600, 0.85)) +
+      popG(t, c[0], 520, 400, badge(520, 400, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 50})) +
+      popG(t, c[1], 520, 530, badge(520, 530, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 50, rot: -2}));
   },
   end4(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 540, 1700, 1.15)) +

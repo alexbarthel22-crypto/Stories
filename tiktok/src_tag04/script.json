@@ -163,6 +163,14 @@
   ]
  },
  {
+  "id": "rule3",
+  "say": "Jeder neue Fan bringt einen Euro, jeder Kommentar zwei.",
+  "cap": [
+   "JEDER NEUE *FAN: *1 €,",
+   "JEDER *KOMMENTAR: *2 €."
+  ]
+ },
+ {
   "id": "end4",
   "say": "Wer wird unser Co-Trainer? Schreib es in die Kommentare!",
   "cap": [

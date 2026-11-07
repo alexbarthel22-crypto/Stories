@@ -116,7 +116,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - Offen: Platzwart, Verteidiger (Nr. 4)
 
 ## Folge 4 (Tag 4) – Entwurf mit Vorschau-Stimme
-- Datei: `tiktok/tag04_fc_schlammloch_entwurf2.mp4` (1:17, espeak-Stimme), Code `src_tag04/`; Intro vor der Ikea-Tribüne
+- Datei: `tiktok/tag04_fc_schlammloch_entwurf3.mp4` (1:21, espeak-Stimme, mit Geld-Regel), Code `src_tag04/`; Intro vor der Ikea-Tribüne
 - Fans: 428 → **478 (+50)**; Geld: 50 € + 40 Kommentare × 2 € = **130 €** → **Schlammpumpe** → Kasse 0 €
 - Neu: **Luca** (Platzwart, Top-Kommentar „ich will Platzwart liekt bitte“) – olivgrüne Latzhose, orange Mütze, grüne Gummistiefel; **Denny** (Verteidiger Nr. 4)
 - Luca pumpt den Platz leer, das Tor treibt zurück auf die Torlinie
