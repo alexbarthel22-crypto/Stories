@@ -153,6 +153,6 @@ Cover: `episodes/31_delulu/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-delulu 🦄 Mit rosaroter Brille durchs Leben 🩷 Seine Lieblings-Influencerin postet ein Herz und er hat schon Namen für die Kinder 👶👶 Die Kellnerin sagt „Schönen Tag noch“ … er wartet bis Ladenschluss ☕⏰ Mia ist als „Mia 💖💘💕😍“ eingespeichert und ihr „ok“ nach drei Tagen? Ganz klar: Sie steht safe auf ihn 💍 Und als CEO bewirbt er sich ohne Abschluss, der Anzug ist schon gekauft 👔 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch jemanden, der delulu ist? Markier sie oder ihn! Und was soll Alex morgen sein?
+delulu 🦄 Mit rosaroter Brille durchs Leben 🩷 Seine Lieblings-Influencerin postet ein Herz und er ist sicher: Das war für ihn 💘 147 DMs, 0 Antworten … egal, die Namen für die Kinder stehen schon 👶👶 Die Kellnerin sagt „Schönen Tag noch“ und er wartet bis Ladenschluss ☕⏰ Mia antwortet nach drei Tagen mit „ok“, er schickt den Screenshot an alle: „Sie steht safe auf mich!“ 💍 Die Jungs: „Bro, die ist doch lesbisch???“ 💀 Und als CEO bewirbt er sich ohne Abschluss, der Anzug ist schon gekauft 👔 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch jemanden, der delulu ist? Markier sie oder ihn! Und was soll Alex morgen sein?
 
-#heuteistalex #delulu #delulutrulu #crush #comedy
+#heuteistalex #delulu #crush #redflags #comedy

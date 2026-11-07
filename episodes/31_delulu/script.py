@@ -11,6 +11,7 @@ MOODS = dict(MOODS_BASE, star="verträumt und sicher, dann trocken", cafe="verli
              chat="euphorisch, dann trocken", job="selbstbewusst, die Pointe trocken")
 SHUFFLE = SHUFFLE_BASE
 INTRO_LEN = 3.3
+LINE_MAXPAUSE = {"star_1": 0.12}
 LINE_TEMPO = {k: 1.3 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
 LAYOUT = dict(feet=1732, ky=1.15, phone=1.06)   # Alex tiefer, Animationsbox größer
 CAPTION_Y = 1650   # Untertitel etwas tiefer (bleibt im Sicherheitsbereich)
@@ -93,4 +94,5 @@ SCENES = [
     ], viz=dict(kind="outro", q="Kennst du auch jemanden, der delulu ist?", handle="@delulu_alex", icon="🦄", col="#9B6BE0")),
 ]
 
-GEMINI_LINE_MOOD = {"intro_role": "völlig überrascht und amüsiert, flüssig in einem Zug ohne Stottern oder Wiederholung ausgerufen"}
+GEMINI_LINE_MOOD = {"star_1": "verträumt und überzeugt, zügig und flüssig; 'Das war für ihn' in einem Atemzug ohne jede Pause und ohne Dehnung, ganz normal gesprochen, dann trocken",
+                    "intro_role": "völlig überrascht und amüsiert, flüssig in einem Zug ohne Stottern oder Wiederholung ausgerufen"}
