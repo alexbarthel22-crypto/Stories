@@ -385,3 +385,110 @@ def make_intro(cfg):
     def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
         draw_intro_house(c, t, shuffle, ticks, flash_start, reveal_t, role_text, INTRO)
     return INTRO, draw_intro
+
+
+# ----------------------------------------------------------------------- realistischer Messenger
+def _phone_shell(c, x, y, w, h):
+    rrect(c, x + 10, y + 16, w, h, 56); src(c, "#000000", 0.25); c.fill()
+    for (bx, by, bh) in ((-5, 150, 50), (-5, 220, 80), (w, 200, 110)):
+        rrect(c, x + bx, y + by, 6, bh, 3); fill(c, "#55565E")
+    g = cairo.LinearGradient(x, y, x + w, y + h)
+    g.add_color_stop_rgb(0, 0.42, 0.42, 0.46); g.add_color_stop_rgb(0.5, 0.2, 0.2, 0.23); g.add_color_stop_rgb(1, 0.38, 0.38, 0.42)
+    rrect(c, x, y, w, h, 56); c.set_source(g); c.fill()
+    rrect(c, x + 6, y + 6, w - 12, h - 12, 50); fill(c, "#050506")
+    return x + 16, y + 16, w - 32, h - 32
+
+
+def _status(c, x0, y0, w, col):
+    text(c, "9:41", x0 + 50, y0 + 30, 22, col, FONT_HEAD, anchor="l")
+    for i in range(4):
+        hh = 7 + i * 4
+        rrect(c, x0 + w - 130 + i * 8, y0 + 38 - hh, 5, hh, 1); src(c, col); c.fill()
+    rrect(c, x0 + w - 74, y0 + 21, 34, 17, 5); c.set_line_width(2); src(c, col, 0.6); c.stroke()
+    rrect(c, x0 + w - 71, y0 + 24, 24, 11, 3); src(c, col); c.fill()
+    rrect(c, x0 + w / 2 - 60, y0 + 12, 120, 32, 16); fill(c, "#000000")
+
+
+def _avatar(c, x, y, r, name, col):
+    c.arc(x, y, r, 0, 2 * math.pi); fill(c, col)
+    text(c, name[0].upper(), x, y, r * 1.1, "#FFFFFF", FONT_HEAD)
+
+
+def _bubble(c, x0, w, y, txt, out, tm, s):
+    lines = wrap(c, txt, 26, w * 0.68, FONT_BOLD)
+    bw = max(text_width(c, ln, 26, FONT_BOLD) for ln in lines) + 120
+    bh = len(lines) * 33 + 26
+    bx = x0 + w - bw - 18 if out else x0 + 18
+    def d():
+        rrect(c, bx + 2, y + 3, bw, bh, 18); src(c, "#000000", 0.08); c.fill()
+        rrect(c, bx, y, bw, bh, 18); fill(c, "#D9FDD3" if out else "#FFFFFF")
+        for i, ln in enumerate(lines):
+            text(c, ln, bx + 18, y + 28 + i * 33, 26, "#111B21", FONT_BOLD, anchor="l")
+        text(c, tm + (" ✓✓" if out else ""), bx + bw - 14, y + bh - 14, 15, "#53BDEB" if out else "#667781", FONT_BOLD, anchor="r")
+    scaled(c, bx + (bw if out else 0), y + bh, s, d)
+    return bh
+
+
+def sc_messenger(c, S, v, spec):
+    """v: list=[(zeile, name, vorschau, zeit, ungelesen, farbe)], switch=zeile ab der der Chat offen ist,
+    chat=dict(name, col, msgs=[(zeile, out?, text, zeit)])"""
+    t = S.t
+    s = pop(t, S.at(0, 0.0))
+    sw_line = v.get("switch", 0)
+    in_chat = sw_line is not None and t >= S.at(sw_line, 0.0)
+    def ph():
+        x0, y0, w, h = _phone_shell(c, 255, 370, 570, 720)
+        c.save(); rrect(c, x0, y0, w, h, 42); c.clip()
+        if not in_chat:
+            src(c, "#FFFFFF"); c.paint()
+            _status(c, x0, y0, w, "#000000")
+            text(c, "Chats", x0 + 30, y0 + 100, 44, "#000000", FONT_HEAD, anchor="l")
+            rrect(c, x0 + 24, y0 + 135, w - 48, 44, 12); fill(c, "#F0F2F5")
+            text(c, "🔍  Suchen", x0 + 44, y0 + 157, 20, "#667781", FONT_BOLD, anchor="l")
+            for i, (li, nm, prev, tm, unread, col) in enumerate(v["list"]):
+                if t < S.at(li, 0.15 + i * 0.12):
+                    continue
+                yy = y0 + 200 + i * 108
+                def row(yy=yy, nm=nm, prev=prev, tm=tm, unread=unread, col=col):
+                    _avatar(c, x0 + 66, yy + 50, 36, nm, col)
+                    text(c, nm, x0 + 118, yy + 32, 26, "#111B21", FONT_HEAD, anchor="l")
+                    text(c, prev, x0 + 118, yy + 68, 20, "#667781", FONT_BOLD, anchor="l")
+                    text(c, tm, x0 + w - 24, yy + 32, 17, "#1FA855" if unread else "#667781", FONT_BOLD, anchor="r")
+                    if unread:
+                        c.arc(x0 + w - 42, yy + 66, 15, 0, 2 * math.pi); fill(c, "#25D366")
+                        text(c, str(unread), x0 + w - 42, yy + 66, 16, "#FFFFFF", FONT_HEAD)
+                    c.move_to(x0 + 118, yy + 104); c.line_to(x0 + w, yy + 104); c.set_line_width(1); src(c, "#E9EDEF"); c.stroke()
+                scaled(c, x0 + w / 2, yy + 50, pop(t, S.at(li, 0.15 + i * 0.12)), row)
+        else:
+            ch = v["chat"]
+            src(c, "#EFEAE2"); c.paint()
+            rnd = random.Random(5)
+            for _ in range(40):
+                emoji(c, rnd.choice(["☕", "🎈", "⭐", "🎵"]), x0 + rnd.uniform(0, w), y0 + rnd.uniform(110, h), 22, alpha=0.06)
+            rrect(c, x0, y0, w, 120, 0); fill(c, "#F7F8FA")
+            _status(c, x0, y0, w, "#000000")
+            text(c, "‹", x0 + 24, y0 + 84, 44, "#007AFF", FONT_HEAD, anchor="l")
+            _avatar(c, x0 + 86, y0 + 82, 24, ch["name"], ch["col"])
+            text(c, ch["name"], x0 + 122, y0 + 72, 24, "#111B21", FONT_HEAD, anchor="l")
+            text(c, "online", x0 + 122, y0 + 98, 16, "#667781", FONT_BOLD, anchor="l")
+            text(c, "📞", x0 + w - 40, y0 + 82, 26, "#007AFF", FONT_HEAD)
+            yy = y0 + 140
+            for (li, out, msg, tm) in ch["msgs"]:
+                if t > S.at(li, 0.2):
+                    yy += _bubble(c, x0, w, yy, msg, out, tm, pop(t, S.at(li, 0.2))) + 14
+            rrect(c, x0, y0 + h - 84, w, 84, 0); fill(c, "#F7F8FA")
+            rrect(c, x0 + 20, y0 + h - 70, w - 110, 46, 23); fill(c, "#FFFFFF")
+            text(c, "Nachricht", x0 + 42, y0 + h - 47, 20, "#8696A0", FONT_BOLD, anchor="l")
+            c.arc(x0 + w - 48, y0 + h - 47, 26, 0, 2 * math.pi); fill(c, "#25D366")
+            text(c, "🎤", x0 + w - 48, y0 + h - 47, 22, "#FFFFFF", FONT_HEAD)
+        c.restore()
+    last = S.at(len(S.S.starts) - 1, 0.3)
+    c.save(); box_move(c, W / 2, 730, t, v.get("move", "wobble"), last)
+    scaled(c, W / 2, 730, s, ph)
+    c.restore()
+    if v.get("fx"):
+        box_fx(c, t, last, W / 2, 730, 570, 720, v["fx"])
+    alex_bottom(c, S, spec, *v.get("alex", ("smug", "idle", "📱")))
+
+
+KINDS["messenger"] = sc_messenger
