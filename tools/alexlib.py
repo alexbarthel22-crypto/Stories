@@ -682,6 +682,15 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.line_to(15.8, -50.5)
         c.curve_to(14.5, -55.6, 10, -56.2, 5, -56.5)
         c.close_path()
+    if sp.get("skirt"):                                   # Minirock (unter dem Oberteil)
+        sk = sp["skirt"]
+        c.move_to(-14.2, -27.5); c.line_to(14.2, -27.5); c.line_to(17.2, -17.2)
+        c.curve_to(6, -16.2, -6, -16.2, -17.2, -17.2); c.close_path()
+        _fill_line(c, sk, -28, -16, 0.8)
+        c.set_line_width(0.45); src(c, shade(sk, 0.75))
+        for xx in (-8, -3, 3, 8):
+            c.move_to(xx * 0.9, -24); c.line_to(xx * 1.15, -17.5)
+        c.stroke()
     torso_path()
     _fill_line(c, top, -57, -24, 0.9)
     c.save(); torso_path(); c.clip()

@@ -52,11 +52,11 @@ SCENES = [
     dict(id="what", bg="#B0307A", clock=None, title="WAS IST EIN OF-MODEL?", dark=True, lines=[
         ("Ein OF-Model verkauft exklusive Inhalte an zahlende Fans. Im Abo.",
          "Ein Oh-Eff-Model verkauft exklusive Inhalte an zahlende Fans. Im Abo."),
-        ("Und dafür wird Alex heute zu Alexia: Perücke, Make-up, Kleid.", None),
+        ("Und dafür wird Alex heute zu Alexia: Perücke, Make-up, Minirock.", None),
     ]),
     dict(id="morning", bg="#F2A65A", clock="09:00", title="NATURAL LOOK", lines=[
         ("Neun Uhr. Der natürliche Look. Dauert nur zwei Stunden.", None),
-        ("Ringlicht an. Dreihundert Fotos. Eins wird gepostet.", None),
+        ("Ringlicht an. Ausschnitt richten. Dreihundert Fotos. Eins wird gepostet.", None),
     ]),
     dict(id="promo", bg="#8E5BE0", clock="13:00", title="LINK IN BIO", dark=True, lines=[
         ("Mittags Werbung auf allen Kanälen. Unter jedem Video: Link in Bio.", None),
@@ -83,7 +83,7 @@ SCENES = [
         ("Und jeder Fan heißt Babe.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du auch ein OF-Model? Markier ihn oder sie!", "Kennst du auch ein Oh-Eff-Model? Markier ihn oder sie!"),
+        ("Kennst du auch jemanden, der damit starten sollte? Markier ihn oder sie!", None),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]

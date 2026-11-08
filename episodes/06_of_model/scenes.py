@@ -6,7 +6,7 @@ from alexlib import *
 
 # Alexia: gleiches Gesicht wie Alex (Augen, Sommersprossen), aber glaubwürdig weiblich gestylt
 ALEXA = alex(hair_style="fem", makeup=dict(shadow="#C8708E"), lashes=True, lips="#D8346E", earrings="#F2C94C",
-             top="#E8457A", top_style="dress", bare_legs=True, heels=True, shoes="#E8457A")
+             top="#E8457A", top_style="tank", skirt="#1C1C22", bare_legs=True, heels=True, shoes="#E8457A")
 FEET, AH = 1740, 470          # Alexia tiefer (neuer Aufbau), Inhalte darüber größer
 CONTENT_SCALE = 1.12
 _BASE = [None]
@@ -122,7 +122,7 @@ def sc_what(c, S):
             emoji(c, "➡️", W / 2, 700, 100)
             person(c, 810, 850, 340, ALEXA, t, "smug", bob=False, name="Alexia")
             # Aufzählung UNTER den Figuren, überdeckt niemanden
-            chips = [("Perücke", "💇", 0.35), ("Make-up", "💄", 0.55), ("Kleid", "👗", 0.75)]
+            chips = [("Perücke", "💇", 0.35), ("Make-up", "💄", 0.55), ("Minirock", "👠", 0.75)]
             for i, (lab, ic, f) in enumerate(chips):
                 if t > S.at(1, f):
                     x = 240 + i * 300
@@ -160,6 +160,11 @@ def sc_morning(c, S):
             txt = f"Fotos: {n}" if t < S.at(1, 0.75) else "Gepostet: 1 ✅"
             text(c, txt, W / 2, 950, 46, "#FFFFFF", FONT_HEAD)
         scaled(c, W / 2, 950, pop(t, S.at(1, 0.15)), counter)
+        if S.at(1, 0.12) < t:
+            def aus():
+                rrect(c, 375, 607, 330, 66, 18); fill(c, "#E8457A")
+                text(c, "Ausschnitt richten ✨", 540, 640, 30, "#FFFFFF", FONT_HEAD)
+            scaled(c, 540, 640, pop(t, S.at(1, 0.12)), aus, rot=-0.04 + 0.02 * math.sin(t * 5))
         alexa_bottom(c, S, "smug", "phone", "📱")
 
 
@@ -330,14 +335,55 @@ SCENE_DRAW = dict(what=sc_what, morning=sc_morning, promo=sc_promo, dms=sc_dms, 
                   boss=sc_boss, signs=sc_signs, outro=sc_outro)
 
 
-def _scaled_scene(fn, k=CONTENT_SCALE, dy=0):
+_MOTION = dict(what="bounce", morning="glow", promo="bounce", dms="buzz", family="wobble", boss="bounce")
+_FX = dict(what=["💄", "💅", "✨"], morning=["📸", "✨", "💡"], promo=["🔗", "💸", "✨"], dms=["💌", "💬", "❤️"],
+           family=["😅", "🍗", "✨"], boss=["💼", "👑", "💸"])
+
+
+def _line_t0(S):
+    t0 = None
+    for st in S.S.starts:
+        if S.t >= st:
+            t0 = st
+    return t0
+
+
+def _scaled_scene(fn, k=CONTENT_SCALE, dy=0, sid=""):
     def run(c, S):
+        t = S.t
         _BASE[0] = c.get_matrix()
-        c.save(); c.translate(W / 2, 430 + dy); c.scale(k, k); c.translate(-W / 2, -430)
+        kind = _MOTION.get(sid)
+        t0 = _line_t0(S)
+        u = (t - t0) / 0.5 if t0 is not None else 9
+        punch = 1 + 0.06 * math.sin(clamp(u) * math.pi) if kind else 1      # Puls bei jeder neuen Zeile
+        dx = rot = 0.0; sc_ = 1.0; dyy = 0.0
+        if kind == "bounce":
+            sc_ = 1 + 0.018 * abs(math.sin(t * math.pi * 2)); rot = 0.012 * math.sin(t * math.pi)
+        elif kind == "wobble":
+            rot = 0.02 * math.sin(t * 3.2)
+        elif kind == "buzz":                                            # Handy vibriert bei Nachrichten
+            if u < 1.2:
+                dx = 7 * math.sin(t * 60) * (1 - clamp(u / 1.2)); rot = 0.02 * math.sin(t * 45) * (1 - clamp(u / 1.2))
+        elif kind == "glow":
+            dyy = 4 * math.sin(t * 2.5)
+        if kind and u < 0.5:
+            dx += 10 * math.sin(u * 30) * (1 - u / 0.5)
+        cy = 430 + dy + 300
+        c.save()
+        c.translate(W / 2 + dx, cy + dyy); c.rotate(rot); c.scale(sc_ * punch, sc_ * punch); c.translate(-W / 2, -cy)
+        c.translate(W / 2, 430 + dy); c.scale(k, k); c.translate(-W / 2, -430)
         fn(c, S)
         c.restore()
         _BASE[0] = None
+        if kind and t0 is not None and 0 <= t - t0 < 1.0:                # Emojis schießen aus den Ecken
+            v = (t - t0) / 1.0
+            ems = _FX.get(sid, ["✨"])
+            for i, (cx_, cy_, sx, sy) in enumerate(((70, 420, -1, -1), (1010, 420, 1, -1), (70, 1080, -1, 1), (1010, 1080, 1, 1))):
+                for j in range(2):
+                    d = 40 + 160 * ease_out_cubic(v) + j * 50
+                    emoji(c, ems[(i + j) % len(ems)], cx_ + sx * d * 0.5, cy_ + sy * d * 0.35, 60 * (1 - v * 0.4),
+                          rot=v * 2 * sx, alpha=1 - v)
     return run
 
 
-SCENE_DRAW = {k: _scaled_scene(v, *((1.0, 45) if k == "dms" else (CONTENT_SCALE, 0))) for k, v in SCENE_DRAW.items()}
+SCENE_DRAW = {k: _scaled_scene(v, *((1.0, 45) if k == "dms" else (CONTENT_SCALE, 0)), sid=k) for k, v in SCENE_DRAW.items()}

@@ -70,7 +70,7 @@ Cover: `episodes/06_of_model/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein OF-Model 📸💄 Aus Alex wird Alexia: Perücke, Make-up, Kleid 💅 Natural Look in nur 2 Stunden, 300 Fotos für 1 Post 🤳 Die Fans wollen heiraten 💍 Geantwortet hat aber Kevin, der bezahlte Chatter 😅 Beruflich? „Content Creatorin im Bereich Fitness“ 💪 Und das Büro ist das Bett 🛏️ Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch ein OF-Model? Markier ihn oder sie! Und was soll Alex morgen sein?
+ein OF-Model 📸💄 Aus Alex wird Alexia: Perücke, Make-up, Minirock 💅 Natural Look in nur 2 Stunden, Ringlicht an, Ausschnitt richten, 300 Fotos für 1 Post 🤳 Die Fans wollen heiraten 💍 Geantwortet hat aber Kevin, der bezahlte Chatter 😅 Beruflich? „Content Creatorin im Bereich Fitness“ 💪 Und das Büro ist das Bett 🛏️ Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch jemanden, der damit starten sollte? Markier ihn oder sie! Und was soll Alex morgen sein?
 
 #heuteistalex #ofmodel #contentcreator #influencer #comedy
 
