@@ -2,7 +2,7 @@
 
 ## Empfohlen (zum Kopieren)
 
-SPIELTAG! ⚽ FC Schlammloch gegen SC Heuballen – 0:1, 1:1, 1:2, Vlad hält einen Elfmeter mit einem Auge 🏴‍☠️ und in der 93. Minute trifft Leberkaaszerfetzer zum 3:2! 😭🔥 494 Fans, 2470 € Eintritt. Jetzt entscheidet ihr: neuer Würstchenstand oder Spielerkabine? Abstimmen in den Kommentaren 👇
+SPIELTAG! ⚽ FC Schlammloch gegen SC Heuballen – 0:1, 1:1, 1:2, Vlad hält einen Elfmeter mit einem Auge 🏴‍☠️ und in der 93. Minute trifft Leberkaaszerfetzer zum 3:2! 😭🔥 494 Fans, 2532 € in der Kasse – und Opa Jürgen hat alles verschlafen 😴 Jetzt entscheidet ihr: neuer Würstchenstand oder Spielerkabine? Abstimmen in den Kommentaren 👇
 
 #fußballverein #kreisliga #fußball #amateurfußball #fußballhumor #spieltag #animation #serie #fcschlammloch
 

@@ -57,6 +57,12 @@ function bewerbungen(t, t0, y) {
 
 
 // ---------- Tag 5: Spieltag ----------
+function sleepyOpa(t, x, y, s, awake) {
+  let z = '';
+  if (!awake) for (let k = 0; k < 3; k++) { const ph = (t * 0.6 + k / 3) % 1; z += `<text x="${x + 60 * s + ph * 80 * s}" y="${y - 520 * s - ph * 160 * s}" ${FONT} font-size="${(40 + ph * 30) * s * 2}" fill="#fff" opacity="${1 - ph}" stroke="#3A2316" stroke-width="4" paint-order="stroke">Z</text>`; }
+  const body = rockingOpa(t).replace(/<circle cx="(195|305)" cy="215" r="36" fill="#fff" stroke="#111" stroke-width="8"\/>/g, awake ? '$&' : '<path d="M$1 215 m-28 0 q28 18 56 0" stroke="#111" stroke-width="8" fill="none"/>');
+  return place(body, x, y, s) + z;
+}
 function heu(o = {}) {
   return player(Object.assign({jersey: '#E8C24A', trim: '#6B8E23', num: '7', shorts: '#6B8E23', socks: '#E8C24A', skin: '#F2C9A0', browCol: '#8A6A2A',
     hair: `<path d="M100 200 Q100 74 250 72 Q400 74 400 200 Q380 132 250 128 Q120 132 100 200Z" fill="#E8C870"/>`,
@@ -156,8 +162,8 @@ const SCENES = {
   },
   kickoff(t, d, m) {
     let s = field(t, 960, {goal: false}) + `<g fill="none" stroke="#F0EDE0" stroke-width="7"><ellipse cx="540" cy="1300" rx="300" ry="110"/><path d="M-400 1300 H1480"/></g>`;
-    s += place(lkz({}), 430, 1320, 0.5) + place(heu({num: '9'}), 650, 1300, 0.5, true) + `<g transform="translate(540 1300)">${ballIcon(0, 0, 26)}</g>`;
-    return cam(1.0, 540, 960, s) + scoreBug(0, 0, "1'") + popG(t, 0.0, 540, 760, bigText(540, 800, 'ANPFIFF!', '#fff', 150));
+    s += `<rect x="-400" y="1560" width="1880" height="400" fill="#4A8038"/><path d="M-400 1560 H1480" stroke="#F0EDE0" stroke-width="10"/>` + sleepyOpa(t, 860, 1780, 0.42, false) + place(frog({blink: blinkAt(t), mouth: true}), 140 + (t * 300) % 800, 1230 - Math.abs(Math.sin(t * 9)) * 50, 0.26) + place(lkz({}), 430, 1320, 0.5) + place(heu({num: '9'}), 650, 1300, 0.5, true) + `<g transform="translate(540 1300)">${ballIcon(0, 0, 26)}</g>`;
+    return cam(1.0, 540, 960, s) + scoreBug(0, 0, "1'") + popG(t, 0.0, 540, 760, bigText(540, 800, 'ANPFIFF!', '#fff', 150)) + popG(t, 0.4, 540, 1000, badge(540, 1000, 'FRODO AUF DEM PLATZ!', {kind: 'orange', fs: 40, rot: -3}));
   },
   h1(t, d, m) {
     const tg = capT(1) + 0.4;
@@ -171,7 +177,7 @@ const SCENES = {
   },
   half(t, d, m) {
     return cam(1.0, 540, 960, field(t, 1080, {goal: false}) + `<rect width="1080" height="1920" fill="#000" opacity=".25"/>` +
-        place(co13({mouth: 1, mood: 'talk', blink: blinkAt(t)}), 330, 1700, 1.0) + place(coach({mouth: m, blink: blinkAt(t)}), 780, 1700, 0.9)) +
+        sleepyOpa(t, 870, 1120, 0.35, false) + place(co13({mouth: 1, mood: 'talk', blink: blinkAt(t)}), 330, 1700, 1.0) + place(coach({mouth: m, blink: blinkAt(t)}), 760, 1700, 0.9)) +
       scoreBug(1, 1, 'HALBZEIT') + popG(t, capT(1), 540, 640, badge(540, 640, 'TAKTIK VON 13', {kind: 'pitch', fs: 54, rot: -2}));
   },
   h2(t, d, m) {
@@ -213,13 +219,21 @@ const SCENES = {
     return cam(1.0, 540, 960, s) + scoreBug(t < tg ? 2 : 3, 2, 'ABPFIFF') + goalFlash(t, tg, 'TOR!!!', '#6BF06B') +
       popG(t, capT(2), 540, 1050, badge(540, 1050, 'SIEG! 3:2', {kind: 'pitch', fs: 80, rot: -3})) + jump + confetti(t, tg, 70);
   },
+  opa5(t, d, m) {
+    const wake = t > capT(2) + 0.5;
+    let s = field(t, 960, {goal: false, touchY: 1320});
+    s += sleepyOpa(t, 520, 1300, 0.95, wake);
+    return cam(1.0, 540, 960, s) + popG(t, 0.0, 500, 440, nameCard(80, 360, '4', 'OPA JÜRGEN', 'RENTNER · SCHLÄFT')) +
+      popG(t, capT(2), 790, 600, `<g transform="rotate(10 790 600)">${badge(790, 600, 'ZZZ ...', {kind: 'red', fs: 52})}</g>`) +
+      (wake ? popG(t, capT(2) + 0.5, 290, 600, badge(290, 600, 'WIE STEHT\'S?', {kind: 'pitch', fs: 48, rot: -3})) : '');
+  },
   money5(t, d, m) {
-    const lines = [['494 FANS × 5 €', '+2470 €'], ['VEREINSKASSE', '2470 €', '#2FA84A', true]];
-    const t3 = capT(4);
+    const lines = [['494 FANS × 5 €', '+2470 €'], ['31 KOMMENTARE × 2 €', '+62 €'], ['VEREINSKASSE', '2532 €', '#2FA84A', true]];
+    const t3 = capT(5);
     let coins = '';
     for (let i = 0; i < 24; i++) { const t0 = capT(1) + rnd(i + 900) * 2.6, k = (t - t0) / 0.9; if (k > 0 && k < 1) coins += coin(80 + rnd(i + 950) * 860, -60 + k * 1500, 34, i % 2); }
-    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + crate(720, 1290, 0.75) + cashBox(720, 1160, 0.62, true) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 240, 1640, 0.95)) +
-      popG(t, 0.0, 540, 340, calcBoard(t, 70, 290, lines, [capT(1), t3])) + coins + confetti(t, t3, 40);
+    return cam(1.0, 540, 960, field(t, 1080, {goalX: 860}) + crate(760, 1330, 0.7) + cashBox(760, 1210, 0.58, true) + place(coach({mouth: m, wave: Math.sin(t * 10), blink: blinkAt(t)}), 240, 1640, 0.95)) +
+      popG(t, 0.0, 540, 340, calcBoard(t, 70, 290, lines, [capT(1), capT(2), t3])) + (t >= t3 ? `<path d="M110 ${290 + 106 + 110 + 30} H890" stroke="#3A2316" stroke-width="7"/>` : '') + coins + confetti(t, t3, 40);
   },
   vote(t, d, m) {
     const c = SEG.caps.map(x => x.t0 - SEG.start);

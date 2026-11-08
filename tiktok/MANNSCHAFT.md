@@ -129,13 +129,14 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - **Ziel: Stadionrasen für 1000 €** = 1000 neue Fans oder 500 Kommentare (Fortschrittsbalken 0 € / 1000 €)
 
 ## Folge 5 (Tag 5) – Spieltag
-- Datei: `tiktok/tag05_fc_schlammloch_v2.mp4` (1:08, Fenrir; Ultra-Gesang aus Pixabay-Aufnahme „crowd-cheering-in-stadium-435357“, längerer Siegesjubel), Titelbild `tag05_thumbnail.png`, Beschreibung `tag05_beschreibung.md`, Code `src_tag05/`
+- Datei: `tiktok/tag05_fc_schlammloch_v3.mp4` (1:15, Fenrir; Ultra-Gesang aus Pixabay-Aufnahme „crowd-cheering-in-stadium-435357“, längerer Siegesjubel), Titelbild `tag05_thumbnail.png`, Beschreibung `tag05_beschreibung.md`, Code `src_tag05/`
 - Fans: 477 → **494 (+17)**
 - Co-Trainer fürs Spiel: **„13“** (Top-Kommentar „Kann ich co-Trainer sein bitte“, 🇦🇫) – schwarzer Trainingsanzug mit 13, blaue Cap mit gelber 13, Pfeife, Klemmbrett
 - **Spiel: FC Schlammloch 3:2 SC Heuballen** – 0:1 (23'), 1:1 Leberkaaszerfetzer (38'), Halbzeit-Taktik von 13, 1:2 (61'), Vlad hält Elfmeter „mit einem Auge“ (74'), Denny grätscht, die Nr. 10 trifft zum 2:2 (84'), 3:2 Leberkaaszerfetzer in der 90.+3'
 - SC-Heuballen-Spieler: gelbe Trikots, grüne Hosen, strohblonde Haare; Torwart rot
-- Geld: 494 Fans × 5 € Eintritt = **2470 €** → Vereinskasse **2470 €**
+- Geld: 494 Fans × 5 € Eintritt = 2470 € + 31 Kommentare (vom Vortag) × 2 € = 62 € → Vereinskasse **2532 €**
+- Gags: Frodo läuft beim Anpfiff über den Platz; Opa Jürgen schläft im Schaukelstuhl am Spielfeldrand (Zzz) und hat das ganze Spiel verschlafen („Wie steht's?“)
 - Abstimmung in den Kommentaren: **neuer Würstchenstand oder Spielerkabine (Bauanhänger)**
 
 ## Stand nach Tag 5
-- Fans: 494 · Vereinskasse: 2470 € · erstes Spiel gewonnen (3:2 gegen SC Heuballen)
+- Fans: 494 · Vereinskasse: 2532 € · erstes Spiel gewonnen (3:2 gegen SC Heuballen)

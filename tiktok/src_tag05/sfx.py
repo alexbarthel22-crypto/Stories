@@ -330,8 +330,12 @@ def build_sfx(segs, N):
         elif sid == 'pen': L(0.0, whistle()); L(c[2] - 0.3, thud()); L(c[2] + 0.2, clack()); L(c[2] + 0.2, stadium_rec(-17.0)[:int(1.6 * SR)])
         elif sid == 'last': L(0.0, drum(en - st) * 1.0)
         elif sid == 'money5':
-            L(0.0, pop()); L(c[1], whoosh()); L(c[4], kaching())
+            L(0.0, pop()); L(c[1], whoosh()); L(c[2], whoosh()); L(c[5], kaching())
             for i in range(12): L(c[1] + i * 0.2 + 0.9, coin(i % 2 == 1))
+        elif sid == 'opa5':
+            L(0.0, pop())
+            for k in range(int((en - st) / 1.2)): L(k * 1.2 + 0.2, creak())
+            L(c[2], pop()); L(c[2] + 0.5, ding())
         elif sid == 'vote': L(0.0, pop()); L(c[2], whoosh()); L(c[3], whoosh()); L(c[4], ding())
         elif sid == 'calc':
             L(0.0, pop())
