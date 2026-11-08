@@ -1,0 +1,18 @@
+[
+ {"id":"intro","say":"Tag fünf! Ich gründe einen Fußballverein!","cap":["TAG FÜNF!","ICH GRÜNDE EINEN","*FUSSBALLVEREIN!"]},
+ {"id":"fans5","say":"Gestern hatten wir vierhundertsiebenundsiebzig Fans. Heute: vierhundertvierundneunzig!","cap":["GESTERN:","477 FANS.","HEUTE:","*494!"]},
+ {"id":"co13","say":"Unser Co-Trainer für heute: Dreizehn! Dein Kommentar hat gewonnen!","cap":["UNSER *CO-TRAINER","FÜR HEUTE:","*13!","DEIN KOMMENTAR","HAT *GEWONNEN!"]},
+ {"id":"matchday","say":"Und heute ist Spieltag! FC Schlammloch gegen SC Heuballen!","cap":["UND HEUTE IST","*SPIELTAG!","*FC SCHLAMMLOCH","GEGEN *SC HEUBALLEN!"]},
+ {"id":"crowd","say":"Die Tribüne ist voll, die Ultras singen!","cap":["DIE TRIBÜNE IST *VOLL,","DIE *ULTRAS SINGEN!"]},
+ {"id":"kickoff","say":"Anpfiff!","cap":["*ANPFIFF!"]},
+ {"id":"h1","say":"Und dann: Heuballen trifft. Null zu eins.","cap":["UND DANN:","!HEUBALLEN TRIFFT.","!0:1."]},
+ {"id":"eq1","say":"Aber Leberkaas-Zerfetzer! Eins zu eins!","cap":["ABER","*LEBERKAASZERFETZER!","*1:1!"]},
+ {"id":"half","say":"Halbzeit. Dreizehn gibt Anweisungen.","cap":["*HALBZEIT.","*13 GIBT","ANWEISUNGEN."]},
+ {"id":"h2","say":"Zweite Halbzeit: Heuballen schon wieder. Eins zu zwei.","cap":["ZWEITE HALBZEIT:","!HEUBALLEN","SCHON WIEDER.","!1:2."]},
+ {"id":"pen","say":"Dann Elfmeter für Heuballen. Aber Vlad hält! Mit einem Auge!","cap":["DANN *ELFMETER","FÜR HEUBALLEN.","ABER *VLAD HÄLT!","MIT *EINEM AUGE!"]},
+ {"id":"eq2","say":"Denny grätscht, die Zehn trifft: zwei zu zwei!","cap":["*DENNY GRÄTSCHT,","DIE *10 TRIFFT:","*2:2!"]},
+ {"id":"last","say":"Letzte Minute. Leberkaas-Zerfetzer zieht ab...","cap":["*LETZTE MINUTE.","*LEBERKAASZERFETZER","ZIEHT AB ..."]},
+ {"id":"win","say":"TOR! Drei zu zwei! Wir haben gewonnen!","cap":["*TOR!","*3:2!","WIR HABEN *GEWONNEN!"]},
+ {"id":"money5","say":"Vierhundertvierundneunzig Fans zahlen je fünf Euro Eintritt. Vereinskasse: zweitausendvierhundertsiebzig Euro!","cap":["*494 FANS","ZAHLEN JE *5 EURO","EINTRITT.","VEREINSKASSE:","*2470 EURO!"]},
+ {"id":"vote","say":"Was machen wir mit dem Geld? Einen neuen Würstchenstand oder eine Spielerkabine? Stimmt in den Kommentaren ab!","cap":["WAS MACHEN WIR","MIT DEM *GELD?","NEUER *WÜRSTCHENSTAND","ODER *SPIELERKABINE?","STIMMT IN DEN","*KOMMENTAREN AB!"]}
+]
