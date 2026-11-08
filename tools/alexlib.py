@@ -803,7 +803,7 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         ex_, ey_ = sx + dx * L, sy + dy * L
         bare = style in ("tank", "dress")
         sleeve = skin if bare else top
-        pump = 1.45 if sp.get("pump") else 1.0
+        pump = (sp["pump"] if isinstance(sp.get("pump"), (int, float)) and not isinstance(sp.get("pump"), bool) else 1.45) if sp.get("pump") else 1.0
         c.set_line_width((8.6 if not bare else 7.2) * pump); src(c, shade(sleeve, 0.62 if not bare else 0.72))
         c.move_to(sx, sy); c.line_to(ex_, ey_); c.stroke()
         c.set_line_width((7.0 if not bare else 5.8) * pump); c.set_source(_grad(c, sleeve, sy - 4, ey_ + 4, 1.06, 0.9))
@@ -1097,6 +1097,14 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         c.move_to(-8, hy0 - 18); c.curve_to(-3, hy0 - 20.4, 4, hy0 - 20.4, 9, hy0 - 18.4); c.stroke()
         if hs == "bun":
             c.arc(0, hy0 - 24, 7, 0, 2 * math.pi); _fill_line(c, hair, hy0 - 31, hy0 - 17, 0.8, 1.2, 0.9, 0.7)
+
+    # Stirnband (Sport)
+    if sp.get("headband"):
+        hb = sp["headband"]
+        c.save(); ellipse(c, 0, hy0, 18.9, 19.9); c.clip()
+        rrect(c, -21, hy0 - 14.5, 42, 6.2, 1.5); _fill_line(c, hb, hy0 - 14.5, hy0 - 8.3, 0.7)
+        rrect(c, -21, hy0 - 12.2, 42, 1.3, 0.5); src(c, "#FFFFFF", 0.85); c.fill()
+        c.restore()
 
     # Brille (moderne, leicht eckig-runde Fassung)
     if sp.get("glasses"):

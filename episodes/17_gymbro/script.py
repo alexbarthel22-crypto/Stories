@@ -3,7 +3,7 @@ Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + m
 from ep_base import *
 from alexlib import alex, person_spec
 
-AL = alex(top="#1C1C22", top_style="tank", pants="#555A66", shoes="#FFFFFF", pump=True)   # sportlich: Tanktop, dicke Arme
+AL = alex(top="#1C1C22", top_style="tank", pants="#555A66", shoes="#39FF6A", pump=2.0, headband="#E23B3B")   # übertrieben sportlich   # sportlich: Tanktop, dicke Arme
 LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894")
 TOM = person_spec(12, top="#36B5C2", hair="#3B2A20")
 ROLE, ROLE_TTS, ROLE_SAY = "EIN GYMBRO.", "ein Gymbro.", "ein Gymbro!"
@@ -16,6 +16,7 @@ CAPTION_Y = 1650
 DAYBAR_Y = 1755
 LINE_TEMPO = {k: 1.3 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
 _BIG = dict(tag_size=52, head_size=54, item_scale=1.45)
+GEMINI_LINE_MOOD = {"morgen_1": "ironisch und augenzwinkernd; 'Für die Gains' übertrieben bedeutungsvoll und spöttisch gesprochen"}
 REACTIONS = {"katze": ["🐈", "😱", "🚩"], "morgen": ["🥚", "🤢", "🚩"], "gym": ["🏋️", "📱", "🚩"], "mittag": ["⚖️", "🍰", "🚩"], "chat": ["💪", "🍕", "🚩"]}
 THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="GYMBRO", bg="#E8742B", color1="#FFFFFF", accent="#FFE14D",
              pill="#7A3414", pill_text="#FFFFFF", expr="smug", pose="hips", prop=None, extras=True, emojis=("💪", "🥤", "🏋️", "🚩"))
@@ -38,23 +39,24 @@ SCENES = [
         ("Deshalb verstecken seine Freunde ihre Katze, wenn er zu Besuch kommt. Damit er sie nicht isst.", None),
     ], viz=dict(kind="stage", **_BIG, box="#F3EAFE", head="🧮 PROTEIN-RECHNER", head_col="#7A3FA8",
                 people=[(LENA, 820, "Lena", "shock", None)],
-                items=[("🐈", 260, 600, 120, 0, "bob"), ("💪", 470, 590, 80, 0, "pulse"), ("📦", 560, 800, 100, 1, "shake"),
-                       ("🐾", 420, 820, 60, 1, "bob")],
-                tags=[("🐈 = 600 g EIWEISS", "#E8742B", 360, 760), ("KATZE IN SICHERHEIT 🫣", "#7A3FA8", 470, 990)],
+                items=[("🐈", 260, 600, 120, 0, "bob"), ("💪", 470, 590, 80, 0, "pulse"), ("📦", 470, 880, 100, 1, "shake"),
+                       ("🐾", 610, 900, 60, 1, "bob")],
+                tags=[("🐈 = 600 g EIWEISS", "#E8742B", 290, 760), ("KATZE IN SICHERHEIT 🫣", "#7A3FA8", 420, 990)],
                 fx="shock", move="rumble", alex=("smug", "hips", None))),
     dict(id="motto", bg="#2F6FA8", clock=None, title="SEIN MOTTO", dark=True, lines=[
-        ("Sein Motto: Arme trainieren. Jeden Tag. Leg Day? Kenn ich nicht.", None),
+        ("Sein Motto: Arme trainieren. Jeden Tag. Bald sieht er aus wie ein Dreieck. Leg Day? Kenn ich nicht.", None),
     ], viz=dict(kind="stage", **_BIG, box="#F5F5F7", head="📅 TRAININGSPLAN", head_col="#2B2F3A",
                 items=[("💪", 320, 650, 170, 0, "pulse"), ("✅", 320, 840, 90, 0, "bob"), ("🦵", 760, 650, 150, 0, "shake"),
-                       ("❌", 760, 840, 100, 0, "pulse")],
+                       ("❌", 760, 840, 100, 0, "pulse"), ("🔻", 540, 700, 120, 0, "pulse")],
                 tags=[("LEG DAY: GESCHWÄNZT 🦵", "#E23B3B")], move="wobble", alex=("smug", "hips", None))),
     dict(id="morgen", bg="#D9A441", clock="05:00", title="FRÜHSTÜCK", lines=[
         ("Fünf Uhr. Zwölf rohe Eier. Aus einem Glas.", None),
-        ("Danach ein Shake. Und noch ein Shake. Zur Sicherheit.", None),
+        ("Danach ein Shake. Und ein Haufen Supplements. Für die Gains.", None),
     ], viz=dict(kind="stage", **_BIG, box="#FFF4E0", head="🍳 FRÜHSTÜCK", head_col="#A8642E",
                 items=[("🥚", 260, 620, 80, 0, "bob"), ("🥚", 360, 620, 80, 0, "bob"), ("🥚", 460, 620, 80, 0, "bob"),
-                       ("🥛", 360, 820, 130, 0, "shake"), ("🥤", 680, 760, 120, 1, "pulse"), ("🥤", 840, 760, 120, 1, "pulse")],
-                tags=[("12 EIER 🥚", "#E07A2E", 360, 960), ("SHAKE × 2 🥤", "#3E7BDA", 760, 960)], fx="shock",
+                       ("🥛", 260, 820, 120, 0, "shake"), ("🥤", 620, 640, 110, 1, "pulse"), ("💊", 760, 620, 70, 1, "spin"),
+                       ("💊", 860, 680, 70, 1, "spin"), ("🧴", 780, 780, 80, 1, "bob"), ("💊", 900, 820, 60, 1, "spin")],
+                tags=[("12 EIER 🥚", "#E07A2E", 560, 800), ("„FÜR DIE GAINS“ 💊", "#3E7BDA", 540, 990)], fx="shock",
                 move="wobble", flash="#FFFFFF", alex=("happy", "idle", "🥤"))),
     dict(id="gym", bg="#5B6BC9", clock="09:00", title="IM GYM", dark=True, lines=[
         ("Neun Uhr. Er belegt drei Geräte gleichzeitig.", None),
