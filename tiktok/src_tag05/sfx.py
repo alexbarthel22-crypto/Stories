@@ -310,7 +310,13 @@ def build_sfx(segs, N):
         elif sid == 'fans5': L(0.0, pop()); L(c[2], pop()); L(c[2] + 0.7, ding())
         elif sid == 'co13': L(0.0, pop()); L(0.2, ding()); L(c[2], whistle()); L(c[2] + 0.3, pop())
         elif sid == 'matchday': L(0.0, thud()); L(0.0, drum(en - st) * 0.5); L(c[2], pop()); L(c[3], thud())
-        elif sid == 'crowd': L(0.0, drum(en - st) * 0.9); L(0.0, stadium_rec(-17.0)[:int((en - st) * SR)])
+        elif sid == 'crowd':
+            import wave as _w
+            _f = _w.open('ultra_sing_full.wav'); _u = np.frombuffer(_f.readframes(_f.getnframes()), dtype=np.int16).astype(np.float32) / 32768
+            _u = _u[int(7.0 * SR):int((7.0 + en - st + 0.4) * SR)]
+            _u = _u * (10 ** (-15 / 20) / (np.sqrt(np.mean(_u ** 2)) + 1e-9))
+            _u *= np.minimum(1, np.arange(len(_u)) / (0.15 * SR)) * np.minimum(1, (len(_u) - np.arange(len(_u))) / (0.5 * SR))
+            L(0.0, _u / 0.6); L(0.0, drum(en - st) * 0.5)
         elif sid == 'kickoff': L(0.0, whistle()); L(0.05, stadium_rec(-24.0)[:int((en - st) * SR)])
         elif sid in ('h1', 'h2'):
             tg = c[1] + 0.4 if sid == 'h1' else c[3] + 0.1
@@ -318,7 +324,7 @@ def build_sfx(segs, N):
         elif sid in ('eq1', 'eq2', 'win'):
             tg = {'eq1': c[1] + 0.3, 'eq2': c[1] + 0.7 if len(c) > 1 else 0.7, 'win': 0.15}[sid]
             if sid == 'eq2': L(0.0, whoosh()); [L(0.1 + k * 0.15, squelch() * 0.5) for k in range(3)]
-            L(max(0, tg - 0.6), thud()); L(tg, clack()); L(tg, stadium_rec(-13.0 if sid == 'win' else -16.0)[:int(max(0.5, en - st - tg) * SR)])
+            L(max(0, tg - 0.6), thud()); L(tg, clack()); L(tg, (lambda _s: _s * np.minimum(1, (len(_s) - np.arange(len(_s))) / (0.6 * SR)))(np.tile(stadium_rec(-13.0 if sid == 'win' else -16.0), 3)[:int(max(0.5, en - st - tg + (0.4 if sid == 'win' else 0)) * SR)]))
             if sid == 'win': L(tg + 0.2, fanfare()); L(en - st - 1.2, whistle())
         elif sid == 'half': L(0.0, whistle()); L(0.4, whistle())
         elif sid == 'pen': L(0.0, whistle()); L(c[2] - 0.3, thud()); L(c[2] + 0.2, clack()); L(c[2] + 0.2, stadium_rec(-17.0)[:int(1.6 * SR)])

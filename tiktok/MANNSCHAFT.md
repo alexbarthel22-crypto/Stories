@@ -129,7 +129,7 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 - **Ziel: Stadionrasen für 1000 €** = 1000 neue Fans oder 500 Kommentare (Fortschrittsbalken 0 € / 1000 €)
 
 ## Folge 5 (Tag 5) – Spieltag
-- Datei: `tiktok/tag05_fc_schlammloch.mp4` (1:05, Fenrir), Titelbild `tag05_thumbnail.png`, Beschreibung `tag05_beschreibung.md`, Code `src_tag05/`
+- Datei: `tiktok/tag05_fc_schlammloch_v2.mp4` (1:08, Fenrir; Ultra-Gesang aus Pixabay-Aufnahme „crowd-cheering-in-stadium-435357“, längerer Siegesjubel), Titelbild `tag05_thumbnail.png`, Beschreibung `tag05_beschreibung.md`, Code `src_tag05/`
 - Fans: 477 → **494 (+17)**
 - Co-Trainer fürs Spiel: **„13“** (Top-Kommentar „Kann ich co-Trainer sein bitte“, 🇦🇫) – schwarzer Trainingsanzug mit 13, blaue Cap mit gelber 13, Pfeife, Klemmbrett
 - **Spiel: FC Schlammloch 3:2 SC Heuballen** – 0:1 (23'), 1:1 Leberkaaszerfetzer (38'), Halbzeit-Taktik von 13, 1:2 (61'), Vlad hält Elfmeter „mit einem Auge“ (74'), Denny grätscht, die Nr. 10 trifft zum 2:2 (84'), 3:2 Leberkaaszerfetzer in der 90.+3'
