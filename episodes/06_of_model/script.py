@@ -87,3 +87,10 @@ SCENES = [
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]
+
+# „Ringlicht“ deutsch aussprechen (Ring-Licht, nicht englisch „Ringlight“)
+_RL = "; das Wort 'Ringlicht' rein deutsch aussprechen: 'Ring-Licht' mit deutschem 'Licht' (ch wie in 'ich'), niemals englisch 'Ringlight'"
+GEMINI_LINE_TEXT = {"morning_1": "Ring-Licht an. Ausschnitt richten. Dreihundert Fotos. Eins wird gepostet.",
+                    "boss_1": "Ihr Büro: das Bett. Ihr ganzes Team: ein Ring-Licht.",
+                    "signs_3": "Das Ring-Licht ist immer dabei."}
+GEMINI_LINE_MOOD = {"morning_1": MOODS["morning"] + _RL, "boss_1": MOODS["boss"] + _RL, "signs_3": MOODS["signs"] + _RL}
