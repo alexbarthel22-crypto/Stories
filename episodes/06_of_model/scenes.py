@@ -16,12 +16,17 @@ MAMA = person_spec(6, girl=True, hair="#7A4A2A", top="#2FA36B", skin="#F1C9A8")
 OPA = person_spec(9, hair="#DADADF", top="#7A5C45", skin="#F1C9A8", glasses=True)
 KEVIN = person_spec(33, hair_style="cap", cap="#2E3A8C", top="#555A66", skin="#E9B48A")
 
-INTRO = dict(icon="📸", bg="#B0307A", spec=ALEXA, expr="smug", pose="phone", hand_prop="📱",
-             side_emoji="💄", burst=["📸", "💄", "💅", "💸", "🔗", "😘", "💡", "👑"])
-
-
-def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
-    draw_intro_generic(c, t, shuffle, ticks, flash_start, reveal_t, role_text, INTRO)
+# Verkündung vor dem Haus mit großem Titel (wie Dorfmatratze)
+import kit as _kit
+INTRO, draw_intro = _kit.make_intro(dict(
+    icon="📸", bg="#B0307A", spec=ALEXA, title_lines=["OF-MODEL."],
+    house=dict(sky=("#E26AA0", "#FFE1EE"), walls="#FFF0F6", roof="#7A1F48", door="#4A0E2A", lawn="#5DAA5E",
+               accent=("#E8457A", "#F2C94C"), sun=True),
+    left=("💡", "RINGLICHT"), right=("📸", "STUDIO"), door=("LINK", "IN BIO 🔗"),
+    neon=("EXKLUSIV", "NUR IM ABO 💸", "#FF6FB0"), signs=("Link in Bio 🔗", "Hey Babe 😘"),
+    sign_x=(190, 890), sign_w=330, sign_size=40,
+    fly=["💸", "💄", "📸"], burst=["📸", "💄", "💅", "💸", "🔗", "😘", "💡", "👑"],
+    extras=[("💄", -34, 40, 12), ("📱", 34, 40, 14)]))
 
 
 def alexa_bottom(c, S, expr="smug", pose="idle", prop=None, x=W / 2, h=AH):
