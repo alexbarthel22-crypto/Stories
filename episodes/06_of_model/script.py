@@ -15,15 +15,15 @@ REACTIONS = {"morning": ["💄", "📸", "🚩"], "promo": ["🔗", "💸", "�
              "family": ["👵", "😅", "🚩"], "boss": ["💼", "🛏️", "🚩"]}
 
 ROLE = "EIN OF-MODEL."
-ROLE_TTS = "ein O-Eff-Model."
-ROLE_SAY = "ein O-Eff-Model!"
+ROLE_TTS = "ein Oh-Eff-Model."
+ROLE_SAY = "ein Oh-Eff-Model!"
 
-# Aussprache für Gemini: OF = "O-Eff"
-GEMINI_REPLACE = {"OF-Model": "O-Eff-Model", "OF ": "O-Eff "}
+# Aussprache für Gemini: OF (OnlyFans) = „Oh Eff“
+GEMINI_REPLACE = {"OF-Model": "Oh-Eff-Model", "OF ": "Oh-Eff "}
 
 MOODS = {
     "intro_pre": "spannend, aber zügig und kurz gesprochen, ohne lange Pause",
-    "intro_role": "kurze, überraschte Enthüllung mit einem Augenzwinkern",
+    "intro_role": "völlig überrascht und amüsiert, wie ungläubig ausgerufen, zügig gesprochen; OF wird 'Oh Eff' ausgesprochen",
     "what": "erklärend und amüsiert, die Verwandlung wie eine Vorher-nachher-Show",
     "morning": "ironisch wie ein Beauty-Tutorial, die Pointe trocken",
     "promo": "übertrieben werblich wie ein Influencer, dann trocken",
@@ -43,9 +43,6 @@ THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="OF-MODEL", bg="#B0307A", a
 
 # Männliche Fan-Stimmen (nicht der Erzähler)
 VOICE_OVERRIDE = {
-    ("dms", 1): dict(voice="Algenib", text="Du bist die Einzige, die mich versteht.",
-                     profile="Ein männlicher Fan, Ende dreißig, tiefe raue Stimme, schmachtend und übertrieben verliebt.",
-                     mood="leise, sehnsüchtig, etwas peinlich"),
     ("dms", 2): dict(voice="Charon", text="Ich hab dir Trinkgeld geschickt. Heiratest du mich?",
                      profile="Ein männlicher Fan, Mitte vierzig, tiefe Männerstimme, aufgeregt und hoffnungsvoll.",
                      mood="aufgeregt, naiv, voller Hoffnung"),
@@ -54,7 +51,7 @@ VOICE_OVERRIDE = {
 SCENES = [
     dict(id="what", bg="#B0307A", clock=None, title="WAS IST EIN OF-MODEL?", dark=True, lines=[
         ("Ein OF-Model verkauft exklusive Inhalte an zahlende Fans. Im Abo.",
-         "Ein O-F-Model verkauft exklusive Inhalte an zahlende Fans. Im Abo."),
+         "Ein Oh-Eff-Model verkauft exklusive Inhalte an zahlende Fans. Im Abo."),
         ("Und dafür wird Alex heute zu Alexia: Perücke, Make-up, Kleid.", None),
     ]),
     dict(id="morning", bg="#F2A65A", clock="09:00", title="NATURAL LOOK", lines=[
@@ -79,14 +76,14 @@ SCENES = [
         ("Ihr Büro: das Bett. Ihr ganzes Team: ein Ringlicht.", None),
     ]),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
-        ("Woran du ein OF-Model erkennst:", "Woran du ein O-F-Model erkennst:"),
+        ("Woran du ein OF-Model erkennst:", "Woran du ein Oh-Eff-Model erkennst:"),
         ("Link in Bio.", None),
         ("Nennt sich CEO.", None),
         ("Das Ringlicht ist immer dabei.", None),
         ("Und jeder Fan heißt Babe.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du auch ein OF-Model? Markier ihn oder sie!", "Kennst du auch ein O-F-Model? Markier ihn oder sie!"),
+        ("Kennst du auch ein OF-Model? Markier ihn oder sie!", "Kennst du auch ein Oh-Eff-Model? Markier ihn oder sie!"),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]
