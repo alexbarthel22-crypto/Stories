@@ -169,15 +169,47 @@ def _clusters(s):
     return out
 
 
-def _emo_draw(c, surf, cx, cy, size, rot=0.0, alpha=1.0):
+_EMO_SIZED = {}
+
+
+def _emo_sized(cl, px):
+    """Emoji in exakt der Pixelgröße (Lanczos + leichte Schärfung) – scharf statt weich skaliert."""
+    key = (cl, px)
+    if key in _EMO_SIZED:
+        return _EMO_SIZED[key]
+    from PIL import Image, ImageChops, ImageFilter
+    k = _emo_key(cl)
+    f = _EMO_INDEX.get(k) or _EMO_INDEX.get(k.replace("-fe0f", "")) or _EMO_INDEX.get(k.replace("-fe0f", "") + "-fe0f")
+    im = Image.open(_os.path.join(_EMO_DIR, f)).convert("RGBA").resize((px, px), Image.LANCZOS)
+    r, g, b, a = im.split()
+    rgb = Image.merge("RGB", (r, g, b)).filter(ImageFilter.UnsharpMask(radius=1.2, percent=70, threshold=2))
+    r, g, b = rgb.split()
+    pre = Image.merge("RGBA", [ImageChops.multiply(ch, a) for ch in (b, g, r)] + [a])
+    data = bytearray(pre.tobytes())
+    surf = cairo.ImageSurface.create_for_data(data, cairo.FORMAT_ARGB32, px, px, px * 4)
+    _EMO_KEEP.append(data)
+    if len(_EMO_SIZED) > 4000:
+        _EMO_SIZED.clear()
+    _EMO_SIZED[key] = surf
+    return surf
+
+
+def _emo_draw(c, surf, cx, cy, size, rot=0.0, alpha=1.0, cl=None):
     d = size * 1.12
+    dx, dy = c.user_to_device_distance(d, 0)
+    px = int(round((dx * dx + dy * dy) ** 0.5 / 4.0)) * 4            # Zielgröße in Gerätepixeln (4er-Raster)
     c.save(); c.translate(cx, cy); c.rotate(rot)
-    sc = d / surf.get_width(); c.scale(sc, sc)
-    c.set_source_surface(surf, -surf.get_width() / 2, -surf.get_height() / 2)
-    c.get_source().set_filter(cairo.FILTER_GOOD)
+    if cl is not None and 8 <= px <= 1024:
+        ss = _emo_sized(cl, px)
+        sc = d / px; c.scale(sc, sc)
+        c.set_source_surface(ss, -px / 2, -px / 2)
+        c.get_source().set_filter(cairo.FILTER_BEST)
+    else:
+        sc = d / surf.get_width(); c.scale(sc, sc)
+        c.set_source_surface(surf, -surf.get_width() / 2, -surf.get_height() / 2)
+        c.get_source().set_filter(cairo.FILTER_BEST)
     c.paint_with_alpha(alpha) if alpha < 1 else c.paint()
     c.restore()
-
 
 def _runs(s):
     out = []
@@ -232,7 +264,7 @@ def text(c, s, x, y, size, color=INK, font=FONT_HEAD, anchor="c", alpha=1.0):
             for cl in _clusters(part):
                 surf = _emo_surface(cl)
                 if surf is not None:
-                    _emo_draw(c, surf, x0 + size * 0.54, y, size * 0.95, alpha=alpha)
+                    _emo_draw(c, surf, x0 + size * 0.54, y, size * 0.95, alpha=alpha, cl=cl)
                     x0 += size * 1.08
                 else:
                     _font(c, True, font, size)
@@ -275,7 +307,7 @@ def emoji(c, e, x, y, size, rot=0.0, alpha=1.0):
         return
     surf = _emo_surface(e)
     if surf is not None:
-        _emo_draw(c, surf, x, y, size, rot, alpha)
+        _emo_draw(c, surf, x, y, size, rot, alpha, cl=e)
         return
     c.save()
     c.translate(x, y)

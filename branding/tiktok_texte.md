@@ -162,6 +162,6 @@ Cover: `episodes/17_gymbro/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein Gymbro 💪 Wohnt praktisch im Gym und jedes Gespräch endet bei Protein 🥤 Laut ihm hat eine Katze 600 g Eiweiß … seine Freunde verstecken ihre Katze, wenn er zu Besuch kommt 🐈🫣 Brust-Tag nie auslassen, Leg Day? Kenn ich nicht 🦵❌ Zum Frühstück 12 rohe Eier aus dem Glas 🥚 Im Gym belegt er drei Geräte und filmt jeden Satz 📱 Und auf „Wer will Pizza?“ antwortet er mit einem Spiegel-Selfie oben ohne 🍕💀 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch einen Gymbro? Markier sie oder ihn! Und was soll Alex morgen sein?
+ein Gymbro 💪 Wohnt praktisch im Gym und jedes Gespräch endet bei Protein 🥤 Laut ihm hat eine Katze 600 g Eiweiß … seine Freunde verstecken ihre Katze, wenn er zu Besuch kommt 🐈🫣 Arme trainieren, jeden Tag. Leg Day? Kenn ich nicht 🦵❌ Zum Frühstück 12 rohe Eier aus dem Glas 🥚 Im Gym belegt er drei Geräte und filmt jeden Satz 📱 Und auf „Wer will Pizza?“ antwortet er mit einem Spiegel-Selfie oben ohne 🍕💀 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch einen Gymbro? Markier sie oder ihn! Und was soll Alex morgen sein?
 
 #heuteistalex #gymbro #legday #fitness #comedy
