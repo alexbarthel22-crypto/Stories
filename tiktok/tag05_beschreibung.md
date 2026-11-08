@@ -2,17 +2,22 @@
 
 ## Empfohlen (zum Kopieren)
 
-SPIELTAG! ⚽ FC Schlammloch gegen SC Heuballen – 0:1, 1:1, 1:2, Vlad hält einen Elfmeter mit einem Auge 🏴‍☠️ und in der 93. Minute trifft Leberkaaszerfetzer zum 3:2! 😭🔥 494 Fans, 2532 € in der Kasse – und Opa Jürgen hat alles verschlafen 😴 Jetzt entscheidet ihr: neuer Würstchenstand oder Spielerkabine? Abstimmen in den Kommentaren 👇
+SPIELTAG beim FC Schlammloch! ⚽🔥 Unser allererstes Spiel gegen den SC Heuballen – und es wird ein echter Krimi:
 
-#fußballverein #kreisliga #fußball #amateurfußball #fußballhumor #spieltag #animation #serie #fcschlammloch
+0:1 nach 23 Minuten 😭
+1:1 durch Leberkaaszerfetzer 💪
+1:2 – Heuballen schon wieder …
+Dann Elfmeter: Vlad hält – mit EINEM Auge 🏴‍☠️
+Denny grätscht, die Nr. 10 trifft zum 2:2!
+Und in der 93. Minute: Leberkaaszerfetzer zum 3:2!!! 🏆
 
-## Kürzere Alternative
+Danke an Co-Trainer „13“ für die Halbzeit-Taktik, an unsere Ultras und an alle 494 Fans auf der Tribüne 🙌 Frodo ist beim Anpfiff übrigens einfach aufs Feld gehüpft 🐸 und Opa Jürgen hat das komplette Spiel im Schaukelstuhl verschlafen 😴
 
-Unser erstes Spiel – und es wird ein Krimi 😱 3:2 in der Nachspielzeit! Würstchenstand oder Kabine? 👇
+Vereinskasse: 2532 € 💰 Jetzt entscheidet ihr: neuer Würstchenstand 🌭 oder Spielerkabine 🏠? Abstimmen in den Kommentaren 👇 Jeder Follow = 1 €, jeder Kommentar = 2 €!
 
-#fußballverein #kreisliga #fußballhumor #fcschlammloch
+#fußballverein #kreisliga #fußball #amateurfußball #fußballhumor #spieltag #ultras #animation #serie #fcschlammloch
 
 ## Tipps
 - Cover: `tag05_thumbnail.png`
-- Co-Trainer „13“, Leberkaaszerfetzer, Denny und die ersten Fans markieren (@-Namen im Profil prüfen)
+- Co-Trainer „13“, Leberkaaszerfetzer, Denny, Luca und die ersten Fans (@eikemzz @tobiii1911 @leo.hro1) markieren – @-Namen im Profil prüfen
 - Ersten Kommentar anpinnen: „🌭 = Würstchenstand, 🏠 = Spielerkabine – stimmt ab!“
