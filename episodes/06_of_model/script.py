@@ -4,6 +4,16 @@ Keine Zahlen/Gebühren – nur Klischees.
 Stimme wie Pick-me-Boy: gemini-3.8-flash-tts, Puck. Fans: eigene männliche Gemini-Stimmen.
 """
 
+from ep_base import (TTS_PROFILE, SAFE_MODE, SAFE_TOP, SAFE_LEFT, EXTRAS, CAPTION_SIZE, NAME_SCALE, TITLE_SIZE,
+                     BUBBLE_SCALE, INTRO_SFX_GAIN, REVEAL_TAIL, INTRO_TICK_GAIN, SHUFFLE_BASE)
+# Aufbau wie die neuen Folgen: kurze Pause nach der Verkündung, Untertitel + Tagesleiste tiefer, schneller gesprochen
+INTRO_LEN = 3.3
+CAPTION_Y = 1650
+DAYBAR_Y = 1755
+LINE_TEMPO = {k: 1.25 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
+REACTIONS = {"morning": ["💄", "📸", "🚩"], "promo": ["🔗", "💸", "🚩"], "dms": ["💌", "🙄", "🚩"],
+             "family": ["👵", "😅", "🚩"], "boss": ["💼", "🛏️", "🚩"]}
+
 ROLE = "EIN OF-MODEL."
 ROLE_TTS = "ein O-Eff-Model."
 ROLE_SAY = "ein O-Eff-Model!"
@@ -24,20 +34,7 @@ MOODS = {
     "outro": "freundlich, aufgedreht, direkt an die Zuschauer, auffordernd",
 }
 
-SHUFFLE = [
-    ("EIN ASTRONAUT.", "🚀", "#E9EEF5", "#3B6FB6"),
-    ("EIN PICK ME BOY.", "🌹", "#EFE2C6", "#EC7FAE"),
-    ("EIN GAMER.", "🎮", "#6A3FC4", "#8E5BE0"),
-    ("EIN F-BOY.", "😏", "#1C1C22", "#2B2D5E"),
-    ("EIN KOCH.", "🍳", "#F4F4F4", "#E3A23B"),
-    ("EIN INFLUENCER.", "🤳", "#F07FB0", "#E26AA0"),
-    ("EIN BAUARBEITER.", "👷", "#F2A23A", "#C9852E"),
-    ("EIN DJ.", "🎧", "#1E1E1E", "#2E3A8C"),
-    ("EIN PIRAT.", "🏴", "#7A2E2E", "#3D8C7A"),
-    ("EIN LEHRER.", "🍎", "#3E6B48", "#5FA36E"),
-    ("EIN POLIZIST.", "👮", "#23406E", "#3B5BA8"),
-    ("EIN ROCKSTAR.", "🎸", "#151515", "#5C5C66"),
-]
+SHUFFLE = SHUFFLE_BASE
 
 # Cover: Anordnung wie Pick-me-Boy, Farben zum Thema (Ringlicht-Pink/Lila, Gold)
 THUMB = dict(head="HEUTE IST ALEX EIN…", l1="", l2="OF-MODEL", bg="#B0307A", accent="#FFD84D",
@@ -89,7 +86,7 @@ SCENES = [
         ("Und jeder Fan heißt Babe.", None),
     ]),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du jemanden, der auch mit OF starten sollte? Markier ihn!", None),
+        ("Kennst du auch ein OF-Model? Markier ihn oder sie!", "Kennst du auch ein O-F-Model? Markier ihn oder sie!"),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ]),
 ]

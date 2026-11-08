@@ -7,7 +7,9 @@ from alexlib import *
 # Alexia: gleiches Gesicht wie Alex (Augen, Sommersprossen), aber glaubwürdig weiblich gestylt
 ALEXA = alex(hair_style="fem", makeup=dict(shadow="#C8708E"), lashes=True, lips="#D8346E", earrings="#F2C94C",
              top="#E8457A", top_style="dress", bare_legs=True, heels=True, shoes="#E8457A")
-FEET, AH = 1665, 470
+FEET, AH = 1740, 470          # Alexia tiefer (neuer Aufbau), Inhalte darüber größer
+CONTENT_SCALE = 1.12
+_BASE = [None]
 OMA = person_spec(5, girl=True, hair_style="bun", hair="#C9C9CF", skin="#F1C9A8", top="#8E5BE0",
                   pants="#4A4A5A", shoes="#5A3A2A", glasses=True)
 MAMA = person_spec(6, girl=True, hair="#7A4A2A", top="#2FA36B", skin="#F1C9A8")
@@ -23,7 +25,11 @@ def draw_intro(c, t, shuffle, ticks, flash_start, reveal_t, role_text):
 
 
 def alexa_bottom(c, S, expr="smug", pose="idle", prop=None, x=W / 2, h=AH):
+    c.save()
+    if _BASE[0] is not None:
+        c.set_matrix(_BASE[0])                              # Alexia unskaliert an fester Position
     person(c, x, FEET, h, ALEXA, S.t, expr, pose, prop, name="Alexia")
+    c.restore()
 
 
 def out_fade(t, t_end, d=0.2):
@@ -102,7 +108,11 @@ def sc_what(c, S):
             text(c, "ABONNIEREN 💸", W / 2, y0 + 650, 32, "#FFFFFF", FONT_HEAD)
             c.restore()
         scaled(c, W / 2, 700, s, screen)
+        c.save()
+        if _BASE[0] is not None:
+            c.set_matrix(_BASE[0])
         person(c, W / 2, FEET, AH, alex(), t, "happy", "idle", name="Alex")
+        c.restore()
     else:
         s = pop(t, a1 + 0.05)
         def makeover():
@@ -146,10 +156,10 @@ def sc_morning(c, S):
         if flash and t > S.at(1, 0.2):
             emoji(c, "📸", 860, 470, 90, rot=0.2)
         def counter():
-            rrect(c, 220, 1010, 640, 100, 50); fill(c, "#1F1F28")
+            rrect(c, 220, 900, 640, 100, 50); fill(c, "#1F1F28")
             txt = f"Fotos: {n}" if t < S.at(1, 0.75) else "Gepostet: 1 ✅"
-            text(c, txt, W / 2, 1060, 46, "#FFFFFF", FONT_HEAD)
-        scaled(c, W / 2, 1060, pop(t, S.at(1, 0.15)), counter)
+            text(c, txt, W / 2, 950, 46, "#FFFFFF", FONT_HEAD)
+        scaled(c, W / 2, 950, pop(t, S.at(1, 0.15)), counter)
         alexa_bottom(c, S, "smug", "phone", "📱")
 
 
@@ -226,7 +236,7 @@ def sc_family(c, S):
         bubble(c, "Und, was machst du so beruflich? 😊", 540, 450, pop(t, S.at(0, 0.3)) * out_fade(t, a1),
                tail=(0, 1), size=40, max_w=640)
     else:
-        bubble(c, "Content Creatorin … im Bereich Fitness 💪😅", 540, 1080, pop(t, a1 + 0.05), tail=(0, 1), size=40, max_w=640)
+        bubble(c, "Content Creatorin … im Bereich Fitness 💪😅", 540, 985, pop(t, a1 + 0.05), tail=(0, 1), size=40, max_w=640)
         if t > a1 + 0.8:
             emoji(c, "🤨", 540, 470, 80 * pop(t, a1 + 0.8))
     alexa_bottom(c, S, "cringe" if t > a1 else "happy", "idle")
@@ -251,11 +261,11 @@ def sc_boss(c, S):
         def office():
             card(c, W / 2, 690, 900, 560, 1, color="#FFF4F8")
             text(c, "DAS BÜRO", W / 2, 460, 48, INK, FONT_HEAD)
-            emoji(c, "🛏️", 420, 720, 300)
+            emoji(c, "🛏️", 370, 720, 220)
             ring_light(c, 800, 640, 90, 1, t)
             if t > S.at(1, 0.5):
-                rrect(c, 640, 860, 330, 70, 16); fill(c, "#FFE14D")
-                text(c, "TEAM: 💡 × 1", 805, 895, 36, INK, FONT_HEAD)
+                rrect(c, 610, 850, 330, 70, 16); fill(c, "#FFE14D")
+                text(c, "TEAM: 💡 × 1", 775, 885, 36, INK, FONT_HEAD)
         scaled(c, W / 2, 690, s, office)
     alexa_bottom(c, S, "smug", "hips")
 
@@ -318,3 +328,16 @@ def sc_outro(c, S):
 
 SCENE_DRAW = dict(what=sc_what, morning=sc_morning, promo=sc_promo, dms=sc_dms, family=sc_family,
                   boss=sc_boss, signs=sc_signs, outro=sc_outro)
+
+
+def _scaled_scene(fn, k=CONTENT_SCALE, dy=0):
+    def run(c, S):
+        _BASE[0] = c.get_matrix()
+        c.save(); c.translate(W / 2, 430 + dy); c.scale(k, k); c.translate(-W / 2, -430)
+        fn(c, S)
+        c.restore()
+        _BASE[0] = None
+    return run
+
+
+SCENE_DRAW = {k: _scaled_scene(v, *((1.0, 45) if k == "dms" else (CONTENT_SCALE, 0))) for k, v in SCENE_DRAW.items()}

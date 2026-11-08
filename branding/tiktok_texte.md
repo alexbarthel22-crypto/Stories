@@ -70,9 +70,9 @@ Cover: `episodes/06_of_model/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein OF-Model 📸💄 Aus Alex wird Alexia – Natural Look in nur 2 Stunden, 300 Fotos für 1 Post, und die Fans wollen heiraten 💍 Geantwortet hat aber Kevin 😅 Kennst du jemanden, der auch mit OF starten sollte? Markier ihn! 👇 Und was soll Alex morgen sein?
+ein OF-Model 📸💄 Aus Alex wird Alexia: Perücke, Make-up, Kleid 💅 Natural Look in nur 2 Stunden, 300 Fotos für 1 Post 🤳 Die Fans wollen heiraten 💍 Geantwortet hat aber Kevin, der bezahlte Chatter 😅 Beruflich? „Content Creatorin im Bereich Fitness“ 💪 Und das Büro ist das Bett 🛏️ Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch ein OF-Model? Markier ihn oder sie! Und was soll Alex morgen sein?
 
-#contentcreator #linkinbio #bossbabe #influencer #klischee #comedy #fürdich #fyp
+#heuteistalex #ofmodel #contentcreator #influencer #comedy
 
 ## TikTok Folge 2 – Emotional abhängig
 Cover: `episodes/07_emotional_abhaengig/thumbnail.png`
