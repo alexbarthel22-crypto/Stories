@@ -1,0 +1,7 @@
+Gruselmusik (Thriller, unheimlich): thriller_haus.mp3 – verwendet in Video #9 (Drei Papas)
+Erzeugt am 2026-11-09 mit Google Lyria (Modell lyria-3.5) über die Gemini API, rein instrumental.
+Prompt: unheimliche, spannende Thriller-Stimmung in einem dunklen Haus bei Gewitter – tiefe Streicher-Drones,
+langsame verstimmte Klaviertöne, leises Spieluhr-Motiv, Sub-Bass wie ein langsamer Herzschlag, dissonante
+Violin-Flageoletts, Moll, ca. 70 BPM, ohne Gesang, ohne Schreie.
+Eigens generiert, kein Sample aus einer Musikbibliothek (lizenzfrei nutzbar gemäß den Google-Nutzungsbedingungen
+für generative KI); Lyria-Audio enthält ein unhörbares SynthID-Wasserzeichen.

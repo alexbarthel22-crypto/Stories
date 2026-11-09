@@ -216,13 +216,8 @@ def house_life(cv, t, light_on=True, shower=True, bath_open=0.0):
     cv.circle(cx, cy, 6, fill=INK)
     # bathroom: light under the door + steam while the shower runs
     bx0, by0, bx1, by1 = BATH
-    if shower:
+    if shower:                                   # only the light under the bathroom door
         cv.rect(bx0, by1 - 8, bx1, by1, fill=(255, 236, 170, 230))
-        for i in range(8):
-            ph = (t * 0.35 + i / 8) % 1
-            sx = bx0 + 20 + (i * 23) % (bx1 - bx0 - 40) + 20 * math.sin(t + i)
-            sy = by1 - 10 - ph * 260
-            cv.circle(sx, sy, 22 + 30 * ph, fill=(230, 235, 255, int(70 * (1 - ph))))
     if bath_open > 0:
         cv.rect(bx0, by0, bx0 + (bx1 - bx0) * bath_open, by1, fill=hexc("#05060f"))
     # monitor glow when the bell rang
