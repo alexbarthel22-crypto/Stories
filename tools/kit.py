@@ -236,6 +236,34 @@ def _items(c, t, S, items, li):
         emoji(c, e, x + dx, y + dy, sz * p * k * _ITEM_SCALE[0], rot=rot)
 
 
+def enter(c, kind, t, t0, cx, cy, fn, d=0.45):
+    """Abwechslungsreiche Auftritte: pop, slide_l, slide_r, drop, rise, spin, flip, zoom."""
+    u = clamp((t - t0) / d)
+    if u <= 0:
+        return
+    e = ease_out_back(u) if kind in ("pop", "drop", "rise", "zoom") else ease_out_cubic(u)
+    c.save()
+    if kind == "slide_l":
+        c.translate(-W * (1 - e), 0); c.translate(cx, cy); c.rotate(-0.12 * (1 - e)); c.translate(-cx, -cy)
+    elif kind == "slide_r":
+        c.translate(W * (1 - e), 0); c.translate(cx, cy); c.rotate(0.12 * (1 - e)); c.translate(-cx, -cy)
+    elif kind == "drop":
+        c.translate(0, -900 * (1 - e))
+    elif kind == "rise":
+        c.translate(0, 900 * (1 - e))
+    elif kind == "spin":
+        c.translate(cx, cy); c.rotate(-math.pi * 2 * (1 - e)); c.scale(max(0.01, e), max(0.01, e)); c.translate(-cx, -cy)
+    elif kind == "flip":
+        c.translate(cx, cy); c.scale(max(0.02, abs(math.cos((1 - e) * math.pi / 2))), 1); c.translate(-cx, -cy)
+    elif kind == "zoom":
+        k = 0.2 + 0.8 * e
+        c.translate(cx, cy); c.scale(k, k); c.translate(-cx, -cy)
+    else:                                                    # pop
+        c.translate(cx, cy); c.scale(max(0.01, e), max(0.01, e)); c.translate(-cx, -cy)
+    fn()
+    c.restore()
+
+
 def sc_stage(c, S, v, spec):
     t = S.t
     s = pop(t, S.at(0, 0.0))
@@ -287,7 +315,7 @@ def sc_stage(c, S, v, spec):
                 tag(c, x, _Y(y), txt, col, s=pop(t, S.at(li, 0.35)), size=v.get("tag_size", 30), ymax=by + bh / 2)
     _ITEM_SCALE[0] = v.get("item_scale", 1.0)
     c.save(); box_move(c, bx, by, t, v.get("move", "wobble"), last)
-    scaled(c, bx, by, s, box)
+    enter(c, v.get("enter", "pop"), t, S.at(0, 0.0), bx, by, box)
     box_flash(c, bx, by, bw, bh, t, last, v.get("flash", "#FFFFFF"))
     c.restore()
     if v.get("fx"):
@@ -339,7 +367,7 @@ def sc_bars(c, S, v, spec):
                     text(c, lab, 225, yy, 38, "#FFFFFF", FONT_HEAD, anchor="l")
                 scaled(c, W / 2, yy, pop(t, a1 + 0.1 + i * 0.2) * pl, pill_)
     c.save(); box_move(c, W / 2, 720, t, "wobble", a1)
-    scaled(c, W / 2, 720, s, card_)
+    enter(c, v.get("enter", "pop"), t, S.at(0, 0.0), W / 2, 720, card_)
     box_flash(c, W / 2, 720, 980, 660, t, a1, "#FFE14D")
     c.restore()
     alex_bottom(c, S, spec, *v.get("alex", ("smug", "hips", None)))
@@ -371,6 +399,14 @@ def sc_signs(c, S, v, spec):
     t = S.t
     for i, (lab, ic) in enumerate(v["items"]):
         y = 400 + i * 175
+        if v.get("slide"):
+            u = clamp((t - S.at(i + 1, 0.0)) / 0.4)
+            if u <= 0:
+                continue
+            c.save(); c.translate((1 - ease_out_cubic(u)) * (W if i % 2 else -W), 0)
+            row_card(c, W / 2, y, 1000, 160, 1.0, lab, ic, 38, num=i + 1, rot=(-0.02 if i % 2 else 0.02) + 0.012 * math.sin(t * 3 + i))
+            c.restore()
+            continue
         row_card(c, W / 2, y, 1000, 160, pop(t, S.at(i + 1, 0.0)), lab, ic, 38, num=i + 1,
                  rot=(-0.02 if i % 2 else 0.02) + 0.012 * math.sin(t * 3 + i))
     for i in range(3):
@@ -596,7 +632,7 @@ def sc_messenger(c, S, v, spec):
     ps = LAYOUT["phone"]
     c.save(); box_move(c, W / 2, 730, t, v.get("move", "wobble"), last)
     c.translate(W / 2, 370); c.scale(ps, ps); c.translate(-W / 2, -370)
-    scaled(c, W / 2, 730, s, ph)
+    enter(c, v.get("enter", "pop"), t, S.at(0, 0.0), W / 2, 730, ph)
     c.restore()
     if v.get("fx"):
         box_fx(c, t, last, W / 2, 730, 570, 720, v["fx"])
