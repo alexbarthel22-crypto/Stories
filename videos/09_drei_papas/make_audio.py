@@ -29,5 +29,5 @@ ev = [
     ("impact", st("Drei Papas"), 0.6), ("pop", st("Drei Papas") + 0.15, 0.5), ("pop", st("Drei Papas") + 0.4, 0.5),
     ("pop", st("Drei Papas") + 0.65, 0.5), ("whoosh", st("Wem glaubst") - 0.1, 0.5), ("pop", wt("Wem glaubst", "folg", 0.0), 0.6)]
 mix(os.path.join(HERE, "voice.wav"), mv.END, ev, os.path.join(HERE, "mix.wav"),
-    music_path=os.path.join(HERE, "..", "..", "assets", "music", "thriller_haus.mp3"), music_db=-14.0)
+    music_path=os.path.join(HERE, "..", "..", "assets", "music", "thriller_haus.mp3"), music_db=-10.5, duck=0.55)
 print("mix.wav", round(mv.END, 2), "s")

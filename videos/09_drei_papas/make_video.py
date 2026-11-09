@@ -198,14 +198,6 @@ def house_life(cv, t, light_on=True, shower=True, bath_open=0.0):
     if fl > 0:
         cv.rect(x0, y0, x1, y1, fill=(200, 210, 255, int(255 * fl)))
         cv.line([(x0 + 140, y0), (x0 + 110, y0 + 90), (x0 + 150, y0 + 120), (x0 + 100, y1)], (255, 255, 255, int(255 * fl)), 5)
-    for i in range(26):                      # rain on the window
-        rx = x0 + (i * 37) % (x1 - x0)
-        ry = y0 + ((t * 600 + i * 97) % (y1 - y0))
-        cv.line([(rx, ry), (rx - 6, ry + 26)], (150, 170, 230, 150), 2)
-    for i in range(8):
-        dx = x0 + 20 + (i * 53) % (x1 - x0 - 40)
-        dy = y0 + ((t * 40 + i * 70) % (y1 - y0))
-        cv.circle(dx, dy, 4, fill=(190, 210, 255, 120))
     # clock 23:41 (minute hand creeps)
     cx, cy, r = CLOCK
     m = 41 + (t / 60)
@@ -490,6 +482,54 @@ def sc_door(t):
     return img
 
 
+def phone_icon(cv, x, y, s, t=0.0, msg=True):
+    """realistic smartphone: black bezel, dynamic island, side buttons, messenger screen"""
+    w, h = 150 * s, 300 * s
+    cv.rect(x - w / 2 - 4 * s, y - h * 0.32, x - w / 2, y - h * 0.18, fill=hexc("#2a2c36"), r=2 * s)   # buttons
+    cv.rect(x + w / 2, y - h * 0.28, x + w / 2 + 4 * s, y - h * 0.12, fill=hexc("#2a2c36"), r=2 * s)
+    cv.rect(x - w / 2, y - h / 2, x + w / 2, y + h / 2, fill=hexc("#16171f"), r=26 * s)
+    cv.rect(x - w / 2 + 2 * s, y - h / 2 + 2 * s, x + w / 2 - 2 * s, y + h / 2 - 2 * s, outline=hexc("#4a4d5c"), width=2 * s,
+            r=24 * s)
+    sx0, sy0, sx1, sy1 = x - w / 2 + 8 * s, y - h / 2 + 8 * s, x + w / 2 - 8 * s, y + h / 2 - 8 * s
+    cv.rect(sx0, sy0, sx1, sy1, fill=hexc("#eef0f6"), r=19 * s)
+    cv.rect(sx0, sy0, sx1, sy0 + 56 * s, fill=hexc("#2f5d50"), r=19 * s)
+    cv.rect(sx0, sy0 + 36 * s, sx1, sy0 + 56 * s, fill=hexc("#2f5d50"))
+    cv.rect(x - 22 * s, sy0 + 6 * s, x + 22 * s, sy0 + 16 * s, fill=hexc("#16171f"), r=5 * s)        # island
+    cv.circle(sx0 + 20 * s, sy0 + 38 * s, 10 * s, fill=hexc("#d9d2c5"))
+    cv.text(sx0 + 36 * s, sy0 + 38 * s, "Papa", 15 * s, hexc("#ffffff"), anchor="lm")
+    if msg:
+        cv.rect(sx0 + 8 * s, sy0 + 70 * s, sx0 + 96 * s, sy0 + 112 * s, fill=hexc("#ffffff"), r=10 * s)
+        for k in range(2):
+            cv.rect(sx0 + 16 * s, sy0 + 80 * s + k * 14 * s, sx0 + (84 - k * 22) * s, sy0 + 87 * s + k * 14 * s,
+                    fill=hexc("#b9bccb"), r=3 * s)
+        cv.rect(sx1 - 96 * s, sy0 + 124 * s, sx1 - 8 * s, sy0 + 162 * s, fill=hexc("#d4f5c9"), r=10 * s)
+        cv.rect(sx1 - 88 * s, sy0 + 134 * s, sx1 - 18 * s, sy0 + 141 * s, fill=hexc("#9cc59a"), r=3 * s)
+        cv.rect(sx0 + 8 * s, sy0 + 174 * s, sx0 + 104 * s, sy0 + 212 * s, fill=hexc("#ffffff"), r=10 * s)
+        cv.rect(sx0 + 16 * s, sy0 + 184 * s, sx0 + 90 * s, sy0 + 191 * s, fill=hexc("#b9bccb"), r=3 * s)
+    cv.rect(x - 30 * s, sy1 - 10 * s, x + 30 * s, sy1 - 6 * s, fill=hexc("#16171f"), r=2 * s)              # home bar
+
+
+def door_icon(cv, x, y, s, t=0.0, person=True):
+    """front door: frame, two panels, frosted glass with a head-and-shoulders shadow, handle and lock"""
+    w, h = 170 * s, 300 * s
+    cv.rect(x - w / 2 - 12 * s, y - h / 2 - 12 * s, x + w / 2 + 12 * s, y + h / 2, fill=hexc("#3b2a24"))
+    cv.rect(x - w / 2, y - h / 2, x + w / 2, y + h / 2, fill=hexc("#6b4a36"))
+    cv.rect(x - w / 2, y - h / 2, x - w / 2 + 10 * s, y + h / 2, fill=hexc("#5a3a2c"))
+    gx0, gy0, gx1, gy1 = x - w / 2 + 22 * s, y - h / 2 + 20 * s, x + w / 2 - 22 * s, y - 10 * s
+    cv.rect(gx0, gy0, gx1, gy1, fill=hexc("#3c5276"), r=8 * s)
+    cv.rect(gx0 + 6 * s, gy0 + 6 * s, gx0 + 30 * s, gy1 - 6 * s, fill=(255, 255, 255, 22), r=6 * s)   # frosted sheen
+    if person:
+        cx = (gx0 + gx1) / 2
+        cv.ellipse(cx - 26 * s, gy0 + 22 * s, cx + 26 * s, gy0 + 82 * s, fill=(12, 14, 26, 220))
+        cv.pieslice(cx - 56 * s, gy0 + 84 * s, cx + 56 * s, gy1 + 60 * s, 180, 360, fill=(12, 14, 26, 220))
+    cv.rect(gx0, y + 14 * s, gx1, y + h / 2 - 22 * s, outline=hexc("#5a3a2c"), width=5 * s, r=6 * s)
+    hx = x + w / 2 - 26 * s
+    cv.rect(hx - 6 * s, y + 6 * s, hx + 6 * s, y + 40 * s, fill=hexc("#c9a46a"), r=3 * s)              # escutcheon
+    cv.rect(hx - 26 * s, y + 10 * s, hx + 4 * s, y + 18 * s, fill=hexc("#e0bf7e"), r=4 * s)            # lever
+    cv.circle(hx, y + 30 * s, 3 * s, fill=hexc("#3b2a24"))                                               # lock
+    cv.rect(x - 34 * s, y + h / 2 - 50 * s, x + 34 * s, y + h / 2 - 40 * s, fill=hexc("#c9a46a"), r=3 * s)  # mail slot
+
+
 def sc_both(t):
     t0 = st("Das stimmt")
     img = Image.new("RGB", (OUT_W, OUT_H), (10, 11, 24))
@@ -499,11 +539,9 @@ def sc_both(t):
         a = ease_out_back(prog(t, t0 + 0.1 + k * 0.3, t0 + 0.4 + k * 0.3))
         cv.rect(x - 170, 760, x + 170, 1260, fill=hexc("#22253f"), r=40)
         if k == 0:
-            cv.rect(x - 80, 830, x + 80, 1110, fill=hexc("#f2f3f8"), r=24)
-            cv.rect(x - 80, 830, x + 80, 880, fill=hexc("#2f5d50"), r=24)
+            phone_icon(cv, x, 975, 1.05, t)
         else:
-            cv.rect(x - 90, 820, x + 90, 1120, fill=hexc("#5a3a2c"), r=8)
-            silhouette(cv, x, 1000, 200, 220)
+            door_icon(cv, x, 975, 1.0, t)
         cv.text(x, 1190, label, 46, hexc("#ffffff"))
         if a > 0.01:
             cv.circle(x + 120, 800, 56 * a, fill=hexc("#37b26c"))
@@ -594,17 +632,16 @@ def sc_whisper(t):
 def icon_card(cv, x, y, kind, a, t):
     cv.rect(x - 125, y - 170, x + 125, y + 170, fill=hexc("#22253f"), r=36)
     if kind == "door":
-        cv.rect(x - 70, y - 130, x + 70, y + 110, fill=hexc("#5a3a2c"), r=8)
-        cv.rect(x - 46, y - 104, x + 46, y - 10, fill=hexc("#2b3a5c"), r=6)
-        silhouette(cv, x, y + 40, 150, 220)
+        door_icon(cv, x, y - 10, 0.78, t)
     elif kind == "phone":
-        cv.rect(x - 60, y - 120, x + 60, y + 110, fill=hexc("#f2f3f8"), r=20)
-        cv.rect(x - 60, y - 120, x + 60, y - 70, fill=hexc("#2f5d50"), r=20)
-        cv.text(x, y - 95, "Papa", 26, hexc("#ffffff"))
+        phone_icon(cv, x, y - 10, 0.8, t)
     else:
         for k in range(5):
             cv.rect(x - 110 + k * 44, y + 110 - k * 44, x + 120, y + 110 - (k - 1) * 44, fill=hexc("#4a3428"))
-        silhouette(cv, x + 40, y - 40, 170, 230)
+            cv.rect(x - 110 + k * 44, y + 110 - k * 44, x + 120, y + 118 - k * 44, fill=hexc("#6b4a36"))
+        hx, hy = x + 60, y - 70                       # head-and-shoulders shadow at the top of the stairs
+        cv.ellipse(hx - 22, hy - 30, hx + 22, hy + 22, fill=(8, 10, 20, 235))
+        cv.pieslice(hx - 50, hy + 24, hx + 50, hy + 120, 180, 360, fill=(8, 10, 20, 235))
     cv.text(x, y + 140, "?", 60, hexc("#ffd34d"))
 
 
