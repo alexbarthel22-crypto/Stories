@@ -445,6 +445,55 @@ def heartbeat():
     return out
 
 
+def buzz():
+    """phone vibration: two short low rattles"""
+    out = np.zeros(int(0.75 * SR))
+    for k in range(2):
+        tt = _t(0.25)
+        x = np.sign(np.sin(2 * np.pi * 150 * tt)) * 0.3 + np.sin(2 * np.pi * 75 * tt) * 0.3
+        x *= np.clip(tt / 0.01, 0, 1) * np.clip((0.25 - tt) / 0.02, 0, 1)
+        i = int(k * 0.38 * SR)
+        out[i:i + len(x)] += x
+    return out * 0.6
+
+
+def knock():
+    """three knocks on a wooden door"""
+    out = np.zeros(int(0.9 * SR))
+    rng = np.random.default_rng(17)
+    for k in range(3):
+        tt = _t(0.18)
+        body = np.sin(2 * np.pi * (140 + 40 * np.exp(-tt * 40)) * tt) * np.exp(-tt * 30)
+        click = rng.standard_normal(len(tt)) * np.exp(-tt * 120) * 0.4
+        i = int(k * 0.24 * SR)
+        out[i:i + len(tt)] += (body + click) * (1 - k * 0.1)
+    return out * 0.8
+
+
+def shower(dur):
+    x = np.random.default_rng(23).standard_normal(int(dur * SR))
+    x = x - np.convolve(x, np.ones(30) / 30, mode="same")
+    r = int(min(0.4, dur / 3) * SR)
+    x[:r] *= np.linspace(0, 1, r); x[-r:] *= np.linspace(1, 0, r)
+    return x * 0.18
+
+
+def lights_out():
+    tt = _t(0.8)
+    return (np.sin(2 * np.pi * (90 * np.exp(-tt * 3) + 30) * tt) * np.exp(-tt * 5) +
+            np.random.default_rng(5).standard_normal(len(tt)) * np.exp(-tt * 40) * 0.3) * 0.7
+
+
+def doorbell():
+    out = np.zeros(int(1.6 * SR))
+    for k, f in enumerate((659, 523)):
+        tt = _t(1.0)
+        b = (np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(2 * np.pi * f * 2 * tt)) * np.exp(-tt * 3.5) * 0.4
+        i = int(k * 0.45 * SR)
+        out[i:i + len(b)] += b
+    return out
+
+
 def place(buf, s, t, gain=1.0):
     k = int(t * SR)
     if k >= len(buf):
@@ -503,7 +552,8 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
              "drip": drip, "swish": swish, "shing": shing, "squawk": squawk, "wrong": wrong, "impact": impact, "drum": drum,
              "gong": gong, "chirp": chirp, "sparkle": sparkle, "riser": riser, "sistrum": sistrum, "rumble": rumble,
              "owl": owl, "splash": splash, "kaching": kaching,
-             "cheer": cheer, "notify": notify, "heartbeat": heartbeat, "beep": beep, "beep_hi": lambda: beep(1760, 0.4)}.get(kind)
+             "cheer": cheer, "notify": notify, "heartbeat": heartbeat, "beep": beep, "beep_hi": lambda: beep(1760, 0.4), "buzz": buzz,
+             "knock": knock, "lights_out": lights_out, "doorbell": doorbell}.get(kind)
         if kind == "file":          # external sound file: ("file", t, gain, path, duration)
             path, dur = extra[0], extra[1]
             s = load_music(path, int(dur * SR))
@@ -516,6 +566,8 @@ def mix(voice_path, length, events, out_path, music_gain=0.16, duck=0.45, music_
             s = chainsaw(extra[0])
         elif kind == "engine":
             s = engine(extra[0])
+        elif kind == "shower":
+            s = shower(extra[0])
         elif kind == "wind":
             s = wind(extra[0])
         elif kind == "rain":

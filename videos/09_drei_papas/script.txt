@@ -1,0 +1,22 @@
+# Mystery-Story in der Du-Form. Jede Zeile = ein Sprechsegment. {emotion} = Regieanweisung.
+{tense} Es ist 23 Uhr 41. Du bist allein mit deiner kleinen Schwester Lina zu Hause.
+{tense} Es klingelt. Auf dem Bildschirm der Türkamera steht dein Vater, klatschnass vom Regen.
+„Mach schnell auf, ich hab meinen Schlüssel im Büro vergessen.“
+{tense} Im selben Moment vibriert dein Handy. Eine Nachricht von Papa:
+„Sitze noch im Zug. Bin in zwei Stunden da. Mach niemandem auf!“
+{tense} Du schaust wieder auf den Bildschirm. Papa lächelt. Er blinzelt nicht. Kein einziges Mal.
+{tense} Dann zupft Lina an deinem Ärmel. „Warum klingelt Papa? Der ist doch oben im Bad.“
+{tense} Und tatsächlich: Oben rauscht die Dusche. Seit über einer Stunde.
+Du schreibst ins Handy: „Was hast du mir früher immer vor dem Einschlafen erzählt?“
+Die Antwort kommt sofort: „Die Geschichten von Kapitän Krümel, dem Piraten ohne Schiff.“
+{tense} Durch die Haustür stellst du dieselbe Frage. Draußen ein leises Lachen.
+„Kapitän Krümel. Mit dem Papagei, der nur rückwärts sprechen konnte.“
+{tense} Das stimmt. Das wusstet nur ihr beide.
+{tense} Plötzlich wird es oben still. Die Dusche ist aus. Schritte auf der Treppe.
+„Wer ist da an der Tür? Mach bloß nicht auf!“
+{tense} Das Licht im Flur geht aus. Dein Handy zeigt: ein Prozent Akku.
+{tense} Eine letzte Nachricht: „Der im Haus ist nicht ich.“
+{tense} Draußen klopft es. Drinnen kommen die Schritte näher.
+{tense} Da flüstert Lina: „Ich hab vorhin schon jemanden reingelassen. Er hat gesagt, er ist Papa.“
+{tense} Drei Papas. Nur einer ist echt.
+{surprised} Wem glaubst du? Tür, Handy oder Treppe? Schreib's in die Kommentare und folg mir für Teil zwei!
