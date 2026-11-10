@@ -13,6 +13,7 @@ Vertikale Erklärvideos (1080×1920, 30 fps) im flachen Vektor-Look mit natürli
 | 7 | Million sofort oder 1 Cent pro Sekunde (Jahrmarkt, Leon vs. Mia) | `videos/07_million_cent/video.mp4` | 1:28 |
 | 8 | Hilberts Hotel – voll belegt, unendlich viele neue Gäste | `videos/08_hilbert_hotel/video.mp4` | 1:02 |
 | 9 | Drei Papas – Mystery-Story in der Du-Form | `videos/09_drei_papas/video.mp4` | 1:25 |
+| 10 | Der fehlende Euro – Pizzeria Bella mit Corgi Pepe (eigene Geschichte zum klassischen Rätsel) | `videos/10_fehlender_euro/video.mp4` | 0:48 |
 
 ## Kanal-Standard (für jedes neue Video)
 - Musik: standardmäßig `assets/music/raetsel_theme.mp3` (Lyria), 15 dB unter der Stimme; Ausnahme Video #5: `assets/music/grusel_keller.mp3` (leicht gruselig, ebenfalls Lyria)

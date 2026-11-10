@@ -1,0 +1,15 @@
+# Rätsel: der fehlende Euro (Pizzeria). Jede Zeile = ein Sprechsegment.
+Drei Freunde, eine Pizza-Rechnung – und plötzlich fehlt ein Euro!
+Lea, Tom und Ben essen in der Pizzeria Bella. Unterm Tisch bettelt Pepe, der Corgi vom Chef.
+Die Rechnung: sechzig Euro. Jeder zahlt zwanzig.
+Dann merkt der Chef: Heute ist Aktionstag! Die Pizzen kosten nur fünfundfünfzig Euro.
+Er gibt dem Kellner fünf Euro zum Zurückgeben.
+Der Kellner steckt heimlich zwei Euro ein und gibt jedem einen Euro zurück.
+Also hat jeder neunzehn Euro bezahlt. Drei mal neunzehn sind siebenundfünfzig. Plus zwei beim Kellner: neunundfünfzig.
+{surprised} Wo ist der letzte Euro?
+[PAUSE 1.3]
+Schreib's in die Kommentare!
+Hier kommt die Lösung: Die Rechnung ist ein Trick.
+In den siebenundfünfzig Euro stecken schon die fünfundfünfzig vom Chef und die zwei vom Kellner.
+Dazu die drei zurückgegebenen Euro: genau sechzig. Es fehlt nichts!
+{amused} Folg mir für das nächste Rätsel!
