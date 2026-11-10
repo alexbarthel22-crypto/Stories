@@ -92,3 +92,10 @@ SCENES = [
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ], viz=dict(kind="outro", q="Kennst du auch einen 31er?", handle="@petze_alex", icon="🐀", col="#4A5568")),
 ]
+
+# „Alex“ deutsch (Aleks), nicht englisch „Äläx“
+_ALEX = "; den Namen deutsch aussprechen: A-leks mit offenem A wie in 'Alexander', niemals englisch 'Äläx'"
+GEMINI_LINE_TEXT = {"ki_1": "Aleks meldet sich sofort: Frau Müller, mein Bro hat das mit KI gemacht!",
+                    "ex_1": "Zehn Minuten später schreibt Aleks ihr: Tom war eh ein schlechter Typ. Ich bin viel besser.",
+                    "spiel_0": "Abends zockt er mit seinen Bros. Aleks verliert."}
+GEMINI_LINE_MOOD = {k: MOODS.get(k.split("_")[0], "lebendig") + _ALEX for k in GEMINI_LINE_TEXT}
