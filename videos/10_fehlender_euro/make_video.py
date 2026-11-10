@@ -70,6 +70,7 @@ def shadow(cv, x, y, w):
 # ------------------------------------------------------------------ original characters & props
 def corgi(cv, x, y, s=1.0, t=0.0, f=1, beg=0.0, wag=1.0):
     """original corgi: red-tan coat, white blaze/chest/paws, big upright ears, fluffy bum, wagging nub tail"""
+    s *= 0.8                                    # a bit smaller overall
     tan, tan_d, wh = hexc("#e2913f"), hexc("#c4742b"), hexc("#fff6ea")
     by = y - 52 * s - beg * 40 * s
     lift = beg * 0.6
@@ -86,16 +87,27 @@ def corgi(cv, x, y, s=1.0, t=0.0, f=1, beg=0.0, wag=1.0):
     cv.ellipse(x - 92 * s, by - 30 * s, x - 30 * s, by + 34 * s, fill=wh if f < 0 else tan)        # fluffy bum
     cv.ellipse(x + f * 10 * s - 50 * s, by + 4 * s, x + f * 10 * s + 50 * s, by + 36 * s, fill=wh)   # belly
     # front legs
-    for dx in (40, 58):
-        if beg > 0.3:
-            cv.line([(x + f * dx * s, by), (x + f * (dx + 22) * s, by - 30 * s)], tan, 18 * s)
-            cv.circle(x + f * (dx + 24) * s, by - 32 * s, 11 * s, fill=wh)
-        else:
-            cv.rect(x + f * dx * s - 10 * s, by + 10 * s, x + f * dx * s + 10 * s, y, fill=tan, r=8 * s)
-            cv.ellipse(x + f * dx * s - 14 * s, y - 10 * s, x + f * dx * s + 16 * s, y + 2 * s, fill=wh)
     # chest ruff + head
     hx, hy = x + f * 78 * s, by - 52 * s - lift * 44 * s + 3 * s * math.sin(t * 3)
     cv.ellipse(hx - f * 34 * s - 30 * s, hy + 10 * s, hx - f * 34 * s + 34 * s, hy + 78 * s, fill=wh)
+    if beg <= 0.3:                              # standing: short front legs, drawn in front of the chest fur
+        for k, dx in enumerate((40, 62)):
+            lx = x + f * dx * s
+            col = tan_d if k == 0 else tan
+            cv.rect(lx - 11 * s, by - 4 * s, lx + 11 * s, y - 4 * s, fill=col, r=9 * s)
+            cv.ellipse(lx - 15 * s, y - 14 * s, lx + 17 * s, y + 2 * s, fill=wh)
+            for j in (-1, 0, 1):
+                cv.line([(lx + f * 4 * s + j * 5 * s, y - 6 * s), (lx + f * 4 * s + j * 5 * s, y)], hexc("#d8cfc2"), 2 * s)
+    if beg > 0.3:                               # begging: both front legs raised in front of the chest
+        for k, dx in enumerate((0, 22)):
+            sh_x, sh_y = x + f * (30 + dx) * s, by - 6 * s          # shoulder on the body
+            el_x, el_y = x + f * (62 + dx) * s, by - 34 * s         # bent elbow
+            px, py = x + f * (78 + dx) * s, by - 8 * s + 5 * s * math.sin(t * 6 + k)   # dangling paw
+            col = tan_d if k == 0 else tan
+            cv.line([(sh_x, sh_y), (el_x, el_y), (px, py)], col, 19 * s)
+            cv.ellipse(px - 13 * s, py - 10 * s, px + 13 * s, py + 11 * s, fill=wh)
+            for j in (-1, 0, 1):
+                cv.line([(px + j * 5 * s, py + 4 * s), (px + j * 5 * s, py + 10 * s)], hexc("#d8cfc2"), 2 * s)
     for side in (-1, 1):                       # big ears
         ex = hx + side * 26 * s - f * 6 * s
         cv.poly([(ex - 18 * s, hy - 26 * s), (ex + side * 6 * s, hy - 82 * s), (ex + 18 * s, hy - 26 * s)], fill=tan)
@@ -504,7 +516,7 @@ def sc_outro(t):
 
     def act(cv):
         room_life(cv, t)
-        corgi(cv, 520, FLOOR + 60, 1.6, t, 1, beg=0.5 + 0.5 * math.sin(t * 2), wag=1.5)
+        corgi(cv, 520, FLOOR + 60, 1.6, t, 1, beg=0.0, wag=1.5)
     img, _ = stage("pizzeria", drift((540, 1200, 1300), t), act)
     img = Image.blend(img, Image.new("RGB", img.size, (15, 10, 30)), 0.25)
     pop_pill(img, t, t0, 540, 360, "HÄTTEST DU'S GEWUSST?", 60, bg="#fff6e6", rot=-2)
