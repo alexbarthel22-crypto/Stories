@@ -174,3 +174,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein 31er 🐀 Weder Seele noch Gewissen 👻 Sein Bro Tom trennt sich morgens von Lena … 10 Minuten später schreibt Alex ihr: „Tom war eh ein schlechter Typ, ich bin viel besser“ 😏💔 Die Hausaufgabe war KI? „Frau Müller, mein Bro hat das mit KI gemacht!“ 🙋🤖 Im Klassenchat wird gelästert, 2 Minuten später hat die Lehrerin den Screenshot 📸 Und beim Zocken verloren? Dann weiß jetzt jeder, dass Tom heimlich in Lena verliebt ist 🗣️ Er kriecht so tief rein, dass er aus dem Hals wieder rauskommt 🍑 Welches Anzeichen hast du schon erlebt? 1, 2, 3 oder 4? 👇 Markier den 31er aus deiner Klasse! Und was soll Alex morgen sein?
 
 #heuteistalex #31er #petze #schule #comedy
+
+## TikTok Folge 11 – Lustmolch
+Cover: `episodes/37_lustmolch/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Lustmolch 🦎 Flirtet mit allem, was nicht bei drei auf dem Baum ist 😏 Schickt allen Mädchen aus der Stufe denselben Snap: „Hey Süße“ … 47 Mal. Einzige Antwort: „Wer bist du?“ 👻 Sein Bro zeigt ihm seine neue Freundin, er schreibt ihr sofort auf Insta 🌹💀 Zur Referendarin: „Sie sind die schönste Zelle im ganzen Organismus“ 🦠 Im Gym stöhnt er extra laut, damit sie hinschaut 🏋️ Und auf der Party: „Hast du was im Auge?“ – „Ja, dich.“ 😉 Ein Korb ist für ihn nur eine Einladung 🧺 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Lustmolch aus deinem Freundeskreis! Und was soll Alex morgen sein?
+
+#heuteistalex #lustmolch #flirten #cringe #comedy

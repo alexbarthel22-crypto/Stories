@@ -1,9 +1,9 @@
 """TikTok-Folge: Heute ist Alex ... ein Lustmolch. Jugendfreie Alltags-Comedy: flirtet mit allem und jedem, nur Cringe.
-Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), erst nach Freigabe. Vorschau: Ersatzstimme."""
+Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
-AL = alex(top="#C2185B", top_style="tee", pants="#2F3B52", shoes="#FFFFFF", chain="#F2C94C")
+AL = alex(top="#8C1C3A", top_style="tee", pants="#1C1C22", shoes="#FFFFFF", chain="#F2C94C")   # Lustmolch-Look: Goldkette, Rose, Kussmund
 TOM = person_spec(12, top="#36B5C2", hair="#3B2A20")
 LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894")
 MIA = person_spec(14, girl=True, top="#F07FB0", hair="#5A3A22", skin="#F1C9A8")
@@ -14,20 +14,20 @@ CAPTION_Y = 1650
 DAYBAR_Y = 1755
 LINE_TEMPO = {k: 1.3 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
 _BIG = dict(tag_size=52, head_size=54, item_scale=1.45)
-MOODS = dict(MOODS_BASE, navi="schleimig flirtend, dann trocken", lehrerin="ungläubig, dann trocken",
+MOODS = dict(MOODS_BASE, snap="schleimig flirtend, dann trocken", lehrerin="ungläubig, dann trocken",
              bro="empört, dann trocken", gym="selbstverliebt, dann trocken", zwinker="übertrieben verführerisch, dann trocken")
 SHUFFLE = SHUFFLE_BASE
-REACTIONS = {"navi": ["🗺️", "😳", "🚩"], "lehrerin": ["👩‍🏫", "💀", "🚩"], "bro": ["💬", "🙄", "🚩"],
+REACTIONS = {"snap": ["👻", "🤨", "🚩"], "lehrerin": ["👩‍🏫", "💀", "🚩"], "bro": ["💬", "🙄", "🚩"],
              "gym": ["🏋️", "😬", "🚩"], "zwinker": ["😉", "🤨", "🚩"]}
 THUMB = dict(head="HEUTE IST ALEX EIN…", l1="LUST-", l2="MOLCH", bg="#7B2FBE", color1="#FFFFFF", accent="#FFE14D",
              pill="#3A1260", pill_text="#FFFFFF", expr="smug", pose="hips", prop=None, extras=True, emojis=("🦎", "😏", "💋", "🚩"))
 INTRO_CFG = dict(icon="🦎", bg="#7B2FBE", title_lines=["LUSTMOLCH."], sign_x=(190, 890), sign_w=330, sign_size=40,
-                 house=dict(sky=("#A66BE0", "#F1E1FF"), walls="#FBF5FF", roof="#3A1260", door="#2A0C46", lawn="#5DAA5E",
-                            accent=("#E0457B", "#F2B233"), sun=True),
-                 left=("😏", "HEY DU"), right=("💋", "KUSS-MUND"), door=("NA, DU?", "😉"),
-                 neon=("FLIRTEN", "MIT ALLEM 😏", "#C59BFF"), signs=("Na, Süße? 😏", "Bist du WLAN? 📶"),
-                 fly=["😏", "💋", "🦎"], burst=["🦎", "😏", "💋", "😉", "🌹", "💘", "👀", "🔥"],
-                 extras=[("🌹", 36, 40, 13)])
+                 house=dict(sky=("#C2185B", "#FFD6E8"), walls="#FFE6F0", roof="#8C1C3A", door="#4A0E2A", lawn="#5DAA5E",
+                            accent=("#E0457B", "#F2C94C"), sun=False),
+                 left=("💋", "KUSS-ECKE"), right=("🕯️", "KERZENLICHT"), door=("KLINGELN", "FÜR KÜSSE 💋"),
+                 neon=("SINGLE", "& READY 😏", "#FF6FB0"), signs=("Na, Süße? 😏", "Rose für dich? 🌹"),
+                 fly=["💋", "😏", "💘", "🌹"], burst=["🦎", "😏", "💋", "😘", "🌹", "💘", "👀", "🔥"],
+                 extras=[("🌹", 9, 63, 9), ("💋", -11, 68, 6), ("😎", 0, 104, 13), ("💨", 34, 55, 14)])
 
 SCENES = [
     dict(id="what", bg="#7B2FBE", clock=None, title="WAS IST EIN LUSTMOLCH?", dark=True, lines=[
@@ -35,14 +35,15 @@ SCENES = [
         ("Und er hält jeden seiner Sprüche für unwiderstehlich.", None),
     ], viz=dict(kind="bars", enter="zoom", head="FLIRT VS. ERFOLG", rows=[("FLIRTS", 1.0, "247 heute", "#E0457B"), ("ERFOLG", 0.02, "0", "#555A66")],
                 pills=[("😏", "Ziel: alle", "#E0457B"), ("🙈", "Cringe-Level: unendlich", "#2B2F3A")])),
-    dict(id="navi", bg="#E0457B", clock="08:00", title="DAS NAVI", dark=True, lines=[
-        ("Acht Uhr, in der Bahn. Er flirtet mit der Navi-Stimme auf seinem Handy.", None),
-        ("Sie sagt: Bitte wenden. Er sagt: Für dich wende ich alles, Baby.", None),
-    ], viz=dict(kind="stage", **_BIG, enter="drop", box="#FFF0F6", head="🗺️ NAVI-STIMME", head_col="#C2185B",
-                items=[("📱", 280, 640, 120, 0, "shake"), ("🗺️", 460, 640, 100, 0, "bob"),
-                       ("😘", 720, 650, 110, 1, "pulse")],
-                tags=[("„BITTE WENDEN“", "#2B2F3A", 400, 800), ("„FÜR DICH WENDE ICH ALLES“ 😏", "#E0457B", 540, 990)],
-                move="bounce", alex=("smug", "idle", "📱"))),
+    dict(id="snap", bg="#F2C94C", clock="08:00", title="DER SNAP", lines=[
+        ("Acht Uhr. Er schickt allen Mädchen aus der Stufe denselben Snap: Hey Süße.", None),
+        ("Siebenundvierzig Mal. Die einzige Antwort: Wer bist du?", None),
+    ], viz=dict(kind="messenger", enter="drop", switch=None,
+                list=[(0, "Mia", "Du: Hey Süße 😏", "08:01", 0, "#F07FB0"),
+                      (0, "Jana", "Du: Hey Süße 😏", "08:01", 0, "#F2B233"),
+                      (0, "Lena", "Du: Hey Süße 😏", "08:01", 0, "#46B39A"),
+                      (1, "Emily", "Wer bist du? 🤨", "08:03", 1, "#3E7BDA")],
+                alex=("smug", "idle", "📱"))),
     dict(id="bro", bg="#36B5C2", clock="10:00", title="DER BRO", lines=[
         ("In der Pause zeigt sein Bro Tom ihm ein Foto von seiner neuen Freundin.", None),
         ("Alex schreibt ihr sofort auf Insta: Na, Süße? Was macht so jemand wie du mit Tom?", None),
@@ -85,11 +86,11 @@ SCENES = [
                 move="flicker", alex=("smug", "idle", None))),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen Lustmolch erkennst:", None),
-        ("Er flirtet sogar mit dem Navi.", None),
+        ("Er schickt allen denselben Snap.", None),
         ("Er schreibt die Freundin vom Bro an.", None),
         ("Er stöhnt im Gym extra laut.", None),
         ("Und ein Korb ist für ihn eine Einladung.", None),
-    ], viz=dict(kind="signs", slide=True, items=[("Flirtet sogar mit dem Navi", "🗺️"), ("Schreibt die Freundin vom Bro an", "💬"),
+    ], viz=dict(kind="signs", slide=True, items=[("Copy-Paste-Snap an alle", "👻"), ("Schreibt die Freundin vom Bro an", "💬"),
                                                  ("Stöhnt im Gym extra laut", "🏋️"), ("Korb = Einladung", "🧺")])),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du auch einen Lustmolch? Markier sie oder ihn!", None),
