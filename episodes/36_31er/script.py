@@ -1,5 +1,5 @@
 """TikTok-Folge: Heute ist Alex ... ein 31er (Petze, verpetzt jeden). Alltags-Comedy über Klischees.
-Gesprochen: „Einunddreißiger“. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), erst nach Freigabe. Vorschau: Ersatzstimme."""
+Gesprochen: „Einunddreißiger“. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 

@@ -165,3 +165,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Gymbro 💪 Wohnt praktisch im Gym und jedes Gespräch endet bei Protein 🥤 Laut ihm hat eine Katze 600 g Eiweiß … seine Freunde verstecken ihre Katze, wenn er zu Besuch kommt 🐈🫣 Arme trainieren, jeden Tag, bald sieht er aus wie ein Dreieck 🔻 Leg Day? Kenn ich nicht 🦵❌ Zum Frühstück 12 rohe Eier aus dem Glas 🥚 und ein Haufen Supplements … für die Gains 💊 Im Gym belegt er drei Geräte und filmt jeden Satz 📱 Und auf „Wer will Pizza?“ antwortet er mit einem Spiegel-Selfie oben ohne 🍕💀 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Kennst du auch einen Gymbro? Markier sie oder ihn! Und was soll Alex morgen sein?
 
 #heuteistalex #gymbro #legday #fitness #comedy
+
+## TikTok Folge 10 – 31er
+Cover: `episodes/36_31er/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein 31er 🐀 Weder Seele noch Gewissen 👻 Sein Bro Tom trennt sich morgens von Lena … 10 Minuten später schreibt Alex ihr: „Tom war eh ein schlechter Typ, ich bin viel besser“ 😏💔 Die Hausaufgabe war KI? „Frau Müller, mein Bro hat das mit KI gemacht!“ 🙋🤖 Im Klassenchat wird gelästert, 2 Minuten später hat die Lehrerin den Screenshot 📸 Und beim Zocken verloren? Dann weiß jetzt jeder, dass Tom heimlich in Lena verliebt ist 🗣️ Er kriecht so tief rein, dass er aus dem Hals wieder rauskommt 🍑 Welches Anzeichen hast du schon erlebt? 1, 2, 3 oder 4? 👇 Markier den 31er aus deiner Klasse! Und was soll Alex morgen sein?
+
+#heuteistalex #31er #petze #schule #comedy
