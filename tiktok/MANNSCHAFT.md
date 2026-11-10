@@ -13,6 +13,7 @@ Diese Figuren bleiben in allen Folgen gleich. Gezeichnet werden sie in `src/char
 | 8 | Der Jüngste *(Platzhalter-Name)* | Mittelfeld | rote Cap, Zahnspange |
 | 10 | Spielmacherin *(Platzhalter-Name)* | Mittelfeld | braune Zöpfe mit pinken Haargummis |
 | 9 | **Leberkaaszerfetzer** (Neuzugang Tag 3, Top-Kommentar „bitte ich Stürmer“) – kurze dunkelbraune Haare, Bartschatten, gelber Stern auf dem Trikot. Vorgänger (Bus-Typ) seit Tag 2 raus | Sturm | blonde Strubbelhaare, verschlafene Augen, Rucksack, **Flip-Flops** |
+| 17 | **Nico** (Neuzugang Tag 6, Kommentar „Bitte kann ich rechter flügel“) – schwarze Locken, goldener Ohrring, Goldkette | Rechter Flügel |
 | 11 | Der Coole *(Platzhalter-Name)* | Sturm | Afro, Sonnenbrille |
 | 14 | Träumer *(Platzhalter-Name)* | Sturm | Locken, blaue Kopfhörer |
 
@@ -140,3 +141,11 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 
 ## Stand nach Tag 5
 - Fans: 494 · Vereinskasse: 2532 € · erstes Spiel gewonnen (3:2 gegen SC Heuballen)
+
+## Folge 6 (Tag 6) – Entwurf mit Vorschau-Stimme
+- Datei: `tiktok/tag06_fc_schlammloch_entwurf.mp4` (0:50, espeak), Code `src_tag06/`
+- Fans: 494 → **513 (+19)**; Geld: 19 € + 24 Kommentare × 2 € = 67 € + 2532 € = **2599 €**
+- Abstimmung gewonnen: **Spielerkabine** (Bauanhänger, blau-weiß mit Vereinswappen) für **1500 €** (Preis angenommen) → Kasse **1099 €**
+- Aufbau-Gag: es fehlt eine Schraube; drinnen Spinde mit Namen, Dusche, eigenes Kissen für Frodo
+- Neuzugang: **Nico**, rechter Flügel, Nr. 17
+- Denny wünscht sich kürzere Haare → Abstimmung in den Kommentaren: **kürzer oder länger?**
