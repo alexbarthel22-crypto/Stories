@@ -30,9 +30,10 @@ INTRO_CFG = dict(icon="🐀", bg="#4A5568", title_lines=["31ER."], sign_x=(190, 
 SCENES = [
     dict(id="what", bg="#4A5568", clock=None, title="WAS IST EIN 31ER?", dark=True, lines=[
         ("Ein 31er verpetzt jeden. Wirklich jeden.", "Ein Einunddreißiger verpetzt jeden. Wirklich jeden."),
-        ("Kaum passiert irgendwas, wissen es Lehrer und Eltern schon.", None),
+        ("Bei den Lehrern kriecht er so tief in den Arsch, dass er aus dem Hals wieder rauskommt.", None),
+        ("Und er hat weder Seele noch Gewissen.", None),
     ], viz=dict(kind="bars", enter="flip", head="LOYALITÄT VS. PETZEN", rows=[("LOYALITÄT", 0.02, "0 %", "#555A66"), ("PETZEN", 1.0, "100 %", "#E23B3B")],
-                pills=[("🗣️", "Geheimnis? Nicht bei ihm", "#E23B3B"), ("📸", "Screenshot? Schon verschickt", "#3E7BDA")])),
+                pills=[("🍑", "Schleimt bis zum Hals raus", "#E07A2E"), ("👻", "Seele: 0 · Gewissen: 0", "#2B2F3A")])),
     dict(id="ex", bg="#C2185B", clock="07:00", title="DIE EX VOM BRO", dark=True, lines=[
         ("Morgens trennt sich sein Bro Tom von Lena.", None),
         ("Zehn Minuten später schreibt Alex ihr: Tom war eh ein schlechter Typ. Ich bin viel besser.", None),
@@ -71,7 +72,7 @@ SCENES = [
                 alex=("smug", "idle", "📱"))),
     dict(id="spiel", bg="#8E5BE0", clock="19:00", title="ZOCKEN", dark=True, lines=[
         ("Abends zockt er mit seinen Bros. Alex verliert.", None),
-        ("Also verrät er allen, wer heimlich in Tom verliebt ist.", None),
+        ("Also verrät er allen, dass Tom heimlich in Lena verliebt ist.", None),
     ], viz=dict(kind="stage", **_BIG, enter="zoom", box="#F3EAFE", head="🎮 ONLINE-RUNDE", head_col="#7A3FA8",
                 people=[(LENA, 820, "Lena", "neutral", 1)],
                 items=[("🎮", 250, 610, 100, 0, "shake"), ("💀", 250, 830, 90, 0, "bob"), ("🗣️", 450, 830, 110, 1, "shake"),
@@ -80,12 +81,12 @@ SCENES = [
                 fx="shock", move="flicker", alex=("angry", "idle", None))),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen 31er erkennst:", "Woran du einen Einunddreißiger erkennst:"),
+        ("Er kriecht so tief in den Arsch, dass er aus dem Hals wieder rauskommt.", None),
         ("Kaum ist sein Bro getrennt, macht er dessen Ex an.", None),
         ("Screenshots gehen direkt an die Lehrer.", None),
-        ("Geheimnisse hält er null Sekunden.", None),
-        ("Und verlieren kann er auch nicht.", None),
-    ], viz=dict(kind="signs", slide=True, items=[("Macht die Ex vom Bro an", "💔"), ("Screenshots an die Lehrer", "📸"),
-                                                 ("Geheimnis hält 0 Sekunden", "🤐"), ("Kann nicht verlieren", "🎮")])),
+        ("Und Geheimnisse hält er null Sekunden.", None),
+    ], viz=dict(kind="signs", slide=True, items=[("Schleimt bis zum Hals raus", "🍑"), ("Macht die Ex vom Bro an", "💔"),
+                                                 ("Screenshots an die Lehrer", "📸"), ("Geheimnis hält 0 Sekunden", "🤐")])),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du auch einen 31er? Markier sie oder ihn!", "Kennst du auch einen Einunddreißiger? Markier sie oder ihn!"),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
