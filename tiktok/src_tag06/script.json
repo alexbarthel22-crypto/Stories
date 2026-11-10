@@ -1,13 +1,123 @@
 [
- {"id":"intro","say":"Tag sechs! Ich gründe einen Fußballverein!","cap":["TAG SECHS!","ICH GRÜNDE EINEN","*FUSSBALLVEREIN!"]},
- {"id":"fans6","say":"Gestern hatten wir vierhundertvierundneunzig Fans. Heute: fünfhundertdreizehn!","cap":["GESTERN:","494 FANS.","HEUTE:","*513!"]},
- {"id":"voteres","say":"Ihr habt abgestimmt: Die Spielerkabine hat gewonnen!","cap":["IHR HABT *ABGESTIMMT:","DIE *SPIELERKABINE","HAT *GEWONNEN!"]},
- {"id":"money6","say":"Neunzehn neue Fans, vierundzwanzig Kommentare, plus die Kasse. Macht zweitausendfünfhundertneunundneunzig Euro!","cap":["19 NEUE *FANS,","24 *KOMMENTARE,","PLUS DIE KASSE.","MACHT","*2599 EURO!"]},
- {"id":"buy","say":"Die Kabine kostet tausendfünfhundert Euro. Bleiben noch tausendneunundneunzig.","cap":["DIE KABINE KOSTET","!1500 EURO.","BLEIBEN NOCH","*1099."]},
- {"id":"build","say":"Luca und das Team bauen auf. Natürlich fehlt eine Schraube.","cap":["*LUCA UND DAS TEAM","BAUEN AUF.","NATÜRLICH FEHLT","!EINE SCHRAUBE."]},
- {"id":"inside","say":"Drinnen: Spinde für alle, eine Dusche und ein eigener Platz für Frodo.","cap":["DRINNEN:","*SPINDE FÜR ALLE,","EINE *DUSCHE","UND EIN EIGENER","PLATZ FÜR *FRODO."]},
- {"id":"nico","say":"Und wir haben einen Neuzugang: Nico wird unser rechter Flügel!","cap":["UND WIR HABEN EINEN","*NEUZUGANG:","*NICO WIRD UNSER","*RECHTER FLÜGEL!"]},
- {"id":"denny6","say":"Und Denny hat eine Bitte: Er will kürzere Haare.","cap":["UND *DENNY","HAT EINE BITTE:","ER WILL","*KÜRZERE HAARE."]},
- {"id":"vote6","say":"Was meint ihr: kürzere oder längere Haare für Denny? Stimmt in den Kommentaren ab!","cap":["WAS MEINT IHR:","*KÜRZERE ODER","*LÄNGERE HAARE?","STIMMT IN DEN","*KOMMENTAREN AB!"]},
- {"id":"rule3","say":"Jeder neue Fan bringt einen Euro, jeder Kommentar zwei.","cap":["JEDER NEUE *FAN: *1 €,","JEDER *KOMMENTAR: *2 €."]}
+ {
+  "id": "intro",
+  "say": "Tag sechs! Ich gründe einen Fußballverein!",
+  "cap": [
+   "TAG SECHS!",
+   "ICH GRÜNDE EINEN",
+   "*FUSSBALLVEREIN!"
+  ]
+ },
+ {
+  "id": "fans6",
+  "say": "Gestern hatten wir vierhundertvierundneunzig Fans. Heute: fünfhundertdreizehn!",
+  "cap": [
+   "GESTERN:",
+   "494 FANS.",
+   "HEUTE:",
+   "*513!"
+  ]
+ },
+ {
+  "id": "voteres",
+  "say": "Ihr habt abgestimmt: Die Spielerkabine hat gewonnen!",
+  "cap": [
+   "IHR HABT *ABGESTIMMT:",
+   "DIE *SPIELERKABINE",
+   "HAT *GEWONNEN!"
+  ]
+ },
+ {
+  "id": "money6",
+  "say": "Neunzehn neue Fans, vierundzwanzig Kommentare, plus die Kasse. Macht zweitausendfünfhundertneunundneunzig Euro!",
+  "cap": [
+   "19 NEUE *FANS,",
+   "24 *KOMMENTARE,",
+   "PLUS DIE KASSE.",
+   "MACHT",
+   "*2599 EURO!"
+  ]
+ },
+ {
+  "id": "buy",
+  "say": "Die Kabine kostet tausendfünfhundert Euro. Bleiben noch tausendneunundneunzig.",
+  "cap": [
+   "DIE KABINE KOSTET",
+   "!1500 EURO.",
+   "BLEIBEN NOCH",
+   "*1099."
+  ]
+ },
+ {
+  "id": "build",
+  "say": "Luca und das Team bauen auf. Natürlich fehlt eine Schraube.",
+  "cap": [
+   "*LUCA UND DAS TEAM",
+   "BAUEN AUF.",
+   "NATÜRLICH FEHLT",
+   "!EINE SCHRAUBE."
+  ]
+ },
+ {
+  "id": "inside",
+  "say": "Drinnen: Spinde für alle, eine Dusche und ein eigener Platz für Frodo.",
+  "cap": [
+   "DRINNEN:",
+   "*SPINDE FÜR ALLE,",
+   "EINE *DUSCHE",
+   "UND EIN EIGENER",
+   "PLATZ FÜR *FRODO."
+  ]
+ },
+ {
+  "id": "nico",
+  "say": "Und wir haben einen Neuzugang: Nico wird unser rechter Flügel!",
+  "cap": [
+   "UND WIR HABEN EINEN",
+   "*NEUZUGANG:",
+   "*NICO WIRD UNSER",
+   "*RECHTER FLÜGEL!"
+  ]
+ },
+ {
+  "id": "denny6",
+  "say": "Und Denny hat eine Bitte: Er will kürzere Haare.",
+  "cap": [
+   "UND *DENNY",
+   "HAT EINE BITTE:",
+   "ER WILL",
+   "*KÜRZERE HAARE."
+  ]
+ },
+ {
+  "id": "vote6",
+  "say": "Was meint ihr: kürzere oder längere Haare für Denny? Stimmt in den Kommentaren ab!",
+  "cap": [
+   "WAS MEINT IHR:",
+   "*KÜRZERE ODER",
+   "*LÄNGERE HAARE?",
+   "STIMMT IN DEN",
+   "*KOMMENTAREN AB!"
+  ]
+ },
+ {
+  "id": "rule3",
+  "say": "Jeder neue Fan bringt einen Euro, jeder Kommentar zwei.",
+  "cap": [
+   "JEDER NEUE *FAN: *1 €,",
+   "JEDER *KOMMENTAR: *2 €."
+  ]
+ },
+ {
+  "id": "teaser",
+  "say": "Und morgen? Morgen ist ein sehr wichtiger Tag für den FC Schlammloch. Aber dazu morgen mehr.",
+  "cap": [
+   "UND *MORGEN?",
+   "MORGEN IST EIN",
+   "!SEHR WICHTIGER TAG",
+   "FÜR DEN *FC SCHLAMMLOCH.",
+   "ABER DAZU",
+   "*MORGEN MEHR ..."
+  ]
+ }
 ]

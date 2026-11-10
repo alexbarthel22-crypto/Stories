@@ -216,6 +216,19 @@ const SCENES = {
       popG(t, c[0], 520, 400, badge(520, 400, '+1 € PRO FOLLOWER', {kind: 'pitch', fs: 50})) +
       popG(t, c[1], 520, 530, badge(520, 530, '+2 € PRO KOMMENTAR', {kind: 'orange', fs: 50, rot: -2}));
   },
+  teaser(t, d, m) {
+    const c = SEG.caps.map(x => x.t0 - SEG.start), pulse = 0.5 + 0.5 * Math.sin(t * 5);
+    const cal = `<g transform="translate(540 760) rotate(${Math.sin(t * 2) * 3})">
+      <rect x="-190" y="-200" width="380" height="400" rx="26" fill="#FFF8EC" stroke="#3A2316" stroke-width="10"/>
+      <rect x="-190" y="-200" width="380" height="110" rx="26" fill="#E5483A" stroke="#3A2316" stroke-width="10"/>
+      ${label(0, -126, 'MORGEN', 64, '#fff')}<text x="0" y="110" text-anchor="middle" ${FONT} font-size="210" fill="#3A2316">?</text>
+      <circle cx="-120" cy="-215" r="16" fill="#9AA0A8" stroke="#3A2316" stroke-width="6"/><circle cx="120" cy="-215" r="16" fill="#9AA0A8" stroke="#3A2316" stroke-width="6"/></g>`;
+    return cam(1.0, 540, 960, field(t, 1080, {goal: false}) + place(coach({mouth: m, blink: blinkAt(t)}), 540, 1720, 0.9)) +
+      `<rect width="1080" height="1920" fill="#000" opacity="${0.3 + 0.25 * clamp(t / d, 0, 1)}"/>` +
+      `<circle cx="540" cy="760" r="${330 + 30 * pulse}" fill="#FFD31A" opacity="${0.12 + 0.1 * pulse}"/>` + popG(t, c[1], 540, 760, cal) +
+      popG(t, c[2], 540, 1060, badge(540, 1060, 'SEHR WICHTIGER TAG!', {kind: 'red', fs: 50, rot: -2})) +
+      popG(t, c[4], 540, 400, badge(540, 400, 'MEHR MORGEN …', {kind: 'orange', fs: 56}));
+  },
 };
 
 let SEG = null;

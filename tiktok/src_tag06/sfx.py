@@ -353,6 +353,7 @@ def build_sfx(segs, N):
         elif sid == 'nico': L(0.0, pop()); L(0.2, ding()); L(c[2], whistle()); L(c[2] + 0.3, pop())
         elif sid == 'denny6': L(0.2, ding())
         elif sid == 'vote6': L(0.0, pop()); L(c[1], whoosh()); L(c[2], whoosh()); L(c[3], ding())
+        elif sid == 'teaser': L(0.0, drum(en - st) * 0.6); L(c[1], thud()); L(c[2], pop()); L(c[4], ding())
         elif sid == 'calc':
             L(0.0, pop())
             for x in (c[0], c[1], c[2]): L(x, whoosh())

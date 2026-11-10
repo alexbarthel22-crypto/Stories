@@ -142,10 +142,14 @@ Vereinsfarben: Blau `#2F7FD8`, Gelb `#FFD31A`. Trikots blau mit gelber Nummer, T
 ## Stand nach Tag 5
 - Fans: 494 · Vereinskasse: 2532 € · erstes Spiel gewonnen (3:2 gegen SC Heuballen)
 
-## Folge 6 (Tag 6) – Entwurf mit Vorschau-Stimme
-- Datei: `tiktok/tag06_fc_schlammloch_entwurf.mp4` (0:50, espeak), Code `src_tag06/`
+## Folge 6 (Tag 6)
+- Datei: `tiktok/tag06_fc_schlammloch.mp4` (0:51, Fenrir); Entwurf `tag06_fc_schlammloch_entwurf.mp4`, Code `src_tag06/`
 - Fans: 494 → **513 (+19)**; Geld: 19 € + 24 Kommentare × 2 € = 67 € + 2532 € = **2599 €**
 - Abstimmung gewonnen: **Spielerkabine** (Bauanhänger, blau-weiß mit Vereinswappen) für **1500 €** (Preis angenommen) → Kasse **1099 €**
 - Aufbau-Gag: es fehlt eine Schraube; drinnen Spinde mit Namen, Dusche, eigenes Kissen für Frodo
 - Neuzugang: **Nico**, rechter Flügel, Nr. 17
 - Denny wünscht sich kürzere Haare → Abstimmung in den Kommentaren: **kürzer oder länger?**
+- Cliffhanger: „Morgen ist ein sehr wichtiger Tag für den FC Schlammloch. Aber dazu morgen mehr.“ (Kalender „MORGEN ?“)
+
+## Stand nach Tag 6
+- Fans: 513 · Vereinskasse: 1099 € · Spielerkabine steht · offen: Dennys Frisur, „wichtiger Tag“ morgen
