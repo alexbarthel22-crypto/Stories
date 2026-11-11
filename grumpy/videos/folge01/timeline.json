@@ -1,70 +1,75 @@
 {
- "duration": 23.418,
+ "duration": 23.72,
  "lines": [
   {
    "text": "WAS GLOTZT DU SO?!",
    "start": 0.25,
-   "end": 1.142
+   "end": 1.219
   },
   {
    "text": "Bro, gestern war ich auf einem Rave …",
-   "start": 1.692,
-   "end": 3.454
+   "start": 1.769,
+   "end": 3.606
   },
   {
    "text": "… und bin heute HIER aufgewacht.",
-   "start": 3.554,
-   "end": 5.541
+   "start": 3.706,
+   "end": 5.656
   },
   {
    "text": "Wer will mich hier hopps nehmen?!",
-   "start": 5.891,
-   "end": 7.334
+   "start": 6.006,
+   "end": 7.44
   },
   {
    "text": "Was soll der Mist?!",
-   "start": 7.784,
-   "end": 8.886
+   "start": 7.89,
+   "end": 9.047
   },
   {
    "text": "Hier ist ja GAR NICHTS!",
-   "start": 9.086,
-   "end": 10.167
+   "start": 9.247,
+   "end": 10.561
   },
   {
    "text": "Und das Beste:",
-   "start": 10.717,
-   "end": 11.648
+   "start": 11.111,
+   "end": 12.004
   },
   {
    "text": "Ausnahmslos ALLES, was ihr in die Kommentare schreibt …",
-   "start": 11.948,
-   "end": 14.767
+   "start": 12.304,
+   "end": 14.884
   },
   {
    "text": "… wird mit mir und der Insel gemacht.",
-   "start": 14.867,
-   "end": 16.34
+   "start": 14.984,
+   "end": 16.586
   },
   {
    "text": "Das kann ja nur sch🥚sse werden.",
-   "start": 16.79,
-   "end": 18.351
+   "start": 17.036,
+   "end": 18.475
   },
   {
    "text": "Wow.",
-   "start": 18.751,
-   "end": 19.007
+   "start": 18.875,
+   "end": 19.115
   },
   {
    "text": "Ja, dann kommentiert mal.",
-   "start": 19.607,
-   "end": 21.281
+   "start": 19.715,
+   "end": 21.061
   },
   {
-   "text": "Nur … egal, was ihr macht.",
-   "start": 21.581,
-   "end": 23.118
+   "text": "Mir egal, was ihr macht.",
+   "start": 21.361,
+   "end": 22.512
+  },
+  {
+   "text": "Juckt mich nicht.",
+   "start": 22.712,
+   "end": 23.42
   }
  ]
 }

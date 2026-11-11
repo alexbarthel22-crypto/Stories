@@ -162,26 +162,38 @@ def palm(x, y, t):
     <circle cx="{x+64}" cy="{y-500}" r="15" fill="#7A4A26"/><circle cx="{x+90}" cy="{y-496}" r="15" fill="#7A4A26"/></g>'''
 
 
-def caption(text, t, t0):
-    """Untertitel UNTER Clara, innerhalb der TikTok-Sicherheitszone
-    (frei von Profil-/Like-Leiste rechts und Beschreibung unten)."""
-    words, lines, cur = text.split(), [], ""
-    for wd in words:
-        if len(cur) + len(wd) + 1 > 22 and cur:
-            lines.append(cur); cur = wd
+def caption(text, t, t0, t1):
+    """Untertitel unter Clara (TikTok-Sicherheitszone), ohne Hintergrund:
+    dicke Kontur + harter Schatten; das gerade gesprochene Wort leuchtet gelb und größer."""
+    words = text.split()
+    # Wort-Zeiten grob nach Länge verteilen (Satzzeichen/„…“ zählen kaum)
+    weights = [max(len(w.strip("….,!?:")), 1) + 1.5 for w in words]
+    tot, acc, active = sum(weights), 0.0, len(words) - 1
+    for i, wgt in enumerate(weights):
+        acc += wgt
+        if t < t0 + (t1 - t0) * acc / tot:
+            active = i
+            break
+    lines, cur = [], []
+    for i, wd in enumerate(words):
+        if cur and len(" ".join(words[j] for j in cur)) + len(wd) + 1 > 20:
+            lines.append(cur); cur = [i]
         else:
-            cur = (cur + " " + wd).strip()
+            cur.append(i)
     lines.append(cur)
-    pop = 1 + 0.15 * max(0, 1 - (t - t0) / 0.18)
-    fs = 60
-    y0 = 1262
-    out = [f'<g transform="translate(470 {y0}) scale({pop:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle">']
-    for k, ln in enumerate(lines):
-        col = "#FFE600" if any(w.isupper() and len(w) > 2 for w in ln.split()) else "#FFFFFF"
-        wpx = len(ln) * fs * 0.6 + 40
-        out.append(f'<rect x="{-wpx/2:.0f}" y="{k*74-fs+4}" width="{wpx:.0f}" height="{fs+20}" rx="18" fill="#000" opacity="0.38"/>')
-        out.append(f'<text y="{k * 74}" font-size="{fs}" fill="{col}" stroke="#111" stroke-width="11" '
-                   f'stroke-linejoin="round" paint-order="stroke">{ln}</text>')
+    fs, lh = 68, 86
+    pop = 1 + 0.12 * max(0, 1 - (t - t0) / 0.15)
+    out = ['<defs><filter id="ts" x="-10%" y="-30%" width="120%" height="170%"><feDropShadow dx="0" dy="7" stdDeviation="0" flood-color="#000" flood-opacity="1"/></filter></defs>',
+           f'<g transform="translate(470 1262) scale({pop:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle" filter="url(#ts)">']
+    for k, idx in enumerate(lines):
+        spans = ""
+        for n, i in enumerate(idx):
+            sep = " " if n else ""
+            if i == active:
+                spans += f'{sep}<tspan fill="#FFE600" font-size="{fs+12}">{words[i]}</tspan>'
+            else:
+                spans += f'{sep}<tspan fill="#FFFFFF">{words[i]}</tspan>'
+        out.append(f'<text y="{k * lh}" font-size="{fs}" stroke="#000" stroke-width="15" stroke-linejoin="round" paint-order="stroke">{spans}</text>')
     out.append("</g>")
     return "".join(out)
 
@@ -349,7 +361,7 @@ def scene(t):
     if t <= L(0)["end"] + 0.35:
         hud.append(hook_text(t))
     elif ln and t < TL["duration"] and ln is not L(0):
-        hud.append(caption(ln["text"], t, ln["start"]))
+        hud.append(caption(ln["text"], t, ln["start"], ln["end"]))
     if t > TL["duration"] + 0.6:
         k = ease((t - TL["duration"] - 0.6) / 0.4)
         pulse = 1 + 0.04 * math.sin(t * 7)
