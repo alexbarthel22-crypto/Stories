@@ -114,8 +114,8 @@ def cy_for(s, dy=0):
     return FEET - (FEET_ON_SCREEN - 960) / s + dy
 
 
-HOOK_S = 1.6          # Anfang: Clara groß (Füße tief, Text darüber)
-HOOK_CY = FEET - (1560 - 960) / HOOK_S
+HOOK_S = 2.1          # Anfang: Clara füllt das Bild (Füße unten, Text oben, Augen frei)
+HOOK_CY = FEET - (1700 - 960) / HOOK_S
 
 KEYS = [
     (0.00, HOOK_S, 560, HOOK_CY),
@@ -265,7 +265,7 @@ def hook_text(t):
     speaking = l0["start"] <= t <= l0["end"] + 0.1
     if speaking:
         k = (t - l0["start"]) / (l0["end"] - l0["start"])
-        sc = 1.0 + 0.27 * min(k * 4, 1) + 0.04 * math.sin(t * 40)
+        sc = 1.0 + 0.05 * min(k * 4, 1) + 0.015 * math.sin(t * 40)
         glow, col = 1.0, "#FFE600"
         jx, jy = 9 * math.sin(t * 57), 7 * math.cos(t * 43)
     else:
@@ -274,11 +274,11 @@ def hook_text(t):
     lines = [("WAS GLOTZT", 0), ("DU SO?!", 1)]
     txt = ""
     for ln, k in lines:
-        y = k * 122
-        txt += (f'<text y="{y}" font-size="112" fill="none" stroke="#FF2A00" stroke-width="40" stroke-linejoin="round" opacity="{0.55*glow:.2f}" filter="url(#glow)">{ln}</text>'
-                f'<text y="{y}" font-size="112" fill="{col}" stroke="#111" stroke-width="16" stroke-linejoin="round" paint-order="stroke">{ln}</text>')
+        y = k * 138
+        txt += (f'<text y="{y}" font-size="120" fill="none" stroke="#FF2A00" stroke-width="40" stroke-linejoin="round" opacity="{0.55*glow:.2f}" filter="url(#glow)">{ln}</text>'
+                f'<text y="{y}" font-size="120" fill="{col}" stroke="#111" stroke-width="16" stroke-linejoin="round" paint-order="stroke">{ln}</text>')
     return (f'<defs><filter id="glow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="18"/></filter></defs>'
-            f'<g opacity="{fade:.2f}" transform="translate({540+jx:.1f} {440+jy:.1f}) scale({sc:.3f})" font-family="DejaVu Sans, sans-serif" font-weight="900" text-anchor="middle">{txt}</g>')
+            f'<g opacity="{fade:.2f}" transform="translate({540+jx:.1f} {468+jy:.1f}) scale({sc:.3f})" font-family="DejaVu Sans, sans-serif" font-weight="900" text-anchor="middle">{txt}</g>')
 
 
 def word_start(line, word):
