@@ -1,3 +1,4 @@
 _line*.wav
 _cache_*.json
 _seg_*.wav
+__pycache__/
