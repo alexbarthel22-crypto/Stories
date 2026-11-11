@@ -3,7 +3,7 @@
 **Prämisse:** Sie ist nach einem Rave auf einer einsamen Insel gestrandet – noch im Rave-Outfit
 (Neon-Crop-Top, Netzshirt, Shorts, Netzstrumpfhose, nur noch ein Plateau-Sneaker, Knicklichter, kaputte Sonnenbrille; ungeschminkt, lange nasse Haare, schlank).
 Sie hat auf nichts Lust.
-ihr einziger Gefährte ist eine genauso grummelige Krabbe.
+Ihr einziger Gefährte ist eine genauso grummelige Krabbe.
 
 **Regel:** Die Kommentare entscheiden. Was in den Kommentaren steht, macht sie auf der Insel –
 widerwillig, genervt, aber sie macht es.
