@@ -28,7 +28,7 @@ LINES = [
     ("", "Mir egal, was ihr macht.", "Mir egal, was ihr macht."),
     ("[dismissive]", "Juckt mich nicht.", "Juckt mich nicht."),
     ("[sarcastic]", "Soll ich hier eigentlich einfach ins Meer kacken, oder wie läuft das jetzt?",
-     "Soll ich hier eigentlich einfach ins Meer kacken oder wie läuft das jetzt?"),
+     "Soll ich hier eigentlich einfach ins Meer 💩 oder wie läuft das jetzt?"),
 ]
 SETTINGS = {
     "A": {"model_id": "eleven_v3", "language_code": "de", "voice_settings": {"stability": 0.0}, "tags": True},
