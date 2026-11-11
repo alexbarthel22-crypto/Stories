@@ -59,6 +59,12 @@ def rage(t):
 
 def character(t, amp, blink, head_rot, bounce, angry=False):
     a = CHAR_A.replace(HEAD_T, f'<g transform="rotate({head_rot:.2f} 540 640) translate(222.6 225.5) scale(0.62)">')
+    # Haare hinten + Strähnen vorne drehen IMMER mit dem Kopf (eine Einheit)
+    rot = f'<g transform="rotate({head_rot:.2f} 540 640)">'
+    a = a.replace("  <!-- lange, wellige Haare hinten", rot + "  <!-- lange, wellige Haare hinten", 1)
+    a = a.replace("  <!-- Beine mit Netzstrumpfhose", "</g>  <!-- Beine mit Netzstrumpfhose", 1)
+    a = a.replace("  <!-- Strähnen vorne", rot + "  <!-- Strähnen vorne", 1)
+    a = a.replace("  <!-- Kopf -->", "</g>  <!-- Kopf -->", 1)
     pre = post = ""
     if angry:
         pre, post = rage(t)
