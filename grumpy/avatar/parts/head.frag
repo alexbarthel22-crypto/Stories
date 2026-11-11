@@ -10,14 +10,6 @@
     <path d="M528 238 h66 l-6 34 q-28 10 -54 0 z" fill="none" stroke-width="3"/>
     <path d="M452 250 l14 14" stroke="#FFFFFF" stroke-width="3"/>
   </g>
-  <!-- abstehende Strähnen -->
-  <g fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round">
-    
-    
-    <path d="M300 360 C265 340 270 310 240 300"/>
-    <path d="M728 380 C760 365 765 335 795 330"/>
-    
-  </g>
 
   <!-- Palmblatt + Muschel im Haar -->
   <g stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round">
@@ -25,11 +17,6 @@
     <path d="M650 298 L780 288" fill="none" stroke-width="3"/>
     <g transform="translate(160 -110)"><path d="M360 320 C350 300 370 285 385 295 C400 285 418 300 405 320 Z" fill="#F7B5C8"/>
     <path d="M372 316 l4 -16 M384 318 l0 -18 M396 316 l-4 -16" fill="none" stroke-width="3"/></g>
-  </g>
-  <g fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round">
-    <path d="M330 300 C300 270 310 245 285 230"/>
-    <path d="M700 300 C730 270 745 260 770 255"/>
-    <path d="M290 560 C255 570 250 600 225 610"/>
   </g>
   <!-- Ohren + Ohrringe -->
   <g stroke="#2B2B2B" stroke-width="6">
@@ -85,9 +72,17 @@
   </g>
   <path d="M512 432 L512 448" fill="none" stroke="#D99A78" stroke-width="2.5" stroke-linecap="round"/>
 
-  <!-- Pony -->
-  <path d="M338 440 C326 320 418 268 512 268 C612 268 702 320 688 440 C668 396 640 362 600 348 C604 372 598 386 586 396 C562 356 526 340 486 344 C474 366 452 380 428 386 C424 366 412 354 396 352 C370 380 350 405 338 440 Z"
-        fill="#F2D27A" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Pony: seitlich gescheitelt, weiche Strähnen (Curtain Bangs) -->
+  <path d="M474 276 C420 276 352 318 340 420 C338 440 338 452 342 466 C352 420 372 380 404 352 C428 330 452 306 474 276 Z"
+        fill="#F2D27A" stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M474 276 C560 262 664 300 684 410 C688 432 688 452 684 470 C668 418 640 376 596 350 C556 328 512 320 474 276 Z"
+        fill="#F2D27A" stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M466 290 C430 310 392 350 368 410" stroke="#D9AE4E" stroke-width="4"/>
+    <path d="M500 296 C560 310 620 340 660 410" stroke="#D9AE4E" stroke-width="4"/>
+    <path d="M520 290 C580 296 630 320 662 370" stroke="#FFF3C4" stroke-width="7"/>
+    <path d="M448 292 C420 306 398 326 382 352" stroke="#FFF3C4" stroke-width="6"/>
+  </g>
   <path d="M430 300 C460 285 500 282 530 290" fill="none" stroke="#FFF0B8" stroke-width="6" stroke-linecap="round"/>
 
   <!-- leichter Sonnenbrand auf der Nase -->

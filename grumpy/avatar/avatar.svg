@@ -85,11 +85,15 @@
   <path d="M10 1800 C80 1770 200 1770 270 1800 L270 1860 L10 1860 Z" fill="#F4D58D"/>
   <path d="M10 1800 C80 1770 200 1770 270 1800" fill="none" stroke="#2B2B2B" stroke-width="5" stroke-linecap="round"/>
 
-  <!-- lange Haare hinten (nass, zerzaust) -->
-  <path d="M540 330 C640 330 700 400 690 500 C700 620 690 760 720 900 C730 950 700 990 670 1000 C680 960 660 950 650 975 C640 1000 610 1005 600 985 L480 985 C470 1005 440 1000 430 975 C420 950 400 960 410 1000 C380 990 350 950 360 900 C390 760 380 620 390 500 C380 400 440 330 540 330 Z"
+  <!-- lange, wellige Haare hinten (blond, mit Glanz) -->
+  <path d="M540 318 C644 314 714 388 702 500 C700 560 736 610 720 680 C706 750 744 800 726 880 C712 940 750 985 720 1018 C702 1040 672 1032 664 1008 C650 1034 618 1032 606 1004 L474 1004 C462 1032 430 1034 416 1008 C408 1032 378 1040 360 1018 C330 985 368 940 354 880 C336 800 374 750 360 680 C344 610 380 560 378 500 C366 388 436 314 540 318 Z"
         fill="#E8C468" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
-  <g fill="none" stroke="#C49A3C" stroke-width="5" stroke-linecap="round">
-    <path d="M410 600 C405 720 400 820 385 920"/><path d="M670 600 C675 720 680 820 695 920"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M396 520 C386 600 404 660 392 730 C382 800 410 860 396 940" stroke="#C99A3C" stroke-width="5"/>
+    <path d="M684 520 C694 600 676 660 688 730 C698 800 670 860 684 940" stroke="#C99A3C" stroke-width="5"/>
+    <path d="M410 470 C400 560 418 620 408 690" stroke="#FFF3C4" stroke-width="7"/>
+    <path d="M670 470 C680 560 662 620 672 690" stroke="#FFF3C4" stroke-width="7"/>
+    <path d="M380 960 C392 990 408 1000 420 990 M700 960 C688 990 672 1000 660 990" stroke="#C99A3C" stroke-width="4"/>
   </g>
 
   <!-- Beine mit Netzstrumpfhose -->
@@ -118,7 +122,7 @@
   <path d="M486 945 L594 945 L597 962 L483 962 Z" fill="#1E2A4A" stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round"/>
 
   <!-- Taille (schmal) -->
-  <path d="M476 846 L604 846 C588 875 584 905 596 948 L484 948 C496 905 492 875 476 846 Z" fill="#F2C29B" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M478 852 L602 852 C588 878 584 908 596 948 L484 948 C496 908 492 878 478 852 Z" fill="#F2C29B" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
   <circle cx="540" cy="905" r="4" fill="#2B2B2B"/>
 
   <!-- Hals + Schultern (Netzshirt) -->
@@ -127,13 +131,13 @@
   <path d="M458 738 C472 716 502 708 540 707 C578 708 608 716 622 738 L614 790 L466 790 Z" fill="url(#net)"/>
 
   <!-- schwarzes Crop-Top (Oberweite betont, kurz) -->
-  <path d="M470 746 Q540 764 610 746 C626 778 626 812 606 848 L474 848 C454 812 454 778 470 746 Z" fill="#1C1C22" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M466 744 Q540 760 614 744 C640 776 644 822 612 854 L468 854 C436 822 440 776 466 744 Z" fill="#1C1C22" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
   <path d="M478 748 L482 712 M602 748 L598 712" stroke="#1C1C22" stroke-width="9"/>
-  <path d="M488 802 Q512 820 537 808 M543 808 Q568 820 592 802" fill="none" stroke="#4A4A55" stroke-width="4" stroke-linecap="round"/>
-  <path d="M478 838 Q540 846 602 838" fill="none" stroke="#3A3A44" stroke-width="3"/>
-  <circle cx="540" cy="772" r="11" fill="#FFE600" stroke="#2B2B2B" stroke-width="3"/>
+  <path d="M480 800 Q508 834 538 814 M542 814 Q572 834 600 800" fill="none" stroke="#4A4A55" stroke-width="4" stroke-linecap="round"/>
+  <path d="M472 844 Q540 852 608 844" fill="none" stroke="#3A3A44" stroke-width="3"/>
+  <circle cx="540" cy="770" r="10" fill="#FFE600" stroke="#2B2B2B" stroke-width="3"/>
   <circle cx="536" cy="769" r="1.8" fill="#2B2B2B"/><circle cx="544" cy="769" r="1.8" fill="#2B2B2B"/><path d="M535 775 q5 5 10 0" fill="none" stroke="#2B2B2B" stroke-width="2"/>
-  <path d="M592 848 l4 -16 l-8 -6 l9 -12" fill="none" stroke="#6A6A78" stroke-width="3.5"/>
+  <path d="M596 854 l4 -16 l-8 -6 l9 -12" fill="none" stroke="#6A6A78" stroke-width="3.5"/>
 
   <!-- Knicklicht-Kette -->
   <path d="M518 708 Q540 740 562 708" fill="none" stroke="#2B2B2B" stroke-width="12" stroke-linecap="round"/>
@@ -152,6 +156,16 @@
     <path d="M640 862 l-18 13" stroke="#2B2B2B" stroke-width="12"/><path d="M640 862 l-18 13" stroke="#FFD23F" stroke-width="6"/>
   </g>
 
+  <!-- Strähnen vorne über den Schultern -->
+  <g stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round">
+    <path d="M436 520 C426 600 452 680 436 760 C424 830 452 900 434 955 C474 935 490 885 478 828 C466 768 494 700 482 620 C478 580 476 545 470 520 Z" fill="#EDCB72"/>
+    <path d="M644 520 C654 600 628 680 644 760 C656 830 628 900 646 955 C606 935 590 885 602 828 C614 768 586 700 598 620 C602 580 604 545 610 520 Z" fill="#EDCB72"/>
+  </g>
+  <g fill="none" stroke-linecap="round">
+    <path d="M454 660 C444 730 466 790 450 860" stroke="#FFF3C4" stroke-width="5"/>
+    <path d="M626 660 C636 730 614 790 630 860" stroke="#FFF3C4" stroke-width="5"/>
+  </g>
+
   <!-- Kopf -->
   <g transform="translate(222.6 225.5) scale(0.62)">
 <!-- kaputte Rave-Sonnenbrille im Dutt (ein Glas fehlt) -->
@@ -164,14 +178,6 @@
     <path d="M528 238 h66 l-6 34 q-28 10 -54 0 z" fill="none" stroke-width="3"/>
     <path d="M452 250 l14 14" stroke="#FFFFFF" stroke-width="3"/>
   </g>
-  <!-- abstehende Strähnen -->
-  <g fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round">
-    
-    
-    <path d="M300 360 C265 340 270 310 240 300"/>
-    <path d="M728 380 C760 365 765 335 795 330"/>
-    
-  </g>
 
   <!-- Palmblatt + Muschel im Haar -->
   <g stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round">
@@ -179,11 +185,6 @@
     <path d="M650 298 L780 288" fill="none" stroke-width="3"/>
     <g transform="translate(160 -110)"><path d="M360 320 C350 300 370 285 385 295 C400 285 418 300 405 320 Z" fill="#F7B5C8"/>
     <path d="M372 316 l4 -16 M384 318 l0 -18 M396 316 l-4 -16" fill="none" stroke-width="3"/></g>
-  </g>
-  <g fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round">
-    <path d="M330 300 C300 270 310 245 285 230"/>
-    <path d="M700 300 C730 270 745 260 770 255"/>
-    <path d="M290 560 C255 570 250 600 225 610"/>
   </g>
   <!-- Ohren + Ohrringe -->
   <g stroke="#2B2B2B" stroke-width="6">
@@ -239,9 +240,17 @@
   </g>
   <path d="M512 432 L512 448" fill="none" stroke="#D99A78" stroke-width="2.5" stroke-linecap="round"/>
 
-  <!-- Pony -->
-  <path d="M338 440 C326 320 418 268 512 268 C612 268 702 320 688 440 C668 396 640 362 600 348 C604 372 598 386 586 396 C562 356 526 340 486 344 C474 366 452 380 428 386 C424 366 412 354 396 352 C370 380 350 405 338 440 Z"
-        fill="#F2D27A" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Pony: seitlich gescheitelt, weiche Strähnen (Curtain Bangs) -->
+  <path d="M474 276 C420 276 352 318 340 420 C338 440 338 452 342 466 C352 420 372 380 404 352 C428 330 452 306 474 276 Z"
+        fill="#F2D27A" stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M474 276 C560 262 664 300 684 410 C688 432 688 452 684 470 C668 418 640 376 596 350 C556 328 512 320 474 276 Z"
+        fill="#F2D27A" stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M466 290 C430 310 392 350 368 410" stroke="#D9AE4E" stroke-width="4"/>
+    <path d="M500 296 C560 310 620 340 660 410" stroke="#D9AE4E" stroke-width="4"/>
+    <path d="M520 290 C580 296 630 320 662 370" stroke="#FFF3C4" stroke-width="7"/>
+    <path d="M448 292 C420 306 398 326 382 352" stroke="#FFF3C4" stroke-width="6"/>
+  </g>
   <path d="M430 300 C460 285 500 282 530 290" fill="none" stroke="#FFF0B8" stroke-width="6" stroke-linecap="round"/>
 
   <!-- leichter Sonnenbrand auf der Nase -->

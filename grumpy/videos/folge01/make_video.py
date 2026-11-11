@@ -17,7 +17,7 @@ O = "#2B2B2B"
 
 # ---------------------------------------------------------------- Avatar-Teile aus avatar.svg
 defs = "".join(re.findall(r"<defs>.*?</defs>", AVATAR, re.S))
-char = AVATAR[AVATAR.index("  <!-- lange Haare hinten"):AVATAR.index("  <!-- Flaschenpost")]
+char = AVATAR[AVATAR.index("  <!-- lange, wellige Haare hinten"):AVATAR.index("  <!-- Flaschenpost")]
 m0 = char.index("  <!-- Mund:")
 m1 = char.index('  <path d="M640 330')
 CHAR_A, CHAR_B = char[:m0], char[m1:]
@@ -93,19 +93,22 @@ def cy_for(s, dy=0):
     return FEET - (FEET_ON_SCREEN - 960) / s + dy
 
 
+HOOK_S = 1.6          # Anfang: Clara groß (Füße tief, Text darüber)
+HOOK_CY = FEET - (1560 - 960) / HOOK_S
+
 KEYS = [
-    (0.00, 1.25, 560, FEET - (1420 - 960) / 1.25),
-    (L(0)["end"] + 0.1, 1.25, 560, FEET - (1420 - 960) / 1.25),
-    (L(2)["end"], 1.00, 540, cy_for(1.0)),
-    (L(3)["end"], 1.20, 555, cy_for(1.2)),
-    (L(4)["start"] + 0.2, 1.38, 330, cy_for(1.38)),
-    (L(5)["end"] + 0.2, 1.38, 790, cy_for(1.38)),
-    (L(6)["start"] + 0.3, 1.00, 540, cy_for(1.0)),
-    (L(8)["end"], 1.08, 545, cy_for(1.08)),
-    (L(9)["start"] + 0.4, 1.40, 560, cy_for(1.4)),
-    (L(10)["end"] + 0.2, 1.42, 560, cy_for(1.42)),
-    (L(11)["start"] + 0.3, 1.00, 540, cy_for(1.0)),
-    (DURATION + 1, 1.00, 540, cy_for(1.0)),
+    (0.00, HOOK_S, 560, HOOK_CY),
+    (L(0)["end"] + 0.1, HOOK_S, 560, HOOK_CY),
+    (L(2)["end"], 0.90, 540, cy_for(0.90)),
+    (L(3)["end"], 1.05, 555, cy_for(1.05)),
+    (L(4)["start"] + 0.2, 1.20, 350, cy_for(1.20)),
+    (L(5)["end"] + 0.2, 1.20, 770, cy_for(1.20)),
+    (L(6)["start"] + 0.3, 0.90, 540, cy_for(0.90)),
+    (L(8)["end"], 0.96, 545, cy_for(0.96)),
+    (L(9)["start"] + 0.4, 1.22, 560, cy_for(1.22)),
+    (L(10)["end"] + 0.2, 1.24, 560, cy_for(1.24)),
+    (L(11)["start"] + 0.3, 0.90, 540, cy_for(0.90)),
+    (DURATION + 1, 0.90, 540, cy_for(0.90)),
 ]
 
 
