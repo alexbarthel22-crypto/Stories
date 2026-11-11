@@ -74,6 +74,16 @@ def character(t, amp, blink, head_rot, bounce, angry=False):
                      ('cx="602" cy="488" r="23"', 'cx="584" cy="487" r="23"'), ('cx="605" cy="490" r="11"', 'cx="584" cy="488" r="11"'),
                      ('cx="596" cy="481" r="6"', 'cx="576" cy="480" r="6"'), ('cx="611" cy="497" r="2.5"', 'cx="591" cy="495" r="2.5"')]:
             a = a.replace(o, n)   # Blickkontakt mit dem Zuschauer
+        # Augen weit offen (kein halb geschlossenes Lid) -> klarer Blick in die Kamera
+        for o, n in [('M386 440 L494 440 L494 466 Q440 456 386 470 Z', 'M386 440 L494 440 L494 444 Q440 440 386 446 Z'),
+                     ('M530 440 L638 440 L638 470 Q584 456 530 466 Z', 'M530 440 L638 440 L638 446 Q584 440 530 444 Z'),
+                     ('M393 470 Q440 455 488 466', 'M392 478 Q438 436 488 470'),
+                     ('M536 466 Q584 455 631 470', 'M536 470 Q586 436 632 478'),
+                     ('cx="440" cy="487" r="23"', 'cx="440" cy="482" r="24"'), ('cx="440" cy="488" r="11"', 'cx="440" cy="483" r="12"'),
+                     ('cx="584" cy="487" r="23"', 'cx="584" cy="482" r="24"'), ('cx="584" cy="488" r="11"', 'cx="584" cy="483" r="12"'),
+                     ('M516 510 Q514 538 504 552 Q514 560 526 554', 'M512 512 Q512 540 503 550 Q512 558 521 550'),
+                     ('cx="432" cy="480" r="6"', 'cx="433" cy="475" r="6"'), ('cx="576" cy="480" r="6"', 'cx="577" cy="475" r="6"')]:
+            a = a.replace(o, n)
         a = a.replace('<!-- Gesicht', pre + '<!-- Gesicht', 1)
     return f'<g transform="translate(0 {-bounce:.1f})">{a}{mouth(amp)}{"" if angry or not blink else BLINK}{post}{CHAR_B}</g>'
 
@@ -400,7 +410,7 @@ def scene(t, profile=None):
     amp = ENV[i] if t < TL["duration"] else 0.0
     blink = (t % 3.3) < 0.12 or (6.1 < t < 6.22)
     angry = t <= L(0)["end"] + 0.2
-    head_rot = 5 * math.sin(t * 22) if angry else 2.0 * math.sin(t * 1.7) + 3 * amp * math.sin(t * 9)
+    head_rot = 1.5 * math.sin(t * 22) if angry else 2.0 * math.sin(t * 1.7) + 3 * amp * math.sin(t * 9)
     bounce = 10 * amp + 3 * math.sin(t * 2.1)
     s, cx, cy = camera(t)
     if profile:

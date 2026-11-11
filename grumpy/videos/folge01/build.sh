@@ -3,7 +3,7 @@
 set -e
 cd "$(dirname "$0")"
 # Stimme: Pfad zu einem Piper-Modell (lokal, gratis) ODER "laura-A" / "laura-D" (ElevenLabs)
-VOICE=$1; WORK=$2; OUT=${3:-folge01.mp4}
+VOICE=${1:-laura-A}; WORK=$2; OUT=${3:-folge01_laura_A.mp4}   # Standard: Laura A
 case "$VOICE" in
   laura-*) python3 audio_elevenlabs.py "${VOICE#laura-}" ;;
   *) python3 audio.py "$VOICE" ;;
