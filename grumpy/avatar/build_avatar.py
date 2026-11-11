@@ -24,8 +24,8 @@ def drop(x, y):
 
 
 # Beine (kürzer, Oberschenkel kräftiger) – je ein geschlossener Umriss
-LEG_L = "M452 1020 C452 1110 470 1190 486 1250 C494 1320 498 1380 500 1430 L524 1430 C524 1380 524 1320 528 1250 C534 1190 540 1130 540 1065 Z"
-LEG_R = "M628 1020 C628 1110 610 1190 594 1250 C586 1320 582 1380 580 1430 L556 1430 C556 1380 556 1320 552 1250 C546 1190 540 1130 540 1065 Z"
+LEG_L = "M462 1020 C462 1110 476 1190 490 1250 C496 1320 500 1380 502 1430 L522 1430 C522 1380 522 1320 526 1250 C532 1190 538 1130 538 1065 Z"
+LEG_R = "M618 1020 C618 1110 604 1190 590 1250 C584 1320 580 1380 578 1430 L558 1430 C558 1380 558 1320 554 1250 C548 1190 542 1130 542 1065 Z"
 
 svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
   {defs}
@@ -134,42 +134,42 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width=
   </g>
 
   <!-- Shorts (Hüfte breit) -->
-  <path d="M484 945 L596 945 C620 975 632 1000 632 1030 L640 1075 L560 1082 L540 1040 L520 1082 L440 1075 L448 1030 C448 1000 460 975 484 945 Z"
+  <path d="M486 945 L594 945 C612 972 622 998 622 1028 L628 1072 L558 1080 L540 1040 L522 1080 L452 1072 L458 1028 C458 998 468 972 486 945 Z"
         fill="#2F3E67" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
-  <path d="M442 1066 l10 -10 l10 12 l10 -10 l10 12 l10 -10 l10 12 M562 1072 l10 -10 l10 12 l10 -10 l10 12 l10 -10 l10 12" fill="none" stroke="#C9D3EE" stroke-width="4"/>
-  <path d="M484 945 L596 945 L600 962 L480 962 Z" fill="#1E2A4A" stroke="{O}" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M454 1064 l10 -10 l10 12 l10 -10 l10 12 l10 -10 l10 10 M560 1070 l10 -10 l10 12 l10 -10 l10 12 l10 -10 l8 10" fill="none" stroke="#C9D3EE" stroke-width="4"/>
+  <path d="M486 945 L594 945 L597 962 L483 962 Z" fill="#1E2A4A" stroke="{O}" stroke-width="5" stroke-linejoin="round"/>
 
   <!-- Taille (schmal) -->
-  <path d="M492 865 L588 865 C578 890 578 920 596 948 L484 948 C502 920 502 890 492 865 Z" fill="{SK}" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
-  <circle cx="540" cy="915" r="4" fill="{O}"/>
+  <path d="M476 846 L604 846 C588 875 584 905 596 948 L484 948 C496 905 492 875 476 846 Z" fill="{SK}" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="540" cy="905" r="4" fill="{O}"/>
 
   <!-- Hals + Schultern (Netzshirt) -->
   <path d="M522 620 L522 715 L558 715 L558 620 Z" fill="#EDB48C" stroke="{O}" stroke-width="6"/>
-  <path d="M452 738 C468 714 500 706 540 705 C580 706 612 714 628 738 L618 790 L462 790 Z" fill="{SK}" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
-  <path d="M452 738 C468 714 500 706 540 705 C580 706 612 714 628 738 L618 790 L462 790 Z" fill="url(#net)"/>
+  <path d="M458 738 C472 716 502 708 540 707 C578 708 608 716 622 738 L614 790 L466 790 Z" fill="{SK}" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M458 738 C472 716 502 708 540 707 C578 708 608 716 622 738 L614 790 L466 790 Z" fill="url(#net)"/>
 
   <!-- schwarzes Crop-Top (Oberweite betont, kurz) -->
-  <path d="M466 748 Q540 772 614 748 C640 790 640 830 616 872 L464 872 C440 830 440 790 466 748 Z" fill="#1C1C22" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
-  <path d="M476 748 L480 712 M604 748 L600 712" stroke="#1C1C22" stroke-width="10"/>
-  <path d="M500 820 Q540 834 580 820" fill="none" stroke="#4A4A55" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="512" cy="790" r="20" fill="#FFE600" stroke="{O}" stroke-width="4"/>
-  <circle cx="505" cy="785" r="2.6" fill="{O}"/><circle cx="519" cy="785" r="2.6" fill="{O}"/>
-  <path d="M503 795 q9 8 18 0" fill="none" stroke="{O}" stroke-width="3"/>
-  <path d="M590 872 l6 -22 l-10 -8 l12 -16" fill="none" stroke="#6A6A78" stroke-width="4"/>
+  <path d="M470 746 Q540 764 610 746 C626 778 626 812 606 848 L474 848 C454 812 454 778 470 746 Z" fill="#1C1C22" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M478 748 L482 712 M602 748 L598 712" stroke="#1C1C22" stroke-width="9"/>
+  <path d="M488 802 Q512 820 537 808 M543 808 Q568 820 592 802" fill="none" stroke="#4A4A55" stroke-width="4" stroke-linecap="round"/>
+  <path d="M478 838 Q540 846 602 838" fill="none" stroke="#3A3A44" stroke-width="3"/>
+  <circle cx="540" cy="772" r="11" fill="#FFE600" stroke="{O}" stroke-width="3"/>
+  <circle cx="536" cy="769" r="1.8" fill="{O}"/><circle cx="544" cy="769" r="1.8" fill="{O}"/><path d="M535 775 q5 5 10 0" fill="none" stroke="{O}" stroke-width="2"/>
+  <path d="M592 848 l4 -16 l-8 -6 l9 -12" fill="none" stroke="#6A6A78" stroke-width="3.5"/>
 
   <!-- Knicklicht-Kette -->
   <path d="M518 708 Q540 740 562 708" fill="none" stroke="{O}" stroke-width="12" stroke-linecap="round"/>
   <path d="M518 708 Q540 740 562 708" fill="none" stroke="{NEON_GREEN}" stroke-width="6" stroke-linecap="round"/>
 
   <!-- Arme: Hände in die Taille gestemmt -->
-  {limb("M460 742 L398 860 L494 920", 32, SK)}
-  {limb("M620 742 L682 860 L586 920", 32, SK)}
-  <path d="M460 742 L398 860 L494 920 M620 742 L682 860 L586 920" fill="none" stroke="url(#net)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
-  <g stroke="{O}" stroke-width="5"><circle cx="496" cy="920" r="21" fill="{SK}"/><circle cx="584" cy="920" r="21" fill="{SK}"/></g>
+  {limb("M464 742 L408 858 L490 910", 25, SK)}
+  {limb("M616 742 L672 858 L590 910", 25, SK)}
+  <path d="M464 742 L408 858 L490 910 M616 742 L672 858 L590 910" fill="none" stroke="url(#net)" stroke-width="25" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+  <g stroke="{O}" stroke-width="5"><circle cx="492" cy="910" r="17" fill="{SK}"/><circle cx="588" cy="910" r="17" fill="{SK}"/></g>
   <g stroke-linecap="round">
-    <path d="M448 890 l20 14" stroke="{O}" stroke-width="12"/><path d="M448 890 l20 14" stroke="{NEON_PINK}" stroke-width="6"/>
-    <path d="M632 890 l-20 14" stroke="{O}" stroke-width="12"/><path d="M632 890 l-20 14" stroke="{NEON_BLUE}" stroke-width="6"/>
-    <path d="M652 876 l-20 14" stroke="{O}" stroke-width="12"/><path d="M652 876 l-20 14" stroke="{NEON_YELLOW}" stroke-width="6"/>
+    <path d="M456 878 l18 13" stroke="{O}" stroke-width="12"/><path d="M456 878 l18 13" stroke="{NEON_PINK}" stroke-width="6"/>
+    <path d="M624 878 l-18 13" stroke="{O}" stroke-width="12"/><path d="M624 878 l-18 13" stroke="{NEON_BLUE}" stroke-width="6"/>
+    <path d="M640 862 l-18 13" stroke="{O}" stroke-width="12"/><path d="M640 862 l-18 13" stroke="{NEON_YELLOW}" stroke-width="6"/>
   </g>
 
 {head}
