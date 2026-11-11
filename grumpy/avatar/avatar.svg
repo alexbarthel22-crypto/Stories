@@ -8,9 +8,53 @@
     </radialGradient>
   </defs>
 
-  <!-- Hintergrund -->
-  <rect width="1024" height="1024" fill="#FFF3E2"/>
-  <circle cx="512" cy="530" r="470" fill="url(#bg)"/>
+  <!-- Hintergrund: Himmel, Sonne, Meer, Insel -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5EC4F0"/><stop offset="1" stop-color="#CDEFFB"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2FA4C9"/><stop offset="1" stop-color="#1C7FA6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#sky)"/>
+  <circle cx="150" cy="140" r="95" fill="#FFF6C8" opacity="0.6"/>
+  <circle cx="150" cy="140" r="68" fill="#FFD23F" stroke="#2B2B2B" stroke-width="6"/>
+  <g fill="#FFFFFF" opacity="0.9">
+    <ellipse cx="880" cy="300" rx="70" ry="20"/><ellipse cx="920" cy="285" rx="40" ry="22"/>
+    <ellipse cx="90" cy="380" rx="55" ry="15"/>
+  </g>
+  <rect x="0" y="640" width="1024" height="384" fill="url(#sea)"/>
+  <path d="M0 640 H1024" stroke="#2B2B2B" stroke-width="5"/>
+  <g fill="none" stroke="#BFEFFF" stroke-width="5" stroke-linecap="round">
+    <path d="M40 700 q20 -12 40 0 q20 12 40 0"/>
+    <path d="M860 690 q20 -12 40 0 q20 12 40 0"/>
+    <path d="M110 780 q20 -12 40 0 q20 12 40 0"/>
+    <path d="M880 790 q20 -12 40 0"/>
+  </g>
+  <!-- Mini-Schiff am Horizont, das wegfährt -->
+  <g stroke="#2B2B2B" stroke-width="3" stroke-linejoin="round">
+    <path d="M880 630 h44 l-8 10 h-30 z" fill="#FFFFFF"/>
+    <rect x="893" y="618" width="16" height="12" fill="#E85D5D"/>
+    <path d="M901 618 v-12" />
+  </g>
+  <g fill="#9AA6B2" opacity="0.8"><circle cx="915" cy="598" r="6"/><circle cx="928" cy="588" r="8"/></g>
+  <!-- Sandinsel -->
+  <path d="M-20 1030 C40 900 200 860 512 860 C824 860 984 900 1044 1030 Z" fill="#F4D58D" stroke="#2B2B2B" stroke-width="6"/>
+  <g fill="#D9B46A"><circle cx="110" cy="980" r="5"/><circle cx="160" cy="950" r="4"/><circle cx="900" cy="970" r="5"/><circle cx="860" cy="1000" r="4"/><circle cx="950" cy="940" r="4"/></g>
+  <!-- Palme -->
+  <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M120 960 C130 800 150 620 205 470 L235 480 C185 630 165 800 160 960 Z" fill="#B07A45"/>
+    <path d="M140 900 l24 4 M146 820 l24 6 M156 740 l24 6 M170 660 l24 8 M186 580 l24 8" fill="none" stroke-width="4"/>
+    <g fill="#3FA34D">
+      <path d="M220 470 C150 420 80 440 30 500 C90 470 150 470 220 470 Z"/>
+      <path d="M220 470 C170 380 90 360 40 390 C110 395 170 420 220 470 Z"/>
+      <path d="M220 470 C240 380 310 340 380 350 C310 380 260 420 220 470 Z"/>
+      <path d="M220 470 C280 440 350 460 390 520 C330 490 280 480 220 470 Z"/>
+      <path d="M220 470 C210 400 230 330 270 300 C250 360 240 420 220 470 Z"/>
+    </g>
+    <circle cx="205" cy="485" r="16" fill="#7A4A26"/><circle cx="232" cy="490" r="16" fill="#7A4A26"/>
+  </g>
 
   <!-- Regenwolke über dem Kopf -->
   <g transform="translate(30 0)">
@@ -24,7 +68,7 @@
     <path d="M592 140 h166" stroke="none" fill="none"/>
     <path d="M688 158 l-22 42 h24 l-18 44 l46 -58 h-26 l18 -28 z" fill="#FFD23F"/>
   </g>
-  <g fill="#6FB6E8" stroke="#2B2B2B" stroke-width="4">
+  <g fill="#2F7FD0" stroke="#2B2B2B" stroke-width="4">
     <path d="M620 190 q-9 16 0 22 q9 -6 0 -22z"/>
     <path d="M748 186 q-9 16 0 22 q9 -6 0 -22z"/>
     <path d="M690 262 q-9 16 0 22 q9 -6 0 -22z"/>
@@ -32,13 +76,30 @@
   </g>
 
   </g>
-  <!-- Körper / Strickjacke -->
+  <!-- Körper: zerfetzte Strickjacke -->
   <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round">
     <path d="M190 1030 C205 870 320 800 512 792 C704 800 819 870 834 1030 Z" fill="#E9A23B"/>
     <path d="M440 795 L512 900 L584 795 Z" fill="#F7F1E8"/>
     <path d="M430 793 L470 1030 M594 793 L554 1030" fill="none"/>
     <circle cx="474" cy="955" r="9" fill="#B5651D"/>
-    <circle cx="468" cy="1005" r="9" fill="#B5651D"/>
+    <!-- Löcher und Risse -->
+    <path d="M300 900 l20 -18 l14 22 l18 -10 l-6 28 l-26 6 z" fill="#6E4A2A"/>
+    <path d="M760 870 l22 10 l-6 18 l16 14 l-28 4 z" fill="#6E4A2A"/>
+    <path d="M250 1000 l18 -26 l12 20 l20 -14 l4 30" fill="none"/>
+    <!-- Flicken aus Palmblatt -->
+    <rect x="360" y="840" width="56" height="48" rx="6" fill="#3FA34D" transform="rotate(-10 388 864)"/>
+    <path d="M366 846 l8 8 M378 842 l0 10 M404 878 l8 6 M396 884 l-2 10" fill="none" stroke-width="3"/>
+  </g>
+  <!-- Krabbe auf der Schulter -->
+  <g stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M262 852 l-22 -20 M262 862 l-26 -6 M330 852 l22 -20 M330 862 l26 -6" fill="none"/>
+    <path d="M268 832 C250 800 230 800 228 815 C240 812 250 820 255 832 Z" fill="#E8553E"/>
+    <path d="M324 832 C342 800 362 800 364 815 C352 812 342 820 337 832 Z" fill="#E8553E"/>
+    <ellipse cx="296" cy="848" rx="40" ry="24" fill="#E8553E"/>
+    <path d="M284 826 v-14 M308 826 v-14" fill="none"/>
+    <circle cx="284" cy="810" r="6" fill="#FFFFFF"/><circle cx="308" cy="810" r="6" fill="#FFFFFF"/>
+    <circle cx="285" cy="811" r="2.5" fill="#2B2B2B" stroke="none"/><circle cx="309" cy="811" r="2.5" fill="#2B2B2B" stroke="none"/>
+    <path d="M286 856 q10 -6 20 0" fill="none" stroke-width="4"/>
   </g>
 
   <!-- Haare hinten -->
@@ -65,6 +126,18 @@
     <path d="M512 133 C515 105 500 95 510 75"/>
   </g>
 
+  <!-- Palmblatt + Muschel im Haar -->
+  <g stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round">
+    <path d="M640 300 C690 250 760 255 790 290 C740 290 690 300 640 300 Z" fill="#3FA34D"/>
+    <path d="M650 298 L780 288" fill="none" stroke-width="3"/>
+    <g transform="translate(160 -110)"><path d="M360 320 C350 300 370 285 385 295 C400 285 418 300 405 320 Z" fill="#F7B5C8"/>
+    <path d="M372 316 l4 -16 M384 318 l0 -18 M396 316 l-4 -16" fill="none" stroke-width="3"/></g>
+  </g>
+  <g fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round">
+    <path d="M330 300 C300 270 310 245 285 230"/>
+    <path d="M700 300 C730 270 745 260 770 255"/>
+    <path d="M290 560 C255 570 250 600 225 610"/>
+  </g>
   <!-- Hals -->
   <path d="M462 630 L462 800 Q512 830 562 800 L562 630 Z" fill="#EDB48C" stroke="#2B2B2B" stroke-width="6"/>
   <path d="M462 690 Q512 720 562 690 L562 660 L462 660 Z" fill="#D9976E"/>
@@ -81,8 +154,8 @@
   <ellipse cx="512" cy="475" rx="176" ry="200" fill="#F2C29B" stroke="#2B2B2B" stroke-width="6"/>
 
   <!-- Wangenröte + Sommersprossen -->
-  <ellipse cx="402" cy="562" rx="40" ry="22" fill="#F08A8A" opacity="0.35"/>
-  <ellipse cx="622" cy="562" rx="40" ry="22" fill="#F08A8A" opacity="0.35"/>
+  <ellipse cx="402" cy="562" rx="40" ry="22" fill="#F06A5A" opacity="0.5"/>
+  <ellipse cx="622" cy="562" rx="40" ry="22" fill="#F06A5A" opacity="0.5"/>
   <g fill="#B8734E">
     <circle cx="388" cy="545" r="3.5"/><circle cx="405" cy="556" r="3.5"/><circle cx="378" cy="562" r="3.5"/><circle cx="420" cy="542" r="3"/>
     <circle cx="636" cy="545" r="3.5"/><circle cx="619" cy="556" r="3.5"/><circle cx="646" cy="562" r="3.5"/><circle cx="604" cy="542" r="3"/>
@@ -132,6 +205,8 @@
         fill="#7A4329" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
   <path d="M430 300 C460 285 500 282 530 290" fill="none" stroke="#A0613E" stroke-width="6" stroke-linecap="round"/>
 
+  <!-- Sonnenbrand Nase -->
+  <ellipse cx="514" cy="552" rx="26" ry="18" fill="#F06A5A" opacity="0.55"/>
   <!-- Nase -->
   <path d="M514 495 Q504 545 492 562 Q512 576 536 563" fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 
@@ -140,26 +215,20 @@
   <path d="M478 640 Q512 650 546 640" fill="none" stroke="#B9806A" stroke-width="4" stroke-linecap="round"/>
   <path d="M450 632 l-6 8 M574 632 l6 8" stroke="#2B2B2B" stroke-width="5" stroke-linecap="round"/>
 
-  <!-- Dampf -->
-  <g fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" opacity="0.9">
-    <path d="M650 770 C635 745 665 730 650 705"/>
-    <path d="M690 765 C675 740 705 725 690 690"/>
-    <path d="M730 770 C715 745 745 730 730 705"/>
+ <!-- Kokosnuss "NEIN." mit Strohhalm -->
+  <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M742 760 L700 620 L716 616 L758 756" fill="#FFFFFF"/>
+    <path d="M708 640 l14 -4 M714 662 l14 -4 M720 684 l14 -4" fill="none" stroke="#E85D5D" stroke-width="7"/>
+    <circle cx="700" cy="880" r="125" fill="#7A4A26"/>
+    <path d="M610 820 l14 6 M640 790 l10 12 M760 800 l-8 12 M790 860 l-14 4 M780 940 l-12 -6 M630 960 l12 -8" fill="none" stroke="#5A3418" stroke-width="5"/>
+    <ellipse cx="740" cy="772" rx="28" ry="12" fill="#F7F1E8"/>
   </g>
-
-  <!-- Tasse "NEIN." -->
-  <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round">
-    <path d="M790 830 C850 830 850 920 790 920" fill="none" stroke-width="16"/>
-    <path d="M790 830 C850 830 850 920 790 920" fill="none" stroke="#FFFFFF" stroke-width="5"/>
-    <rect x="600" y="780" width="190" height="200" rx="20" fill="#FFFFFF"/>
-    <ellipse cx="695" cy="782" rx="93" ry="14" fill="#5A3A22"/>
-  </g>
-  <text x="714" y="898" text-anchor="middle" font-family="Impact, 'Arial Black', 'DejaVu Sans', sans-serif" font-weight="900" font-size="48" fill="#D64545">NEIN.</text>
+  <text x="722" y="905" text-anchor="middle" font-family="Impact, 'Arial Black', 'DejaVu Sans', sans-serif" font-weight="900" font-size="50" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="2" transform="rotate(-6 722 890)">NEIN.</text>
   <!-- Hand -->
   <g fill="#F2C29B" stroke="#2B2B2B" stroke-width="5">
-    <rect x="566" y="818" width="62" height="34" rx="17"/>
-    <rect x="566" y="856" width="66" height="34" rx="17"/>
-    <rect x="566" y="894" width="62" height="34" rx="17"/>
-    <rect x="570" y="932" width="54" height="30" rx="15"/>
+    <rect x="560" y="818" width="62" height="34" rx="17"/>
+    <rect x="556" y="856" width="66" height="34" rx="17"/>
+    <rect x="558" y="894" width="62" height="34" rx="17"/>
+    <rect x="566" y="932" width="54" height="30" rx="15"/>
   </g>
 </svg>
