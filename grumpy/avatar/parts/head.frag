@@ -27,7 +27,7 @@
     <path d="M538 452 Q584 432 628 454" fill="none" stroke="#D99A78" stroke-width="3" stroke-linecap="round"/>
     <ellipse cx="440" cy="482" rx="48" ry="32" fill="#FFFFFF"/>
     <g clip-path="url(#eyeL)">
-      <circle cx="458" cy="488" r="23" fill="#5E8C4A"/><circle cx="458" cy="488" r="23" fill="none" stroke="#3E6230" stroke-width="3"/>
+      <circle cx="458" cy="488" r="23" fill="#4A90D9"/><circle cx="458" cy="488" r="23" fill="none" stroke="#2A5C9A" stroke-width="3"/>
       <circle cx="461" cy="490" r="11" fill="#1B1B1B"/>
       <circle cx="452" cy="481" r="6" fill="#FFFFFF"/><circle cx="467" cy="497" r="2.5" fill="#FFFFFF"/>
       <path d="M386 440 L494 440 L494 466 Q440 456 386 470 Z" fill="#EBB592"/>
@@ -38,7 +38,7 @@
 
     <ellipse cx="584" cy="482" rx="48" ry="32" fill="#FFFFFF"/>
     <g clip-path="url(#eyeR)">
-      <circle cx="602" cy="488" r="23" fill="#5E8C4A"/><circle cx="602" cy="488" r="23" fill="none" stroke="#3E6230" stroke-width="3"/>
+      <circle cx="602" cy="488" r="23" fill="#4A90D9"/><circle cx="602" cy="488" r="23" fill="none" stroke="#2A5C9A" stroke-width="3"/>
       <circle cx="605" cy="490" r="11" fill="#1B1B1B"/>
       <circle cx="596" cy="481" r="6" fill="#FFFFFF"/><circle cx="611" cy="497" r="2.5" fill="#FFFFFF"/>
       <path d="M530 440 L638 440 L638 470 Q584 456 530 466 Z" fill="#EBB592"/>
