@@ -87,8 +87,8 @@
 
   <!-- lange Haare hinten (nass, zerzaust) -->
   <path d="M540 330 C640 330 700 400 690 500 C700 620 690 760 720 900 C730 950 700 990 670 1000 C680 960 660 950 650 975 C640 1000 610 1005 600 985 L480 985 C470 1005 440 1000 430 975 C420 950 400 960 410 1000 C380 990 350 950 360 900 C390 760 380 620 390 500 C380 400 440 330 540 330 Z"
-        fill="#6B3A22" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
-  <g fill="none" stroke="#4E2814" stroke-width="5" stroke-linecap="round">
+        fill="#E8C468" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
+  <g fill="none" stroke="#C49A3C" stroke-width="5" stroke-linecap="round">
     <path d="M410 600 C405 720 400 820 385 920"/><path d="M670 600 C675 720 680 820 695 920"/>
   </g>
 
@@ -126,14 +126,14 @@
   <path d="M452 738 C468 714 500 706 540 705 C580 706 612 714 628 738 L618 790 L462 790 Z" fill="#F2C29B" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
   <path d="M452 738 C468 714 500 706 540 705 C580 706 612 714 628 738 L618 790 L462 790 Z" fill="url(#net)"/>
 
-  <!-- Neon-Crop-Top (Oberweite betont, kurz) -->
-  <path d="M466 748 Q540 772 614 748 C640 790 640 830 616 872 L464 872 C440 830 440 790 466 748 Z" fill="#FF3FA4" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
-  <path d="M476 748 L480 712 M604 748 L600 712" stroke="#FF3FA4" stroke-width="10"/>
-  <path d="M500 820 Q540 834 580 820" fill="none" stroke="#C42A7E" stroke-width="4" stroke-linecap="round"/>
+  <!-- schwarzes Crop-Top (Oberweite betont, kurz) -->
+  <path d="M466 748 Q540 772 614 748 C640 790 640 830 616 872 L464 872 C440 830 440 790 466 748 Z" fill="#1C1C22" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M476 748 L480 712 M604 748 L600 712" stroke="#1C1C22" stroke-width="10"/>
+  <path d="M500 820 Q540 834 580 820" fill="none" stroke="#4A4A55" stroke-width="4" stroke-linecap="round"/>
   <circle cx="512" cy="790" r="20" fill="#FFE600" stroke="#2B2B2B" stroke-width="4"/>
   <circle cx="505" cy="785" r="2.6" fill="#2B2B2B"/><circle cx="519" cy="785" r="2.6" fill="#2B2B2B"/>
   <path d="M503 795 q9 8 18 0" fill="none" stroke="#2B2B2B" stroke-width="3"/>
-  <path d="M590 872 l6 -22 l-10 -8 l12 -16" fill="none" stroke="#2B2B2B" stroke-width="4"/>
+  <path d="M590 872 l6 -22 l-10 -8 l12 -16" fill="none" stroke="#6A6A78" stroke-width="4"/>
 
   <!-- Knicklicht-Kette -->
   <path d="M518 708 Q540 740 562 708" fill="none" stroke="#2B2B2B" stroke-width="12" stroke-linecap="round"/>
@@ -237,7 +237,7 @@
   </g>
 
   <!-- Augenbrauen: schmaler, geschwungen, trotzdem genervt -->
-  <g fill="#5A3018" stroke="#2B2B2B" stroke-width="3" stroke-linejoin="round">
+  <g fill="#B08A45" stroke="#2B2B2B" stroke-width="3" stroke-linejoin="round">
     <path d="M384 422 Q432 402 496 448 L491 459 Q432 420 387 433 Z"/>
     <path d="M640 422 Q592 402 528 448 L533 459 Q592 420 637 433 Z"/>
   </g>
@@ -245,8 +245,8 @@
 
   <!-- Pony -->
   <path d="M338 440 C326 320 418 268 512 268 C612 268 702 320 688 440 C668 396 640 362 600 348 C604 372 598 386 586 396 C562 356 526 340 486 344 C474 366 452 380 428 386 C424 366 412 354 396 352 C370 380 350 405 338 440 Z"
-        fill="#7A4329" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
-  <path d="M430 300 C460 285 500 282 530 290" fill="none" stroke="#A0613E" stroke-width="6" stroke-linecap="round"/>
+        fill="#F2D27A" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M430 300 C460 285 500 282 530 290" fill="none" stroke="#FFF0B8" stroke-width="6" stroke-linecap="round"/>
 
   <!-- leichter Sonnenbrand auf der Nase -->
   <ellipse cx="514" cy="548" rx="20" ry="13" fill="#F08A7A" opacity="0.45"/>

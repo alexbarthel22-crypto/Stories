@@ -83,7 +83,7 @@
   </g>
 
   <!-- Augenbrauen: schmaler, geschwungen, trotzdem genervt -->
-  <g fill="#5A3018" stroke="#2B2B2B" stroke-width="3" stroke-linejoin="round">
+  <g fill="#B08A45" stroke="#2B2B2B" stroke-width="3" stroke-linejoin="round">
     <path d="M384 422 Q432 402 496 448 L491 459 Q432 420 387 433 Z"/>
     <path d="M640 422 Q592 402 528 448 L533 459 Q592 420 637 433 Z"/>
   </g>
@@ -91,8 +91,8 @@
 
   <!-- Pony -->
   <path d="M338 440 C326 320 418 268 512 268 C612 268 702 320 688 440 C668 396 640 362 600 348 C604 372 598 386 586 396 C562 356 526 340 486 344 C474 366 452 380 428 386 C424 366 412 354 396 352 C370 380 350 405 338 440 Z"
-        fill="#7A4329" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
-  <path d="M430 300 C460 285 500 282 530 290" fill="none" stroke="#A0613E" stroke-width="6" stroke-linecap="round"/>
+        fill="#F2D27A" stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M430 300 C460 285 500 282 530 290" fill="none" stroke="#FFF0B8" stroke-width="6" stroke-linecap="round"/>
 
   <!-- leichter Sonnenbrand auf der Nase -->
   <ellipse cx="514" cy="548" rx="20" ry="13" fill="#F08A7A" opacity="0.45"/>

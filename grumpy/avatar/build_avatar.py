@@ -109,8 +109,8 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width=
 
   <!-- lange Haare hinten (nass, zerzaust) -->
   <path d="M540 330 C640 330 700 400 690 500 C700 620 690 760 720 900 C730 950 700 990 670 1000 C680 960 660 950 650 975 C640 1000 610 1005 600 985 L480 985 C470 1005 440 1000 430 975 C420 950 400 960 410 1000 C380 990 350 950 360 900 C390 760 380 620 390 500 C380 400 440 330 540 330 Z"
-        fill="#6B3A22" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
-  <g fill="none" stroke="#4E2814" stroke-width="5" stroke-linecap="round">
+        fill="#E8C468" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
+  <g fill="none" stroke="#C49A3C" stroke-width="5" stroke-linecap="round">
     <path d="M410 600 C405 720 400 820 385 920"/><path d="M670 600 C675 720 680 820 695 920"/>
   </g>
 
@@ -148,14 +148,14 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width=
   <path d="M452 738 C468 714 500 706 540 705 C580 706 612 714 628 738 L618 790 L462 790 Z" fill="{SK}" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
   <path d="M452 738 C468 714 500 706 540 705 C580 706 612 714 628 738 L618 790 L462 790 Z" fill="url(#net)"/>
 
-  <!-- Neon-Crop-Top (Oberweite betont, kurz) -->
-  <path d="M466 748 Q540 772 614 748 C640 790 640 830 616 872 L464 872 C440 830 440 790 466 748 Z" fill="{NEON_PINK}" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
-  <path d="M476 748 L480 712 M604 748 L600 712" stroke="{NEON_PINK}" stroke-width="10"/>
-  <path d="M500 820 Q540 834 580 820" fill="none" stroke="#C42A7E" stroke-width="4" stroke-linecap="round"/>
+  <!-- schwarzes Crop-Top (Oberweite betont, kurz) -->
+  <path d="M466 748 Q540 772 614 748 C640 790 640 830 616 872 L464 872 C440 830 440 790 466 748 Z" fill="#1C1C22" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M476 748 L480 712 M604 748 L600 712" stroke="#1C1C22" stroke-width="10"/>
+  <path d="M500 820 Q540 834 580 820" fill="none" stroke="#4A4A55" stroke-width="4" stroke-linecap="round"/>
   <circle cx="512" cy="790" r="20" fill="#FFE600" stroke="{O}" stroke-width="4"/>
   <circle cx="505" cy="785" r="2.6" fill="{O}"/><circle cx="519" cy="785" r="2.6" fill="{O}"/>
   <path d="M503 795 q9 8 18 0" fill="none" stroke="{O}" stroke-width="3"/>
-  <path d="M590 872 l6 -22 l-10 -8 l12 -16" fill="none" stroke="{O}" stroke-width="4"/>
+  <path d="M590 872 l6 -22 l-10 -8 l12 -16" fill="none" stroke="#6A6A78" stroke-width="4"/>
 
   <!-- Knicklicht-Kette -->
   <path d="M518 708 Q540 740 562 708" fill="none" stroke="{O}" stroke-width="12" stroke-linecap="round"/>
