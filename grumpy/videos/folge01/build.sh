@@ -6,7 +6,7 @@ MODEL=$1; WORK=$2
 python3 audio.py "$MODEL"
 python3 make_video.py "$WORK/fsvg"
 node render.js "$WORK/fsvg" "$WORK/fjpg"
-DUR=$(python3 -c "import json;print(json.load(open('timeline.json'))['duration']+3.4)")
+DUR=$(python3 -c "import json;print(json.load(open('timeline.json'))['duration']+1.0)")
 # Meeresrauschen (synthetisch) + Stimme
 ffmpeg -loglevel error -y -framerate 25 -i "$WORK/fjpg/f%05d.jpg" -i voice.wav \
   -f lavfi -i "anoisesrc=color=brown:amplitude=0.5:sample_rate=44100,lowpass=f=900,volume='0.10+0.07*sin(2*PI*t/5)':eval=frame" \

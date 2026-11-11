@@ -9,7 +9,7 @@ AVATAR = (HERE / "../../avatar/avatar.svg").read_text()
 TL = json.loads((HERE / "timeline.json").read_text())
 ENV = json.loads((HERE / "envelope.json").read_text())
 FPS = 25
-END_CARD = 3.4
+END_CARD = 1.0
 DURATION = TL["duration"] + END_CARD
 OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "_frames_svg"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -166,6 +166,11 @@ def caption(text, t, t0, t1):
     """Untertitel unter Clara (TikTok-Sicherheitszone), ohne Hintergrund:
     dicke Kontur + harter Schatten; das gerade gesprochene Wort leuchtet gelb und größer."""
     words = text.split()
+    for k in range(len(words) - 1, 0, -1):   # „…“ nie allein in eine Zeile
+        if words[k] == "…":
+            words[k - 1] += " …"; del words[k]
+    if words and words[0] == "…" and len(words) > 1:
+        words[1] = "… " + words[1]; del words[0]
     # Wort-Zeiten grob nach Länge verteilen (Satzzeichen/„…“ zählen kaum)
     weights = [max(len(w.strip("….,!?:")), 1) + 1.5 for w in words]
     tot, acc, active = sum(weights), 0.0, len(words) - 1
@@ -242,6 +247,65 @@ def hook_text(t):
                 f'<text y="{y}" font-size="112" fill="{col}" stroke="#111" stroke-width="16" stroke-linejoin="round" paint-order="stroke">{ln}</text>')
     return (f'<defs><filter id="glow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="18"/></filter></defs>'
             f'<g opacity="{fade:.2f}" transform="translate({540+jx:.1f} {440+jy:.1f}) scale({sc:.3f})" font-family="DejaVu Sans, sans-serif" font-weight="900" text-anchor="middle">{txt}</g>')
+
+
+def word_start(line, word):
+    """Geschätzter Startzeitpunkt eines Wortes (gleiche Gewichtung wie die Untertitel)."""
+    words = line["text"].split()
+    weights = [max(len(w.strip("….,!?:")), 1) + 1.5 for w in words]
+    i = next(k for k, w in enumerate(words) if w.startswith(word))
+    return line["start"] + (line["end"] - line["start"]) * sum(weights[:i]) / sum(weights)
+
+
+COMMENT_T0 = word_start(next(l for l in TL["lines"] if "Kommentare" in l["text"]), "Kommentare")
+COMMENT = "Buddel dich ein, spuck hoch und fang die Spucke wieder auf bis es Nacht wird"
+
+
+def comment_anim(dt):
+    """Jemand tippt einen Kommentar und schickt ihn ab (generische Kommentar-Optik)."""
+    slide_in = ease(dt / 0.3)
+    slide_out = ease((dt - 3.4) / 0.3)
+    y = 320 - 420 * (1 - slide_in) - 420 * slide_out
+    t_type0, t_type1, t_send = 0.3, 2.3, 2.5
+    n = int(len(COMMENT) * min(max((dt - t_type0) / (t_type1 - t_type0), 0), 1))
+    typed = COMMENT[:n]
+    posted = dt >= t_send
+    lines, cur = [], ""
+    for wd in typed.split(" "):
+        if cur and len(cur) + len(wd) + 1 > 27:
+            lines.append(cur); cur = wd
+        else:
+            cur = (cur + " " + wd) if cur else wd
+    lines.append(cur)
+    lines = lines[:3]
+    cursor = "" if posted or (dt * 2.5) % 1 > 0.5 else "|"
+    F = 'font-family="DejaVu Sans, Noto Color Emoji, sans-serif"'
+    txt = "".join(f'<text x="150" y="{118 + k*46}" font-size="36" fill="#161616" {F} font-weight="600">{ln}{cursor if k == len(lines)-1 else ""}</text>'
+                  for k, ln in enumerate(lines))
+    if not posted:
+        # Eingabefeld + Senden-Knopf (pulsiert, dann „Tipp“)
+        tap = 1 - 0.18 * max(0, 1 - abs(dt - 2.42) / 0.1)
+        body = (f'<rect x="130" y="72" width="640" height="190" rx="28" fill="#F1F1F2"/>'
+                + (txt if typed else f'<text x="150" y="118" font-size="34" fill="#9A9A9F" {F}>Kommentar hinzufügen …</text>')
+                + f'<g transform="translate(830 168) scale({tap:.2f})"><circle r="44" fill="#FE2C55"/>'
+                  f'<path d="M-16 -18 L22 0 L-16 18 L-10 0 Z" fill="#FFFFFF"/></g>')
+        header = f'<text x="450" y="46" text-anchor="middle" font-size="28" fill="#444" {F} font-weight="700">Kommentare</text>'
+    else:
+        k = dt - t_send
+        likes = int(min(k / 0.7, 1) ** 2 * 8400) + 1
+        lk = f"{likes/1000:.1f}".replace(".", ",") + "K" if likes >= 1000 else str(likes)
+        heart = 1 + 0.35 * max(0, 1 - abs(k - 0.25) / 0.2)
+        body = (f'<text x="150" y="80" font-size="27" fill="#8A8A90" {F} font-weight="700">mia.inselfan · gerade eben</text>'
+                + txt.replace('y="118"', 'y="126"').replace('y="164"', 'y="172"').replace('y="210"', 'y="218"')
+                + f'<g transform="translate(830 140) scale({heart:.2f})"><path d="M0 18 C-30 -4 -26 -30 -10 -30 C-3 -30 0 -24 0 -20 C0 -24 3 -30 10 -30 C26 -30 30 -4 0 18 Z" fill="#FE2C55"/></g>'
+                + f'<text x="830" y="205" text-anchor="middle" font-size="28" fill="#555" {F} font-weight="700">{lk}</text>')
+        header = f'<text x="450" y="46" text-anchor="middle" font-size="28" fill="#444" {F} font-weight="700">1 neuer Kommentar</text>'
+    return (f'<defs><filter id="cs" x="-10%" y="-20%" width="120%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.35"/></filter></defs>'
+            f'<g transform="translate(70 {y:.0f})" filter="url(#cs)">'
+            f'<rect x="0" y="0" width="900" height="290" rx="34" fill="#FFFFFF"/>'
+            f'<rect x="410" y="10" width="80" height="8" rx="4" fill="#D0D0D4"/>{header}'
+            f'<circle cx="70" cy="140" r="46" fill="#FF9F43"/><circle cx="70" cy="128" r="17" fill="#FFFFFF"/>'
+            f'<path d="M40 172 Q70 140 100 172 Z" fill="#FFFFFF"/>{body}</g>')
 
 
 # ---------------------------------------------------------------- Szene
@@ -362,13 +426,8 @@ def scene(t):
         hud.append(hook_text(t))
     elif ln and t < TL["duration"] and ln is not L(0):
         hud.append(caption(ln["text"], t, ln["start"], ln["end"]))
-    if t > TL["duration"] + 0.6:
-        k = ease((t - TL["duration"] - 0.6) / 0.4)
-        pulse = 1 + 0.04 * math.sin(t * 7)
-        hud.append(f'<g opacity="{k:.2f}" transform="translate(500 420) scale({pulse:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle">'
-                   f'<text y="0" font-size="70" fill="#FFE600" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">WAS SOLL CLARA TUN?</text>'
-                   f'<text y="95" font-size="56" fill="#FFFFFF" stroke="#111" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Schreibt\'s in die Kommentare</text>'
-                   f'<text y="200" font-size="90" fill="#FFFFFF" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">↓</text></g>')
+    if COMMENT_T0 <= t <= COMMENT_T0 + 3.7:
+        hud.append(comment_anim(t - COMMENT_T0))
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
 {defs}
