@@ -171,7 +171,7 @@ def palm(x, y, t):
     <circle cx="{x+64}" cy="{y-500}" r="15" fill="#7A4A26"/><circle cx="{x+90}" cy="{y-496}" r="15" fill="#7A4A26"/></g>'''
 
 
-def caption(text, t, t0, t1):
+def caption(text, t, t0, t1, wtimes=None):
     """Untertitel unter Clara (TikTok-Sicherheitszone), ohne Hintergrund:
     dicke Kontur + harter Schatten; das gerade gesprochene Wort leuchtet gelb und größer."""
     words = text.split()
@@ -188,6 +188,11 @@ def caption(text, t, t0, t1):
         if t < t0 + (t1 - t0) * acc / tot:
             active = i
             break
+    if wtimes and len(wtimes) == len(words):      # exakte Wortzeiten (ElevenLabs)
+        active = 0
+        for i, wt in enumerate(wtimes):
+            if t >= wt["start"] - 0.03:
+                active = i
     lines, cur = [], []
     for i, wd in enumerate(words):
         if cur and len(" ".join(words[j] for j in cur)) + len(wd) + 1 > 20:
@@ -260,6 +265,10 @@ def hook_text(t):
 
 def word_start(line, word):
     """Geschätzter Startzeitpunkt eines Wortes (gleiche Gewichtung wie die Untertitel)."""
+    if line.get("words"):
+        for wt in line["words"]:
+            if wt["w"].startswith(word):
+                return wt["start"]
     words = line["text"].split()
     weights = [max(len(w.strip("….,!?:")), 1) + 1.5 for w in words]
     i = next(k for k, w in enumerate(words) if w.startswith(word))
@@ -434,7 +443,7 @@ def scene(t):
     if t <= L(0)["end"] + 0.35:
         hud.append(hook_text(t))
     elif ln and t < TL["duration"] and ln is not L(0):
-        hud.append(caption(ln["text"], t, ln["start"], ln["end"]))
+        hud.append(caption(ln["text"], t, ln["start"], ln["end"], ln.get("words")))
     if COMMENT_T0 <= t <= COMMENT_T0 + 3.7:
         hud.append(comment_anim(t - COMMENT_T0))
 
