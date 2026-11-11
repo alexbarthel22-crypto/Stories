@@ -1,7 +1,7 @@
 # Clara auf der Insel – Serienkonzept
 
 **Prämisse:** Clara ist nach einem Rave auf einer einsamen Insel gestrandet – noch im Rave-Outfit
-(Neon-Crop-Top, Netzshirt, Shorts, Netzstrumpfhose, nur noch ein Plateau-Sneaker, Knicklichter, kaputte Sonnenbrille; ungeschminkt, lange nasse blonde Haare, schlank).
+(eng anliegendes schwarzes Crop-Top, Netzshirt, Shorts, Netzstrumpfhose, nur noch ein Plateau-Sneaker, Knicklichter, kaputte Sonnenbrille; ungeschminkt, lange nasse blonde Haare, schlank).
 Sie hat auf nichts Lust.
 Ihr einziger Gefährte ist eine genauso grummelige Krabbe.
 

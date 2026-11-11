@@ -6,16 +6,17 @@ import numpy as np
 
 MODEL = sys.argv[1] if len(sys.argv) > 1 else "de-kerstin-low.onnx"
 SR = 16000
-LINES = [  # (Text, Untertitel, Sprechtempo, Lautstärke, Pause danach in s)
-    ("Was glotzt du so?!", "WAS GLOTZT DU SO?!", 0.78, 2.2, 0.55),
-    ("War gestern auf einem Reiv.", "War gestern auf einem Rave …", 0.88, 1.3, 0.25),
-    ("Und heute bin ich hier.", "… und heute bin ich HIER.", 0.9, 1.3, 0.45),
+LINES = [  # (Text für die Stimme, Untertitel, Sprechtempo, Lautstärke, Pause danach in s)
+    ("Was glotzt du so?!", "WAS GLOTZT DU SO?!", 0.78, 2.6, 0.55),
+    ("Bro, gestern war ich auf einem Reiv,", "Bro, gestern war ich auf einem Rave …", 0.86, 1.4, 0.1),
+    ("und bin heute hier aufgewacht.", "… und bin heute HIER aufgewacht.", 0.88, 1.4, 0.35),
+    ("Wer will mich hier hopps nehmen?!", "Wer will mich hier hopps nehmen?!", 0.84, 1.7, 0.45),
     ("Was soll der Mist?", "Was soll der Mist?!", 0.82, 1.6, 0.2),
-    ("Hier ist ja gar nichts!", "Hier ist ja GAR NICHTS!", 0.85, 1.6, 0.6),
-    ("Und das Beste:", "Und das Beste:", 0.95, 1.3, 0.35),
+    ("Hier ist ja gar nichts!", "Hier ist ja GAR NICHTS!", 0.85, 1.6, 0.55),
+    ("Und das Beste:", "Und das Beste:", 0.95, 1.3, 0.3),
     ("Ausnahmslos alles, was ihr in die Kommentare schreibt,", "Ausnahmslos ALLES, was ihr in die Kommentare schreibt …", 0.86, 1.4, 0.1),
-    ("wird mit mir und der Insel gemacht.", "… wird mit mir und der Insel gemacht.", 0.88, 1.4, 0.5),
-    ("Das kann ja nur scheiße werden.", "Das kann ja nur scheiße werden.", 0.9, 1.4, 0.45),
+    ("wird mit mir und der Insel gemacht.", "… wird mit mir und der Insel gemacht.", 0.88, 1.4, 0.45),
+    ("Das kann ja nur scheiße werden.", "Das kann ja nur sch🥚sse werden.", 0.9, 1.4, 0.4),
     ("Wow.", "Wow.", 1.5, 1.2, 0.3),
 ]
 START = 0.25

@@ -43,9 +43,28 @@ BLINK = ('<g><ellipse cx="440" cy="480" rx="50" ry="34" fill="#F2C29B"/><ellipse
          '<path d="M394 484 Q440 498 486 484 M538 484 Q584 498 630 484" fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round"/></g>')
 
 
-def character(t, amp, blink, head_rot, bounce):
+def rage(t):
+    """Extrem-Wut: roter Kopf, Zornesader, Dampf aus den Ohren (Kopf-Koordinaten)."""
+    puffs = ""
+    for k in range(3):
+        ph = (t * 1.6 + k / 3) % 1
+        for ex, dx in [(330, -1), (694, 1)]:
+            x, y, r = ex + dx * (20 + 60 * ph), 470 - 150 * ph, 18 + 26 * ph
+            puffs += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.0f}" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="4" opacity="{1-ph:.2f}"/>'
+    vein = ('<g transform="translate(640 330) scale(1.3)" fill="none" stroke="#E0262B" stroke-width="9" stroke-linecap="round">'
+            '<path d="M-28 -8 Q-10 -10 -8 -28 M8 -28 Q10 -10 28 -8 M28 8 Q10 10 8 28 M-8 28 Q-10 10 -28 8"/></g>')
+    flush = '<path d="M338 436 C338 330 410 276 512 276 C614 276 686 330 686 436 C686 530 660 596 604 644 C570 672 540 682 512 682 C484 682 454 672 420 644 C364 596 338 530 338 436 Z" fill="#FF2A2A" opacity="0.28"/>'
+    return puffs, flush + vein
+
+
+def character(t, amp, blink, head_rot, bounce, angry=False):
     a = CHAR_A.replace(HEAD_T, f'<g transform="rotate({head_rot:.2f} 540 640) translate(222.6 225.5) scale(0.62)">')
-    return f'<g transform="translate(0 {-bounce:.1f})">{a}{mouth(amp)}{BLINK if blink else ""}{CHAR_B}</g>'
+    pre = post = ""
+    if angry:
+        pre, post = rage(t)
+        a = a.replace('<g id="brows"', '<g transform="translate(0 12)" id="brows"')
+        a = a.replace('<!-- Gesicht', pre + '<!-- Gesicht', 1)
+    return f'<g transform="translate(0 {-bounce:.1f})">{a}{mouth(amp)}{"" if angry or not blink else BLINK}{post}{CHAR_B}</g>'
 
 
 # ---------------------------------------------------------------- Hilfsfunktionen
@@ -67,14 +86,15 @@ def L(i):
 
 # Kamera-Keyframes: (Zeit, Zoom, Mitte x, Mitte y) – Insel bleibt immer im Bild
 KEYS = [
-    (0.00, 1.70, 560, 1190),
-    (L(0)["end"] + 0.1, 1.70, 560, 1190),
+    (0.00, 1.70, 560, 1110),
+    (L(0)["end"] + 0.1, 1.70, 560, 1110),
     (L(2)["end"], 1.00, 540, 1000),
-    (L(3)["start"] + 0.1, 1.38, 330, 1250),
-    (L(4)["end"] + 0.2, 1.38, 790, 1250),
-    (L(5)["start"] + 0.3, 1.00, 540, 980),
-    (L(7)["end"], 1.10, 545, 1080),
-    (L(8)["start"] + 0.4, 1.50, 560, 1210),
+    (L(3)["end"], 1.25, 555, 1130),
+    (L(4)["start"] + 0.2, 1.38, 330, 1250),
+    (L(5)["end"] + 0.2, 1.38, 790, 1250),
+    (L(6)["start"] + 0.3, 1.00, 540, 980),
+    (L(8)["end"], 1.10, 545, 1080),
+    (L(9)["start"] + 0.4, 1.50, 560, 1210),
     (TL["duration"] + 0.2, 1.55, 560, 1215),
     (TL["duration"] + 1.4, 1.00, 540, 980),
     (DURATION + 1, 1.00, 540, 980),
@@ -147,7 +167,7 @@ def caption(text, t, t0):
     big = text.isupper()
     fs = 84 if big else 66
     y0 = 400 - (len(lines) - 1) * fs * 0.6
-    out = [f'<g transform="translate(540 {y0:.0f}) scale({pop:.3f})" font-family="DejaVu Sans, Arial, sans-serif" font-weight="900" text-anchor="middle">']
+    out = [f'<g transform="translate(540 {y0:.0f}) scale({pop:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle">']
     for k, ln in enumerate(lines):
         col = "#FFE600" if big else "#FFFFFF"
         out.append(f'<text y="{k * fs * 1.18:.0f}" font-size="{fs}" fill="{col}" stroke="#111" stroke-width="{fs*0.16:.0f}" '
@@ -156,12 +176,58 @@ def caption(text, t, t0):
     return "".join(out)
 
 
+def live_badge(t):
+    """Hochwertiges LIVE-Schild oben links: pulsierender roter Punkt, Zuschauerzahl."""
+    pulse = 0.55 + 0.45 * (0.5 + 0.5 * math.sin(t * 6))
+    viewers = 1200 + int(t * 37) + int(40 * math.sin(t * 3))
+    v = f"{viewers/1000:.1f}".replace(".", ",") + "K"
+    return f'''<g transform="translate(40 190)" font-family="DejaVu Sans, sans-serif" font-weight="900">
+  <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF4B5C"/><stop offset="1" stop-color="#D5001C"/></linearGradient>
+  <filter id="sh" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.45"/></filter></defs>
+  <g filter="url(#sh)">
+    <rect x="0" y="0" width="610" height="78" rx="39" fill="#0E0E12" opacity="0.82"/>
+    <rect x="8" y="8" width="150" height="62" rx="31" fill="url(#lg)"/>
+    <circle cx="42" cy="39" r="17" fill="#FF6B78" opacity="{pulse*0.6:.2f}"/>
+    <circle cx="42" cy="39" r="10" fill="#FFFFFF" opacity="{0.6+0.4*pulse:.2f}"/>
+    <text x="100" y="52" text-anchor="middle" font-size="34" fill="#FFFFFF" letter-spacing="2">LIVE</text>
+    <text x="178" y="35" font-size="27" fill="#FFFFFF">TAG 1 · DIE INSEL</text>
+    <text x="178" y="64" font-size="21" fill="#FFD23F" font-weight="700">mit Clara</text>
+    <g transform="translate(495 39)">
+      <path d="M-18 0 Q0 -16 18 0 Q0 16 -18 0 Z" fill="none" stroke="#FFFFFF" stroke-width="3.5"/>
+      <circle cx="0" cy="0" r="5.5" fill="#FFFFFF"/>
+      <text x="28" y="10" font-size="26" fill="#FFFFFF" font-weight="700">{v}</text>
+    </g>
+  </g></g>'''
+
+
+def hook_text(t):
+    """„WAS GLOTZT DU SO?!“ – ab Sekunde 0 groß in der Mitte, leuchtet beim Schreien riesig auf."""
+    l0 = L(0)
+    speaking = l0["start"] <= t <= l0["end"] + 0.1
+    if speaking:
+        k = (t - l0["start"]) / (l0["end"] - l0["start"])
+        sc = 1.0 + 0.27 * min(k * 4, 1) + 0.04 * math.sin(t * 40)
+        glow, col = 1.0, "#FFE600"
+        jx, jy = 9 * math.sin(t * 57), 7 * math.cos(t * 43)
+    else:
+        sc, glow, col, jx, jy = 1.0, 0.0, "#FFFFFF", 0, 0
+    fade = 1 - ease((t - l0["end"] - 0.1) / 0.25) if t > l0["end"] + 0.1 else 1
+    lines = [("WAS GLOTZT", 0), ("DU SO?!", 1)]
+    txt = ""
+    for ln, k in lines:
+        y = k * 122
+        txt += (f'<text y="{y}" font-size="112" fill="none" stroke="#FF2A00" stroke-width="40" stroke-linejoin="round" opacity="{0.55*glow:.2f}" filter="url(#glow)">{ln}</text>'
+                f'<text y="{y}" font-size="112" fill="{col}" stroke="#111" stroke-width="16" stroke-linejoin="round" paint-order="stroke">{ln}</text>')
+    return (f'<defs><filter id="glow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="18"/></filter></defs>'
+            f'<g opacity="{fade:.2f}" transform="translate({540+jx:.1f} {470+jy:.1f}) scale({sc:.3f})" font-family="DejaVu Sans, sans-serif" font-weight="900" text-anchor="middle">{txt}</g>')
+
+
 # ---------------------------------------------------------------- Szene
 def scene(t):
     i = min(int(t * FPS), len(ENV) - 1)
     amp = ENV[i] if t < TL["duration"] else 0.0
     blink = (t % 3.3) < 0.12 or (6.1 < t < 6.22)
-    angry = L(0)["start"] <= t <= L(0)["end"]
+    angry = t <= L(0)["end"] + 0.2
     head_rot = 5 * math.sin(t * 22) if angry else 2.0 * math.sin(t * 1.7) + 3 * amp * math.sin(t * 9)
     bounce = 10 * amp + 3 * math.sin(t * 2.1)
     s, cx, cy = camera(t)
@@ -182,10 +248,25 @@ def scene(t):
     # Meer
     w.append('<rect x="-400" y="760" width="1880" height="1560" fill="url(#vsea)"/>')
     w.append(f'<path d="M-400 760 H1480" stroke="{O}" stroke-width="4"/>')
-    # Ferne Inseln am Horizont
-    w.append(f'<path d="M30 762 Q90 715 170 722 Q230 728 270 762 Z" fill="#7CC27A" stroke="{O}" stroke-width="4"/>'
-             f'<path d="M150 724 q4 -40 14 -60 M164 664 q-18 -6 -32 4 M164 664 q18 -8 30 2 M164 664 q-4 -18 -16 -24" fill="none" stroke="{O}" stroke-width="4" stroke-linecap="round"/>'
-             f'<path d="M880 762 Q930 735 990 745 Q1030 750 1050 762 Z" fill="#8FA0A8" stroke="{O}" stroke-width="4"/>')
+    # springende Fische (vereinzelt)
+    for t0, x0, y0, dirn in [(2.2, 120, 1080, 1), (7.4, 960, 1150, -1), (12.6, 200, 1820, 1), (17.8, 880, 1000, -1)]:
+        k = (t - t0) / 1.1
+        if 0 <= k <= 1:
+            fx, fy = x0 + dirn * 170 * k, y0 - 150 * math.sin(math.pi * k)
+            ang = dirn * (-50 + 100 * k)
+            w.append(f'<g transform="translate({fx:.0f} {fy:.0f}) rotate({ang:.0f}) scale({dirn} 1)" stroke="{O}" stroke-width="4" stroke-linejoin="round">'
+                     f'<path d="M-34 0 Q-10 -20 22 0 Q-10 20 -34 0 Z" fill="#FF9F43"/><path d="M-30 0 l-18 -14 l2 28 z" fill="#FF9F43"/>'
+                     f'<circle cx="10" cy="-4" r="3" fill="{O}" stroke="none"/></g>')
+        if 0.95 <= k <= 1.4 or -0.4 <= k <= 0.05:
+            sx = x0 + (dirn * 170 if k > 0.5 else 0)
+            r = 20 + 60 * abs(k - (1 if k > 0.5 else 0))
+            w.append(f'<ellipse cx="{sx}" cy="{y0}" rx="{r:.0f}" ry="{r*0.3:.0f}" fill="none" stroke="#FFFFFF" stroke-width="4" opacity="0.8"/>')
+    # Fischschwarm im Flachwasser
+    for k in range(5):
+        a_ = t * 0.6 + k * 1.25
+        fx, fy = 540 + 520 * math.cos(a_), 1440 + 222 * math.sin(a_)
+        if math.sin(a_) > 0.2:
+            w.append(f'<path transform="translate({fx:.0f} {fy:.0f}) rotate({math.degrees(a_)+90:.0f})" d="M-12 0 Q0 -7 12 0 Q0 7 -12 0 Z M-12 0 l-8 -6 v12 z" fill="#2C7A8C" opacity="0.55"/>')
     for k, y in enumerate(range(800, 1960, 70)):
         w.append(wave_row(y, t, 18 + k * 3, 260 + (k % 3) * 40, k * 83, w=3 + k * 0.15))
     # Hai-Flosse kreist
@@ -226,7 +307,7 @@ def scene(t):
              f'<rect x="-38" y="-10" width="66" height="20" rx="3" fill="#FFF6DC" stroke-width="3"/></g>'
              f'<text x="0" y="6" transform="translate(860 1455) rotate(-20) scale(0.8)" text-anchor="middle" font-family="DejaVu Sans" font-weight="900" font-size="15" fill="#D64545">SOS</text>')
     # Avatar (Füße bei 1550 im Avatar-Koordinatensystem)
-    w.append(f'<g transform="translate(560 1452) scale(0.43) translate(-540 -1550)">{character(t, amp, blink, head_rot, bounce)}</g>')
+    w.append(f'<g transform="translate(560 1452) scale(0.43) translate(-540 -1550)">{character(t, amp, blink, head_rot, bounce, angry)}</g>')
     # Vordergrund-Objekte
     w.append(f'<g transform="translate(370 1520) rotate(-8) scale(0.5)" stroke="{O}" stroke-width="8" stroke-linejoin="round">'
              f'<rect x="-100" y="-120" width="200" height="230" rx="14" fill="#2E2E38"/>'
@@ -247,18 +328,17 @@ def scene(t):
     world = "".join(w)
     cam = f'translate(540 960) scale({s:.4f}) translate({-cx:.1f} {-cy:.1f})'
 
-    hud = []
-    hud.append('<g font-family="DejaVu Sans, Arial, sans-serif" font-weight="900">'
-               '<rect x="40" y="200" width="420" height="70" rx="35" fill="#111" opacity="0.75"/>'
-               '<text x="250" y="248" text-anchor="middle" font-size="36" fill="#FFE600">TAG 1 · DIE INSEL</text></g>')
+    hud = [live_badge(t)]
     ln = line_at(t)
-    if ln and t < TL["duration"]:
+    if t <= L(0)["end"] + 0.35:
+        hud.append(hook_text(t))
+    elif ln and t < TL["duration"] and ln is not L(0):
         hud.append(caption(ln["text"], t, ln["start"]))
     if t > TL["duration"] + 0.6:
         k = ease((t - TL["duration"] - 0.6) / 0.4)
         pulse = 1 + 0.04 * math.sin(t * 7)
-        hud.append(f'<g opacity="{k:.2f}" transform="translate(540 330) scale({pulse:.3f})" font-family="DejaVu Sans, Arial, sans-serif" font-weight="900" text-anchor="middle">'
-                   f'<text y="0" font-size="70" fill="#FFE600" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">WAS SOLL SIE TUN?</text>'
+        hud.append(f'<g opacity="{k:.2f}" transform="translate(540 330) scale({pulse:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle">'
+                   f'<text y="0" font-size="70" fill="#FFE600" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">WAS SOLL CLARA TUN?</text>'
                    f'<text y="95" font-size="56" fill="#FFFFFF" stroke="#111" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Schreibt\'s in die Kommentare</text>'
                    f'<text y="200" font-size="90" fill="#FFFFFF" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">↓</text></g>')
 
