@@ -14,7 +14,7 @@ HERE = Path(__file__).parent
 # (Regieanweisung für v3, gesprochener Text, Untertitel)
 LINES = [
     ("[shouting angrily]", "WAS GLOTZT DU SO?!", "WAS GLOTZT DU SO?!"),
-    ("[annoyed]", "Bro, gestern war ich auf einem Rave", "Bro, gestern war ich auf einem Rave …"),
+    ("[annoyed]", "Digga, gestern war ich auf einem Rave", "Digga, gestern war ich auf einem Rave …"),
     ("", "und bin heute hier aufgewacht.", "… und bin heute HIER aufgewacht."),
     ("[frustrated]", "Wer will mich hier hopps nehmen?!", "Wer will mich hier hopps nehmen?!"),
     ("[angry]", "Was soll der Mist?", "Was soll der Mist?!"),
@@ -27,6 +27,8 @@ LINES = [
     ("[sighs]", "Ja, dann kommentiert mal.", "Ja, dann kommentiert mal."),
     ("", "Mir egal, was ihr macht.", "Mir egal, was ihr macht."),
     ("[dismissive]", "Juckt mich nicht.", "Juckt mich nicht."),
+    ("[sarcastic]", "Soll ich hier eigentlich einfach ins Meer kacken, oder wie läuft das jetzt?",
+     "Soll ich hier eigentlich einfach ins Meer kacken oder wie läuft das jetzt?"),
 ]
 SETTINGS = {
     "A": {"model_id": "eleven_v3", "language_code": "de", "voice_settings": {"stability": 0.0}, "tags": True},
@@ -84,6 +86,26 @@ for (a, b), (_, spoken, sub) in zip(spans, LINES):
 with wave.open(str(HERE / "voice.wav")) as w:
     sr = w.getframerate()
     audio = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
+
+# Sprechpausen kürzen (kurze Pause nach dem Schrei, sonst höchstens 0.45 s) – Zeiten mitschieben
+MAX_GAP = {0: 0.15}
+for i in range(len(timeline) - 1):
+    gap = timeline[i + 1]["start"] - timeline[i]["end"]
+    cut = gap - MAX_GAP.get(i, 0.45)
+    if cut > 0.02:
+        a = int((timeline[i]["end"] + 0.05) * sr)
+        audio = np.concatenate([audio[:a], audio[a + int(cut * sr):]])
+        removed_now = cut
+    else:
+        removed_now = 0.0
+    # Zeiten der folgenden Zeilen verschieben
+    for ln in timeline[i + 1:]:
+        ln["start"] = round(ln["start"] - removed_now, 3); ln["end"] = round(ln["end"] - removed_now, 3)
+        for wd in ln["words"]:
+            wd["start"] = round(wd["start"] - removed_now, 3); wd["end"] = round(wd["end"] - removed_now, 3)
+with wave.open(str(HERE / "voice.wav"), "wb") as w:
+    w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
+    w.writeframes((np.clip(audio, -1, 1) * 32767).astype(np.int16).tobytes())
 FPS = 25
 hop = sr // FPS
 env = [float(np.sqrt(np.mean(audio[k:k + hop] ** 2))) for k in range(0, len(audio), hop)]

@@ -9,7 +9,7 @@ AVATAR = (HERE / "../../avatar/avatar.svg").read_text()
 TL = json.loads((HERE / "timeline.json").read_text())
 ENV = json.loads((HERE / "envelope.json").read_text())
 FPS = 25
-END_CARD = 1.0
+END_CARD = 0.8
 DURATION = TL["duration"] + END_CARD
 OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "_frames_svg"
 OUT.mkdir(parents=True, exist_ok=True)
