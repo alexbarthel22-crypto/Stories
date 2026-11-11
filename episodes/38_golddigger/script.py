@@ -1,5 +1,5 @@
-"""TikTok-Folge: Heute ist Alex ... ein Golddigger. Alltags-Comedy, Jugendliche 2026, nur Freunde/Bros.
-Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), erst nach Freigabe. Vorschau: Ersatzstimme."""
+"""TikTok-Folge: Heute ist Alex ... ein Golddigger. Alltags-Comedy, Alex hier klar erwachsen (Anfang 20, Uni/Café) wegen Sugar-Thema, nur Freunde/Bros.
+Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
@@ -14,10 +14,10 @@ CAPTION_Y = 1650
 DAYBAR_Y = 1755
 LINE_TEMPO = {k: 1.3 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
 _BIG = dict(tag_size=52, head_size=54, item_scale=1.45)
-MOODS = dict(MOODS_BASE, iphone="kalt und berechnend, dann trocken", insta="detektivisch, dann trocken",
+MOODS = dict(MOODS_BASE, sugar="selbstbewusst wie eine Werbung, dann trocken", iphone="kalt und berechnend, dann trocken", insta="detektivisch, dann trocken",
              bro="schleimig, dann trocken", party="gierig, dann trocken", date="enttäuscht, dann trocken")
 SHUFFLE = SHUFFLE_BASE
-REACTIONS = {"iphone": ["📱", "💔", "🚩"], "insta": ["🔍", "🛥️", "🚩"], "bro": ["🏠", "🤝", "🚩"],
+REACTIONS = {"sugar": ["💸", "👀", "🚩"], "iphone": ["📱", "💔", "🚩"], "insta": ["🔍", "🛥️", "🚩"], "bro": ["🏠", "🤝", "🚩"],
              "party": ["🎧", "💰", "🚩"], "date": ["🍔", "😐", "🚩"]}
 THUMB = dict(head="HEUTE IST ALEX EIN…", l1="GOLD-", l2="DIGGER", bg="#B8860B", color1="#FFFFFF", accent="#FFE14D",
              pill="#3A2A06", pill_text="#FFFFFF", expr="smug", pose="hips", prop=None, extras=True, emojis=("💰", "⛏️", "💎", "🚩"))
@@ -35,8 +35,16 @@ SCENES = [
         ("Die erste Frage beim Kennenlernen: Was arbeitet dein Vater?", None),
     ], viz=dict(kind="bars", enter="zoom", head="LIEBE VS. KONTOSTAND", rows=[("LIEBE", 0.03, "egal", "#555A66"), ("KONTO", 1.0, "alles", "#F2C94C")],
                 pills=[("💰", "Interessiert an: Geld", "#B8860B"), ("❤️", "Gefühle: optional", "#E0457B")])),
+    dict(id="sugar", bg="#E0457B", clock="07:00", title="DAS DATING-PROFIL", dark=True, lines=[
+        ("Sein Dating-Profil: Alex, zweiundzwanzig. Sucht Sugar Mami oder Sugar Daddy.", "Sein Dating-Profil: Aleks, zweiundzwanzig. Sucht Sugar Mami oder Sugar Daddy."),
+        ("Filter: Alter egal. Hauptsache Yacht.", None),
+    ], viz=dict(kind="stage", **_BIG, enter="slide_r", box="#FFF0F6", head="💘 DATING-APP · FILTER", head_col="#C2185B",
+                items=[("👵", 250, 620, 100, 0, "bob"), ("👴", 400, 620, 100, 0, "bob"), ("💳", 620, 620, 100, 0, "pulse"),
+                       ("🛥️", 790, 620, 110, 1, "bob")],
+                tags=[("SUCHT: SUGAR MAMI / DADDY 💸", "#C2185B", 540, 790), ("ALTER: EGAL · YACHT: PFLICHT 🛥️", "#2B2F3A", 540, 990)],
+                fx="shock", move="bounce", alex=("smug", "idle", "📱"))),
     dict(id="iphone", bg="#C0392B", clock="08:00", title="DAS IPHONE", dark=True, lines=[
-        ("Acht Uhr. Lena kommt mit einem gebrauchten Handy in die Schule.", None),
+        ("Acht Uhr in der Uni. Lena kommt mit einem gebrauchten Handy.", None),
         ("Mittags ist Alex Single. Er sagt: Ich brauch jemanden mit Zukunft.", None),
     ], viz=dict(kind="stage", **_BIG, enter="drop", box="#FFF0F0", head="📱 LENAS NEUES HANDY", head_col="#C0392B",
                 people=[(LENA, 820, "Lena", "happy", 1)],
@@ -75,11 +83,11 @@ SCENES = [
                 fx="shock", move="bounce", alex=("smug", "idle", None))),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen Golddigger erkennst:", None),
+        ("Er sucht Sugar Mamis und Sugar Daddys.", None),
         ("Gebrauchtes Handy? Schluss.", None),
-        ("Er checkt Instas nach Yachten.", None),
         ("Sein bester Bro hat immer einen Pool.", None),
         ("Und seine erste Frage: Was arbeitet dein Vater?", None),
-    ], viz=dict(kind="signs", slide=True, items=[("Gebrauchtes Handy = Schluss", "📱"), ("Checkt Insta nach Yachten", "🛥️"),
+    ], viz=dict(kind="signs", slide=True, items=[("Sucht Sugar Mami/Daddy", "💸"), ("Gebrauchtes Handy = Schluss", "📱"),
                                                  ("Bester Bro hat einen Pool", "🏊"), ("„Was arbeitet dein Vater?“", "💰")])),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du auch einen Golddigger? Markier sie oder ihn!", None),

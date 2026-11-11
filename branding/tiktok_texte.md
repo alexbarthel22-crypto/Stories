@@ -183,3 +183,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Lustmolch 🦎 Flirtet mit allem, was nicht bei drei auf dem Baum ist 😏 Schickt allen Mädchen aus der Stufe denselben Snap: „Hey Süße“ … 47 Mal. Einzige Antwort: „Wer bist du?“ 👻 Sein Bro zeigt ihm seine neue Freundin, er schreibt ihr sofort auf Insta 🌹💀 Zur Referendarin: „Sie sind die schönste Zelle im ganzen Organismus“ 🦠 Im Gym stöhnt er extra laut, damit sie hinschaut 🏋️ Und auf der Party: „Hast du was im Auge?“ – „Ja, dich.“ 😉 Ein Korb ist für ihn nur eine Einladung 🧺 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Lustmolch aus deinem Freundeskreis! Und was soll Alex morgen sein?
 
 #heuteistalex #lustmolch #flirten #cringe #comedy
+
+## TikTok Folge 12 – Golddigger
+Cover: `episodes/38_golddigger/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Golddigger ⛏️💰 Sucht keine Liebe, sondern Kohle 💸 Dating-Profil: „Alex, 22, sucht Sugar Mami oder Sugar Daddy“ – Filter: Alter egal, Hauptsache Yacht 🛥️ Lena kommt mit gebrauchtem Handy? Mittags ist er Single 📱💔 Ohne Yacht-Foto auf Insta gibt's kein Like 🔍 Sein neuer bester Bro hat zufällig Pool, PS5 und einen Vater mit Porsche 🏊🏎️ Und auf der Party sind die teuren Kopfhörer nur geliehen? Weg ist er 💨 Wahre Liebe hat eben einen Pool 💘 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Golddigger aus deinem Freundeskreis! Und was soll Alex morgen sein?
+
+#heuteistalex #golddigger #sugardaddy #dating #comedy
