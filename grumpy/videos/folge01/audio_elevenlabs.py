@@ -134,6 +134,18 @@ for i in range(len(timeline) - 1):
         ln["start"] = round(ln["start"] - removed_now, 3); ln["end"] = round(ln["end"] - removed_now, 3)
         for wd in ln["words"]:
             wd["start"] = round(wd["start"] - removed_now, 3); wd["end"] = round(wd["end"] - removed_now, 3)
+# Sound-Effekt nach „gemacht“: Pause einfügen, Effekt wird in build.sh dazugemischt
+SFX = [("../../sounds/yippee.mp3", 0.58, 1.32, "gemacht")]   # (Datei, Ausschnitt von, bis, nach Wort)
+sfx_out = []
+for fn, a0, a1, after in SFX:
+    i = next(k for k, ln in enumerate(timeline) if any(w["w"].startswith(after) for w in ln["words"]))
+    at = timeline[i]["end"] + 0.08
+    pad = (a1 - a0) + 0.12
+    k = int(at * sr)
+    audio = np.concatenate([audio[:k], np.zeros(int(pad * sr), np.float32), audio[k:]])
+    shift(timeline[i + 1:], -pad)
+    sfx_out.append({"file": fn, "from": a0, "to": a1, "at": round(at, 3)})
+
 with wave.open(str(HERE / "voice.wav"), "wb") as w:
     w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
     w.writeframes((np.clip(audio, -1, 1) * 32767).astype(np.int16).tobytes())
@@ -143,5 +155,5 @@ env = [float(np.sqrt(np.mean(audio[k:k + hop] ** 2))) for k in range(0, len(audi
 m = max(env)
 json.dump([round(min(e / m * 1.6, 1.0), 3) for e in env], open(HERE / "envelope.json", "w"))
 dur = round(len(audio) / sr + 0.2, 3)
-json.dump({"duration": dur, "lines": timeline}, open(HERE / "timeline.json", "w"), indent=1, ensure_ascii=False)
+json.dump({"duration": dur, "lines": timeline, "sfx": sfx_out}, open(HERE / "timeline.json", "w"), indent=1, ensure_ascii=False)
 print(f"Laura {VARIANT}: {dur} s")

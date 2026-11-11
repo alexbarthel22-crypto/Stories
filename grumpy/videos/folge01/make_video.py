@@ -69,6 +69,11 @@ def character(t, amp, blink, head_rot, bounce, angry=False):
     if angry:
         pre, post = rage(t)
         a = a.replace('<g id="brows"', '<g transform="translate(0 12)" id="brows"')
+        for o, n in [('cx="458" cy="488" r="23"', 'cx="440" cy="487" r="23"'), ('cx="461" cy="490" r="11"', 'cx="440" cy="488" r="11"'),
+                     ('cx="452" cy="481" r="6"', 'cx="432" cy="480" r="6"'), ('cx="467" cy="497" r="2.5"', 'cx="447" cy="495" r="2.5"'),
+                     ('cx="602" cy="488" r="23"', 'cx="584" cy="487" r="23"'), ('cx="605" cy="490" r="11"', 'cx="584" cy="488" r="11"'),
+                     ('cx="596" cy="481" r="6"', 'cx="576" cy="480" r="6"'), ('cx="611" cy="497" r="2.5"', 'cx="591" cy="495" r="2.5"')]:
+            a = a.replace(o, n)   # Blickkontakt mit dem Zuschauer
         a = a.replace('<!-- Gesicht', pre + '<!-- Gesicht', 1)
     return f'<g transform="translate(0 {-bounce:.1f})">{a}{mouth(amp)}{"" if angry or not blink else BLINK}{post}{CHAR_B}</g>'
 
@@ -124,7 +129,10 @@ def camera(t):
             k = ease((t - t0) / max(t1 - t0, 1e-6))
             s, x, y = s0 + (s1 - s0) * k, x0 + (x1 - x0) * k, y0 + (y1 - y0) * k
             break
-    # Wackeln bei „WAS GLOTZT DU SO?!“
+    # Zoom-Stoß bei „ALLES“
+    if "ALLES_T0" in globals() and ALLES_T0 - 0.05 <= t <= ALLES_T1 + 0.4:
+        s *= 1 + 0.12 * math.sin(math.pi * min((t - ALLES_T0 + 0.05) / (ALLES_T1 - ALLES_T0 + 0.45), 1))
+        # Wackeln bei „WAS GLOTZT DU SO?!“
     if L(0)["start"] <= t <= L(0)["end"]:
         x += 22 * math.sin(t * 61) / s ; y += 18 * math.cos(t * 47) / s
     return s, x, y
@@ -171,7 +179,7 @@ def palm(x, y, t):
     <circle cx="{x+64}" cy="{y-500}" r="15" fill="#7A4A26"/><circle cx="{x+90}" cy="{y-496}" r="15" fill="#7A4A26"/></g>'''
 
 
-def caption(text, t, t0, t1, wtimes=None):
+def caption(text, t, t0, t1, wtimes=None, y=1262):
     """Untertitel unter Clara (TikTok-Sicherheitszone), ohne Hintergrund:
     dicke Kontur + harter Schatten; das gerade gesprochene Wort leuchtet gelb und größer."""
     words = text.split()
@@ -203,7 +211,7 @@ def caption(text, t, t0, t1, wtimes=None):
     fs, lh = 68, 86
     pop = 1 + 0.12 * max(0, 1 - (t - t0) / 0.15)
     out = ['<defs><filter id="ts" x="-10%" y="-30%" width="120%" height="170%"><feDropShadow dx="0" dy="7" stdDeviation="0" flood-color="#000" flood-opacity="1"/></filter></defs>',
-           f'<g transform="translate(470 1262) scale({pop:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle" filter="url(#ts)">']
+           f'<g transform="translate(470 {y}) scale({pop:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle" filter="url(#ts)">']
     for k, idx in enumerate(lines):
         spans = ""
         for n, i in enumerate(idx):
@@ -279,51 +287,110 @@ COMMENT_T0 = word_start(next(l for l in TL["lines"] if "Kommentare" in l["text"]
 COMMENT = "Buddel dich ein, spuck hoch und fang die Spucke wieder auf bis es Nacht wird"
 
 
-def comment_anim(dt):
-    """Jemand tippt einen Kommentar und schickt ihn ab (generische Kommentar-Optik)."""
-    slide_in = ease(dt / 0.3)
-    slide_out = ease((dt - 3.4) / 0.3)
-    y = 320 - 420 * (1 - slide_in) - 420 * slide_out
-    t_type0, t_type1, t_send = 0.3, 2.3, 2.5
-    n = int(len(COMMENT) * min(max((dt - t_type0) / (t_type1 - t_type0), 0), 1))
-    typed = COMMENT[:n]
-    posted = dt >= t_send
+COMMENT_LEN = 3.9
+OTHERS = [("lena.mp4", "Clara braucht erstmal nen Kaffee 😭", "vor 2 Min.", "1.204"),
+          ("tobi_kfz", "Lass sie die Krabbe adoptieren 🦀", "vor 5 Min.", "856")]
+
+
+def _wrap(text, n):
     lines, cur = [], ""
-    for wd in typed.split(" "):
-        if cur and len(cur) + len(wd) + 1 > 27:
+    for wd in text.split(" "):
+        if cur and len(cur) + len(wd) + 1 > n:
             lines.append(cur); cur = wd
         else:
             cur = (cur + " " + wd) if cur else wd
-    lines.append(cur)
-    lines = lines[:3]
-    cursor = "" if posted or (dt * 2.5) % 1 > 0.5 else "|"
+    return lines + ([cur] if cur else [])
+
+
+def _row(y, user, text, meta, likes, col, liked=False, heart_scale=1.0, bg=None):
     F = 'font-family="DejaVu Sans, Noto Color Emoji, sans-serif"'
-    txt = "".join(f'<text x="150" y="{118 + k*46}" font-size="36" fill="#161616" {F} font-weight="600">{ln}{cursor if k == len(lines)-1 else ""}</text>'
-                  for k, ln in enumerate(lines))
-    if not posted:
-        # Eingabefeld + Senden-Knopf (pulsiert, dann „Tipp“)
-        tap = 1 - 0.18 * max(0, 1 - abs(dt - 2.42) / 0.1)
-        body = (f'<rect x="130" y="72" width="640" height="190" rx="28" fill="#F1F1F2"/>'
-                + (txt if typed else f'<text x="150" y="118" font-size="34" fill="#9A9A9F" {F}>Kommentar hinzufügen …</text>')
-                + f'<g transform="translate(830 168) scale({tap:.2f})"><circle r="44" fill="#FE2C55"/>'
-                  f'<path d="M-16 -18 L22 0 L-16 18 L-10 0 Z" fill="#FFFFFF"/></g>')
-        header = f'<text x="450" y="46" text-anchor="middle" font-size="28" fill="#444" {F} font-weight="700">Kommentare</text>'
-    else:
+    lines = _wrap(text, 34)
+    h = 96 + 40 * len(lines)
+    out = f'<rect x="0" y="{y}" width="1080" height="{h}" fill="{bg}"/>' if bg else ""
+    out += (f'<circle cx="72" cy="{y+52}" r="34" fill="{col}"/><circle cx="72" cy="{y+44}" r="12" fill="#FFFFFF"/>'
+            f'<path d="M50 {y+74} Q72 {y+50} 94 {y+74} Z" fill="#FFFFFF"/>'
+            f'<text x="126" y="{y+40}" font-size="25" fill="#8A8B91" {F} font-weight="600">{user}</text>')
+    for k, ln in enumerate(lines):
+        out += f'<text x="126" y="{y+80+k*40}" font-size="30" fill="#161823" {F}>{ln}</text>'
+    out += (f'<text x="126" y="{y+80+len(lines)*40}" font-size="24" fill="#8A8B91" {F}>{meta}'
+            f'<tspan dx="30" font-weight="700">Antworten</tspan></text>')
+    hp = f'M0 14 C-24 -4 -20 -24 -8 -24 C-3 -24 0 -19 0 -16 C0 -19 3 -24 8 -24 C20 -24 24 -4 0 14 Z'
+    out += (f'<g transform="translate(1010 {y+56}) scale({heart_scale:.2f})"><path d="{hp}" fill="{"#FE2C55" if liked else "none"}" '
+            f'stroke="{"#FE2C55" if liked else "#8A8B91"}" stroke-width="3"/></g>'
+            f'<text x="1010" y="{y+104}" text-anchor="middle" font-size="22" fill="#8A8B91" {F}>{likes}</text>')
+    return out, h
+
+
+def comment_anim(dt):
+    """Kommentarbereich fährt von unten hoch (wie in der App), jemand tippt einen Kommentar,
+    schickt ihn ab, er erscheint oben und bekommt sofort Likes."""
+    F = 'font-family="DejaVu Sans, Noto Color Emoji, sans-serif"'
+    up = ease(dt / 0.3) * (1 - ease((dt - COMMENT_LEN + 0.3) / 0.3))
+    top = 1920 - 900 * up
+    t_type0, t_type1, t_send = 0.35, 2.35, 2.5
+    n = int(len(COMMENT) * min(max((dt - t_type0) / (t_type1 - t_type0), 0), 1))
+    posted = dt >= t_send
+    out = [f'<g transform="translate(0 {top:.0f})">',
+           '<rect x="0" y="0" width="1080" height="1000" rx="30" fill="#FFFFFF"/>',
+           f'<text x="540" y="62" text-anchor="middle" font-size="27" fill="#161823" {F} font-weight="700">{"2.848" if posted else "2.847"} Kommentare</text>',
+           '<path d="M1012 40 l22 22 M1034 40 l-22 22" stroke="#161823" stroke-width="4" stroke-linecap="round"/>']
+    y = 100
+    if posted:
         k = dt - t_send
-        likes = int(min(k / 0.7, 1) ** 2 * 8400) + 1
-        lk = f"{likes/1000:.1f}".replace(".", ",") + "K" if likes >= 1000 else str(likes)
-        heart = 1 + 0.35 * max(0, 1 - abs(k - 0.25) / 0.2)
-        body = (f'<text x="150" y="80" font-size="27" fill="#8A8A90" {F} font-weight="700">mia.inselfan · gerade eben</text>'
-                + txt.replace('y="118"', 'y="126"').replace('y="164"', 'y="172"').replace('y="210"', 'y="218"')
-                + f'<g transform="translate(830 140) scale({heart:.2f})"><path d="M0 18 C-30 -4 -26 -30 -10 -30 C-3 -30 0 -24 0 -20 C0 -24 3 -30 10 -30 C26 -30 30 -4 0 18 Z" fill="#FE2C55"/></g>'
-                + f'<text x="830" y="205" text-anchor="middle" font-size="28" fill="#555" {F} font-weight="700">{lk}</text>')
-        header = f'<text x="450" y="46" text-anchor="middle" font-size="28" fill="#444" {F} font-weight="700">1 neuer Kommentar</text>'
-    return (f'<defs><filter id="cs" x="-10%" y="-20%" width="120%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.35"/></filter></defs>'
-            f'<g transform="translate(70 {y:.0f})" filter="url(#cs)">'
-            f'<rect x="0" y="0" width="900" height="290" rx="34" fill="#FFFFFF"/>'
-            f'<rect x="410" y="10" width="80" height="8" rx="4" fill="#D0D0D4"/>{header}'
-            f'<circle cx="70" cy="140" r="46" fill="#FF9F43"/><circle cx="70" cy="128" r="17" fill="#FFFFFF"/>'
-            f'<path d="M40 172 Q70 140 100 172 Z" fill="#FFFFFF"/>{body}</g>')
+        likes = int(min(k / 0.8, 1) ** 2 * 8400) + 1
+        lk = f"{likes/1000:.1f}".replace(".", ",") + " Tsd." if likes >= 1000 else str(likes)
+        hs = 1 + 0.4 * max(0, 1 - abs(k - 0.3) / 0.2)
+        bg = "#FFF3F5" if k < 1.2 else None
+        r, h = _row(y, "mia.inselfan", COMMENT, "gerade eben", lk, "#FF9F43", liked=k > 0.25, heart_scale=hs, bg=bg)
+        out.append(r); y += h
+    for user, text, meta, likes in OTHERS:
+        r, h = _row(y, user, text, meta, likes, "#6C5CE7" if user.startswith("l") else "#00B894")
+        out.append(r); y += h
+    # Eingabezeile
+    iy = 640
+    out.append(f'<rect x="0" y="{iy-20}" width="1080" height="2" fill="#EDEDEF"/>'
+               f'<circle cx="72" cy="{iy+46}" r="30" fill="#FFB8C6"/>')
+    typed = "" if posted else COMMENT[:n]
+    lines = _wrap(typed, 30)[-3:] if typed else []
+    fh = max(92, 30 + 40 * len(lines))
+    out.append(f'<rect x="120" y="{iy}" width="{760 if typed else 900}" height="{fh}" rx="46" fill="#F1F1F2"/>')
+    if typed:
+        cur = "|" if (dt * 2.5) % 1 < 0.5 else ""
+        for k, ln in enumerate(lines):
+            out.append(f'<text x="150" y="{iy+58+k*40}" font-size="30" fill="#161823" {F}>{ln}{cur if k == len(lines)-1 else ""}</text>')
+        tap = 1 - 0.2 * max(0, 1 - abs(dt - 2.42) / 0.1)
+        out.append(f'<g transform="translate(960 {iy+46}) scale({tap:.2f})"><circle r="40" fill="#FE2C55"/>'
+                   '<path d="M0 -18 L0 18 M-14 -4 L0 -18 L14 -4" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>')
+    else:
+        out.append(f'<text x="150" y="{iy+56}" font-size="29" fill="#8A8B91" {F}>Kommentar hinzufügen …</text>'
+                   f'<text x="900" y="{iy+58}" font-size="34" fill="#161823" {F}>@</text>'
+                   f'<circle cx="980" cy="{iy+46}" r="17" fill="none" stroke="#161823" stroke-width="3"/>'
+                   f'<path d="M972 {iy+50} q8 8 16 0" stroke="#161823" stroke-width="3" fill="none"/>'
+                   f'<circle cx="974" cy="{iy+41}" r="2.5" fill="#161823"/><circle cx="986" cy="{iy+41}" r="2.5" fill="#161823"/>')
+    out.append("</g>")
+    return "".join(out)
+
+
+_aw = next(w for l in TL["lines"] for w in l.get("words", []) if w["w"].lower().startswith("alles"))
+ALLES_T0, ALLES_T1 = _aw["start"], _aw["end"]
+
+
+def alles_burst(t):
+    """„ALLES!“ knallt groß ins Bild: Blitz, Strahlenkranz, Pop-Animation."""
+    k = (t - ALLES_T0) / 0.18
+    sc = 0.5 + 0.75 * ease(k) - 0.15 * ease((t - ALLES_T0 - 0.18) / 0.15)
+    fade = 1 - ease((t - ALLES_T1 - 0.25) / 0.2)
+    flash = max(0, 1 - (t - ALLES_T0) / 0.15) * 0.55
+    rays = "".join(f'<path d="M0 0 L{math.cos(math.radians(a))*420:.0f} {math.sin(math.radians(a))*420:.0f} '
+                   f'L{math.cos(math.radians(a+9))*420:.0f} {math.sin(math.radians(a+9))*420:.0f} Z"/>' for a in range(0, 360, 20))
+    return ('<defs><filter id="glow2" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="20"/></filter></defs>'
+            f'<rect x="0" y="0" width="1080" height="1920" fill="#FFFFFF" opacity="{flash:.2f}"/>'
+            f'<g opacity="{fade:.2f}" transform="translate(540 600) rotate({-6 + 2*math.sin(t*30):.1f}) scale({sc:.3f})">'
+            f'<g fill="#FFD23F" opacity="0.85" transform="rotate({t*60:.0f})">{rays}</g>'
+            '<text y="70" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-weight="900" font-size="210" '
+            'fill="none" stroke="#FF2A00" stroke-width="56" stroke-linejoin="round" filter="url(#glow2)">ALLES!</text>'
+            '<text y="70" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-weight="900" font-size="210" '
+            'fill="#FFE600" stroke="#111" stroke-width="22" stroke-linejoin="round" paint-order="stroke">ALLES!</text></g>')
 
 
 # ---------------------------------------------------------------- Szene
@@ -452,9 +519,12 @@ def scene(t, profile=None):
     if t <= L(0)["end"] + 0.35:
         hud.append(hook_text(t))
     elif ln and t < TL["duration"] and ln is not L(0):
-        hud.append(caption(ln["text"], t, ln["start"], ln["end"], ln.get("words")))
-    if COMMENT_T0 <= t <= COMMENT_T0 + 3.7:
+        cap_y = 420 if COMMENT_T0 <= t <= COMMENT_T0 + COMMENT_LEN else 1262
+        hud.append(caption(ln["text"], t, ln["start"], ln["end"], ln.get("words"), cap_y))
+    if COMMENT_T0 <= t <= COMMENT_T0 + COMMENT_LEN:
         hud.append(comment_anim(t - COMMENT_T0))
+    if ALLES_T0 - 0.05 <= t <= ALLES_T1 + 0.45:
+        hud.append(alles_burst(t))
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
 {defs}
