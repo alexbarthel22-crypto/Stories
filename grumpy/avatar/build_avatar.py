@@ -107,23 +107,6 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width=
   <path d="M10 1800 C80 1770 200 1770 270 1800 L270 1860 L10 1860 Z" fill="#F4D58D"/>
   <path d="M10 1800 C80 1770 200 1770 270 1800" fill="none" stroke="{O}" stroke-width="5" stroke-linecap="round"/>
 
-  <!-- Holzschild "RAVE →" zeigt aufs Meer -->
-  <g stroke="{O}" stroke-width="6" stroke-linejoin="round">
-    <rect x="922" y="1440" width="18" height="170" fill="#A0703F"/>
-    <path d="M860 1430 L1010 1430 L1040 1462 L1010 1494 L860 1494 Z" fill="#C8955A" transform="rotate(-6 950 1462)"/>
-  </g>
-  <text x="940" y="1478" text-anchor="middle" transform="rotate(-6 950 1462)" font-family="Impact, 'Arial Black', 'DejaVu Sans', sans-serif" font-weight="900" font-size="38" fill="{O}">RAVE →</text>
-
-  <!-- Gewitterwolke über ihr -->
-  <g stroke="{O}" stroke-width="6" stroke-linejoin="round">
-    <g fill="#8E99A8">
-      <circle cx="490" cy="150" r="48"/><circle cx="550" cy="122" r="60"/><circle cx="615" cy="152" r="45"/>
-      <rect x="465" y="148" width="175" height="50" rx="25"/>
-    </g>
-    <path d="M560 188 l-22 42 h24 l-18 44 l46 -58 h-26 l18 -28 z" fill="{NEON_YELLOW}"/>
-  </g>
-  <g fill="#2F7FD0" stroke="{O}" stroke-width="4">{drop(480,220)}{drop(625,215)}{drop(500,268)}{drop(640,262)}</g>
-
   <!-- lange Haare hinten (nass, zerzaust) -->
   <path d="M540 330 C640 330 700 400 690 500 C700 620 690 760 720 900 C730 950 700 990 670 1000 C680 960 660 950 650 975 C640 1000 610 1005 600 985 L480 985 C470 1005 440 1000 430 975 C420 950 400 960 410 1000 C380 990 350 950 360 900 C390 760 380 620 390 500 C380 400 440 330 540 330 Z"
         fill="#6B3A22" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
