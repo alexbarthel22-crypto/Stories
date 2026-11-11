@@ -1,5 +1,5 @@
 {
- "duration": 28.381,
+ "duration": 28.561,
  "lines": [
   {
    "text": "WAS GLOTZT DU SO?!",
@@ -311,203 +311,203 @@
   },
   {
    "text": "Das kann ja nur sch🥚sse werden.",
-   "start": 17.148,
-   "end": 19.092,
+   "start": 17.328,
+   "end": 19.272,
    "words": [
     {
      "w": "Das",
-     "start": 17.148,
-     "end": 17.172
+     "start": 17.328,
+     "end": 17.352
     },
     {
      "w": "kann",
-     "start": 17.22,
-     "end": 17.412
+     "start": 17.4,
+     "end": 17.592
     },
     {
      "w": "ja",
-     "start": 17.465,
-     "end": 17.572
+     "start": 17.645,
+     "end": 17.752
     },
     {
      "w": "nur",
-     "start": 17.612,
-     "end": 17.732
+     "start": 17.792,
+     "end": 17.912
     },
     {
      "w": "scheiße",
-     "start": 17.78,
-     "end": 18.132
+     "start": 17.96,
+     "end": 18.312
     },
     {
      "w": "werden.",
-     "start": 18.201,
-     "end": 19.092
+     "start": 18.381,
+     "end": 19.272
     }
    ]
   },
   {
    "text": "Wow.",
-   "start": 19.542,
-   "end": 19.697,
+   "start": 19.722,
+   "end": 19.877,
    "words": [
     {
      "w": "Wow.",
-     "start": 19.542,
-     "end": 19.697
+     "start": 19.722,
+     "end": 19.877
     }
    ]
   },
   {
    "text": "Ja, dann kommentiert mal.",
-   "start": 20.147,
-   "end": 21.783,
+   "start": 20.327,
+   "end": 21.963,
    "words": [
     {
      "w": "Ja,",
-     "start": 20.147,
-     "end": 20.263
+     "start": 20.327,
+     "end": 20.443
     },
     {
      "w": "dann",
-     "start": 20.327,
-     "end": 20.583
+     "start": 20.507,
+     "end": 20.763
     },
     {
      "w": "kommentiert",
-     "start": 20.633,
-     "end": 21.143
+     "start": 20.813,
+     "end": 21.323
     },
     {
      "w": "mal.",
-     "start": 21.223,
-     "end": 21.783
+     "start": 21.403,
+     "end": 21.963
     }
    ]
   },
   {
    "text": "Mir egal, was ihr macht.",
-   "start": 21.863,
-   "end": 23.303,
+   "start": 22.043,
+   "end": 23.483,
    "words": [
     {
      "w": "Mir",
-     "start": 21.863,
-     "end": 22.103
+     "start": 22.043,
+     "end": 22.283
     },
     {
      "w": "egal,",
-     "start": 22.167,
-     "end": 22.503
+     "start": 22.347,
+     "end": 22.683
     },
     {
      "w": "was",
-     "start": 22.543,
-     "end": 22.663
+     "start": 22.723,
+     "end": 22.843
     },
     {
      "w": "ihr",
-     "start": 22.683,
-     "end": 22.743
+     "start": 22.863,
+     "end": 22.923
     },
     {
      "w": "macht.",
-     "start": 22.81,
-     "end": 23.303
+     "start": 22.99,
+     "end": 23.483
     }
    ]
   },
   {
    "text": "Juckt mich nicht.",
-   "start": 23.533,
-   "end": 24.503,
+   "start": 23.713,
+   "end": 24.683,
    "words": [
     {
      "w": "Juckt",
-     "start": 23.533,
-     "end": 23.783
+     "start": 23.713,
+     "end": 23.963
     },
     {
      "w": "mich",
-     "start": 23.831,
-     "end": 24.023
+     "start": 24.011,
+     "end": 24.203
     },
     {
      "w": "nicht.",
-     "start": 24.076,
-     "end": 24.503
+     "start": 24.256,
+     "end": 24.683
     }
    ]
   },
   {
    "text": "Soll ich hier eigentlich einfach ins Meer kacken oder wie läuft das jetzt?",
-   "start": 24.953,
-   "end": 28.161,
+   "start": 25.133,
+   "end": 28.341,
    "words": [
     {
      "w": "Soll",
-     "start": 24.953,
-     "end": 25.041
+     "start": 25.133,
+     "end": 25.221
     },
     {
      "w": "ich",
-     "start": 25.081,
-     "end": 25.201
+     "start": 25.261,
+     "end": 25.381
     },
     {
      "w": "hier",
-     "start": 25.217,
-     "end": 25.281
+     "start": 25.397,
+     "end": 25.461
     },
     {
      "w": "eigentlich",
-     "start": 25.317,
-     "end": 25.681
+     "start": 25.497,
+     "end": 25.861
     },
     {
      "w": "einfach",
-     "start": 25.731,
-     "end": 26.081
+     "start": 25.911,
+     "end": 26.261
     },
     {
      "w": "ins",
-     "start": 26.121,
-     "end": 26.241
+     "start": 26.301,
+     "end": 26.421
     },
     {
      "w": "Meer",
-     "start": 26.289,
-     "end": 26.481
+     "start": 26.469,
+     "end": 26.661
     },
     {
      "w": "kacken,",
-     "start": 26.561,
-     "end": 27.081
+     "start": 26.741,
+     "end": 27.261
     },
     {
      "w": "oder",
-     "start": 27.105,
-     "end": 27.201
+     "start": 27.285,
+     "end": 27.381
     },
     {
      "w": "wie",
-     "start": 27.221,
-     "end": 27.281
+     "start": 27.401,
+     "end": 27.461
     },
     {
      "w": "läuft",
-     "start": 27.334,
-     "end": 27.521
+     "start": 27.514,
+     "end": 27.701
     },
     {
      "w": "das",
-     "start": 27.581,
-     "end": 27.761
+     "start": 27.761,
+     "end": 27.941
     },
     {
      "w": "jetzt?",
-     "start": 27.814,
-     "end": 28.161
+     "start": 27.994,
+     "end": 28.341
     }
    ]
   }
@@ -516,7 +516,7 @@
   {
    "file": "../../sounds/yippee.mp3",
    "from": 0.58,
-   "to": 1.32,
+   "to": 1.5,
    "at": 15.918
   }
  ]
