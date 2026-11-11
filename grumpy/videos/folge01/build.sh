@@ -19,7 +19,7 @@ for e in $SFX; do IFS=: read -r F A0 A1 AT <<< "$e"; N=$((N+1))
   FILT+="[$N:a]atrim=$A0:$A1,asetpts=PTS-STARTPTS,aresample=44100,adelay=$(python3 -c "print(int($AT*1000))")|$(python3 -c "print(int($AT*1000))"),volume=1.4[s$N];"
   MIX+="[s$N]"
 done
-NIN=$((N+1))
+NIN=$N
 ffmpeg -loglevel error -y -framerate 25 -i "$WORK/fjpg/f%05d.jpg" -i voice.wav \
   -f lavfi -i "anoisesrc=color=brown:amplitude=0.5:sample_rate=44100,lowpass=f=900,volume='0.10+0.07*sin(2*PI*t/5)':eval=frame" \
   "${INPUTS[@]}" \
