@@ -17,7 +17,9 @@ LINES = [  # (Text für die Stimme, Untertitel, Sprechtempo, Lautstärke, Pause 
     ("Ausnahmslos alles, was ihr in die Kommentare schreibt,", "Ausnahmslos ALLES, was ihr in die Kommentare schreibt …", 0.86, 1.4, 0.1),
     ("wird mit mir und der Insel gemacht.", "… wird mit mir und der Insel gemacht.", 0.88, 1.4, 0.45),
     ("Das kann ja nur scheiße werden.", "Das kann ja nur sch🥚sse werden.", 0.9, 1.4, 0.4),
-    ("Wow.", "Wow.", 1.5, 1.2, 0.3),
+    ("Wow.", "Wow.", 1.5, 1.2, 0.6),
+    ("Ja, dann kommentiert mal.", "Ja, dann kommentiert mal.", 0.92, 1.4, 0.3),
+    ("Nur, egal was ihr macht.", "Nur … egal, was ihr macht.", 0.95, 1.3, 0.3),
 ]
 START = 0.25
 out, timeline, t = [np.zeros(int(START * SR), np.float32)], [], START

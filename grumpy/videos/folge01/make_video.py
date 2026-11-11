@@ -54,7 +54,7 @@ def rage(t):
     vein = ('<g transform="translate(640 330) scale(1.3)" fill="none" stroke="#E0262B" stroke-width="9" stroke-linecap="round">'
             '<path d="M-28 -8 Q-10 -10 -8 -28 M8 -28 Q10 -10 28 -8 M28 8 Q10 10 8 28 M-8 28 Q-10 10 -28 8"/></g>')
     flush = '<path d="M338 436 C338 330 410 276 512 276 C614 276 686 330 686 436 C686 530 660 596 604 644 C570 672 540 682 512 682 C484 682 454 672 420 644 C364 596 338 530 338 436 Z" fill="#FF2A2A" opacity="0.28"/>'
-    return puffs, flush + vein
+    return puffs, vein
 
 
 def character(t, amp, blink, head_rot, bounce, angry=False):
@@ -85,19 +85,27 @@ def L(i):
 
 
 # Kamera-Keyframes: (Zeit, Zoom, Mitte x, Mitte y) – Insel bleibt immer im Bild
+FEET = 1452          # Füße von Clara (Welt-Koordinate)
+FEET_ON_SCREEN = 1170  # darunter liegen die Untertitel (über der unteren TikTok-Zone)
+
+
+def cy_for(s, dy=0):
+    return FEET - (FEET_ON_SCREEN - 960) / s + dy
+
+
 KEYS = [
-    (0.00, 1.70, 560, 1110),
-    (L(0)["end"] + 0.1, 1.70, 560, 1110),
-    (L(2)["end"], 1.00, 540, 1000),
-    (L(3)["end"], 1.25, 555, 1130),
-    (L(4)["start"] + 0.2, 1.38, 330, 1250),
-    (L(5)["end"] + 0.2, 1.38, 790, 1250),
-    (L(6)["start"] + 0.3, 1.00, 540, 980),
-    (L(8)["end"], 1.10, 545, 1080),
-    (L(9)["start"] + 0.4, 1.50, 560, 1210),
-    (TL["duration"] + 0.2, 1.55, 560, 1215),
-    (TL["duration"] + 1.4, 1.00, 540, 980),
-    (DURATION + 1, 1.00, 540, 980),
+    (0.00, 1.25, 560, FEET - (1420 - 960) / 1.25),
+    (L(0)["end"] + 0.1, 1.25, 560, FEET - (1420 - 960) / 1.25),
+    (L(2)["end"], 1.00, 540, cy_for(1.0)),
+    (L(3)["end"], 1.20, 555, cy_for(1.2)),
+    (L(4)["start"] + 0.2, 1.38, 330, cy_for(1.38)),
+    (L(5)["end"] + 0.2, 1.38, 790, cy_for(1.38)),
+    (L(6)["start"] + 0.3, 1.00, 540, cy_for(1.0)),
+    (L(8)["end"], 1.08, 545, cy_for(1.08)),
+    (L(9)["start"] + 0.4, 1.40, 560, cy_for(1.4)),
+    (L(10)["end"] + 0.2, 1.42, 560, cy_for(1.42)),
+    (L(11)["start"] + 0.3, 1.00, 540, cy_for(1.0)),
+    (DURATION + 1, 1.00, 540, cy_for(1.0)),
 ]
 
 
@@ -109,7 +117,7 @@ def camera(t):
             break
     # Wackeln bei „WAS GLOTZT DU SO?!“
     if L(0)["start"] <= t <= L(0)["end"]:
-        x += 10 * math.sin(t * 61) ; y += 8 * math.cos(t * 47)
+        x += 22 * math.sin(t * 61) / s ; y += 18 * math.cos(t * 47) / s
     return s, x, y
 
 
@@ -155,22 +163,24 @@ def palm(x, y, t):
 
 
 def caption(text, t, t0):
-    """TikTok-Untertitel oben im Himmel, mit kurzem Pop-Effekt."""
+    """Untertitel UNTER Clara, innerhalb der TikTok-Sicherheitszone
+    (frei von Profil-/Like-Leiste rechts und Beschreibung unten)."""
     words, lines, cur = text.split(), [], ""
     for wd in words:
-        if len(cur) + len(wd) + 1 > 23 and cur:
+        if len(cur) + len(wd) + 1 > 22 and cur:
             lines.append(cur); cur = wd
         else:
             cur = (cur + " " + wd).strip()
     lines.append(cur)
-    pop = 1 + 0.18 * max(0, 1 - (t - t0) / 0.18)
-    big = text.isupper()
-    fs = 84 if big else 66
-    y0 = 400 - (len(lines) - 1) * fs * 0.6
-    out = [f'<g transform="translate(540 {y0:.0f}) scale({pop:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle">']
+    pop = 1 + 0.15 * max(0, 1 - (t - t0) / 0.18)
+    fs = 60
+    y0 = 1262
+    out = [f'<g transform="translate(470 {y0}) scale({pop:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle">']
     for k, ln in enumerate(lines):
-        col = "#FFE600" if big else "#FFFFFF"
-        out.append(f'<text y="{k * fs * 1.18:.0f}" font-size="{fs}" fill="{col}" stroke="#111" stroke-width="{fs*0.16:.0f}" '
+        col = "#FFE600" if any(w.isupper() and len(w) > 2 for w in ln.split()) else "#FFFFFF"
+        wpx = len(ln) * fs * 0.6 + 40
+        out.append(f'<rect x="{-wpx/2:.0f}" y="{k*74-fs+4}" width="{wpx:.0f}" height="{fs+20}" rx="18" fill="#000" opacity="0.38"/>')
+        out.append(f'<text y="{k * 74}" font-size="{fs}" fill="{col}" stroke="#111" stroke-width="11" '
                    f'stroke-linejoin="round" paint-order="stroke">{ln}</text>')
     out.append("</g>")
     return "".join(out)
@@ -181,7 +191,7 @@ def live_badge(t):
     pulse = 0.55 + 0.45 * (0.5 + 0.5 * math.sin(t * 6))
     viewers = 1200 + int(t * 37) + int(40 * math.sin(t * 3))
     v = f"{viewers/1000:.1f}".replace(".", ",") + "K"
-    return f'''<g transform="translate(40 190)" font-family="DejaVu Sans, sans-serif" font-weight="900">
+    return f'''<g transform="translate(40 225)" font-family="DejaVu Sans, sans-serif" font-weight="900">
   <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF4B5C"/><stop offset="1" stop-color="#D5001C"/></linearGradient>
   <filter id="sh" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.45"/></filter></defs>
   <g filter="url(#sh)">
@@ -219,7 +229,7 @@ def hook_text(t):
         txt += (f'<text y="{y}" font-size="112" fill="none" stroke="#FF2A00" stroke-width="40" stroke-linejoin="round" opacity="{0.55*glow:.2f}" filter="url(#glow)">{ln}</text>'
                 f'<text y="{y}" font-size="112" fill="{col}" stroke="#111" stroke-width="16" stroke-linejoin="round" paint-order="stroke">{ln}</text>')
     return (f'<defs><filter id="glow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="18"/></filter></defs>'
-            f'<g opacity="{fade:.2f}" transform="translate({540+jx:.1f} {470+jy:.1f}) scale({sc:.3f})" font-family="DejaVu Sans, sans-serif" font-weight="900" text-anchor="middle">{txt}</g>')
+            f'<g opacity="{fade:.2f}" transform="translate({540+jx:.1f} {440+jy:.1f}) scale({sc:.3f})" font-family="DejaVu Sans, sans-serif" font-weight="900" text-anchor="middle">{txt}</g>')
 
 
 # ---------------------------------------------------------------- Szene
@@ -328,7 +338,13 @@ def scene(t):
     world = "".join(w)
     cam = f'translate(540 960) scale({s:.4f}) translate({-cx:.1f} {-cy:.1f})'
 
-    hud = [live_badge(t)]
+    hud = []
+    if angry:
+        k = 0.55 + 0.45 * abs(math.sin(t * 13))
+        hud.append(f'<defs><radialGradient id="rv" cx="50%" cy="50%" r="75%"><stop offset="0.55" stop-color="#FF0000" stop-opacity="0"/>'
+                   f'<stop offset="0.85" stop-color="#FF1A1A" stop-opacity="0.55"/><stop offset="1" stop-color="#D00000" stop-opacity="0.9"/></radialGradient></defs>'
+                   f'<rect x="-20" y="-20" width="1120" height="1960" fill="url(#rv)" opacity="{k:.2f}"/>')
+    hud.append(live_badge(t))
     ln = line_at(t)
     if t <= L(0)["end"] + 0.35:
         hud.append(hook_text(t))
@@ -337,7 +353,7 @@ def scene(t):
     if t > TL["duration"] + 0.6:
         k = ease((t - TL["duration"] - 0.6) / 0.4)
         pulse = 1 + 0.04 * math.sin(t * 7)
-        hud.append(f'<g opacity="{k:.2f}" transform="translate(540 330) scale({pulse:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle">'
+        hud.append(f'<g opacity="{k:.2f}" transform="translate(500 420) scale({pulse:.3f})" font-family="DejaVu Sans, Noto Color Emoji, sans-serif" font-weight="900" text-anchor="middle">'
                    f'<text y="0" font-size="70" fill="#FFE600" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">WAS SOLL CLARA TUN?</text>'
                    f'<text y="95" font-size="56" fill="#FFFFFF" stroke="#111" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Schreibt\'s in die Kommentare</text>'
                    f'<text y="200" font-size="90" fill="#FFFFFF" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">↓</text></g>')
