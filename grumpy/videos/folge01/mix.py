@@ -16,7 +16,7 @@ inputs = ["-framerate", "25", "-i", f"{frames}/f%05d.jpg", "-i", "voice.wav",
           "-i", str(music)]
 filt = ["[1:a]aresample=44100,apad,asplit=2[v][vsc]",
         # Musik: hörbar, aber deutlich leiser; duckt zusätzlich, sobald Clara spricht
-        "[3:a]volume=0.20[mus]",
+        "[3:a]volume=0.13[mus]",
         "[mus][vsc]sidechaincompress=threshold=0.02:ratio=6:attack=15:release=350:makeup=1[md]"]
 mix, n = ["[v]", "[2:a]", "[md]"], 3
 for sfx in tl.get("sfx", []):

@@ -114,9 +114,8 @@ def cy_for(s, dy=0):
     return FEET - (FEET_ON_SCREEN - 960) / s + dy
 
 
-HOOK_S = 3.4          # Anfang: Clara füllt den ganzen Bereich unter dem Text (Kopf bis Knie)
-EYES_Y = 1452 + (524 - 1550) * 0.43          # Augenhöhe in Welt-Koordinaten
-HOOK_CY = EYES_Y + (960 - 690) / HOOK_S      # Augen bei y=690, direkt unter dem Text
+HOOK_S = 1.0          # Anfang: der Platz gehört dem Text; Clara ganz darunter (Augen frei)
+HOOK_CY = FEET - (1700 - 960) / HOOK_S      # Augen bei y=690, direkt unter dem Text
 
 KEYS = [
     (0.00, HOOK_S, 560, HOOK_CY),
@@ -260,26 +259,50 @@ def live_badge(t):
   </g></g>'''
 
 
+from PIL import ImageFont
+_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+HOOK_LINES = ["WAS", "GLOTZT", "DU SO?!"]
+HOOK_BOX = (70, 890, 350, 1165)     # x links/rechts, y oben/unten – frei von TikTok-Leisten, über Claras Augen
+
+
+def _hook_layout():
+    x0, x1, y0, y1 = HOOK_BOX
+    sizes = []
+    for ln in HOOK_LINES:
+        f = ImageFont.truetype(_FONT, 100)
+        sizes.append(100 * (x1 - x0) / f.getlength(ln))
+    caps = [0.73 * fs for fs in sizes]
+    gap = ((y1 - y0) - sum(caps)) / (len(caps) - 1)
+    ys, y = [], y0
+    for c in caps:
+        y += c; ys.append(y); y += gap
+    return list(zip(HOOK_LINES, sizes, ys))
+
+
+HOOK = _hook_layout()
+
+
 def hook_text(t):
-    """„WAS GLOTZT DU SO?!“ – ab Sekunde 0 groß in der Mitte, leuchtet beim Schreien riesig auf."""
+    """„WAS GLOTZT DU SO?!“ – ab Sekunde 0 riesig über den ganzen freien Bereich, leuchtet beim Schreien auf."""
     l0 = L(0)
     speaking = l0["start"] <= t <= l0["end"] + 0.1
     if speaking:
         k = (t - l0["start"]) / (l0["end"] - l0["start"])
-        sc = 1.0 + 0.05 * min(k * 4, 1) + 0.015 * math.sin(t * 40)
+        sc = 1.0 + 0.03 * min(k * 4, 1) + 0.012 * math.sin(t * 40)
         glow, col = 1.0, "#FFE600"
-        jx, jy = 9 * math.sin(t * 57), 7 * math.cos(t * 43)
+        jx, jy = 7 * math.sin(t * 57), 6 * math.cos(t * 43)
     else:
         sc, glow, col, jx, jy = 1.0, 0.0, "#FFFFFF", 0, 0
     fade = 1 - ease((t - l0["end"] - 0.1) / 0.25) if t > l0["end"] + 0.1 else 1
-    lines = [("WAS GLOTZT", 0), ("DU SO?!", 1)]
+    cx = (HOOK_BOX[0] + HOOK_BOX[1]) / 2
+    cy = (HOOK_BOX[2] + HOOK_BOX[3]) / 2
     txt = ""
-    for ln, k in lines:
-        y = k * 138
-        txt += (f'<text y="{y}" font-size="120" fill="none" stroke="#FF2A00" stroke-width="40" stroke-linejoin="round" opacity="{0.55*glow:.2f}" filter="url(#glow)">{ln}</text>'
-                f'<text y="{y}" font-size="120" fill="{col}" stroke="#111" stroke-width="16" stroke-linejoin="round" paint-order="stroke">{ln}</text>')
-    return (f'<defs><filter id="glow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="18"/></filter></defs>'
-            f'<g opacity="{fade:.2f}" transform="translate({540+jx:.1f} {468+jy:.1f}) scale({sc:.3f})" font-family="DejaVu Sans, sans-serif" font-weight="900" text-anchor="middle">{txt}</g>')
+    for ln, fs, y in HOOK:
+        txt += (f'<text x="{cx}" y="{y:.0f}" font-size="{fs:.0f}" fill="none" stroke="#FF2A00" stroke-width="{fs*0.28:.0f}" stroke-linejoin="round" opacity="{0.6*glow:.2f}" filter="url(#glow)">{ln}</text>'
+                f'<text x="{cx}" y="{y:.0f}" font-size="{fs:.0f}" fill="{col}" stroke="#111" stroke-width="{fs*0.11:.0f}" stroke-linejoin="round" paint-order="stroke">{ln}</text>')
+    return (f'<defs><filter id="glow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="22"/></filter></defs>'
+            f'<g opacity="{fade:.2f}" transform="translate({cx+jx:.1f} {cy+jy:.1f}) scale({sc:.3f}) translate({-cx} {-cy})" '
+            f'font-family="DejaVu Sans, sans-serif" font-weight="900" text-anchor="middle">{txt}</g>')
 
 
 def word_start(line, word):
