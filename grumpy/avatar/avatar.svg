@@ -76,19 +76,30 @@
   </g>
 
   </g>
-  <!-- Körper: zerfetzte Strickjacke -->
+  <!-- Körper: Rave-Outfit (Neon-Top, Netzshirt, Festivalbändchen) -->
+  <defs>
+    <pattern id="mesh" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="22" height="22" fill="none"/>
+      <path d="M0 0 H22 M0 0 V22" stroke="#1E1E1E" stroke-width="3"/>
+    </pattern>
+  </defs>
   <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round">
-    <path d="M190 1030 C205 870 320 800 512 792 C704 800 819 870 834 1030 Z" fill="#E9A23B"/>
-    <path d="M440 795 L512 900 L584 795 Z" fill="#F7F1E8"/>
-    <path d="M430 793 L470 1030 M594 793 L554 1030" fill="none"/>
-    <circle cx="474" cy="955" r="9" fill="#B5651D"/>
-    <!-- Löcher und Risse -->
-    <path d="M300 900 l20 -18 l14 22 l18 -10 l-6 28 l-26 6 z" fill="#6E4A2A"/>
-    <path d="M760 870 l22 10 l-6 18 l16 14 l-28 4 z" fill="#6E4A2A"/>
-    <path d="M250 1000 l18 -26 l12 20 l20 -14 l4 30" fill="none"/>
-    <!-- Flicken aus Palmblatt -->
-    <rect x="360" y="840" width="56" height="48" rx="6" fill="#3FA34D" transform="rotate(-10 388 864)"/>
-    <path d="M366 846 l8 8 M378 842 l0 10 M404 878 l8 6 M396 884 l-2 10" fill="none" stroke-width="3"/>
+    <path d="M190 1030 C205 870 320 800 512 792 C704 800 819 870 834 1030 Z" fill="#F2C29B"/>
+    <path d="M190 1030 C205 870 320 800 512 792 C704 800 819 870 834 1030 Z" fill="url(#mesh)"/>
+    <path d="M380 1030 L392 850 Q512 900 632 850 L644 1030 Z" fill="#FF3FA4"/>
+    <path d="M392 850 L400 800 M632 850 L624 800" fill="none" stroke="#FF3FA4" stroke-width="12"/>
+    <path d="M392 850 L400 800 M632 850 L624 800" fill="none" stroke-width="3"/>
+    <!-- Riss im Top -->
+    <path d="M560 1030 l10 -40 l-18 -14 l22 -26 l-6 -20" fill="none"/>
+    <!-- Smiley-Aufdruck, leicht verwaschen -->
+    <circle cx="470" cy="960" r="34" fill="#FFE600" stroke-width="5"/>
+    <circle cx="459" cy="952" r="4" fill="#2B2B2B" stroke="none"/><circle cx="481" cy="952" r="4" fill="#2B2B2B" stroke="none"/>
+    <path d="M454 970 q16 14 32 0" fill="none" stroke-width="4"/>
+  </g>
+  <!-- Sand und Wassertropfen auf den Schultern -->
+  <g fill="#E9C77A"><circle cx="700" cy="880" r="4"/><circle cx="720" cy="905" r="3"/><circle cx="330" cy="900" r="4"/><circle cx="745" cy="930" r="3"/></g>
+  <g fill="#BFEFFF" stroke="#2B2B2B" stroke-width="3">
+    <path d="M760 860 q-8 14 0 19 q8 -5 0 -19z"/><path d="M680 930 q-8 14 0 19 q8 -5 0 -19z"/>
   </g>
   <!-- Krabbe auf der Schulter -->
   <g stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
@@ -108,14 +119,18 @@
 
   <!-- Dutt mit Bleistift -->
   <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round">
-    <g transform="rotate(-28 512 200)">
-      <rect x="380" y="186" width="270" height="26" rx="4" fill="#FFC93C"/>
-      <path d="M650 186 L690 199 L650 212 Z" fill="#F1D3A8"/>
-      <path d="M675 194 L690 199 L675 204 Z" fill="#2B2B2B"/>
-      <rect x="360" y="186" width="24" height="26" rx="5" fill="#F48FB1"/>
-    </g>
     <circle cx="512" cy="215" r="82" fill="#7A4329"/>
     <path d="M455 200 C480 165 545 160 570 205 M470 240 C500 215 540 220 560 245" fill="none" stroke="#4E2814" stroke-width="5"/>
+  </g>
+  <!-- kaputte Rave-Sonnenbrille im Dutt (ein Glas fehlt) -->
+  <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round" transform="translate(0 -48) rotate(-12 512 250)">
+    <path d="M420 250 h184" fill="none" stroke="#FF3FA4" stroke-width="10"/>
+    <path d="M420 250 h184" fill="none" stroke-width="3"/>
+    <path d="M430 238 h66 l-6 34 q-28 10 -54 0 z" fill="#FF3FA4"/>
+    <path d="M440 244 h48 l-4 24 q-20 7 -40 0 z" fill="#3B1F5C"/>
+    <path d="M528 238 h66 l-6 34 q-28 10 -54 0 z" fill="none" stroke="#FF3FA4" stroke-width="8"/>
+    <path d="M528 238 h66 l-6 34 q-28 10 -54 0 z" fill="none" stroke-width="3"/>
+    <path d="M452 250 l14 14" stroke="#FFFFFF" stroke-width="3"/>
   </g>
   <!-- abstehende Strähnen -->
   <g fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round">
@@ -142,6 +157,9 @@
   <path d="M462 630 L462 800 Q512 830 562 800 L562 630 Z" fill="#EDB48C" stroke="#2B2B2B" stroke-width="6"/>
   <path d="M462 690 Q512 720 562 690 L562 660 L462 660 Z" fill="#D9976E"/>
 
+  <!-- Knicklicht-Kette -->
+  <path d="M458 740 Q512 790 566 740" fill="none" stroke="#2B2B2B" stroke-width="14" stroke-linecap="round"/>
+  <path d="M458 740 Q512 790 566 740" fill="none" stroke="#39FF6A" stroke-width="7" stroke-linecap="round"/>
   <!-- Ohren + Ohrringe -->
   <g stroke="#2B2B2B" stroke-width="6">
     <ellipse cx="338" cy="490" rx="24" ry="40" fill="#F2C29B"/>
@@ -215,20 +233,23 @@
   <path d="M478 640 Q512 650 546 640" fill="none" stroke="#B9806A" stroke-width="4" stroke-linecap="round"/>
   <path d="M450 632 l-6 8 M574 632 l6 8" stroke="#2B2B2B" stroke-width="5" stroke-linecap="round"/>
 
- <!-- Kokosnuss "NEIN." mit Strohhalm -->
-  <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M742 760 L700 620 L716 616 L758 756" fill="#FFFFFF"/>
-    <path d="M708 640 l14 -4 M714 662 l14 -4 M720 684 l14 -4" fill="none" stroke="#E85D5D" stroke-width="7"/>
-    <circle cx="700" cy="880" r="125" fill="#7A4A26"/>
-    <path d="M610 820 l14 6 M640 790 l10 12 M760 800 l-8 12 M790 860 l-14 4 M780 940 l-12 -6 M630 960 l12 -8" fill="none" stroke="#5A3418" stroke-width="5"/>
-    <ellipse cx="740" cy="772" rx="28" ry="12" fill="#F7F1E8"/>
+  <!-- Rave-Reste im Gesicht: verschmierte Wimperntusche, Neon-Farbe, Glitzer -->
+  <g fill="none" stroke="#2B2B2B" stroke-linecap="round" opacity="0.75">
+    <path d="M412 500 C410 525 416 545 410 572" stroke-width="5"/>
+    <path d="M425 503 C426 520 422 532 426 548" stroke-width="3.5"/>
+    <path d="M612 500 C616 522 610 540 616 560" stroke-width="5"/>
   </g>
-  <text x="722" y="905" text-anchor="middle" font-family="Impact, 'Arial Black', 'DejaVu Sans', sans-serif" font-weight="900" font-size="50" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="2" transform="rotate(-6 722 890)">NEIN.</text>
-  <!-- Hand -->
-  <g fill="#F2C29B" stroke="#2B2B2B" stroke-width="5">
-    <rect x="560" y="818" width="62" height="34" rx="17"/>
-    <rect x="556" y="856" width="66" height="34" rx="17"/>
-    <rect x="558" y="894" width="62" height="34" rx="17"/>
-    <rect x="566" y="932" width="54" height="30" rx="15"/>
+  <g stroke="#2B2B2B" stroke-width="3" stroke-linecap="round">
+    <path d="M360 585 l50 -12 M366 600 l42 -10" stroke="#FF3FA4" stroke-width="7"/>
+    <path d="M664 585 l-50 -12 M658 600 l-42 -10" stroke="#39FF6A" stroke-width="7"/>
   </g>
+  <g>
+    <circle cx="455" cy="430" r="4" fill="#FF3FA4"/><circle cx="470" cy="520" r="3.5" fill="#3FD2FF"/>
+    <circle cx="560" cy="525" r="4" fill="#FFD23F"/><circle cx="590" cy="425" r="3.5" fill="#39FF6A"/>
+    <circle cx="640" cy="520" r="3" fill="#FF3FA4"/><circle cx="385" cy="520" r="3" fill="#FFD23F"/>
+    <path d="M565 385 l4 10 l10 4 l-10 4 l-4 10 l-4 -10 l-10 -4 l10 -4 z" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="2"/>
+    <path d="M430 620 l3 7 l7 3 l-7 3 l-3 7 l-3 -7 l-7 -3 l7 -3 z" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="2"/>
+  </g>
+  <!-- nasse Haarsträhne mit Seetang -->
+  <path d="M640 330 C660 380 650 420 668 460" fill="none" stroke="#2E7D3A" stroke-width="9" stroke-linecap="round"/>
 </svg>
