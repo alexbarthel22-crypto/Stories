@@ -1,0 +1,279 @@
+"""Folge 1 – erzeugt pro Videobild eine SVG-Datei (Insel-Szene + Avatar + Kamera + Untertitel).
+Danach: node render.js <svg-ordner> <png-ordner>  und  ffmpeg (siehe build.sh).
+"""
+import json, math, re, sys
+from pathlib import Path
+
+HERE = Path(__file__).parent
+AVATAR = (HERE / "../../avatar/avatar.svg").read_text()
+TL = json.loads((HERE / "timeline.json").read_text())
+ENV = json.loads((HERE / "envelope.json").read_text())
+FPS = 25
+END_CARD = 3.4
+DURATION = TL["duration"] + END_CARD
+OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "_frames_svg"
+OUT.mkdir(parents=True, exist_ok=True)
+O = "#2B2B2B"
+
+# ---------------------------------------------------------------- Avatar-Teile aus avatar.svg
+defs = "".join(re.findall(r"<defs>.*?</defs>", AVATAR, re.S))
+char = AVATAR[AVATAR.index("  <!-- lange Haare hinten"):AVATAR.index("  <!-- Flaschenpost")]
+m0 = char.index("  <!-- Mund:")
+m1 = char.index('  <path d="M640 330')
+CHAR_A, CHAR_B = char[:m0], char[m1:]
+HEAD_T = '<g transform="translate(222.6 225.5) scale(0.62)">'
+assert HEAD_T in CHAR_A
+
+
+def mouth(a):
+    """Mund im Kopf-Koordinatensystem; a = Öffnung 0..1."""
+    if a < 0.08:
+        return ('<path d="M470 630 Q490 613 505 617 Q512 613 519 617 Q534 613 554 630 Q512 622 470 630 Z" fill="#D98C84" stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round"/>'
+                '<path d="M472 631 Q512 623 552 631 Q541 650 512 651 Q483 650 472 631 Z" fill="#E39A90" stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round"/>'
+                '<path d="M467 632 l-6 9 M557 632 l6 9" stroke="#2B2B2B" stroke-width="4" stroke-linecap="round"/>')
+    h = 8 + 40 * a
+    w = 40 - 6 * a
+    return (f'<path d="M{512-w} 628 Q512 {612} {512+w} 628 Q{512+w*0.8} {628+h} 512 {630+h} Q{512-w*0.8} {628+h} {512-w} 628 Z" fill="#5A1E22" stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round"/>'
+            f'<path d="M{512-w*0.7} 626 Q512 {618} {512+w*0.7} 626 L{512+w*0.6} {632} Q512 {626} {512-w*0.6} {632} Z" fill="#FFFFFF"/>'
+            f'<path d="M{512-w} 628 Q512 {606} {512+w} 628" fill="none" stroke="#D98C84" stroke-width="7" stroke-linecap="round"/>'
+            f'<path d="M{512-w*0.75} {632+h*0.55} Q512 {638+h*1.05} {512+w*0.75} {632+h*0.55}" fill="none" stroke="#E39A90" stroke-width="7" stroke-linecap="round"/>')
+
+
+BLINK = ('<g><ellipse cx="440" cy="480" rx="50" ry="34" fill="#F2C29B"/><ellipse cx="584" cy="480" rx="50" ry="34" fill="#F2C29B"/>'
+         '<path d="M394 484 Q440 498 486 484 M538 484 Q584 498 630 484" fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round"/></g>')
+
+
+def character(t, amp, blink, head_rot, bounce):
+    a = CHAR_A.replace(HEAD_T, f'<g transform="rotate({head_rot:.2f} 540 640) translate(222.6 225.5) scale(0.62)">')
+    return f'<g transform="translate(0 {-bounce:.1f})">{a}{mouth(amp)}{BLINK if blink else ""}{CHAR_B}</g>'
+
+
+# ---------------------------------------------------------------- Hilfsfunktionen
+def ease(x):
+    x = min(max(x, 0), 1)
+    return x * x * (3 - 2 * x)
+
+
+def line_at(t):
+    for l in TL["lines"]:
+        if l["start"] - 0.05 <= t <= l["end"] + 0.25:
+            return l
+    return None
+
+
+def L(i):
+    return TL["lines"][i]
+
+
+# Kamera-Keyframes: (Zeit, Zoom, Mitte x, Mitte y) – Insel bleibt immer im Bild
+KEYS = [
+    (0.00, 1.70, 560, 1190),
+    (L(0)["end"] + 0.1, 1.70, 560, 1190),
+    (L(2)["end"], 1.00, 540, 1000),
+    (L(3)["start"] + 0.1, 1.38, 330, 1250),
+    (L(4)["end"] + 0.2, 1.38, 790, 1250),
+    (L(5)["start"] + 0.3, 1.00, 540, 980),
+    (L(7)["end"], 1.10, 545, 1080),
+    (L(8)["start"] + 0.4, 1.50, 560, 1210),
+    (TL["duration"] + 0.2, 1.55, 560, 1215),
+    (TL["duration"] + 1.4, 1.00, 540, 980),
+    (DURATION + 1, 1.00, 540, 980),
+]
+
+
+def camera(t):
+    for (t0, s0, x0, y0), (t1, s1, x1, y1) in zip(KEYS, KEYS[1:]):
+        if t0 <= t <= t1:
+            k = ease((t - t0) / max(t1 - t0, 1e-6))
+            s, x, y = s0 + (s1 - s0) * k, x0 + (x1 - x0) * k, y0 + (y1 - y0) * k
+            break
+    # Wackeln bei „WAS GLOTZT DU SO?!“
+    if L(0)["start"] <= t <= L(0)["end"]:
+        x += 10 * math.sin(t * 61) ; y += 8 * math.cos(t * 47)
+    return s, x, y
+
+
+def wave_row(y, t, speed, spacing, phase, col="#BFEFFF", w=4):
+    off = (t * speed + phase) % spacing
+    xs = [-200 + off + k * spacing for k in range(int(1500 / spacing) + 2)]
+    d = "".join(f"M{x:.0f} {y} q18 -10 36 0 q18 10 36 0 " for x in xs)
+    return f'<path d="{d}" fill="none" stroke="{col}" stroke-width="{w}" stroke-linecap="round" opacity="0.85"/>'
+
+
+def gull(x, y, t, s=1.0):
+    f = 10 * math.sin(t * 9)
+    return (f'<path transform="translate({x:.0f} {y:.0f}) scale({s})" d="M-24 {f:.1f} Q-12 -12 0 0 Q12 -12 24 {f:.1f}" '
+            f'fill="none" stroke="{O}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>')
+
+
+def crab(x, y, s, t):
+    legs = 4 * math.sin(t * 14)
+    return f'''<g transform="translate({x:.1f} {y}) scale({s}) translate(-296 -848)" stroke="{O}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M262 852 l-22 {-20+legs:.1f} M262 862 l-26 {-6-legs:.1f} M330 852 l22 {-20-legs:.1f} M330 862 l26 {-6+legs:.1f}" fill="none"/>
+    <path d="M268 832 C250 800 230 800 228 815 C240 812 250 820 255 832 Z" fill="#E8553E"/>
+    <path d="M324 832 C342 800 362 800 364 815 C352 812 342 820 337 832 Z" fill="#E8553E"/>
+    <ellipse cx="296" cy="848" rx="40" ry="24" fill="#E8553E"/>
+    <path d="M284 826 v-14 M308 826 v-14" fill="none"/>
+    <circle cx="284" cy="810" r="6" fill="#FFFFFF"/><circle cx="308" cy="810" r="6" fill="#FFFFFF"/>
+    <circle cx="281" cy="811" r="2.5" fill="{O}" stroke="none"/><circle cx="305" cy="811" r="2.5" fill="{O}" stroke="none"/>
+    <path d="M286 856 q10 -6 20 0" fill="none" stroke-width="4"/></g>'''
+
+
+def palm(x, y, t):
+    sway = 3.5 * math.sin(t * 1.3)
+    return f'''<g stroke="{O}" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M{x-18} {y} C{x-10} {y-200} {x+10} {y-380} {x+60} {y-520} L{x+88} {y-510} C{x+40} {y-380} {x+22} {y-200} {x+18} {y} Z" fill="#B07A45"/>
+    <path d="M{x-10} {y-60} l26 4 M{x-6} {y-150} l26 5 M{x+4} {y-240} l26 6 M{x+20} {y-330} l26 7 M{x+40} {y-420} l24 8" fill="none" stroke-width="3.5"/>
+    <g transform="rotate({sway:.2f} {x+74} {y-515})" fill="#3FA34D">
+      <path d="M{x+74} {y-515} C{x+14} {y-560} {x-56} {y-545} {x-104} {y-485} C{x-48} {y-515} {x+14} {y-517} {x+74} {y-515} Z"/>
+      <path d="M{x+74} {y-515} C{x+26} {y-605} {x-46} {y-620} {x-96} {y-590} C{x-30} {y-585} {x+26} {y-560} {x+74} {y-515} Z"/>
+      <path d="M{x+74} {y-515} C{x+96} {y-605} {x+166} {y-640} {x+232} {y-628} C{x+166} {y-600} {x+116} {y-560} {x+74} {y-515} Z"/>
+      <path d="M{x+74} {y-515} C{x+134} {y-545} {x+200} {y-525} {x+240} {y-462} C{x+186} {y-492} {x+134} {y-502} {x+74} {y-515} Z"/>
+      <path d="M{x+74} {y-515} C{x+64} {y-585} {x+86} {y-645} {x+124} {y-675} C{x+104} {y-615} {x+94} {y-560} {x+74} {y-515} Z"/>
+    </g>
+    <circle cx="{x+64}" cy="{y-500}" r="15" fill="#7A4A26"/><circle cx="{x+90}" cy="{y-496}" r="15" fill="#7A4A26"/></g>'''
+
+
+def caption(text, t, t0):
+    """TikTok-Untertitel oben im Himmel, mit kurzem Pop-Effekt."""
+    words, lines, cur = text.split(), [], ""
+    for wd in words:
+        if len(cur) + len(wd) + 1 > 23 and cur:
+            lines.append(cur); cur = wd
+        else:
+            cur = (cur + " " + wd).strip()
+    lines.append(cur)
+    pop = 1 + 0.18 * max(0, 1 - (t - t0) / 0.18)
+    big = text.isupper()
+    fs = 84 if big else 66
+    y0 = 400 - (len(lines) - 1) * fs * 0.6
+    out = [f'<g transform="translate(540 {y0:.0f}) scale({pop:.3f})" font-family="DejaVu Sans, Arial, sans-serif" font-weight="900" text-anchor="middle">']
+    for k, ln in enumerate(lines):
+        col = "#FFE600" if big else "#FFFFFF"
+        out.append(f'<text y="{k * fs * 1.18:.0f}" font-size="{fs}" fill="{col}" stroke="#111" stroke-width="{fs*0.16:.0f}" '
+                   f'stroke-linejoin="round" paint-order="stroke">{ln}</text>')
+    out.append("</g>")
+    return "".join(out)
+
+
+# ---------------------------------------------------------------- Szene
+def scene(t):
+    i = min(int(t * FPS), len(ENV) - 1)
+    amp = ENV[i] if t < TL["duration"] else 0.0
+    blink = (t % 3.3) < 0.12 or (6.1 < t < 6.22)
+    angry = L(0)["start"] <= t <= L(0)["end"]
+    head_rot = 5 * math.sin(t * 22) if angry else 2.0 * math.sin(t * 1.7) + 3 * amp * math.sin(t * 9)
+    bounce = 10 * amp + 3 * math.sin(t * 2.1)
+    s, cx, cy = camera(t)
+
+    w = []
+    # Himmel + Ferne
+    w.append('<rect x="-400" y="-400" width="1880" height="1180" fill="url(#vsky)"/>')
+    w.append(f'<g transform="rotate({t*8:.1f} 860 250)" stroke="#FFE27A" stroke-width="10" stroke-linecap="round">' +
+             "".join(f'<path d="M860 {250-118} v-34" transform="rotate({k*30} 860 250)"/>' for k in range(12)) + "</g>")
+    w.append(f'<circle cx="860" cy="250" r="88" fill="#FFD23F" stroke="{O}" stroke-width="6"/>')
+    for bx, by, sc, sp in [(120, 470, 1.0, 9), (700, 560, 0.8, 6), (420, 320, 0.6, 12)]:
+        x = (bx + t * sp) % 1500 - 200
+        w.append(f'<g transform="translate({x:.0f} {by}) scale({sc})" fill="#FFFFFF" opacity="0.92"><ellipse cx="0" cy="0" rx="95" ry="26"/>'
+                 f'<ellipse cx="45" cy="-20" rx="55" ry="30"/><ellipse cx="-35" cy="-12" rx="40" ry="22"/></g>')
+    w.append(gull((t * 85) % 1500 - 200, 380 + 20 * math.sin(t), t))
+    w.append(gull((t * 85 + 90) % 1500 - 200, 420 + 20 * math.sin(t + 1), t + 0.4, 0.8))
+    w.append(gull(1180 - (t * 60) % 1500, 610, t + 1.3, 0.6))
+    # Meer
+    w.append('<rect x="-400" y="760" width="1880" height="1560" fill="url(#vsea)"/>')
+    w.append(f'<path d="M-400 760 H1480" stroke="{O}" stroke-width="4"/>')
+    # Ferne Inseln am Horizont
+    w.append(f'<path d="M30 762 Q90 715 170 722 Q230 728 270 762 Z" fill="#7CC27A" stroke="{O}" stroke-width="4"/>'
+             f'<path d="M150 724 q4 -40 14 -60 M164 664 q-18 -6 -32 4 M164 664 q18 -8 30 2 M164 664 q-4 -18 -16 -24" fill="none" stroke="{O}" stroke-width="4" stroke-linecap="round"/>'
+             f'<path d="M880 762 Q930 735 990 745 Q1030 750 1050 762 Z" fill="#8FA0A8" stroke="{O}" stroke-width="4"/>')
+    for k, y in enumerate(range(800, 1960, 70)):
+        w.append(wave_row(y, t, 18 + k * 3, 260 + (k % 3) * 40, k * 83, w=3 + k * 0.15))
+    # Hai-Flosse kreist
+    fx = (t * 95) % 1700 - 300
+    w.append(f'<g transform="translate({fx:.0f} {1800 + 6*math.sin(t*3):.0f})"><path d="M-30 0 Q0 -10 10 -70 Q28 -30 50 0 Z" fill="#5D6D7E" stroke="{O}" stroke-width="5" stroke-linejoin="round"/>'
+             f'<path d="M-60 6 q20 -10 40 0 M50 6 q20 -10 40 0" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/></g>')
+    # Treibgut: Sneaker + Flamingo
+    bob = 8 * math.sin(t * 2.4)
+    w.append(f'<g transform="translate(150 {1700+bob:.1f}) rotate({-12+4*math.sin(t*2):.1f})" stroke="{O}" stroke-width="5" stroke-linejoin="round">'
+             f'<path d="M-20 -20 L20 -20 L22 6 L-54 10 C-62 10 -60 -6 -46 -8 Z" fill="#FFFFFF"/><rect x="-60" y="6" width="84" height="18" rx="6" fill="#39FF6A"/></g>')
+    w.append(f'<g transform="translate(905 {1745-bob:.1f}) rotate({3*math.sin(t*1.8):.1f})" stroke="{O}" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">'
+             f'<ellipse cx="0" cy="0" rx="92" ry="28" fill="#FF8FC2"/><ellipse cx="0" cy="-4" rx="48" ry="11" fill="#2A8DB5"/>'
+             f'<path d="M58 -14 C88 -54 73 -94 48 -94 C28 -94 23 -69 38 -64" fill="none" stroke="{O}" stroke-width="22"/>'
+             f'<path d="M58 -14 C88 -54 73 -94 48 -94 C28 -94 23 -69 38 -64" fill="none" stroke="#FF8FC2" stroke-width="12"/>'
+             f'<path d="M34 -72 l-18 10 l14 6 z" fill="{O}"/></g>')
+    # Insel: Flachwasser, Schaum, Sand
+    foam = (t * 40) % 60
+    w.append('<ellipse cx="540" cy="1440" rx="545" ry="235" fill="#7FDCDC" opacity="0.75"/>')
+    w.append(f'<ellipse cx="540" cy="1440" rx="500" ry="205" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-dasharray="40 20" stroke-dashoffset="{foam:.0f}" opacity="0.9"/>')
+    w.append(f'<ellipse cx="540" cy="1430" rx="485" ry="192" fill="#F4D58D" stroke="{O}" stroke-width="6"/>')
+    w.append('<ellipse cx="540" cy="1442" rx="485" ry="180" fill="none" stroke="#E2BE6E" stroke-width="18" opacity="0.6"/>')
+    w.append('<g fill="#D9B46A">' + "".join(f'<circle cx="{x}" cy="{y}" r="5"/>' for x, y in
+             [(180, 1440), (260, 1530), (700, 1580), (860, 1500), (420, 1350), (980, 1440), (620, 1330), (320, 1600)]) + "</g>")
+    # Fußspuren vom Wasser bis zu ihr
+    w.append('<g fill="#D9B46A">' + "".join(
+        f'<ellipse cx="{x}" cy="{y}" rx="9" ry="5" transform="rotate(-20 {x} {y})"/>' for x, y in
+        [(330, 1600), (360, 1580), (392, 1566), (420, 1545), (452, 1532), (480, 1512), (508, 1500)]) + "</g>")
+    # Hintergrund-Objekte auf der Insel
+    w.append(f'<g stroke="{O}" stroke-width="5" stroke-linejoin="round"><ellipse cx="955" cy="1380" rx="46" ry="30" fill="#9AA6B2"/><ellipse cx="915" cy="1395" rx="28" ry="20" fill="#B5C0CA"/></g>')
+    w.append(f'<g stroke="{O}" stroke-width="5" stroke-linejoin="round" fill="#4CAF50">'
+             f'<path d="M800 1350 C780 1300 820 1270 845 1300 C850 1260 900 1260 905 1305 C930 1280 960 1310 940 1350 Z"/></g>')
+    w.append(palm(230, 1420, t))
+    w.append(f'<g stroke="{O}" stroke-width="5"><circle cx="268" cy="1430" r="20" fill="#7A4A26"/><circle cx="300" cy="1440" r="17" fill="#7A4A26"/></g>')
+    # Flaschenpost
+    w.append(f'<g transform="translate(860 1455) rotate(-20) scale(0.8)" stroke="{O}" stroke-width="5" stroke-linejoin="round">'
+             f'<path d="M-50 -20 h90 q20 0 20 20 q0 20 -20 20 h-90 q-14 0 -14 -20 q0 -20 14 -20 z" fill="#9FE3C9"/>'
+             f'<rect x="58" y="-10" width="34" height="20" rx="4" fill="#9FE3C9"/><rect x="90" y="-12" width="14" height="24" rx="3" fill="#B07A45"/>'
+             f'<rect x="-38" y="-10" width="66" height="20" rx="3" fill="#FFF6DC" stroke-width="3"/></g>'
+             f'<text x="0" y="6" transform="translate(860 1455) rotate(-20) scale(0.8)" text-anchor="middle" font-family="DejaVu Sans" font-weight="900" font-size="15" fill="#D64545">SOS</text>')
+    # Avatar (Füße bei 1550 im Avatar-Koordinatensystem)
+    w.append(f'<g transform="translate(560 1452) scale(0.43) translate(-540 -1550)">{character(t, amp, blink, head_rot, bounce)}</g>')
+    # Vordergrund-Objekte
+    w.append(f'<g transform="translate(370 1520) rotate(-8) scale(0.5)" stroke="{O}" stroke-width="8" stroke-linejoin="round">'
+             f'<rect x="-100" y="-120" width="200" height="230" rx="14" fill="#2E2E38"/>'
+             f'<circle cx="0" cy="-60" r="34" fill="#4A4A58"/><circle cx="0" cy="-60" r="12" fill="{O}"/>'
+             f'<circle cx="0" cy="40" r="52" fill="#4A4A58"/><circle cx="0" cy="40" r="18" fill="{O}"/>'
+             f'<path d="M-80 -100 l30 40 l-10 20 l26 30" fill="none" stroke="#9AA0B5" stroke-width="5"/>'
+             f'<path d="M-90 -110 C-60 -80 -70 -40 -45 -20" fill="none" stroke="#2E7D3A" stroke-width="10" stroke-linecap="round"/></g>'
+             f'<path d="M300 1560 C340 1540 400 1540 440 1560 L440 1590 L300 1590 Z" fill="#F4D58D"/>'
+             f'<path d="M300 1560 C340 1540 400 1540 440 1560" fill="none" stroke="{O}" stroke-width="4" stroke-linecap="round"/>')
+    w.append(f'<g transform="translate(760 1545) rotate(22) scale(0.55)" stroke="{O}" stroke-width="7" stroke-linejoin="round">'
+             f'<rect x="-40" y="-70" width="80" height="140" rx="12" fill="#1F1F25"/><rect x="-32" y="-58" width="64" height="116" rx="6" fill="#3A4256"/>'
+             f'<path d="M-24 -50 l22 30 l-8 18 l26 22 M-2 -20 l26 -14" fill="none" stroke="#C9D3EE" stroke-width="4"/></g>')
+    w.append(f'<path d="M480 1575 l34 -24" stroke="{O}" stroke-width="13" stroke-linecap="round"/><path d="M480 1575 l34 -24" stroke="#3FD2FF" stroke-width="6" stroke-linecap="round"/>')
+    w.append(f'<path transform="translate(640 1590) scale(0.7)" d="M0 -40 l12 26 l28 2 l-22 18 l8 28 l-26 -16 l-26 16 l8 -28 l-22 -18 l28 -2 z" fill="#FF8A5C" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>')
+    w.append(f'<g fill="#F7B5C8" stroke="{O}" stroke-width="3"><path d="M200 1500 c-8 -14 6 -24 14 -16 c8 -8 22 2 14 16 z"/><path d="M930 1470 c-8 -14 6 -24 14 -16 c8 -8 22 2 14 16 z"/></g>')
+    w.append(crab(705 + 28 * math.sin(t * 1.6), 1470, 0.55, t))
+
+    world = "".join(w)
+    cam = f'translate(540 960) scale({s:.4f}) translate({-cx:.1f} {-cy:.1f})'
+
+    hud = []
+    hud.append('<g font-family="DejaVu Sans, Arial, sans-serif" font-weight="900">'
+               '<rect x="40" y="200" width="420" height="70" rx="35" fill="#111" opacity="0.75"/>'
+               '<text x="250" y="248" text-anchor="middle" font-size="36" fill="#FFE600">TAG 1 · DIE INSEL</text></g>')
+    ln = line_at(t)
+    if ln and t < TL["duration"]:
+        hud.append(caption(ln["text"], t, ln["start"]))
+    if t > TL["duration"] + 0.6:
+        k = ease((t - TL["duration"] - 0.6) / 0.4)
+        pulse = 1 + 0.04 * math.sin(t * 7)
+        hud.append(f'<g opacity="{k:.2f}" transform="translate(540 330) scale({pulse:.3f})" font-family="DejaVu Sans, Arial, sans-serif" font-weight="900" text-anchor="middle">'
+                   f'<text y="0" font-size="70" fill="#FFE600" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">WAS SOLL SIE TUN?</text>'
+                   f'<text y="95" font-size="56" fill="#FFFFFF" stroke="#111" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Schreibt\'s in die Kommentare</text>'
+                   f'<text y="200" font-size="90" fill="#FFFFFF" stroke="#111" stroke-width="12" stroke-linejoin="round" paint-order="stroke">↓</text></g>')
+
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+{defs}
+<defs>
+<linearGradient id="vsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FB8EC"/><stop offset="0.7" stop-color="#BFE9FA"/><stop offset="1" stop-color="#E6F7FD"/></linearGradient>
+<linearGradient id="vsea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#36AACE"/><stop offset="1" stop-color="#166F96"/></linearGradient>
+</defs>
+<g transform="{cam}">{world}</g>
+{"".join(hud)}
+</svg>'''
+
+
+n = int(DURATION * FPS)
+for f in range(n):
+    (OUT / f"f{f:05d}.svg").write_text(scene(f / FPS))
+print(n, "Bilder,", round(DURATION, 2), "s")
