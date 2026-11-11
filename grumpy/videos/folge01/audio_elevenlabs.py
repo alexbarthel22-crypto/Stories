@@ -13,7 +13,7 @@ HERE = Path(__file__).parent
 
 # (Regieanweisung für v3, gesprochener Text, Untertitel)
 LINES = [
-    ("[shouting angrily]", "WAS GLOTZT DU SO?!", "WAS GLOTZT DU SO?!"),
+    ("[angry]", "Was glotzt du so?!", "WAS GLOTZT DU SO?!"),
     ("[annoyed]", "Digga, gestern war ich auf einem Rave", "Digga, gestern war ich auf einem Rave …"),
     ("", "und bin heute hier aufgewacht.", "… und bin heute HIER aufgewacht."),
     ("[frustrated]", "Wer will mich hier hopps nehmen?!", "Wer will mich hier hopps nehmen?!"),
@@ -63,10 +63,10 @@ al = resp["alignment"]
 chars, st, en = al["characters"], al["character_start_times_seconds"], al["character_end_times_seconds"]
 assert "".join(chars) == full, "Alignment passt nicht zum Text"
 
-LEAD = 0.25  # Stille am Anfang
+LEAD = 0.0   # Video beginnt sofort mit dem ersten Satz
 mp3 = HERE / f"_voice_{VARIANT}.mp3"
 mp3.write_bytes(base64.b64decode(resp["audio_base64"]))
-subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp3), "-af", f"adelay={int(LEAD*1000)},aresample=16000",
+subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp3), "-af", "aresample=16000",
                 "-ac", "1", str(HERE / "voice.wav")], check=True)
 mp3.unlink()
 
@@ -86,6 +86,37 @@ for (a, b), (_, spoken, sub) in zip(spans, LINES):
 with wave.open(str(HERE / "voice.wav")) as w:
     sr = w.getframerate()
     audio = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
+
+def shift(lines, dt):
+    for ln in lines:
+        ln["start"] = round(ln["start"] - dt, 3); ln["end"] = round(ln["end"] - dt, 3)
+        for wd in ln["words"]:
+            wd["start"] = round(wd["start"] - dt, 3); wd["end"] = round(wd["end"] - dt, 3)
+
+
+# 1) Stille vor dem ersten Wort weg -> „Was glotzt du so?!“ ab Sekunde 0
+head = max(timeline[0]["start"] - 0.03, 0)
+audio = audio[int(head * sr):]
+shift(timeline, head)
+
+# 2) Ersten Satz schneller (Tempo +30 %, gleiche Tonhöhe/Stimme)
+TEMPO = 1.3
+cut_at = timeline[0]["end"] + 0.05
+seg = audio[:int(cut_at * sr)]
+tmp_in, tmp_out = HERE / "_seg_in.wav", HERE / "_seg_out.wav"
+with wave.open(str(tmp_in), "wb") as w:
+    w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
+    w.writeframes((np.clip(seg, -1, 1) * 32767).astype(np.int16).tobytes())
+subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(tmp_in), "-af", f"atempo={TEMPO}", str(tmp_out)], check=True)
+with wave.open(str(tmp_out)) as w:
+    fast = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
+tmp_in.unlink(); tmp_out.unlink()
+audio = np.concatenate([fast, audio[int(cut_at * sr):]])
+for key in ("start", "end"):
+    timeline[0][key] = round(timeline[0][key] / TEMPO, 3)
+for wd in timeline[0]["words"]:
+    wd["start"] = round(wd["start"] / TEMPO, 3); wd["end"] = round(wd["end"] / TEMPO, 3)
+shift(timeline[1:], cut_at - cut_at / TEMPO)
 
 # Sprechpausen kürzen (kurze Pause nach dem Schrei, sonst höchstens 0.45 s) – Zeiten mitschieben
 MAX_GAP = {0: 0.15}
