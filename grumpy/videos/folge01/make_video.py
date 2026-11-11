@@ -114,8 +114,9 @@ def cy_for(s, dy=0):
     return FEET - (FEET_ON_SCREEN - 960) / s + dy
 
 
-HOOK_S = 2.1          # Anfang: Clara füllt das Bild (Füße unten, Text oben, Augen frei)
-HOOK_CY = FEET - (1700 - 960) / HOOK_S
+HOOK_S = 3.4          # Anfang: Clara füllt den ganzen Bereich unter dem Text (Kopf bis Knie)
+EYES_Y = 1452 + (524 - 1550) * 0.43          # Augenhöhe in Welt-Koordinaten
+HOOK_CY = EYES_Y + (960 - 690) / HOOK_S      # Augen bei y=690, direkt unter dem Text
 
 KEYS = [
     (0.00, HOOK_S, 560, HOOK_CY),

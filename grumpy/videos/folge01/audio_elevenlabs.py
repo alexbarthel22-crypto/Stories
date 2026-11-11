@@ -135,7 +135,7 @@ for i in range(len(timeline) - 1):
         for wd in ln["words"]:
             wd["start"] = round(wd["start"] - removed_now, 3); wd["end"] = round(wd["end"] - removed_now, 3)
 # Sound-Effekt nach „gemacht“: Pause einfügen, Effekt wird in build.sh dazugemischt
-SFX = [("../../sounds/yippee.mp3", 0.58, 1.32, "gemacht")]   # (Datei, Ausschnitt von, bis, nach Wort)
+SFX = [("../../sounds/yippee.mp3", 0.58, 1.50, "gemacht")]   # (Datei, Ausschnitt von, bis, nach Wort)
 sfx_out = []
 for fn, a0, a1, after in SFX:
     i = next(k for k, ln in enumerate(timeline) if any(w["w"].startswith(after) for w in ln["words"]))
