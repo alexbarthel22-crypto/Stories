@@ -108,7 +108,7 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width=
   <path d="M10 1800 C80 1770 200 1770 270 1800" fill="none" stroke="{O}" stroke-width="5" stroke-linecap="round"/>
 
   <!-- lange, wellige Haare hinten (blond, mit Glanz) -->
-  <path d="M540 318 C644 314 714 388 702 500 C700 560 736 610 720 680 C706 750 744 800 726 880 C712 940 750 985 720 1018 C702 1040 672 1032 664 1008 C650 1034 618 1032 606 1004 L474 1004 C462 1032 430 1034 416 1008 C408 1032 378 1040 360 1018 C330 985 368 940 354 880 C336 800 374 750 360 680 C344 610 380 560 378 500 C366 388 436 314 540 318 Z"
+  <path d="M540 372 C628 370 700 414 702 500 C700 560 736 610 720 680 C706 750 744 800 726 880 C712 940 750 985 720 1018 C702 1040 672 1032 664 1008 C650 1034 618 1032 606 1004 L474 1004 C462 1032 430 1034 416 1008 C408 1032 378 1040 360 1018 C330 985 368 940 354 880 C336 800 374 750 360 680 C344 610 380 560 378 500 C380 414 452 370 540 372 Z"
         fill="#E8C468" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
   <g fill="none" stroke-linecap="round">
     <path d="M396 520 C386 600 404 660 392 730 C382 800 410 860 396 940" stroke="#C99A3C" stroke-width="5"/>
@@ -153,12 +153,12 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width=
   <path d="M458 738 C472 716 502 708 540 707 C578 708 608 716 622 738 L614 790 L466 790 Z" fill="url(#net)"/>
 
   <!-- schwarzes Crop-Top (Oberweite betont, kurz) -->
-  <path d="M466 744 Q540 760 614 744 C640 776 644 822 612 854 L468 854 C436 822 440 776 466 744 Z" fill="#1C1C22" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M468 744 C500 754 580 754 612 744 C632 762 642 792 636 816 C632 836 622 848 612 854 L468 854 C458 848 448 836 444 816 C438 792 448 762 468 744 Z" fill="#1C1C22" stroke="{O}" stroke-width="6" stroke-linejoin="round"/>
   <path d="M478 748 L482 712 M602 748 L598 712" stroke="#1C1C22" stroke-width="9"/>
-  <path d="M480 800 Q508 834 538 814 M542 814 Q572 834 600 800" fill="none" stroke="#4A4A55" stroke-width="4" stroke-linecap="round"/>
+  <path d="M540 754 C541 768 539 780 535 790" fill="none" stroke="#3A3A44" stroke-width="3" stroke-linecap="round"/>
+  <path d="M462 822 Q496 846 532 834 M548 834 Q584 846 618 822" fill="none" stroke="#3A3A44" stroke-width="3" stroke-linecap="round"/>
+  <path d="M470 780 Q482 764 504 762 M610 780 Q598 764 576 762" fill="none" stroke="#4C4C58" stroke-width="5" stroke-linecap="round"/>
   <path d="M472 844 Q540 852 608 844" fill="none" stroke="#3A3A44" stroke-width="3"/>
-  <circle cx="540" cy="770" r="10" fill="#FFE600" stroke="{O}" stroke-width="3"/>
-  <circle cx="536" cy="769" r="1.8" fill="{O}"/><circle cx="544" cy="769" r="1.8" fill="{O}"/><path d="M535 775 q5 5 10 0" fill="none" stroke="{O}" stroke-width="2"/>
   <path d="M596 854 l4 -16 l-8 -6 l9 -12" fill="none" stroke="#6A6A78" stroke-width="3.5"/>
 
   <!-- Knicklicht-Kette -->

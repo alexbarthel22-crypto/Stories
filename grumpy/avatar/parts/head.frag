@@ -1,23 +1,6 @@
   <!-- Kopf -->
   <g transform="translate(222.6 225.5) scale(0.62)">
-<!-- kaputte Rave-Sonnenbrille im Dutt (ein Glas fehlt) -->
-  <g stroke="#2B2B2B" stroke-width="6" stroke-linejoin="round" transform="translate(0 -48) rotate(-12 512 250)">
-    <path d="M420 250 h184" fill="none" stroke="#FF3FA4" stroke-width="10"/>
-    <path d="M420 250 h184" fill="none" stroke-width="3"/>
-    <path d="M430 238 h66 l-6 34 q-28 10 -54 0 z" fill="#FF3FA4"/>
-    <path d="M440 244 h48 l-4 24 q-20 7 -40 0 z" fill="#3B1F5C"/>
-    <path d="M528 238 h66 l-6 34 q-28 10 -54 0 z" fill="none" stroke="#FF3FA4" stroke-width="8"/>
-    <path d="M528 238 h66 l-6 34 q-28 10 -54 0 z" fill="none" stroke-width="3"/>
-    <path d="M452 250 l14 14" stroke="#FFFFFF" stroke-width="3"/>
-  </g>
 
-  <!-- Palmblatt + Muschel im Haar -->
-  <g stroke="#2B2B2B" stroke-width="5" stroke-linejoin="round">
-    <path d="M640 300 C690 250 760 255 790 290 C740 290 690 300 640 300 Z" fill="#3FA34D"/>
-    <path d="M650 298 L780 288" fill="none" stroke-width="3"/>
-    <g transform="translate(160 -110)"><path d="M360 320 C350 300 370 285 385 295 C400 285 418 300 405 320 Z" fill="#F7B5C8"/>
-    <path d="M372 316 l4 -16 M384 318 l0 -18 M396 316 l-4 -16" fill="none" stroke-width="3"/></g>
-  </g>
   <!-- Ohren + Ohrringe -->
   <g stroke="#2B2B2B" stroke-width="6">
     <ellipse cx="338" cy="490" rx="24" ry="40" fill="#F2C29B"/>
