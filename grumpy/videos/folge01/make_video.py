@@ -439,7 +439,8 @@ def scene(t, profile=None):
     s, cx, cy = camera(t)
     if profile:
         amp, blink, angry, head_rot, bounce = 0.0, False, False, -3.0, 0.0
-        s, cx, cy, size = profile
+        s, cx, cy, size = profile[:4]
+        hgt = profile[4] if len(profile) > 4 else size
 
     w = []
     # Himmel + Ferne
@@ -536,10 +537,10 @@ def scene(t, profile=None):
 
     world = "".join(w)
     if profile:
-        return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" width="{size}" height="{size}">{defs}'
+        return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {hgt}" width="{size}" height="{hgt}">{defs}'
                 '<defs><linearGradient id="vsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FB8EC"/><stop offset="0.7" stop-color="#BFE9FA"/><stop offset="1" stop-color="#E6F7FD"/></linearGradient>'
                 '<linearGradient id="vsea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#36AACE"/><stop offset="1" stop-color="#166F96"/></linearGradient></defs>'
-                f'<g transform="translate({size/2} {size/2}) scale({s}) translate({-cx} {-cy})">{world}</g></svg>')
+                f'<g transform="translate({size/2} {hgt/2}) scale({s}) translate({-cx} {-cy})">{world}</g></svg>')
     cam = f'translate(540 960) scale({s:.4f}) translate({-cx:.1f} {-cy:.1f})'
 
     hud = []
