@@ -123,7 +123,7 @@ ACID_CACHE = {}
 bars = int(LEN / BAR) + 1
 for b in range(bars):
     t0 = b * BAR
-    intro = b == 0
+    intro = False            # alles ab Sekunde 0
     for k in range(4):
         add(KICK, t0 + k * BEAT, 1.0)
         add(RUMBLE, t0 + k * BEAT + 0.03, 0.35)
@@ -142,7 +142,7 @@ for b in range(bars):
             if key not in ACID_CACHE:
                 ACID_CACHE[key] = acid(note, acc, cut)
             add(ACID_CACHE[key], t0 + k * S16, 0.16, 0.2)
-    if b >= 2 and b % 2 == 0:   # Riff ab Takt 3
+    if b % 2 == 0:   # Riff ab Takt 1
         for step, ch in STAB_HITS:
             s = stab(ch, S16 * 2)
             add(s, t0 + step * S16, 0.2, -0.15)

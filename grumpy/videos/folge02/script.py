@@ -35,7 +35,8 @@ SEGMENTS = [
         ("", "Hier ist dein Part. Angelstation steht.", "Hier ist dein Part. Angelstation steht."),
     ]),
     dict(key="angeln", user="LHW_Oli", comment="Angeln", pre=1.0, lines=[
-        ("[bored]", "Angeln. Mal sehen…", "Angeln. Mal sehen …"),
+        ("[confused]", "Digga, warte mal, woher hab ich eigentlich die Angel?", "Digga, warte mal, woher hab ich eigentlich die ANGEL?"),
+        ("[shrugs]", "Naja, egal.", "Naja, egal."),
         ("[surprised]", "Mein Schuh?!", "Mein SCHUH?!"),
     ]),
     dict(key="bob", user="《M》 ▸ Clara🖤", comment="Bob kann Fisch fangen 2x pro Tag morgens und abends.", pre=1.2, lines=[
