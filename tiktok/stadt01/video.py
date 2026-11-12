@@ -4,7 +4,8 @@ os.makedirs('subs',exist_ok=True)
 inp=[];fl=[]
 RUN={'06':14,'07':8}
 for i,(img,st,en) in enumerate(T['scenes']):
-    d=en-st; inp+=['-loop','1','-framerate','30','-t',f'{d:.3f}','-i',f'img/{img}.png']
+    d=en-st; clip=f'clips/{img}.mp4'; isclip=os.path.exists(clip)
+    inp+=(['-i',clip] if isclip else ['-loop','1','-framerate','30','-t',f'{d:.3f}','-i',f'img/{img}.png'])
     sx=[];sy=[]
     for t0,A in T['shakes']:
         if st-0.01<=t0<en:
@@ -13,7 +14,8 @@ for i,(img,st,en) in enumerate(T['scenes']):
     sx.append("6*sin(t*1.3)"); sy.append("5*sin(t*1.7)")
     dx=40 if i%2 else -40
     X=f"(iw-1080)/2+{dx}*t/{d:.3f}+"+"+".join(sx); Y=f"(ih-1920)/2-30*t/{d:.3f}+"+"+".join(sy)
-    fl.append(f"[{i}:v]scale=1420:-2,crop=1080:1920:'{X}':'{Y}',setsar=1,fps=30,format=yuv420p[s{i}]")
+    pre=f"fps=30,tpad=stop_mode=clone:stop_duration=20,trim=duration={d:.3f},setpts=PTS-STARTPTS,scale=1420:2524:force_original_aspect_ratio=increase," if isclip else "scale=1420:-2,"
+    fl.append(f"[{i}:v]{pre}crop=1080:1920:'{X}':'{Y}',setsar=1,fps=30,format=yuv420p[s{i}]")
 n=len(T['scenes'])
 fl.append("".join(f"[s{i}]" for i in range(n))+f"concat=n={n}:v=1:a=0[cat]")
 end=T['scenes'][-1][2]
