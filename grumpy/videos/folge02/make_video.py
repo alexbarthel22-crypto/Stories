@@ -478,14 +478,15 @@ def line_at(t):
     return None
 
 
-def scene(t):
+def scene(t, cam=None, hud_on=True, show_clara=True):
+    """cam=(zoom, x, y) überschreibt die Kamera; hud_on=False -> ohne Einblendungen (z. B. Thumbnail)."""
     i = min(int(t * FPS), len(ENV) - 1)
     amp = ENV[i] if t < TL["duration"] else 0.0
     angry = t <= HOOK_END + 0.2
     blink = (t % 3.3) < 0.12 and not angry
     head_rot = 1.5 * math.sin(t * 22) if angry else 2.0 * math.sin(t * 1.7) + 3 * amp * math.sin(t * 9)
     bounce = 10 * amp + 3 * math.sin(t * 2.1)
-    s, cx, cy = camera(t)
+    s, cx, cy = camera(t) if cam is None else cam
 
     w = ['<rect x="-7000" y="-7000" width="17000" height="7760" fill="url(#vsky)"/>']
     if EV["vulkan"] + 1.0 <= t <= EV["vulkan"] + 4.0:   # orangefarbener Himmel beim Ausbruch
@@ -544,7 +545,8 @@ def scene(t):
     walking = 0 < (abs(px - HOME[0]) + abs(py - HOME[1])) and not (abs(px - JETTY_END[0]) < 1 and abs(py - JETTY_END[1]) < 1)
     step = 6 * abs(math.sin(t * 12)) if walking else 0
     hand = (px + 7, py - 92 - step)
-    w.append(f'<g transform="translate({px:.1f} {py - step:.1f}) scale({CL}) translate(-540 -1550)">{clara(t, amp, blink, head_rot, bounce, angry)}</g>')
+    if show_clara:
+        w.append(f'<g transform="translate({px:.1f} {py - step:.1f}) scale({CL}) translate(-540 -1550)">{clara(t, amp, blink, head_rot, bounce, angry)}</g>')
     w.append(held_items(t, hand))
     if EV["tsunami"] + 1.4 <= t <= EV["tsunami"] + 5.0:   # nass: Tropfen
         for j in range(6):
@@ -578,19 +580,22 @@ def scene(t):
     world = "".join(w)
 
     hud = []
-    if t <= HOOK_END + 0.2:
+    if not hud_on:
+        pass
+    elif t <= HOOK_END + 0.2:
         k = 0.55 + 0.45 * abs(math.sin(t * 13))
         hud.append(f'<defs><radialGradient id="rv" cx="50%" cy="50%" r="75%"><stop offset="0.55" stop-color="#FF0000" stop-opacity="0"/>'
                    f'<stop offset="0.85" stop-color="#FF1A1A" stop-opacity="0.55"/><stop offset="1" stop-color="#D00000" stop-opacity="0.9"/></radialGradient></defs>'
                    f'<rect x="-20" y="-20" width="1120" height="1960" fill="url(#rv)" opacity="{k:.2f}"/>')
-    hud.append(live_badge(t))
-    if t <= HOOK_END + 0.35:
+    if hud_on:
+        hud.append(live_badge(t))
+    if hud_on and t <= HOOK_END + 0.35:
         hud.append(hook(t))
-    for seg in TL["segments"]:
+    for seg in (TL["segments"] if hud_on else []):
         if seg["comment"]:
             hud.append(sticker(seg, t))
     ln = line_at(t)
-    if ln and t > HOOK_END + 0.3 and t < TL["duration"]:
+    if hud_on and ln and t > HOOK_END + 0.3 and t < TL["duration"]:
         hud.append(base.caption(ln["text"], t, ln["start"], ln["end"], ln.get("words")))
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
