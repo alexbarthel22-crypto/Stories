@@ -63,7 +63,7 @@ CAM = {  # Zielbild pro Kommentar: (Zoom, x, y) – nah bei Clara, weit bei gro�
     "vulkan": (0.36, 1150, 900), "tsunami": (0.6, 560, 1150), "baum": (0.75, 380, 1150),
     "zigaretten": (1.6, 560, cy_for(1.6)), "haus": (1.2, 440, cy_for(1.2)), "toilette": (1.9, 380, cy_for(1.9)),
     "doener": (1.3, 700, cy_for(1.3)), "angel": (0.75, 700, 1680), "angeln": (1.4, 790, 1890),
-    "bob": (2.0, 500, 1385), "rucksack": (2.4, 600, 1409), "krabbe": (3.0, 580, 1397),
+    "bob": (2.0, 500, 1385), "rucksack": (2.4, 600, 1295), "krabbe": (3.0, 580, 1372),
     "flugzeug": (0.75, 560, 1050), "villa": (0.2, 2100, 1200), "outro": (0.3, 1800, 1250),
 }
 KEYS = [(0.0, HOOK_S, 560, HOOK_CY), (HOOK_END + 0.15, HOOK_S, 560, HOOK_CY),
@@ -422,26 +422,52 @@ def live_badge(t):
     return s.replace("TAG 1 · DIE INSEL", "TAG 2 · DIE INSEL")
 
 
+from PIL import ImageFont as _IF
+_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+STICKER_MAX_H = 560      # höchstens so hoch (px) – bleibt über Claras Gesicht/der Bildmitte
+
+
+def _wrap_px(text, fs, width):
+    f = _IF.truetype(_BOLD, int(fs))
+    lines, cur = [], ""
+    for wd in text.split(" "):
+        test = (cur + " " + wd).strip()
+        if cur and f.getlength(test) > width:
+            lines.append(cur); cur = wd
+        else:
+            cur = test
+    return lines + ([cur] if cur else [])
+
+
+def _sticker_layout(text):
+    """Größte Schrift, bei der der GANZE Kommentar in die Box passt."""
+    fs = 33.0
+    while True:
+        lines = _wrap_px(text, fs, 770)
+        h = 70 + fs * 1.33 * len(lines) + 26
+        if h <= STICKER_MAX_H or fs <= 15:
+            return fs, lines, h
+        fs -= 1
+
+
 def sticker(seg, t):
-    """„Antwort auf Kommentar“-Sticker oben (wie bei TikTok)."""
+    """„Antwort auf Kommentar“-Sticker oben (wie bei TikTok) – immer der vollständige Kommentar."""
     t0, t1 = seg["event"] - 0.3, seg["end"] + 0.25
     if not (t0 <= t <= t1):
         return ""
     sc = pop(t, t0, 0.3) * (1 - ease(k_of(t, t1 - 0.2, 0.2)))
     F = 'font-family="DejaVu Sans, Noto Color Emoji, Noto Sans CJK JP, sans-serif"'
-    lines = base._wrap(seg["comment"], 40)
-    if len(lines) > 2:
-        lines = lines[:2]; lines[1] = lines[1].rstrip(" …") + " …"
-    h = 96 + 44 * len(lines)
+    fs, lines, h = _sticker_layout(seg["comment"])
+    lh = fs * 1.33
     user = seg["user"]
     out = (f'<defs><filter id="sk" x="-10%" y="-20%" width="120%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000" flood-opacity="0.35"/></filter></defs>'
            f'<g transform="translate(540 {330 + h/2:.0f}) scale({sc:.3f}) translate(-450 {-h/2:.0f})" filter="url(#sk)">'
-           f'<rect x="0" y="0" width="900" height="{h}" rx="26" fill="#FFFFFF"/>'
+           f'<rect x="0" y="0" width="900" height="{h:.0f}" rx="26" fill="#FFFFFF"/>'
            f'<circle cx="54" cy="52" r="30" fill="#{(sum(map(ord, user)) * 2654435761) % 0xAAAAAA + 0x333333:06X}"/>'
            f'<circle cx="54" cy="44" r="11" fill="#FFFFFF"/><path d="M34 70 Q54 48 74 70 Z" fill="#FFFFFF"/>'
            f'<text x="100" y="44" font-size="25" fill="#8A8B91" {F} font-weight="600">Antwort auf den Kommentar von {user}</text>')
     for k, ln in enumerate(lines):
-        out += f'<text x="100" y="{92 + k*44}" font-size="31" fill="#161823" {F} font-weight="700">{ln}</text>'
+        out += f'<text x="100" y="{70 + fs + k*lh:.0f}" font-size="{fs:.0f}" fill="#161823" {F} font-weight="700">{ln}</text>'
     return out + "</g>"
 
 

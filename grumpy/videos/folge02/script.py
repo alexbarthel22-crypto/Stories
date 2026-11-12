@@ -11,7 +11,7 @@ SEGMENTS = [
         ("[sarcastic]", "Das fängt ja hier wieder richtig respektlos an.", "Das fängt ja hier wieder richtig RESPEKTLOS an."),
     ]),
     dict(key="tsunami", user="david🇬🇪", comment="ey ein tsunamie kommt jetzt", pre=1.9, lines=[
-        ("[surprised]", "Oha, was ein Tsunami.", "Oha, was ein TSUNAMI."),
+        ("[annoyed]", "Oha, was ein Tsunami.", "Oha, was ein TSUNAMI."),
         ("[sarcastic]", "Als hätte Regen nicht gereicht. Übertreib halt direkt.", "Als hätte Regen nicht gereicht. Übertreib halt direkt."),
     ]),
     dict(key="baum", user="Corny_Tech", comment="Der baum soll umfallen", pre=1.1, lines=[
@@ -45,14 +45,19 @@ SEGMENTS = [
          "Das ist Bob. Fängt zweimal am Tag Fisch. Mein neuer bester Freund."),
     ]),
     dict(key="rucksack", user="joleen",
-         comment="Ich gebe dir einen Rucksack, damit du deine Sachen transportieren kannst. Dazu bekommst du eine Wasserflasche …",
+         comment=("Ich gebe dir einen Rucksack, damit du deine Sachen transportieren kannst. Dazu bekommst du eine Wasserflasche, "
+                  "damit du Wasser aufbewahren kannst, eine Taschenlampe, damit du nachts sehen kannst, und einen Kompass, damit du "
+                  "dich orientieren kannst. Außerdem gebe ich dir ein Zelt, das dich vor Regen schützt, ein Seil, um Dinge zu "
+                  "befestigen, ein Erste-Hilfe-Set für kleine Verletzungen und Streichhölzer, um ein Feuer zu machen. Ein Messer "
+                  "bekommst du auch, um Lebensmittel vorzubereiten und Materialien zu schneiden."),
          pre=0.8, lines=[
         ("[surprised]", "Wasser, Lampe, Kompass, Zelt, Seil, Erste Hilfe, Streichhölzer, Messer…",
          "Wasser, Lampe, Kompass, Zelt, Seil, Erste Hilfe, Streichhölzer, Messer …"),
         ("[impressed]", "Joleen, du bist die Einzige hier mit Verstand.", "Joleen, du bist die Einzige hier mit Verstand."),
     ]),
     dict(key="krabbe", user="Muchacho",
-         comment="Trink erst mal etwas eine Kokosnuss vom Baum und dann töte die Krabbe und iss sie roh …", pre=0.5, lines=[
+         comment="Trink erst mal etwas eine Kokosnuss vom Baum und dann töte die Krabbe und iss sie roh fals du es braten kannst tu es!",
+         pre=0.5, lines=[
         ("[satisfied]", "Kokosnuss: gut.", "Kokosnuss: gut."),
         ("[annoyed]", "Aber die Krabbe? Nein. Die versteht mich als Einzige.", "Aber die Krabbe? NEIN. Die versteht mich als Einzige."),
     ]),

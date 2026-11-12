@@ -1,5 +1,5 @@
 {
- "duration": 92.192,
+ "duration": 92.423,
  "lines": [
   {
    "seg": 0,
@@ -167,27 +167,27 @@
    "idx": 0,
    "text": "Oha, was ein TSUNAMI.",
    "start": 12.963,
-   "end": 14.229,
+   "end": 14.39,
    "words": [
     {
      "w": "Oha,",
      "start": 12.963,
-     "end": 13.255
+     "end": 13.415
     },
     {
      "w": "was",
-     "start": 13.29,
-     "end": 13.394
+     "start": 13.467,
+     "end": 13.623
     },
     {
      "w": "ein",
-     "start": 13.446,
-     "end": 13.603
+     "start": 13.676,
+     "end": 13.832
     },
     {
      "w": "Tsunami.",
-     "start": 13.649,
-     "end": 14.229
+     "start": 13.856,
+     "end": 14.39
     }
    ]
   },
@@ -195,48 +195,48 @@
    "seg": 2,
    "idx": 1,
    "text": "Als hätte Regen nicht gereicht. Übertreib halt direkt.",
-   "start": 14.542,
-   "end": 16.928,
+   "start": 14.703,
+   "end": 17.158,
    "words": [
     {
      "w": "Als",
-     "start": 14.542,
-     "end": 14.563
+     "start": 14.703,
+     "end": 14.723
     },
     {
      "w": "hätte",
-     "start": 14.609,
-     "end": 14.841
+     "start": 14.758,
+     "end": 14.932
     },
     {
      "w": "Regen",
-     "start": 14.893,
-     "end": 15.119
+     "start": 14.984,
+     "end": 15.21
     },
     {
      "w": "nicht",
-     "start": 15.143,
-     "end": 15.258
+     "start": 15.234,
+     "end": 15.35
     },
     {
      "w": "gereicht.",
-     "start": 15.314,
-     "end": 15.746
+     "start": 15.405,
+     "end": 16.115
     },
     {
      "w": "Übertreib",
-     "start": 15.884,
-     "end": 16.441
+     "start": 16.15,
+     "end": 16.602
     },
     {
      "w": "halt",
-     "start": 16.469,
-     "end": 16.58
+     "start": 16.63,
+     "end": 16.741
     },
     {
      "w": "direkt.",
-     "start": 16.62,
-     "end": 16.928
+     "start": 16.79,
+     "end": 17.158
     }
    ]
   },
@@ -244,33 +244,33 @@
    "seg": 3,
    "idx": 0,
    "text": "Der einzige Schatten hier. Danke.",
-   "start": 18.341,
-   "end": 20.023,
+   "start": 18.571,
+   "end": 20.254,
    "words": [
     {
      "w": "Der",
-     "start": 18.341,
-     "end": 18.354
+     "start": 18.571,
+     "end": 18.584
     },
     {
      "w": "einzige",
-     "start": 18.41,
-     "end": 18.771
+     "start": 18.64,
+     "end": 19.002
     },
     {
      "w": "Schatten",
-     "start": 18.806,
-     "end": 19.119
+     "start": 19.037,
+     "end": 19.35
     },
     {
      "w": "hier.",
-     "start": 19.161,
-     "end": 19.397
+     "start": 19.391,
+     "end": 19.628
     },
     {
      "w": "Danke.",
-     "start": 19.484,
-     "end": 20.023
+     "start": 19.715,
+     "end": 20.254
     }
    ]
   },
@@ -278,63 +278,63 @@
    "seg": 4,
    "idx": 0,
    "text": "Ich rauch nicht mal! Und jetzt sind die auch noch nass.",
-   "start": 21.837,
-   "end": 25.002,
+   "start": 22.067,
+   "end": 25.232,
    "words": [
     {
      "w": "Ich",
-     "start": 21.837,
-     "end": 21.941
+     "start": 22.067,
+     "end": 22.171
     },
     {
      "w": "rauch",
-     "start": 22.01,
-     "end": 22.289
+     "start": 22.241,
+     "end": 22.519
     },
     {
      "w": "nicht",
-     "start": 22.335,
-     "end": 22.567
+     "start": 22.565,
+     "end": 22.797
     },
     {
      "w": "mal!",
-     "start": 22.654,
-     "end": 22.984
+     "start": 22.884,
+     "end": 23.215
     },
     {
      "w": "Und",
-     "start": 23.158,
-     "end": 23.68
+     "start": 23.389,
+     "end": 23.91
     },
     {
      "w": "jetzt",
-     "start": 23.738,
-     "end": 24.028
+     "start": 23.969,
+     "end": 24.258
     },
     {
      "w": "sind",
-     "start": 24.056,
-     "end": 24.167
+     "start": 24.286,
+     "end": 24.397
     },
     {
      "w": "die",
-     "start": 24.202,
-     "end": 24.306
+     "start": 24.432,
+     "end": 24.537
     },
     {
      "w": "auch",
-     "start": 24.334,
-     "end": 24.445
+     "start": 24.564,
+     "end": 24.676
     },
     {
      "w": "noch",
-     "start": 24.473,
-     "end": 24.584
+     "start": 24.703,
+     "end": 24.815
     },
     {
      "w": "nass.",
-     "start": 24.654,
-     "end": 25.002
+     "start": 24.884,
+     "end": 25.232
     }
    ]
   },
@@ -342,43 +342,43 @@
    "seg": 5,
    "idx": 0,
    "text": "Oh. Ein Haus. Das ist … tatsächlich nett.",
-   "start": 26.115,
-   "end": 29.134,
+   "start": 26.345,
+   "end": 29.364,
    "words": [
     {
      "w": "Oh.",
-     "start": 26.115,
-     "end": 26.212
+     "start": 26.345,
+     "end": 26.443
     },
     {
      "w": "Ein",
-     "start": 26.317,
-     "end": 26.63
+     "start": 26.547,
+     "end": 26.86
     },
     {
      "w": "Haus.",
-     "start": 26.727,
-     "end": 27.325
+     "start": 26.957,
+     "end": 27.556
     },
     {
      "w": "Das",
-     "start": 27.377,
-     "end": 27.534
+     "start": 27.608,
+     "end": 27.764
     },
     {
      "w": "ist…",
-     "start": 27.638,
-     "end": 28.23
+     "start": 27.869,
+     "end": 28.46
     },
     {
      "w": "tatsächlich",
-     "start": 28.264,
-     "end": 28.786
+     "start": 28.495,
+     "end": 29.017
     },
     {
      "w": "nett.",
-     "start": 28.842,
-     "end": 29.134
+     "start": 29.072,
+     "end": 29.364
     }
    ]
   },
@@ -386,93 +386,93 @@
    "seg": 6,
    "idx": 0,
    "text": "Ich weiß nicht, wo ihr aufs Klo geht, aber das Klo wäre im Haus irgendwie besser gewesen.",
-   "start": 30.147,
-   "end": 35.037,
+   "start": 30.377,
+   "end": 35.268,
    "words": [
     {
      "w": "Ich",
-     "start": 30.147,
-     "end": 30.168
+     "start": 30.377,
+     "end": 30.398
     },
     {
      "w": "weiß",
-     "start": 30.223,
-     "end": 30.446
+     "start": 30.454,
+     "end": 30.677
     },
     {
      "w": "nicht,",
-     "start": 30.47,
-     "end": 30.655
+     "start": 30.7,
+     "end": 30.885
     },
     {
      "w": "wo",
-     "start": 30.678,
-     "end": 30.724
+     "start": 30.909,
+     "end": 30.955
     },
     {
      "w": "ihr",
-     "start": 30.777,
-     "end": 30.933
+     "start": 31.007,
+     "end": 31.163
     },
     {
      "w": "aufs",
-     "start": 30.985,
-     "end": 31.281
+     "start": 31.216,
+     "end": 31.511
     },
     {
      "w": "Klo",
-     "start": 31.316,
-     "end": 31.42
+     "start": 31.546,
+     "end": 31.65
     },
     {
      "w": "geht,",
-     "start": 31.476,
-     "end": 31.977
+     "start": 31.706,
+     "end": 32.207
     },
     {
      "w": "aber",
-     "start": 32.018,
-     "end": 32.185
+     "start": 32.249,
+     "end": 32.416
     },
     {
      "w": "das",
-     "start": 32.22,
-     "end": 32.324
+     "start": 32.45,
+     "end": 32.555
     },
     {
      "w": "Klo",
-     "start": 32.377,
-     "end": 32.533
+     "start": 32.607,
+     "end": 32.763
     },
     {
      "w": "wäre",
-     "start": 32.589,
-     "end": 32.811
+     "start": 32.819,
+     "end": 33.042
     },
     {
      "w": "im",
-     "start": 32.857,
-     "end": 32.95
+     "start": 33.088,
+     "end": 33.181
     },
     {
      "w": "Haus",
-     "start": 33.006,
-     "end": 33.229
+     "start": 33.237,
+     "end": 33.459
     },
     {
      "w": "irgendwie",
-     "start": 33.278,
-     "end": 33.646
+     "start": 33.509,
+     "end": 33.877
     },
     {
      "w": "besser",
-     "start": 33.686,
-     "end": 33.924
+     "start": 33.917,
+     "end": 34.155
     },
     {
      "w": "gewesen.",
-     "start": 33.959,
-     "end": 35.037
+     "start": 34.19,
+     "end": 35.268
     }
    ]
   },
@@ -480,18 +480,18 @@
    "seg": 6,
    "idx": 1,
    "text": "Aber egal.",
-   "start": 35.35,
-   "end": 35.949,
+   "start": 35.581,
+   "end": 36.179,
    "words": [
     {
      "w": "Aber",
-     "start": 35.35,
-     "end": 35.462
+     "start": 35.581,
+     "end": 35.692
     },
     {
      "w": "egal.",
-     "start": 35.545,
-     "end": 35.949
+     "start": 35.776,
+     "end": 36.179
     }
    ]
   },
@@ -499,43 +499,43 @@
    "seg": 7,
    "idx": 0,
    "text": "Digga, wieso kostet der Döner 5 €?",
-   "start": 37.062,
-   "end": 39.378,
+   "start": 37.292,
+   "end": 39.609,
    "words": [
     {
      "w": "Digga,",
-     "start": 37.062,
-     "end": 37.291
+     "start": 37.292,
+     "end": 37.522
     },
     {
      "w": "wieso",
-     "start": 37.326,
-     "end": 37.674
+     "start": 37.557,
+     "end": 37.904
     },
     {
      "w": "kostet",
-     "start": 37.709,
-     "end": 37.917
+     "start": 37.939,
+     "end": 38.148
     },
     {
      "w": "der",
-     "start": 37.952,
-     "end": 38.057
+     "start": 38.183,
+     "end": 38.287
     },
     {
      "w": "Döner",
-     "start": 38.126,
-     "end": 38.404
+     "start": 38.357,
+     "end": 38.635
     },
     {
      "w": "fünf",
-     "start": 38.474,
-     "end": 38.822
+     "start": 38.704,
+     "end": 39.052
     },
     {
      "w": "Euro?",
-     "start": 38.919,
-     "end": 39.378
+     "start": 39.15,
+     "end": 39.609
     }
    ]
   },
@@ -543,53 +543,53 @@
    "seg": 7,
    "idx": 1,
    "text": "Und wen bezahle ich? Da arbeitet doch gar KEINER.",
-   "start": 39.691,
-   "end": 42.137,
+   "start": 39.922,
+   "end": 42.367,
    "words": [
     {
      "w": "Und",
-     "start": 39.691,
-     "end": 39.702
+     "start": 39.922,
+     "end": 39.932
     },
     {
      "w": "wen",
-     "start": 39.754,
-     "end": 39.91
+     "start": 39.984,
+     "end": 40.141
     },
     {
      "w": "bezahle",
-     "start": 39.98,
-     "end": 40.467
+     "start": 40.21,
+     "end": 40.697
     },
     {
      "w": "ich?",
-     "start": 40.537,
-     "end": 40.884
+     "start": 40.767,
+     "end": 41.115
     },
     {
      "w": "Da",
-     "start": 40.93,
-     "end": 41.023
+     "start": 41.161,
+     "end": 41.254
     },
     {
      "w": "arbeitet",
-     "start": 41.07,
-     "end": 41.371
+     "start": 41.3,
+     "end": 41.602
     },
     {
      "w": "doch",
-     "start": 41.413,
-     "end": 41.58
+     "start": 41.643,
+     "end": 41.81
     },
     {
      "w": "gar",
-     "start": 41.597,
-     "end": 41.65
+     "start": 41.828,
+     "end": 41.88
     },
     {
      "w": "keiner.",
-     "start": 41.719,
-     "end": 42.137
+     "start": 41.95,
+     "end": 42.367
     }
    ]
   },
@@ -597,38 +597,38 @@
    "seg": 8,
    "idx": 0,
    "text": "Hier ist dein Part. Angelstation steht.",
-   "start": 43.15,
-   "end": 45.758,
+   "start": 43.38,
+   "end": 45.989,
    "words": [
     {
      "w": "Hier",
-     "start": 43.15,
-     "end": 43.289
+     "start": 43.38,
+     "end": 43.519
     },
     {
      "w": "ist",
-     "start": 43.306,
-     "end": 43.358
+     "start": 43.537,
+     "end": 43.589
     },
     {
      "w": "dein",
-     "start": 43.4,
-     "end": 43.567
+     "start": 43.63,
+     "end": 43.797
     },
     {
      "w": "Part.",
-     "start": 43.637,
-     "end": 44.263
+     "start": 43.867,
+     "end": 44.493
     },
     {
      "w": "Angelstation",
-     "start": 44.321,
-     "end": 45.028
+     "start": 44.551,
+     "end": 45.258
     },
     {
      "w": "steht.",
-     "start": 45.086,
-     "end": 45.758
+     "start": 45.317,
+     "end": 45.989
     }
    ]
   },
@@ -636,53 +636,53 @@
    "seg": 9,
    "idx": 0,
    "text": "Digga, warte mal, woher hab ich eigentlich die ANGEL?",
-   "start": 47.071,
-   "end": 49.84,
+   "start": 47.302,
+   "end": 50.07,
    "words": [
     {
      "w": "Digga,",
-     "start": 47.071,
-     "end": 47.231
+     "start": 47.302,
+     "end": 47.462
     },
     {
      "w": "warte",
-     "start": 47.266,
-     "end": 47.51
+     "start": 47.497,
+     "end": 47.74
     },
     {
      "w": "mal,",
-     "start": 47.579,
-     "end": 47.997
+     "start": 47.81,
+     "end": 48.227
     },
     {
      "w": "woher",
-     "start": 48.066,
-     "end": 48.275
+     "start": 48.297,
+     "end": 48.505
     },
     {
      "w": "hab",
-     "start": 48.31,
-     "end": 48.414
+     "start": 48.54,
+     "end": 48.644
     },
     {
      "w": "ich",
-     "start": 48.449,
-     "end": 48.553
+     "start": 48.679,
+     "end": 48.783
     },
     {
      "w": "eigentlich",
-     "start": 48.591,
-     "end": 48.97
+     "start": 48.822,
+     "end": 49.201
     },
     {
      "w": "die",
-     "start": 48.988,
-     "end": 49.04
+     "start": 49.218,
+     "end": 49.27
     },
     {
      "w": "Angel?",
-     "start": 49.121,
-     "end": 49.84
+     "start": 49.351,
+     "end": 50.07
     }
    ]
   },
@@ -690,18 +690,18 @@
    "seg": 9,
    "idx": 1,
    "text": "Naja, egal.",
-   "start": 50.153,
-   "end": 51.31,
+   "start": 50.383,
+   "end": 51.54,
    "words": [
     {
      "w": "Naja,",
-     "start": 50.153,
-     "end": 50.579
+     "start": 50.383,
+     "end": 50.81
     },
     {
      "w": "egal.",
-     "start": 50.663,
-     "end": 51.31
+     "start": 50.893,
+     "end": 51.54
     }
    ]
   },
@@ -709,18 +709,18 @@
    "seg": 9,
    "idx": 2,
    "text": "Mein SCHUH?!",
-   "start": 51.623,
-   "end": 52.212,
+   "start": 51.853,
+   "end": 52.443,
    "words": [
     {
      "w": "Mein",
-     "start": 51.623,
-     "end": 51.656
+     "start": 51.853,
+     "end": 51.886
     },
     {
      "w": "Schuh?!",
-     "start": 51.725,
-     "end": 52.212
+     "start": 51.956,
+     "end": 52.443
     }
    ]
   },
@@ -728,68 +728,68 @@
    "seg": 10,
    "idx": 0,
    "text": "Das ist Bob. Fängt zweimal am Tag Fisch. Mein neuer bester Freund.",
-   "start": 53.725,
-   "end": 57.186,
+   "start": 53.956,
+   "end": 57.417,
    "words": [
     {
      "w": "Das",
-     "start": 53.725,
-     "end": 53.743
+     "start": 53.956,
+     "end": 53.973
     },
     {
      "w": "ist",
-     "start": 53.777,
-     "end": 53.882
+     "start": 54.008,
+     "end": 54.112
     },
     {
      "w": "Bob.",
-     "start": 53.951,
-     "end": 54.23
+     "start": 54.182,
+     "end": 54.46
     },
     {
      "w": "Fängt",
-     "start": 54.299,
-     "end": 54.508
+     "start": 54.53,
+     "end": 54.738
     },
     {
      "w": "zweimal",
-     "start": 54.543,
-     "end": 54.856
+     "start": 54.773,
+     "end": 55.086
     },
     {
      "w": "am",
-     "start": 54.902,
-     "end": 54.995
+     "start": 55.132,
+     "end": 55.225
     },
     {
      "w": "Tag",
-     "start": 55.047,
-     "end": 55.203
+     "start": 55.277,
+     "end": 55.434
     },
     {
      "w": "Fisch.",
-     "start": 55.273,
-     "end": 55.551
+     "start": 55.503,
+     "end": 55.782
     },
     {
      "w": "Mein",
-     "start": 55.607,
-     "end": 55.83
+     "start": 55.837,
+     "end": 56.06
     },
     {
      "w": "neuer",
-     "start": 55.853,
-     "end": 56.038
+     "start": 56.083,
+     "end": 56.269
     },
     {
      "w": "bester",
-     "start": 56.08,
-     "end": 56.317
+     "start": 56.31,
+     "end": 56.547
     },
     {
      "w": "Freund.",
-     "start": 56.386,
-     "end": 57.186
+     "start": 56.617,
+     "end": 57.417
     }
    ]
   },
@@ -797,53 +797,53 @@
    "seg": 11,
    "idx": 0,
    "text": "Wasser, Lampe, Kompass, Zelt, Seil, Erste Hilfe, Streichhölzer, Messer …",
-   "start": 58.299,
-   "end": 62.962,
+   "start": 58.53,
+   "end": 63.192,
    "words": [
     {
      "w": "Wasser,",
-     "start": 58.299,
-     "end": 58.51
+     "start": 58.53,
+     "end": 58.74
     },
     {
      "w": "Lampe,",
-     "start": 58.544,
-     "end": 59.101
+     "start": 58.775,
+     "end": 59.331
     },
     {
      "w": "Kompass,",
-     "start": 59.144,
-     "end": 59.692
+     "start": 59.375,
+     "end": 59.923
     },
     {
      "w": "Zelt,",
-     "start": 59.762,
-     "end": 60.318
+     "start": 59.992,
+     "end": 60.549
     },
     {
      "w": "Seil,",
-     "start": 60.388,
-     "end": 60.875
+     "start": 60.618,
+     "end": 61.105
     },
     {
      "w": "Erste",
-     "start": 60.921,
-     "end": 61.153
+     "start": 61.151,
+     "end": 61.383
     },
     {
      "w": "Hilfe,",
-     "start": 61.223,
-     "end": 61.64
+     "start": 61.453,
+     "end": 61.87
     },
     {
      "w": "Streichhölzer,",
-     "start": 61.696,
-     "end": 62.475
+     "start": 61.926,
+     "end": 62.705
     },
     {
      "w": "Messer…",
-     "start": 62.517,
-     "end": 62.962
+     "start": 62.747,
+     "end": 63.192
     }
    ]
   },
@@ -851,48 +851,48 @@
    "seg": 11,
    "idx": 1,
    "text": "Joleen, du bist die Einzige hier mit Verstand.",
-   "start": 63.275,
-   "end": 65.44,
+   "start": 63.505,
+   "end": 65.67,
    "words": [
     {
      "w": "Joleen,",
-     "start": 63.275,
-     "end": 63.77
+     "start": 63.505,
+     "end": 64.001
     },
     {
      "w": "du",
-     "start": 63.817,
-     "end": 63.91
+     "start": 64.047,
+     "end": 64.14
     },
     {
      "w": "bist",
-     "start": 63.937,
-     "end": 64.049
+     "start": 64.168,
+     "end": 64.279
     },
     {
      "w": "die",
-     "start": 64.083,
-     "end": 64.188
+     "start": 64.314,
+     "end": 64.418
     },
     {
      "w": "Einzige",
-     "start": 64.24,
-     "end": 64.605
+     "start": 64.47,
+     "end": 64.836
     },
     {
      "w": "hier",
-     "start": 64.633,
-     "end": 64.744
+     "start": 64.863,
+     "end": 64.975
     },
     {
      "w": "mit",
-     "start": 64.779,
-     "end": 64.883
+     "start": 65.01,
+     "end": 65.114
     },
     {
      "w": "Verstand.",
-     "start": 64.918,
-     "end": 65.44
+     "start": 65.149,
+     "end": 65.67
     }
    ]
   },
@@ -900,18 +900,18 @@
    "seg": 12,
    "idx": 0,
    "text": "Kokosnuss: gut.",
-   "start": 66.253,
-   "end": 67.197,
+   "start": 66.483,
+   "end": 67.427,
    "words": [
     {
      "w": "Kokosnuss:",
-     "start": 66.253,
-     "end": 66.779
+     "start": 66.483,
+     "end": 67.01
     },
     {
      "w": "gut.",
-     "start": 66.866,
-     "end": 67.197
+     "start": 67.097,
+     "end": 67.427
     }
    ]
   },
@@ -919,53 +919,53 @@
    "seg": 12,
    "idx": 1,
    "text": "Aber die Krabbe? NEIN. Die versteht mich als Einzige.",
-   "start": 67.51,
-   "end": 70.32,
+   "start": 67.74,
+   "end": 70.55,
    "words": [
     {
      "w": "Aber",
-     "start": 67.51,
-     "end": 67.537
+     "start": 67.74,
+     "end": 67.768
     },
     {
      "w": "die",
-     "start": 67.59,
-     "end": 67.746
+     "start": 67.82,
+     "end": 67.977
     },
     {
      "w": "Krabbe?",
-     "start": 67.792,
-     "end": 68.233
+     "start": 68.023,
+     "end": 68.463
     },
     {
      "w": "Nein.",
-     "start": 68.349,
-     "end": 68.859
+     "start": 68.579,
+     "end": 69.09
     },
     {
      "w": "Die",
-     "start": 68.877,
-     "end": 68.929
+     "start": 69.107,
+     "end": 69.159
     },
     {
      "w": "versteht",
-     "start": 68.981,
-     "end": 69.346
+     "start": 69.211,
+     "end": 69.577
     },
     {
      "w": "mich",
-     "start": 69.374,
-     "end": 69.485
+     "start": 69.604,
+     "end": 69.716
     },
     {
      "w": "als",
-     "start": 69.537,
-     "end": 69.694
+     "start": 69.768,
+     "end": 69.924
     },
     {
      "w": "Einzige.",
-     "start": 69.763,
-     "end": 70.32
+     "start": 69.994,
+     "end": 70.55
     }
    ]
   },
@@ -973,38 +973,38 @@
    "seg": 13,
    "idx": 0,
    "text": "Hätte mich ja gleich MITNEHMEN können.",
-   "start": 72.633,
-   "end": 74.239,
+   "start": 72.863,
+   "end": 74.47,
    "words": [
     {
      "w": "Hätte",
-     "start": 72.633,
-     "end": 72.778
+     "start": 72.863,
+     "end": 73.009
     },
     {
      "w": "mich",
-     "start": 72.806,
-     "end": 72.917
+     "start": 73.037,
+     "end": 73.148
     },
     {
      "w": "ja",
-     "start": 72.941,
-     "end": 72.987
+     "start": 73.171,
+     "end": 73.217
     },
     {
      "w": "gleich",
-     "start": 73.027,
-     "end": 73.265
+     "start": 73.257,
+     "end": 73.496
     },
     {
      "w": "mitnehmen",
-     "start": 73.3,
-     "end": 73.613
+     "start": 73.53,
+     "end": 73.843
     },
     {
      "w": "können.",
-     "start": 73.663,
-     "end": 74.239
+     "start": 73.893,
+     "end": 74.47
     }
    ]
   },
@@ -1012,33 +1012,33 @@
    "seg": 13,
    "idx": 1,
    "text": "Aber was weiß ich schon.",
-   "start": 74.552,
-   "end": 75.768,
+   "start": 74.783,
+   "end": 75.998,
    "words": [
     {
      "w": "Aber",
-     "start": 74.552,
-     "end": 74.585
+     "start": 74.783,
+     "end": 74.816
     },
     {
      "w": "was",
-     "start": 74.62,
-     "end": 74.724
+     "start": 74.85,
+     "end": 74.955
     },
     {
      "w": "weiß",
-     "start": 74.766,
-     "end": 74.933
+     "start": 74.997,
+     "end": 75.163
     },
     {
      "w": "ich",
-     "start": 74.968,
-     "end": 75.072
+     "start": 75.198,
+     "end": 75.303
     },
     {
      "w": "schon.",
-     "start": 75.13,
-     "end": 75.768
+     "start": 75.361,
+     "end": 75.998
     }
    ]
   },
@@ -1046,33 +1046,33 @@
    "seg": 14,
    "idx": 0,
    "text": "Okay … das ist ziemlich geil.",
-   "start": 78.481,
-   "end": 80.039,
+   "start": 78.711,
+   "end": 80.27,
    "words": [
     {
      "w": "Okay…",
-     "start": 78.481,
-     "end": 78.787
+     "start": 78.711,
+     "end": 79.017
     },
     {
      "w": "das",
-     "start": 78.839,
-     "end": 78.996
+     "start": 79.07,
+     "end": 79.226
     },
     {
      "w": "ist",
-     "start": 79.048,
-     "end": 79.204
+     "start": 79.278,
+     "end": 79.435
     },
     {
      "w": "ziemlich",
-     "start": 79.274,
-     "end": 79.622
+     "start": 79.504,
+     "end": 79.852
     },
     {
      "w": "geil.",
-     "start": 79.691,
-     "end": 80.039
+     "start": 79.922,
+     "end": 80.27
     }
    ]
   },
@@ -1080,38 +1080,38 @@
    "seg": 14,
    "idx": 1,
    "text": "Ich hasse, dass es mir gefällt.",
-   "start": 80.352,
-   "end": 82.008,
+   "start": 80.583,
+   "end": 82.238,
    "words": [
     {
      "w": "Ich",
-     "start": 80.352,
-     "end": 80.373
+     "start": 80.583,
+     "end": 80.603
     },
     {
      "w": "hasse,",
-     "start": 80.425,
-     "end": 80.721
+     "start": 80.656,
+     "end": 80.951
     },
     {
      "w": "dass",
-     "start": 80.749,
-     "end": 80.86
+     "start": 80.979,
+     "end": 81.09
     },
     {
      "w": "es",
-     "start": 80.883,
-     "end": 80.93
+     "start": 81.114,
+     "end": 81.16
     },
     {
      "w": "mir",
-     "start": 80.964,
-     "end": 81.069
+     "start": 81.195,
+     "end": 81.299
     },
     {
      "w": "gefällt.",
-     "start": 81.121,
-     "end": 82.008
+     "start": 81.351,
+     "end": 82.238
     }
    ]
   },
@@ -1119,83 +1119,83 @@
    "seg": 15,
    "idx": 0,
    "text": "Schreibt in die Kommentare, was mit mir und der Insel im nächsten Video passieren soll.",
-   "start": 82.721,
-   "end": 86.521,
+   "start": 82.951,
+   "end": 86.751,
    "words": [
     {
      "w": "Schreibt",
-     "start": 82.721,
-     "end": 82.938
+     "start": 82.951,
+     "end": 83.169
     },
     {
      "w": "in",
-     "start": 82.962,
-     "end": 83.008
+     "start": 83.192,
+     "end": 83.238
     },
     {
      "w": "die",
-     "start": 83.043,
-     "end": 83.147
+     "start": 83.273,
+     "end": 83.377
     },
     {
      "w": "Kommentare,",
-     "start": 83.182,
-     "end": 83.808
+     "start": 83.412,
+     "end": 84.038
     },
     {
      "w": "was",
-     "start": 83.834,
-     "end": 83.912
+     "start": 84.064,
+     "end": 84.143
     },
     {
      "w": "mit",
-     "start": 83.947,
-     "end": 84.051
+     "start": 84.177,
+     "end": 84.282
     },
     {
      "w": "mir",
-     "start": 84.103,
-     "end": 84.26
+     "start": 84.334,
+     "end": 84.49
     },
     {
      "w": "und",
-     "start": 84.295,
-     "end": 84.399
+     "start": 84.525,
+     "end": 84.63
     },
     {
      "w": "der",
-     "start": 84.417,
-     "end": 84.469
+     "start": 84.647,
+     "end": 84.699
     },
     {
      "w": "Insel",
-     "start": 84.538,
-     "end": 84.817
+     "start": 84.769,
+     "end": 85.047
     },
     {
      "w": "im",
-     "start": 84.84,
-     "end": 84.886
+     "start": 85.07,
+     "end": 85.117
     },
     {
      "w": "nächsten",
-     "start": 84.924,
-     "end": 85.234
+     "start": 85.155,
+     "end": 85.464
     },
     {
      "w": "Video",
-     "start": 85.28,
-     "end": 85.512
+     "start": 85.51,
+     "end": 85.743
     },
     {
      "w": "passieren",
-     "start": 85.554,
-     "end": 85.93
+     "start": 85.784,
+     "end": 86.16
     },
     {
      "w": "soll.",
-     "start": 85.999,
-     "end": 86.521
+     "start": 86.23,
+     "end": 86.751
     }
    ]
   },
@@ -1203,53 +1203,53 @@
    "seg": 15,
    "idx": 1,
    "text": "Und ALLES, was in den Kommentaren steht, passiert. Ausnahmslos.",
-   "start": 86.834,
-   "end": 90.347,
+   "start": 87.064,
+   "end": 90.577,
    "words": [
     {
      "w": "Und",
-     "start": 86.834,
-     "end": 86.869
+     "start": 87.064,
+     "end": 87.099
     },
     {
      "w": "alles,",
-     "start": 86.938,
-     "end": 87.286
+     "start": 87.169,
+     "end": 87.517
     },
     {
      "w": "was",
-     "start": 87.321,
-     "end": 87.425
+     "start": 87.551,
+     "end": 87.656
     },
     {
      "w": "in",
-     "start": 87.471,
-     "end": 87.564
+     "start": 87.702,
+     "end": 87.795
     },
     {
      "w": "den",
-     "start": 87.582,
-     "end": 87.634
+     "start": 87.812,
+     "end": 87.864
     },
     {
      "w": "Kommentaren",
-     "start": 87.677,
-     "end": 88.19
+     "start": 87.908,
+     "end": 88.421
     },
     {
      "w": "steht,",
-     "start": 88.237,
-     "end": 88.573
+     "start": 88.467,
+     "end": 88.803
     },
     {
      "w": "passiert.",
-     "start": 88.594,
-     "end": 89.303
+     "start": 88.824,
+     "end": 89.534
     },
     {
      "w": "Ausnahmslos.",
-     "start": 89.39,
-     "end": 90.347
+     "start": 89.621,
+     "end": 90.577
     }
    ]
   },
@@ -1257,28 +1257,28 @@
    "seg": 15,
    "idx": 2,
    "text": "Ich hasse mein Leben.",
-   "start": 90.66,
-   "end": 91.86,
+   "start": 90.89,
+   "end": 92.09,
    "words": [
     {
      "w": "Ich",
-     "start": 90.66,
-     "end": 90.817
+     "start": 90.89,
+     "end": 91.047
     },
     {
      "w": "hasse",
-     "start": 90.851,
-     "end": 91.025
+     "start": 91.082,
+     "end": 91.256
     },
     {
      "w": "mein",
-     "start": 91.067,
-     "end": 91.234
+     "start": 91.297,
+     "end": 91.464
     },
     {
      "w": "Leben.",
-     "start": 91.292,
-     "end": 91.86
+     "start": 91.523,
+     "end": 92.09
     }
    ]
   }
@@ -1306,111 +1306,111 @@
    "comment": "ey ein tsunamie kommt jetzt",
    "event": 11.063,
    "speak": 12.963,
-   "end": 16.928
+   "end": 17.158
   },
   {
    "key": "baum",
    "user": "Corny_Tech",
    "comment": "Der baum soll umfallen",
-   "event": 17.241,
-   "speak": 18.341,
-   "end": 20.023
+   "event": 17.471,
+   "speak": 18.571,
+   "end": 20.254
   },
   {
    "key": "zigaretten",
    "user": "¤LEMI.42¤",
    "comment": "500 Zigaretten fallen vom himmel",
-   "event": 20.337,
-   "speak": 21.837,
-   "end": 25.002
+   "event": 20.567,
+   "speak": 22.067,
+   "end": 25.232
   },
   {
    "key": "haus",
    "user": "Scoot.Nik459",
    "comment": "ein Haus damit du da leben kannst",
-   "event": 25.315,
-   "speak": 26.115,
-   "end": 29.134
+   "event": 25.545,
+   "speak": 26.345,
+   "end": 29.364
   },
   {
    "key": "toilette",
    "user": "❤️🌹",
    "comment": "Eine Toilette",
-   "event": 29.447,
-   "speak": 30.147,
-   "end": 35.949
+   "event": 29.677,
+   "speak": 30.377,
+   "end": 36.179
   },
   {
    "key": "doener",
    "user": "Team_Fisch🐟",
    "comment": "ein dönerladen bauen",
-   "event": 36.262,
-   "speak": 37.062,
-   "end": 42.137
+   "event": 36.492,
+   "speak": 37.292,
+   "end": 42.367
   },
   {
    "key": "angel",
    "user": "01_k61",
    "comment": "Wann nächster Part und bitte mach die angelstation",
-   "event": 42.45,
-   "speak": 43.15,
-   "end": 45.758
+   "event": 42.68,
+   "speak": 43.38,
+   "end": 45.989
   },
   {
    "key": "angeln",
    "user": "LHW_Oli",
    "comment": "Angeln",
-   "event": 46.071,
-   "speak": 47.071,
-   "end": 52.212
+   "event": 46.302,
+   "speak": 47.302,
+   "end": 52.443
   },
   {
    "key": "bob",
    "user": "《M》 ▸ Clara🖤",
    "comment": "Bob kann Fisch fangen 2x pro Tag morgens und abends.",
-   "event": 52.525,
-   "speak": 53.725,
-   "end": 57.186
+   "event": 52.756,
+   "speak": 53.956,
+   "end": 57.417
   },
   {
    "key": "rucksack",
    "user": "joleen",
-   "comment": "Ich gebe dir einen Rucksack, damit du deine Sachen transportieren kannst. Dazu bekommst du eine Wasserflasche …",
-   "event": 57.499,
-   "speak": 58.299,
-   "end": 65.44
+   "comment": "Ich gebe dir einen Rucksack, damit du deine Sachen transportieren kannst. Dazu bekommst du eine Wasserflasche, damit du Wasser aufbewahren kannst, eine Taschenlampe, damit du nachts sehen kannst, und einen Kompass, damit du dich orientieren kannst. Außerdem gebe ich dir ein Zelt, das dich vor Regen schützt, ein Seil, um Dinge zu befestigen, ein Erste-Hilfe-Set für kleine Verletzungen und Streichhölzer, um ein Feuer zu machen. Ein Messer bekommst du auch, um Lebensmittel vorzubereiten und Materialien zu schneiden.",
+   "event": 57.73,
+   "speak": 58.53,
+   "end": 65.67
   },
   {
    "key": "krabbe",
    "user": "Muchacho",
-   "comment": "Trink erst mal etwas eine Kokosnuss vom Baum und dann töte die Krabbe und iss sie roh …",
-   "event": 65.753,
-   "speak": 66.253,
-   "end": 70.32
+   "comment": "Trink erst mal etwas eine Kokosnuss vom Baum und dann töte die Krabbe und iss sie roh fals du es braten kannst tu es!",
+   "event": 65.983,
+   "speak": 66.483,
+   "end": 70.55
   },
   {
    "key": "flugzeug",
    "user": "lyrics guy",
    "comment": "ein Flugzeug kommt und gibt sie essen",
-   "event": 70.633,
-   "speak": 72.633,
-   "end": 75.768
+   "event": 70.863,
+   "speak": 72.863,
+   "end": 75.998
   },
   {
    "key": "villa",
    "user": "Michyx🦦💦",
    "comment": "so ne rießen insel mit hafen und ner rießen villa",
-   "event": 76.081,
-   "speak": 78.481,
-   "end": 82.008
+   "event": 76.311,
+   "speak": 78.711,
+   "end": 82.238
   },
   {
    "key": "outro",
    "user": null,
    "comment": null,
-   "event": 82.321,
-   "speak": 82.721,
-   "end": 91.86
+   "event": 82.551,
+   "speak": 82.951,
+   "end": 92.09
   }
  ],
  "sfx": [
@@ -1436,73 +1436,73 @@
    "file": "../../sounds/sfx/thud.wav",
    "from": 0,
    "to": 9,
-   "at": 17.991
+   "at": 18.221
   },
   {
    "file": "../../sounds/sfx/patter.wav",
    "from": 0,
    "to": 9,
-   "at": 20.437
+   "at": 20.667
   },
   {
    "file": "../../sounds/sfx/pop.wav",
    "from": 0,
    "to": 9,
-   "at": 25.565
+   "at": 25.795
   },
   {
    "file": "../../sounds/sfx/pop.wav",
    "from": 0,
    "to": 9,
-   "at": 29.647
+   "at": 29.877
   },
   {
    "file": "../../sounds/sfx/pop.wav",
    "from": 0,
    "to": 9,
-   "at": 36.512
+   "at": 36.742
   },
   {
    "file": "../../sounds/sfx/pop.wav",
    "from": 0,
    "to": 9,
-   "at": 42.65
+   "at": 42.88
   },
   {
    "file": "../../sounds/sfx/splash.wav",
    "from": 0,
    "to": 9,
-   "at": 46.221
+   "at": 46.452
   },
   {
    "file": "../../sounds/sfx/splash.wav",
    "from": 0,
    "to": 9,
-   "at": 52.625
+   "at": 52.856
   },
   {
    "file": "../../sounds/sfx/thud.wav",
    "from": 0,
    "to": 9,
-   "at": 58.049
+   "at": 58.28
   },
   {
    "file": "../../sounds/sfx/plane.wav",
    "from": 0,
    "to": 9,
-   "at": 70.633
+   "at": 70.863
   },
   {
    "file": "../../sounds/sfx/magic.wav",
    "from": 0,
    "to": 9,
-   "at": 76.081
+   "at": 76.311
   },
   {
    "file": "../../sounds/sfx/rumble.wav",
    "from": 0,
    "to": 9,
-   "at": 76.181
+   "at": 76.411
   }
  ]
 }
