@@ -1,8 +1,0 @@
-04 ok
-06 ok
-08 ok
-Traceback (most recent call last):
-  File "/home/user/Stories/tiktok/stadt01/img.py", line 32, in <module>
-    d=[p['inlineData']['data'] for p in r['candidates'][0]['content']['parts'] if 'inlineData' in p]
-                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
-KeyError: 'parts'
