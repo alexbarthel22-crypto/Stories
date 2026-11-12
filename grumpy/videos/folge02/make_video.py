@@ -56,8 +56,9 @@ def cy_for(s, dy=0):
 
 
 HOOK_END = line_of("intro", 0)["end"]
-HOOK_S = 2.9
-HOOK_CY = FEET - (1700 - 960) / HOOK_S
+HOOK_S = 15.0                                   # Anfang: Clara füllt den Bildschirm
+EYES_W = FEET + (524 - 1550) * CL               # Augenhöhe (Welt)
+HOOK_CY = EYES_W + (960 - 600) / HOOK_S         # Augen bei y=660 – klarer Mittelpunkt, Blickkontakt
 CAM = {  # Zielbild pro Kommentar: (Zoom, x, y) – nah bei Clara, weit bei großen Ereignissen
     "vulkan": (0.36, 1150, 900), "tsunami": (0.6, 560, 1150), "baum": (0.75, 380, 1150),
     "zigaretten": (1.6, 560, cy_for(1.6)), "haus": (1.2, 440, cy_for(1.2)), "toilette": (1.9, 380, cy_for(1.9)),
@@ -445,11 +446,12 @@ def sticker(seg, t):
 
 
 HOOK_LINES = ["IHR HABT", "ECHT", "KOMMENTIERT?!"]
+HOOK_BOX2 = (70, 890, 960, 1450)   # unter Claras Gesicht, links der TikTok-Leiste, über der unteren Zone
 
 
 def _hook_layout():
     from PIL import ImageFont
-    x0, x1, y0, y1 = base.HOOK_BOX
+    x0, x1, y0, y1 = HOOK_BOX2
     sizes = [min(100 * (x1 - x0) / ImageFont.truetype(base._FONT, 100).getlength(ln), 190) for ln in HOOK_LINES]
     caps = [0.73 * fs for fs in sizes]
     gap = 55

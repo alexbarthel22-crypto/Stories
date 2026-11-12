@@ -11,7 +11,8 @@ SEGMENTS = [
         ("[sarcastic]", "Das fängt ja hier wieder richtig respektlos an.", "Das fängt ja hier wieder richtig RESPEKTLOS an."),
     ]),
     dict(key="tsunami", user="david🇬🇪", comment="ey ein tsunamie kommt jetzt", pre=1.9, lines=[
-        ("[panicked]", "Ein Tsunami?! Meine Haare waren gerade trocken!", "Ein TSUNAMI?! Meine Haare waren gerade trocken!"),
+        ("[surprised]", "Oha, was ein Tsunami.", "Oha, was ein TSUNAMI."),
+        ("[sarcastic]", "Als hätte Regen nicht gereicht. Übertreib halt direkt.", "Als hätte Regen nicht gereicht. Übertreib halt direkt."),
     ]),
     dict(key="baum", user="Corny_Tech", comment="Der baum soll umfallen", pre=1.1, lines=[
         ("[deadpan]", "Der einzige Schatten hier. Danke.", "Der einzige Schatten hier. Danke."),
