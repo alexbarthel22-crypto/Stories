@@ -192,3 +192,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Golddigger ⛏️💰 Sucht keine Liebe, sondern Kohle 💸 Dating-Profil: „Alex, 22, sucht Sugar Mami oder Sugar Daddy“ – Filter: Alter egal, Hauptsache Yacht 🛥️ Lena kommt mit gebrauchtem Handy? Mittags ist er Single 📱💔 Ohne Yacht-Foto auf Insta gibt's kein Like 🔍 Sein neuer bester Bro hat zufällig Pool, PS5 und einen Vater mit Porsche 🏊🏎️ Und auf der Party sind die teuren Kopfhörer nur geliehen? Weg ist er 💨 Wahre Liebe hat eben einen Pool 💘 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Golddigger aus deinem Freundeskreis! Und was soll Alex morgen sein?
 
 #heuteistalex #golddigger #sugardaddy #dating #comedy
+
+## TikTok Folge 13 – Looksmaxxer
+Cover: `episodes/39_looksmaxxer/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Looksmaxxer 🗿 Skincare mit 12 Schritten, Hausaufgaben: null 🧴📚 Schläft mit Tape auf dem Mund für die Jawline … sein Bro denkt, er wurde entführt 🩹😱 Tom erzählt den Witz des Jahres, alle lachen – nur Alex nicht. Lachen gibt Falten, Bro 😐 40 Versuche fürs Gruppenfoto, weil der Kiefer schief war 📸📐 Lena fragt was? Keine Antwort, er ist gerade am Mewing 🤐 Und im Gruppenchat gibt er sich selbst 9/10 … die Bros sagen 4 💀 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Looksmaxxer aus deinem Freundeskreis! Und was soll Alex morgen sein?
+
+#heuteistalex #looksmaxxing #mewing #jawline #comedy

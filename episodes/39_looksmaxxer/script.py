@@ -1,9 +1,9 @@
 """TikTok-Folge: Heute ist Alex ... ein Looksmaxxer. Alltags-Comedy, Jugendliche 2026, nur Freunde/Bros.
-Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), erst nach Freigabe. Vorschau: Ersatzstimme."""
+Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
-AL = alex(top="#2B2F3A", top_style="tee", pants="#5C5C66", shoes="#FFFFFF")
+AL = alex(top="#2B2F3A", top_style="tee", pants="#5C5C66", shoes="#FFFFFF", jaw="square")   # eckiges Gesicht (Jawline)
 TOM = person_spec(12, top="#36B5C2", hair="#3B2A20")
 LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894")
 ROLE, ROLE_TTS, ROLE_SAY = "EIN LOOKSMAXXER.", "ein Looksmaxxer.", "ein Looksmaxxer!"
@@ -84,7 +84,7 @@ SCENES = [
         ("Woran du einen Looksmaxxer erkennst:", None),
         ("Er lacht nie. Wegen der Falten.", None),
         ("Er schläft mit Tape auf dem Mund.", None),
-        ("Er antwortet nicht, weil er mewt.", None),
+        ("Er antwortet nicht, weil er gerade am Mewing ist.", None),
         ("Und er bewertet alle mit Punkten.", None),
     ], viz=dict(kind="signs", slide=True, items=[("Lacht nie (Falten!)", "😐"), ("Schläft mit Mund-Tape", "🩹"),
                                                  ("Antwortet nicht – mewt", "🤐"), ("Bewertet alle 1–10", "📊")])),
@@ -93,3 +93,10 @@ SCENES = [
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ], viz=dict(kind="outro", q="Kennst du auch einen Looksmaxxer?", handle="@looksmaxx_alex", icon="🗿", col="#1F6F8B")),
 ]
+
+_ALEX = "; den Namen deutsch aussprechen: A-leks mit offenem A wie in 'Alexander', niemals englisch 'Äläx'"
+GEMINI_LINE_TEXT = {"lachen_1": "Nur Aleks nicht. Lachen gibt Falten. Bro.",
+                    "signs_3": "Er antwortet nicht, weil er gerade am Mewing ist."}
+GEMINI_LINE_MOOD = {"lachen_1": MOODS["lachen"] + _ALEX,
+                    "signs_3": MOODS["signs"] + "; 'Mewing' englisch aussprechen: 'Mjuh-ing'",
+                    "intro_role": "völlig überrascht und amüsiert, flüssig ausgerufen: 'ein Looksmaxxer!' – das Wort 'ein' unbedingt mitsprechen"}

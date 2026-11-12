@@ -601,6 +601,22 @@ def _fill_line(c, color, y0, y1, lw=0.9, top=1.1, bottom=0.88, line=0.66):
     c.stroke()
 
 
+def _head_path(c, sp, hy0):
+    """Kopfform: rund (Standard) oder sp['jaw'] == 'square' = kantiges Gesicht mit breitem Kiefer."""
+    if sp.get("jaw") == "square":
+        c.move_to(-16.8, hy0 - 13)
+        c.line_to(-14.5, hy0 - 18.6); c.line_to(14.5, hy0 - 18.6); c.line_to(16.8, hy0 - 13)
+        c.line_to(18.2, hy0 + 11)
+        c.line_to(15.5, hy0 + 17.5)
+        c.line_to(7.5, hy0 + 20.2)
+        c.line_to(-7.5, hy0 + 20.2)
+        c.line_to(-15.5, hy0 + 17.5)
+        c.line_to(-18.2, hy0 + 11)
+        c.close_path()
+    else:
+        ellipse(c, 0, hy0, 17.6, 18.6)
+
+
 def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=None,
            blink_seed=0, bob=True, look=0.0, flip=False):
     """Zeichnet eine Figur. (x, y) = Mitte zwischen den Füßen, h = Gesamthöhe in px."""
@@ -836,7 +852,8 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
         if sp.get("earrings"):
             c.arc(sx * 17.8, hy0 + 6.2, 1.5, 0, 2 * math.pi); src(c, sp["earrings"]); c.fill()
     # Kopf mit Verlauf
-    ellipse(c, 0, hy0, 17.6, 18.6)
+    _head_path(c, sp, hy0)
+    c.set_line_join(cairo.LINE_JOIN_ROUND)
     g = cairo.RadialGradient(-5, hy0 - 7, 3, 0, hy0, 21)
     g.add_color_stop_rgba(0, *rgb(shade(skin, 1.08)))
     g.add_color_stop_rgba(1, *rgb(shade(skin, 0.9)))
@@ -985,7 +1002,7 @@ def person(c, x, y, h, spec, t=0.0, expr="happy", pose="idle", prop=None, name=N
     if hs == "bald":
         # Halbglatze: kahler Oberkopf mit Glanz, Haarkranz an Seiten/hinten (über den Ohren)
         c.save()
-        ellipse(c, 0, hy0, 17.6, 18.6); c.clip()
+        _head_path(c, sp, hy0); c.clip()
         g = cairo.RadialGradient(-4, hy0 - 15, 0.5, -4, hy0 - 15, 9)
         g.add_color_stop_rgba(0, 1, 1, 1, 0.55); g.add_color_stop_rgba(1, 1, 1, 1, 0)
         ellipse(c, -4, hy0 - 14, 8, 4.5); c.set_source(g); c.fill()
