@@ -4,3 +4,4 @@ _seg_*.wav
 __pycache__/
 _cache.json
 _frames_svg/
+_cache_*.json

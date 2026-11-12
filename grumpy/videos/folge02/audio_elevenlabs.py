@@ -9,26 +9,33 @@ from script import SEGMENTS, SFX
 
 HERE = Path(__file__).parent
 LAURA = "FGY2WhTYpPnrIDTdsKH5"
-TEMPO = 1.12          # etwas zügiger, damit das Video bei ~70 s bleibt
-MAX_GAP = 0.28        # Pause zwischen zwei Sätzen
+TEMPO = 1.15          # etwas zügiger, damit das Video bei ~70 s bleibt
+MAX_GAP = 0.36        # Pause zwischen zwei Sätzen
 SR = 16000
 
-full, spans = "", []          # spans: (start, end, seg_index, line_index)
-for si, seg in enumerate(SEGMENTS):
-    for li, (tag, spoken, _) in enumerate(seg["lines"]):
-        if full:
-            full += " "
-        if tag:
-            full += tag + " "
-        spans.append((len(full), len(full) + len(spoken), si, li))
-        full += spoken
+def build_text(segments, offset_seg=0):
+    text, spans = "", []
+    for si, seg in enumerate(segments):
+        for li, (tag, spoken, _) in enumerate(seg["lines"]):
+            if text:
+                text += " "
+            if tag:
+                text += tag + " "
+            spans.append((len(text), len(text) + len(spoken), si + offset_seg, li))
+            text += spoken
+    return text, spans
 
-cache = HERE / "_cache.json"
-if cache.exists() and json.loads(cache.read_text()).get("text") == full:
-    resp = json.loads(cache.read_text())
-else:
-    body = {"text": full, "model_id": "eleven_v3", "language_code": "de", "voice_settings": {"stability": 0.0}}
-    # Streaming-Variante: Verbindung bleibt offen, solange Daten fließen (langer Text bricht sonst ab)
+
+def tts(text):
+    """ElevenLabs v3 (Streaming mit Zeitstempeln). Ergebnis wird pro Text gecacht."""
+    import hashlib
+    cache = HERE / f"_cache_{hashlib.md5(text.encode()).hexdigest()[:10]}.json"
+    if cache.exists():
+        return json.loads(cache.read_text())
+    old = HERE / "_cache.json"      # erste Aufnahme (ganzes Skript) wiederverwenden, wenn der Text darin vorkommt
+    if old.exists() and json.loads(old.read_text())["text"].startswith(text):
+        return json.loads(old.read_text())
+    body = {"text": text, "model_id": "eleven_v3", "language_code": "de", "voice_settings": {"stability": 0.0}}
     req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{LAURA}/stream/with-timestamps",
                                  json.dumps(body).encode(),
                                  {"Content-Type": "application/json", "xi-api-key": "proxy-injected"})
@@ -44,20 +51,38 @@ else:
             a = d.get("alignment") or {}
             if a.get("characters"):
                 chars += a["characters"]; starts += a["character_start_times_seconds"]; ends += a["character_end_times_seconds"]
-    resp = {"text": full, "audio_base64": base64.b64encode(audio_b).decode(),
+    resp = {"text": text, "audio_base64": base64.b64encode(audio_b).decode(),
             "alignment": {"characters": chars, "character_start_times_seconds": starts, "character_end_times_seconds": ends}}
     cache.write_text(json.dumps(resp))
+    return resp
 
-al = resp["alignment"]
-st, en = al["character_start_times_seconds"], al["character_end_times_seconds"]
-assert "".join(al["characters"]) == full
 
-mp3 = HERE / "_raw.mp3"; raw = HERE / "_raw.wav"
-mp3.write_bytes(base64.b64decode(resp["audio_base64"]))
-subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp3), "-ac", "1", "-ar", str(SR), str(raw)], check=True)
-with wave.open(str(raw)) as w:
-    audio = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
-mp3.unlink(); raw.unlink()
+def decode(resp):
+    mp3 = HERE / "_raw.mp3"; raw = HERE / "_raw.wav"
+    mp3.write_bytes(base64.b64decode(resp["audio_base64"]))
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp3), "-ac", "1", "-ar", str(SR), str(raw)], check=True)
+    with wave.open(str(raw)) as w:
+        x = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
+    mp3.unlink(); raw.unlink()
+    return x
+
+
+# Aufnahme 1: alles bis vor das Outro (aus der bestehenden Aufnahme), Aufnahme 2: neues Outro
+main_text, spans = build_text(SEGMENTS[:-1])
+out_text, spans2 = build_text(SEGMENTS[-1:], offset_seg=len(SEGMENTS) - 1)
+r1, r2 = tts(main_text), tts(out_text)
+n1 = len(main_text)
+a1 = decode(r1)
+end1 = r1["alignment"]["character_end_times_seconds"][n1 - 1] + 0.2
+a1 = a1[: int(end1 * SR)]
+gap = np.zeros(int(0.4 * SR), np.float32)
+off2 = len(a1) / SR + 0.4
+audio = np.concatenate([a1, gap, decode(r2)])
+full = main_text + " " + out_text
+st = r1["alignment"]["character_start_times_seconds"][:n1] + [0.0] + [x + off2 for x in r2["alignment"]["character_start_times_seconds"]]
+en = r1["alignment"]["character_end_times_seconds"][:n1] + [0.0] + [x + off2 for x in r2["alignment"]["character_end_times_seconds"]]
+spans += [(a + n1 + 1, b + n1 + 1, si, li) for a, b, si, li in spans2]
+assert len(st) == len(full)
 
 # Zeilen mit Wortzeiten
 lines = []
@@ -91,7 +116,7 @@ for i in range(len(lines) - 2, -1, -1):
     gap = lines[i + 1]["start"] - lines[i]["end"]
     if gap > MAX_GAP:
         cut = gap - MAX_GAP
-        a = int((lines[i]["end"] + 0.06) * SR)
+        a = int((lines[i]["end"] + 0.04) * SR)     # direkt nach dem Satzende schneiden
         audio = np.concatenate([audio[:a], audio[a + int(cut * SR):]])
         shift(i + 1, -cut)
 
@@ -114,7 +139,8 @@ segs = []
 for si, seg in enumerate(SEGMENTS):
     first = next(k for k, ln in enumerate(lines) if ln["seg"] == si)
     if seg["pre"] > 0:
-        at = max(lines[first]["start"] - 0.05, 0)
+        # Pause direkt NACH dem vorigen Satz einfügen (nicht vor dem neuen Wort -> kein Gestotter)
+        at = lines[first - 1]["end"] + 0.04 if first > 0 else max(lines[first]["start"] - 0.05, 0)
         audio = np.concatenate([audio[:int(at * SR)], np.zeros(int(seg["pre"] * SR), np.float32), audio[int(at * SR):]])
         shift(first, seg["pre"])
     last = max(k for k, ln in enumerate(lines) if ln["seg"] == si)

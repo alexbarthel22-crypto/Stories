@@ -61,7 +61,7 @@ HOOK_CY = FEET - (1700 - 960) / HOOK_S
 CAM = {  # Zielbild pro Kommentar: (Zoom, x, y) – nah bei Clara, weit bei großen Ereignissen
     "vulkan": (0.36, 1150, 900), "tsunami": (0.6, 560, 1150), "baum": (0.75, 380, 1150),
     "zigaretten": (1.6, 560, cy_for(1.6)), "haus": (1.2, 440, cy_for(1.2)), "toilette": (1.9, 380, cy_for(1.9)),
-    "doener": (1.3, 700, cy_for(1.3)), "angel": (0.85, 1000, cy_for(0.85)), "angeln": (1.5, 740, cy_for(1.5)),
+    "doener": (1.3, 700, cy_for(1.3)), "angel": (0.75, 700, 1680), "angeln": (1.4, 790, 1890),
     "bob": (2.0, 500, 1385), "rucksack": (2.4, 600, 1409), "krabbe": (3.0, 580, 1397),
     "flugzeug": (0.75, 560, 1050), "villa": (0.2, 2100, 1200), "outro": (0.3, 1800, 1250),
 }
@@ -224,14 +224,25 @@ def doener(s, t):
             '</g>')
 
 
+JETTY = [(612, 1580), (700, 1580), (805, 2095), (668, 2095)]   # Strand -> Meer
+JETTY_END = (735, 2045)                                           # hier steht Clara beim Angeln
+
+
 def jetty(s):
-    return (f'<g transform="translate(1000 1440) scale({2.0*s:.3f})" stroke="{O}" stroke-width="5" stroke-linejoin="round">'
-            '<path d="M0 -20 L280 20 L280 60 L0 20 Z" fill="#B88550"/>'
-            '<path d="M40 -14 l0 40 M90 -7 l0 40 M140 0 l0 40 M190 7 l0 40 M240 14 l0 40" stroke="#8A5A2E" stroke-width="4"/>'
-            '<path d="M60 20 v60 M200 40 v60 M270 55 v55" stroke="#6A4420" stroke-width="10"/>'
-            '<rect x="190" y="-30" width="50" height="40" rx="6" fill="#4C8DDB"/><path d="M190 -30 q25 -25 50 0" fill="none"/>'
-            '<path d="M110 -40 L120 10 M130 -40 L120 10" stroke="#7A4A26" stroke-width="6"/>'
-            '<path d="M120 -40 L60 -140" stroke="#3A3A3A" stroke-width="5"/></g>')
+    if s <= 0:
+        return ""
+    (x0, y0), (x1, _), (x2, y2), (x3, _) = JETTY
+    planks = "".join(
+        f'<path d="M{x0 + (x3-x0)*k:.0f} {y0 + (y2-y0)*k:.0f} L{x1 + (x2-x1)*k:.0f} {y0 + (y2-y0)*k:.0f}" stroke="#8A5A2E" stroke-width="4"/>'
+        for k in [i / 12 for i in range(1, 12)])
+    posts = "".join(f'<rect x="{x - 8}" y="{y}" width="16" height="70" fill="#6A4420" stroke="{O}" stroke-width="3"/>'
+                    for x, y in [(x3 - 2, y2 - 10), (x2 - 14, y2 - 10), (690, 1850), (765, 1850)])
+    return (f'<g transform="translate(656 1580) scale({s:.3f}) translate(-656 -1580)">{posts}'
+            f'<path d="M{x0} {y0} L{x1} {y0} L{x2} {y2} L{x3} {y2} Z" fill="#B88550" stroke="{O}" stroke-width="5" stroke-linejoin="round"/>{planks}'
+            f'<g transform="translate(790 2040) scale(0.5)" stroke="{O}" stroke-width="5"><rect x="-30" y="-40" width="60" height="45" rx="6" fill="#4C8DDB"/>'
+            f'<path d="M-30 -40 q30 -28 60 0" fill="none"/></g>'
+            f'<g transform="translate(690 2075) scale(0.5)" stroke="{O}" stroke-width="5"><rect x="-30" y="-12" width="60" height="12" fill="#7A4A26"/>'
+            f'<path d="M-24 0 v30 M24 0 v30" stroke="#7A4A26" stroke-width="7"/></g></g>')
 
 
 def turtle(x, y, s=1.0, fish=True, t=0):
@@ -357,6 +368,20 @@ SNEAKER_R = ('<g transform="translate(0 -60) translate(1118 0) scale(-1 1)" stro
 SHOE_ON = word_t("angeln", "schuh") + 1.1
 
 
+HOME = (560, 1452)
+
+
+def clara_pos(t):
+    go0, back0 = EV["angeln"], EV["bob"]
+    if go0 <= t < back0:
+        k = ease(k_of(t, go0, 0.8))
+        return HOME[0] + (JETTY_END[0] - HOME[0]) * k, HOME[1] + (JETTY_END[1] - HOME[1]) * k
+    if t >= back0:
+        k = ease(k_of(t, back0, 0.7))
+        return JETTY_END[0] + (HOME[0] - JETTY_END[0]) * k, JETTY_END[1] + (HOME[1] - JETTY_END[1]) * k
+    return HOME
+
+
 def clara(t, amp, blink, head_rot, bounce, angry):
     svg = base.character(t, amp, blink, head_rot, bounce, angry)
     if t >= SHOE_ON:   # zweiter Sneaker wieder am Fuß
@@ -370,8 +395,8 @@ def held_items(t, hand):
     out = ""
     a0, a_end = EV["angeln"], SEG["angeln"]["end"] + 0.3
     if a0 <= t <= a_end:
-        tip = (740, 1210)
-        wx, wy = 980, 1640
+        tip = (hx + 190, hy - 140)
+        wx, wy = hx + 330, hy + 210
         out += f'<path d="M{hx} {hy} L{tip[0]} {tip[1]}" stroke="#3A3A3A" stroke-width="3" stroke-linecap="round"/>'
         ts = word_t("angeln", "schuh") - 0.6
         if t < ts:
@@ -515,8 +540,11 @@ def scene(t):
         w.append(f'<g transform="translate(870 1455) rotate(-20) scale(0.3)" stroke="{O}" stroke-width="5"><path d="M-50 -20 h90 q20 0 20 20 q0 20 -20 20 h-90 q-14 0 -14 -20 q0 -20 14 -20 z" fill="#9FE3C9"/>'
                  f'<rect x="58" y="-10" width="34" height="20" rx="4" fill="#9FE3C9"/></g>')
     # Clara
-    hand = (567, 1360)
-    w.append(f'<g transform="translate(560 1452) scale({CL}) translate(-540 -1550)">{clara(t, amp, blink, head_rot, bounce, angry)}</g>')
+    px, py = clara_pos(t)
+    walking = 0 < (abs(px - HOME[0]) + abs(py - HOME[1])) and not (abs(px - JETTY_END[0]) < 1 and abs(py - JETTY_END[1]) < 1)
+    step = 6 * abs(math.sin(t * 12)) if walking else 0
+    hand = (px + 7, py - 92 - step)
+    w.append(f'<g transform="translate({px:.1f} {py - step:.1f}) scale({CL}) translate(-540 -1550)">{clara(t, amp, blink, head_rot, bounce, angry)}</g>')
     w.append(held_items(t, hand))
     if EV["tsunami"] + 1.4 <= t <= EV["tsunami"] + 5.0:   # nass: Tropfen
         for j in range(6):

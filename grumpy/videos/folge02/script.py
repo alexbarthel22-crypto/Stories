@@ -59,7 +59,8 @@ SEGMENTS = [
         ("[annoyed]", "Ich hasse, dass es mir gefällt.", "Ich hasse, dass es mir gefällt."),
     ]),
     dict(key="outro", user=None, comment=None, pre=0.4, lines=[
-        ("[sarcastic]", "Tag drei? Schreibt's in die Kommentare. Mir doch egal.", "Tag drei? Schreibt's in die Kommentare. Mir doch egal."),
+        ("[sarcastic]", "Schreibt's in die Kommentare.", "Schreibt's in die Kommentare."),
+        ("[annoyed]", "Bei Tag drei gebt euch aber ein bisschen mehr Mühe.", "Bei Tag drei gebt euch aber ein bisschen mehr MÜHE."),
     ]),
 ]
 
