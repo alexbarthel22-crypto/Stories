@@ -1,0 +1,17 @@
+[
+ {"id":"01","who":"sven","say":"[shouting] RUNTER!","sub":"RUNTER!"},
+ {"id":"02","who":"ich","say":"[panicked] Was war das?!","sub":"Was war das?!"},
+ {"id":"03","who":"sven","say":"[breathless] Das Umspannwerk. Das ganze Viertel ist dunkel.","sub":"Das Umspannwerk. Das ganze Viertel ist dunkel."},
+ {"id":"04","who":"ansage","say":"Achtung. Alle Personen unter achtzehn begeben sich sofort zur Sammelstelle.","sub":"Alle Personen unter 18 begeben sich sofort zur Sammelstelle."},
+ {"id":"05","who":"sven","say":"[whispers] Geh da nicht hin. Mein Bruder ist hingegangen. [pause] Er kam nie zurück.","sub":"Geh da nicht hin. Mein Bruder ist hingegangen. Er kam nie zurück."},
+ {"id":"06","who":"ansage","say":"Person erkannt. Stehen bleiben.","sub":"Person erkannt. Stehen bleiben."},
+ {"id":"07","who":"sven","say":"[shouting] LAUF!","sub":"LAUF!"},
+ {"id":"08","who":"ich","say":"[out of breath] Die ist direkt hinter uns!","sub":"Die ist direkt hinter uns!"},
+ {"id":"09","who":"sven","say":"[shouting] Weiter! Nicht umdrehen!","sub":"Weiter! Nicht umdrehen!"},
+ {"id":"10","who":"sven","say":"[shocked, quiet] Die sprengen ihre eigene Stadt...","sub":"Die sprengen ihre eigene Stadt..."},
+ {"id":"11","who":"lea","say":"[cold, quiet] Keinen Mucks. Seid ihr gechipt?","sub":"Keinen Mucks. Seid ihr gechipt?"},
+ {"id":"12","who":"ich","say":"[confused] Ge... was?!","sub":"Ge... was?!"},
+ {"id":"13","who":"lea","say":"Er ist einer von denen.","sub":"Er ist einer von denen."},
+ {"id":"14","who":"sven","say":"[shouting] Was redest du da?!","sub":"Was redest du da?!"},
+ {"id":"15","who":"lea","say":"[cold] Tut mir leid. [pause] Du hast zehn Sekunden, um mir zu sagen, wer du wirklich bist.","sub":"Du hast 10 Sekunden, um mir zu sagen, wer du wirklich bist."}
+]
