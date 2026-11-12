@@ -8,7 +8,7 @@ SEGMENTS = [
         ("[sighs]", "Na gut. Dann eben so.", "Na gut. Dann eben so."),
     ]),
     dict(key="vulkan", user="❤️🌹", comment="Ein Vulkanausbruch", pre=2.2, lines=[
-        ("[sarcastic]", "Ein Vulkan. Genau das hat noch gefehlt.", "Ein Vulkan. Genau DAS hat noch gefehlt."),
+        ("[sarcastic]", "Das fängt ja hier wieder richtig respektlos an.", "Das fängt ja hier wieder richtig RESPEKTLOS an."),
     ]),
     dict(key="tsunami", user="david🇬🇪", comment="ey ein tsunamie kommt jetzt", pre=1.9, lines=[
         ("[panicked]", "Ein Tsunami?! Meine Haare waren gerade trocken!", "Ein TSUNAMI?! Meine Haare waren gerade trocken!"),
@@ -23,10 +23,13 @@ SEGMENTS = [
         ("[surprised]", "Oh. Ein Haus. Das ist… tatsächlich nett.", "Oh. Ein Haus. Das ist … tatsächlich nett."),
     ]),
     dict(key="toilette", user="❤️🌹", comment="Eine Toilette", pre=0.7, lines=[
-        ("[relieved]", "Endlich. Das Meer dankt euch.", "Endlich. Das Meer dankt euch."),
+        ("[annoyed]", "Ich weiß nicht, wo ihr aufs Klo geht, aber das Klo wäre im Haus irgendwie besser gewesen.",
+         "Ich weiß nicht, wo ihr aufs Klo geht, aber das Klo wäre im Haus irgendwie besser gewesen."),
+        ("[sighs]", "Aber egal.", "Aber egal."),
     ]),
     dict(key="doener", user="Team_Fisch🐟", comment="ein dönerladen bauen", pre=0.8, lines=[
-        ("[excited]", "Ein Dönerladen?! Okay, du darfst bleiben.", "Ein DÖNERLADEN?! Okay, du darfst bleiben."),
+        ("[confused]", "Digga, wieso kostet der Döner fünf Euro?", "Digga, wieso kostet der Döner 5 €?"),
+        ("[annoyed]", "Und wen bezahle ich? Da arbeitet doch gar keiner.", "Und wen bezahle ich? Da arbeitet doch gar KEINER."),
     ]),
     dict(key="angel", user="01_k61", comment="Wann nächster Part und bitte mach die angelstation", pre=0.7, lines=[
         ("", "Hier ist dein Part. Angelstation steht.", "Hier ist dein Part. Angelstation steht."),
@@ -52,15 +55,19 @@ SEGMENTS = [
         ("[annoyed]", "Aber die Krabbe? Nein. Die versteht mich als Einzige.", "Aber die Krabbe? NEIN. Die versteht mich als Einzige."),
     ]),
     dict(key="flugzeug", user="lyrics guy", comment="ein Flugzeug kommt und gibt sie essen", pre=2.0, lines=[
-        ("[annoyed]", "Ein Flugzeug wirft Essen ab. Und nimmt mich nicht mit.", "Ein Flugzeug wirft Essen ab. Und nimmt mich NICHT mit."),
+        ("[annoyed]", "Hätte mich ja gleich mitnehmen können.", "Hätte mich ja gleich MITNEHMEN können."),
+        ("[sarcastic]", "Aber was weiß ich schon.", "Aber was weiß ich schon."),
     ]),
     dict(key="villa", user="Michyx🦦💦", comment="so ne rießen insel mit hafen und ner rießen villa", pre=2.4, lines=[
         ("[impressed]", "Okay… das ist ziemlich geil.", "Okay … das ist ziemlich geil."),
         ("[annoyed]", "Ich hasse, dass es mir gefällt.", "Ich hasse, dass es mir gefällt."),
     ]),
     dict(key="outro", user=None, comment=None, pre=0.4, lines=[
-        ("[sarcastic]", "Schreibt's in die Kommentare.", "Schreibt's in die Kommentare."),
-        ("[annoyed]", "Bei Tag drei gebt euch aber ein bisschen mehr Mühe.", "Bei Tag drei gebt euch aber ein bisschen mehr MÜHE."),
+        ("[annoyed]", "Schreibt in die Kommentare, was mit mir und der Insel im nächsten Video passieren soll.",
+         "Schreibt in die Kommentare, was mit mir und der Insel im nächsten Video passieren soll."),
+        ("[serious]", "Und alles, was in den Kommentaren steht, passiert. Ausnahmslos.",
+         "Und ALLES, was in den Kommentaren steht, passiert. Ausnahmslos."),
+        ("[sighs]", "Ich hasse mein Leben.", "Ich hasse mein Leben."),
     ]),
 ]
 

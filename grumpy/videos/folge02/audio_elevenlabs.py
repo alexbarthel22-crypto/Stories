@@ -67,21 +67,56 @@ def decode(resp):
     return x
 
 
-# Aufnahme 1: alles bis vor das Outro (aus der bestehenden Aufnahme), Aufnahme 2: neues Outro
-main_text, spans = build_text(SEGMENTS[:-1])
-out_text, spans2 = build_text(SEGMENTS[-1:], offset_seg=len(SEGMENTS) - 1)
-r1, r2 = tts(main_text), tts(out_text)
-n1 = len(main_text)
-a1 = decode(r1)
-end1 = r1["alignment"]["character_end_times_seconds"][n1 - 1] + 0.2
-a1 = a1[: int(end1 * SR)]
-gap = np.zeros(int(0.4 * SR), np.float32)
-off2 = len(a1) / SR + 0.4
-audio = np.concatenate([a1, gap, decode(r2)])
-full = main_text + " " + out_text
-st = r1["alignment"]["character_start_times_seconds"][:n1] + [0.0] + [x + off2 for x in r2["alignment"]["character_start_times_seconds"]]
-en = r1["alignment"]["character_end_times_seconds"][:n1] + [0.0] + [x + off2 for x in r2["alignment"]["character_end_times_seconds"]]
-spans += [(a + n1 + 1, b + n1 + 1, si, li) for a, b, si, li in spans2]
+# Pro Szene: unveränderte Sätze aus vorhandenen Aufnahmen herausschneiden, geänderte Szenen einzeln neu vertonen
+def recordings():
+    for f in sorted(HERE.glob("_cache*.json")):
+        d = json.loads(f.read_text())
+        yield d
+
+
+RECS = list(recordings())
+_decoded = {}
+
+
+def piece_for(si):
+    """Audio + Zeichenzeiten für Szene si. Sucht den Text in vorhandenen Aufnahmen, sonst neue Aufnahme."""
+    text, sp = build_text([SEGMENTS[si]], offset_seg=si)
+    first_char = sp[0][0]
+    for d in RECS:
+        k = d["text"].find(text)
+        if k < 0:
+            continue
+        al = d["alignment"]
+        t0 = al["character_start_times_seconds"][k + first_char] - 0.05
+        t1 = al["character_end_times_seconds"][k + len(text) - 1] + 0.15
+        key = id(d)
+        if key not in _decoded:
+            _decoded[key] = decode(d)
+        x = _decoded[key][max(int(t0 * SR), 0): int(t1 * SR)]
+        st_ = [v - t0 for v in al["character_start_times_seconds"][k:k + len(text)]]
+        en_ = [v - t0 for v in al["character_end_times_seconds"][k:k + len(text)]]
+        return text, sp, x, st_, en_
+    d = tts(text)
+    x = decode(d)
+    al = d["alignment"]
+    t0 = max(al["character_start_times_seconds"][first_char] - 0.05, 0)
+    t1 = al["character_end_times_seconds"][-1] + 0.15
+    return (text, sp, x[int(t0 * SR): int(t1 * SR)],
+            [v - t0 for v in al["character_start_times_seconds"]], [v - t0 for v in al["character_end_times_seconds"]])
+
+
+full, spans, st, en, parts, pos = "", [], [], [], [], 0.0
+for si in range(len(SEGMENTS)):
+    text, sp, x, st_, en_ = piece_for(si)
+    if full:
+        full += " "; st.append(0.0); en.append(0.0)
+        parts.append(np.zeros(int(0.3 * SR), np.float32)); pos += 0.3
+    base_i = len(full)
+    spans += [(a + base_i, b + base_i, s_, l_) for a, b, s_, l_ in sp]
+    full += text
+    st += [v + pos for v in st_]; en += [v + pos for v in en_]
+    parts.append(x.astype(np.float32)); pos += len(x) / SR
+audio = np.concatenate(parts)
 assert len(st) == len(full)
 
 # Zeilen mit Wortzeiten
