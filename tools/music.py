@@ -159,10 +159,71 @@ def _loop_anthem(sr, with_melody=True, seed=0):
     return sosfilt(lp, 0.5 * keys + 0.7 * bass + 0.45 * sosfilt(bp, mel) + 0.5 * drums)
 
 
+
+# ---------------------------------------------------------------- Stil 4: "groove"
+# Druckvoller Hip-Hop/Funk-Groove, 100 BPM, Dm–Bb–F–C: Boom-Bap-Drums (Kick, Snare, Hi-Hats),
+# fetter Synth-Bass-Riff und gepfiffene/Synth-Lead-Hook. Komplett synthetisiert -> lizenzfrei.
+G_BPM = 100
+G_BEAT = 60 / G_BPM
+G_BAR = 4 * G_BEAT
+G_CHORDS = [(62, 65, 69), (58, 62, 65), (53, 57, 60), (60, 64, 67)]
+G_BASS = [(0, 38, .75), (.75, 38, .25), (1.5, 50, .5), (2.5, 38, .5), (3.25, 41, .5)]   # Riff pro Takt (relativ)
+G_ROOT = [0, -4, -9, -2]
+G_HOOK = [(0, 0, 74, .5), (0, .75, 74, .25), (0, 1, 77, .5), (0, 1.5, 74, .5), (0, 2.5, 72, .5), (0, 3, 69, 1),
+          (1, 0, 70, .5), (1, .75, 70, .25), (1, 1, 74, .5), (1, 1.5, 70, .5), (1, 2.5, 69, 1.5),
+          (2, 0, 74, .5), (2, .75, 74, .25), (2, 1, 77, .5), (2, 1.5, 81, .5), (2, 2.5, 79, .5), (2, 3, 77, 1),
+          (3, 0, 76, .5), (3, .5, 74, .5), (3, 1, 72, 1), (3, 2.5, 74, 1.5)]
+
+
+def _saw(f, dur, sr, decay=3.0, attack=0.005, cutoff=2400):
+    t = np.arange(int(dur * sr)) / sr
+    y = 2 * ((f * t) % 1) - 1
+    y = y + 0.5 * (2 * ((f * 1.006 * t) % 1) - 1)                     # leicht verstimmt = fett
+    env = np.minimum(1, t / attack) * np.exp(-t * decay)
+    lp = butter(2, cutoff, "lowpass", fs=sr, output="sos")
+    return sosfilt(lp, y * env)
+
+
+def _loop_groove(sr, with_melody=True, seed=0):
+    n = int(4 * G_BAR * sr)
+    drums, bass, keys, lead = (np.zeros(n) for _ in range(4))
+    rnd = np.random.default_rng(seed + 7)
+    for b in range(4):
+        t0 = b * G_BAR
+        for beat in (0, 1.75, 2.5):                                   # Boom-Bap-Kick
+            tt = np.arange(int(0.3 * sr)) / sr
+            k = np.sin(2 * np.pi * np.cumsum(48 + 140 * np.exp(-tt * 38)) / sr) * np.exp(-tt * 11)
+            _add(drums, k, t0 + beat * G_BEAT, sr, 1.0)
+        for beat in (1, 3):                                           # knackige Snare + Clap
+            ln = int(0.22 * sr); tt = np.arange(ln) / sr
+            sn = rnd.standard_normal(ln) * np.exp(-tt * 22) + 0.5 * np.sin(2 * np.pi * 190 * tt) * np.exp(-tt * 30)
+            hp = butter(2, 900, "highpass", fs=sr, output="sos")
+            _add(drums, sosfilt(hp, sn), t0 + beat * G_BEAT, sr, 0.55)
+        for e in range(8):                                            # Hi-Hats, mit Swing
+            ln = int(0.04 * sr); tt = np.arange(ln) / sr
+            hh = sosfilt(butter(2, 7000, "highpass", fs=sr, output="sos"), rnd.standard_normal(ln)) * np.exp(-tt * 90)
+            _add(drums, hh, t0 + (e * 0.5 + (0.06 if e % 2 else 0)) * G_BEAT, sr, 0.22 if e % 2 else 0.32)
+        for beat, m, L in G_BASS:                                     # Synth-Bass-Riff
+            f = hz(m + G_ROOT[b])
+            _add(bass, _saw(f, L * G_BEAT + 0.05, sr, decay=2.5, cutoff=700), t0 + beat * G_BEAT, sr, 0.9)
+        for beat in (0, 2):                                           # Stab-Akkorde
+            for m in G_CHORDS[b]:
+                _add(keys, _saw(hz(m), 0.35, sr, decay=9, cutoff=1800), t0 + beat * G_BEAT + 0.02, sr, 0.22)
+    if with_melody:
+        for bar, beat, m, L in G_HOOK:                                # Lead-Hook (Synth-Pfeife)
+            f = hz(m)
+            t = np.arange(int((L * G_BEAT + 0.15) * sr)) / sr
+            vib = np.sin(2 * np.pi * f * t + 0.25 * np.sin(2 * np.pi * 5.5 * t))
+            env = np.minimum(1, t / 0.01) * np.exp(-t * 2.2)
+            sq = np.sign(np.sin(2 * np.pi * f * t)) * 0.18
+            _add(lead, (vib + sq) * env, bar * G_BAR + beat * G_BEAT, sr, 0.55)
+    return 0.8 * drums + 0.7 * bass + 0.5 * keys + 0.6 * lead
+
+
 def theme(seconds, sr=44100, style="lofi", fade_in=1.2):
     """Theme in gewünschter Länge: Loops mit/ohne Melodie im Wechsel, weich ein- und ausgeblendet.
     style: "lofi" (ruhig, 96 BPM), "marimba" (fröhlich, 112 BPM), "anthem" (Girl-Power-Hymne, 118 BPM)."""
-    loop = {"marimba": _loop_marimba, "anthem": _loop_anthem}.get(style, _loop)
+    loop = {"marimba": _loop_marimba, "anthem": _loop_anthem, "groove": _loop_groove}.get(style, _loop)
     parts, total, i = [], 0, 0
     while total < seconds * sr:
         p = loop(sr, with_melody=(i % 2 == 0), seed=i)
