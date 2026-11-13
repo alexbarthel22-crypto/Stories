@@ -1,9 +1,9 @@
 """TikTok-Folge: Heute ist Alex ... ein Schluckspecht. Alex hier klar erwachsen (Anfang 20, WG/Kneipe) wegen Alkohol-Thema.
-Alltags-Comedy, nur Freunde/Bros, kein Verherrlichen. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), erst nach Freigabe. Vorschau: Ersatzstimme."""
+Alltags-Comedy, nur Freunde/Bros, kein Verherrlichen. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
-AL = alex(top="#C98E25", top_style="hoodie", pants="#2F3B52", shoes="#FFFFFF")
+AL = alex(top="#3E5C9A", top_style="hoodie", pants="#2F3B52", shoes="#FFFFFF")
 TOM = person_spec(12, top="#36B5C2", hair="#3B2A20")
 LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894")
 ROLE, ROLE_TTS, ROLE_SAY = "EIN SCHLUCKSPECHT.", "ein Schluckspecht.", "ein Schluckspecht!"
@@ -13,10 +13,10 @@ CAPTION_Y = 1650
 DAYBAR_Y = 1755
 LINE_TEMPO = {k: 1.3 for k in ("signs_0", "signs_1", "signs_2", "signs_3", "signs_4", "outro_0", "outro_1")}
 _BIG = dict(tag_size=52, head_size=54, item_scale=1.45)
-MOODS = dict(MOODS_BASE, pfand="stolz, dann trocken", party="unschuldig tuend, dann trocken",
+MOODS = dict(MOODS_BASE, rest="verkatert, dann trocken", pfand="stolz, dann trocken", party="unschuldig tuend, dann trocken",
              nureins="gemütlich, dann trocken", chat="gerührt und übertrieben emotional, dann trocken")
 SHUFFLE = SHUFFLE_BASE
-REACTIONS = {"pfand": ["♻️", "🪙", "🚩"], "party": ["🥂", "😳", "🚩"], "nureins": ["🍺", "⏰", "🚩"], "chat": ["🥹", "💀", "🚩"]}
+REACTIONS = {"rest": ["🪟", "🤢", "🚩"], "pfand": ["♻️", "🪙", "🚩"], "party": ["🥂", "😳", "🚩"], "nureins": ["🍺", "⏰", "🚩"], "chat": ["🥹", "💀", "🚩"]}
 THUMB = dict(head="HEUTE IST ALEX EIN…", l1="SCHLUCK-", l2="SPECHT", bg="#C98E25", color1="#FFFFFF", accent="#FFE14D",
              pill="#5A3E06", pill_text="#FFFFFF", expr="smug", pose="hips", prop=None, extras=True, emojis=("🍺", "🐦", "🥂", "🚩"))
 INTRO_CFG = dict(icon="🍺", bg="#C98E25", title_lines=["SCHLUCKSPECHT."], sign_x=(190, 890), sign_w=330, sign_size=40,
@@ -33,6 +33,15 @@ SCENES = [
         ("Sein Lieblingssatz: Nur noch eins. Gemeint sind zwölf.", None),
     ], viz=dict(kind="bars", enter="drop", head="GEPLANT VS. GETRUNKEN", rows=[("GEPLANT", 0.08, "1", "#2FA36B"), ("GETRUNKEN", 1.0, "12", "#E07A2E")],
                 pills=[("🍺", "„Nur noch eins“", "#E07A2E"), ("💧", "Wasser: kennt er nicht", "#3E7BDA")])),
+    dict(id="rest", bg="#5B6BC9", clock="08:00", title="RESTALKOHOL", dark=True, lines=[
+        ("Acht Uhr, Berufsschule. Er kommt mit Restalkohol in den Unterricht.", None),
+        ("Der Lehrer reißt sofort alle Fenster auf. Sein Bro sagt: Bro, du riechst wie eine Kneipe.", None),
+    ], viz=dict(kind="stage", **_BIG, enter="drop", box="#EEF0FF", head="📚 BERUFSSCHULE · 1. STUNDE", head_col="#3E4A9C",
+                people=[(TOM, 820, "Tom", "neutral", 1)],
+                items=[("😵‍💫", 270, 620, 110, 0, "shake"), ("🍺", 430, 620, 80, 0, "bob"), ("🪟", 600, 620, 90, 1, "pulse"),
+                       ("💨", 600, 760, 70, 1, "fly")],
+                tags=[("RESTALKOHOL 🍺", "#3E4A9C", 360, 760), ("„DU RIECHST WIE 'NE KNEIPE“", "#E23B3B", 430, 990)],
+                fx="shock", move="rumble", alex=("sleepy", "idle", None))),
     dict(id="pfand", bg="#2FA36B", clock="10:00", title="PFANDAUTOMAT", dark=True, lines=[
         ("Zehn Uhr. Er bringt seine Pfandflaschen weg. Mit dem Einkaufswagen.", None),
         ("Hinter ihm die Schlange: zwanzig Leute. Der Automat: voll.", None),
@@ -75,11 +84,11 @@ SCENES = [
                 alex=("happy", "idle", "📱"))),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
         ("Woran du einen Schluckspecht erkennst:", None),
-        ("Er bringt Pfand mit dem Einkaufswagen weg.", None),
+        ("Morgens sitzt er mit Restalkohol im Unterricht.", None),
         ("Sein Nur noch eins dauert bis drei Uhr.", None),
         ("Volle Gläser sind bei ihm nie sicher.", None),
         ("Und nachts kommen Sprachnachrichten voller Liebe.", None),
-    ], viz=dict(kind="signs", slide=True, items=[("Pfand mit Einkaufswagen", "🛒"), ("„Nur noch eins“ = 3 Uhr", "🍺"),
+    ], viz=dict(kind="signs", slide=True, items=[("Restalkohol im Unterricht", "😵‍💫"), ("„Nur noch eins“ = 3 Uhr", "🍺"),
                                                  ("Kein Glas ist sicher", "🥂"), ("Nachts Liebes-Sprachis", "🎤")])),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
         ("Kennst du auch einen Schluckspecht? Markier sie oder ihn!", None),

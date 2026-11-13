@@ -201,3 +201,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Looksmaxxer 🗿 Skincare mit 12 Schritten, Hausaufgaben: null 🧴📚 Schläft mit Tape auf dem Mund für die Jawline … sein Bro denkt, er wurde entführt 🩹😱 Tom erzählt den Witz des Jahres, alle lachen – nur Alex nicht. Lachen gibt Falten, Bro 😐 40 Versuche fürs Gruppenfoto, weil der Kiefer schief war 📸📐 Lena fragt was? Keine Antwort, er ist gerade am Mewing 🤐 Und im Gruppenchat gibt er sich selbst 9/10 … die Bros sagen 4 💀 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Looksmaxxer aus deinem Freundeskreis! Und was soll Alex morgen sein?
 
 #heuteistalex #looksmaxxing #mewing #jawline #comedy
+
+## TikTok Folge 14 – Schluckspecht
+Cover: `episodes/40_schluckspecht/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Schluckspecht 🍺 Trinkt alles, was nicht bei drei leer ist 🫗 „Nur noch eins“ heißt bei ihm zwölf 🍻 Morgens sitzt er mit Restalkohol in der Berufsschule – der Lehrer reißt alle Fenster auf und sein Bro sagt: „Du riechst wie 'ne Kneipe“ 🪟💀 87 Pfandflaschen im Einkaufswagen, der Automat ist voll ♻️ Wer auf Lenas Geburtstag kurz aufs Klo geht, findet sein Glas leer 🥂 Und nachts: 14 Sprachnachrichten an die Bros – „Ich lieb euch so sehr“ 🥹🎤 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Schluckspecht aus deinem Freundeskreis! Und was soll Alex morgen sein?
+
+#heuteistalex #schluckspecht #nurnocheins #bros #comedy
