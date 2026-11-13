@@ -207,6 +207,6 @@ Cover: `episodes/40_schluckspecht/thumbnail.png`
 
 Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 
-ein Schluckspecht 🍺 Trinkt alles, was nicht bei drei leer ist 🫗 „Nur noch eins“ heißt bei ihm zwölf 🍻 Morgens sitzt er mit Restalkohol in der Berufsschule – der Lehrer reißt alle Fenster auf und sein Bro sagt: „Du riechst wie 'ne Kneipe“ 🪟💀 87 Pfandflaschen im Einkaufswagen, der Automat ist voll ♻️ Wer auf Lenas Geburtstag kurz aufs Klo geht, findet sein Glas leer 🥂 Und nachts: 14 Sprachnachrichten an die Bros – „Ich lieb euch so sehr“ 🥹🎤 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Schluckspecht aus deinem Freundeskreis! Und was soll Alex morgen sein?
+ein Schluckspecht 🍺 Trinkt alles. Sogar den Uwe 🫗 „Nur noch eins“ heißt bei ihm zwölf 🍻 Morgens sitzt er mit Restalkohol in der Berufsschule – der Lehrer reißt alle Fenster auf und sein Bro sagt: „Du riechst wie 'ne Kneipe“ 🪟💀 87 Pfandflaschen im Einkaufswagen, der Automat ist voll ♻️ Auf Lenas Party macht er betrunken Marie an … und denkt den ganzen Abend, es ist Lena 🥴💀 Und nachts: 14 Sprachnachrichten an die Bros – „Ich lieb euch so sehr“ 🥹🎤 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Schluckspecht aus deinem Freundeskreis! Und was soll Alex morgen sein?
 
 #heuteistalex #schluckspecht #nurnocheins #bros #comedy

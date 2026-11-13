@@ -211,6 +211,7 @@ def _swap_fx(c, t, ts):
 
 
 _ITEM_SCALE = [1.0]
+_LIVELY = [False]
 
 
 def _items(c, t, S, items, li):
@@ -233,6 +234,8 @@ def _items(c, t, S, items, li):
             dx = math.sin(t * 40 + x) * 4; rot = math.sin(t * 30) * 0.08
         elif an == "fly":
             uu = ((t - t0) * 0.6 + (x % 7) / 7) % 1; dy = -uu * 120; k = 1 - uu * 0.5
+        if _LIVELY[0]:
+            rot += 0.12 * math.sin(t * 3.3 + x * 0.01); dy += 5 * math.sin(t * 4.1 + y * 0.02)
         emoji(c, e, x + dx, y + dy, sz * p * k * _ITEM_SCALE[0], rot=rot)
 
 
@@ -283,6 +286,15 @@ def sc_stage(c, S, v, spec):
         for (sp, x, nm, ex, l_angry) in v.get("people", []):
             e = ex if (l_angry is None or t < S.at(l_angry, 0.4)) else "angry"
             person(c, x, _Y(1000), 380 * LAYOUT["ky"], sp, t, e, bob=False, name=nm, blink_seed=int(x))
+        if v.get("particles"):                               # thematische Partikel schweben durch die Box
+            ems = v["particles"]
+            for i in range(9):
+                rr = random.Random(500 + i)
+                uu = (t * rr.uniform(0.18, 0.32) + rr.random()) % 1
+                px = bx - bw / 2 + 60 + rr.random() * (bw - 120) + math.sin(t * 2 + i) * 18
+                py = by + bh / 2 - 40 - uu * (bh - 120)
+                emoji(c, ems[i % len(ems)], px, py, 44 + 10 * math.sin(t * 3 + i), rot=math.sin(t * 2 + i) * 0.4,
+                      alpha=0.55 * math.sin(uu * math.pi))
         _items(c, t, S, v.get("items", []), 0)
         for pn in v.get("panels", []):                       # kleine Info-Karte, z. B. DM-Verlauf
             if t < S.at(pn["line"], pn.get("at", 0.1)):
@@ -314,6 +326,7 @@ def sc_stage(c, S, v, spec):
                 col = tag_color(col, S.S.bg, v.get("box", "#FFF4E0"))
                 tag(c, x, _Y(y), txt, col, s=pop(t, S.at(li, 0.35)), size=v.get("tag_size", 30), ymax=by + bh / 2)
     _ITEM_SCALE[0] = v.get("item_scale", 1.0)
+    _LIVELY[0] = v.get("lively", False)
     c.save(); box_move(c, bx, by, t, v.get("move", "wobble"), last)
     enter(c, v.get("enter", "pop"), t, S.at(0, 0.0), bx, by, box)
     box_flash(c, bx, by, bw, bh, t, last, v.get("flash", "#FFFFFF"))
