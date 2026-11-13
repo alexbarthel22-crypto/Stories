@@ -10,6 +10,10 @@ MARIE = person_spec(18, girl=True, top="#F2B233", hair="#2B1A10", skin="#C98B5E"
 ROLE, ROLE_TTS, ROLE_SAY = "EIN SCHLUCKSPECHT.", "ein Schluckspecht.", "ein Schluckspecht!"
 INTRO_LEN = 3.3
 MUSIC = "groove"   # eigener, per Code synthetisierter Hip-Hop-Groove (tools/music.py) – lizenzfrei
+MUSIC_START = 0.0   # Musik ab Sekunde 0
+MUSIC_DB = -15      # Musik lauter (vorher -22)
+MUSIC_DUCK_DB = -6
+LOUDNESS = -11      # Gesamt lauter (vorher -14 LUFS)
 LAYOUT = dict(feet=1732, ky=1.15, phone=1.06)
 CAPTION_Y = 1650
 DAYBAR_Y = 1755

@@ -340,7 +340,7 @@ def build_audio(path):
         env = maximum_filter1d(env, int(0.35 * SR))
         speech = np.clip(env / (env.max() * 0.08 + 1e-9), 0, 1)
         speech = uniform_filter1d(speech, int(0.12 * SR))
-        g = 10 ** (-22 / 20) * (1 - speech * (1 - 10 ** (-8 / 20)))
+        g = 10 ** (getattr(script, "MUSIC_DB", -22) / 20) * (1 - speech * (1 - 10 ** (getattr(script, "MUSIC_DUCK_DB", -8) / 20)))
         mix = mix + m * g
         global MUSIC_CHECK
         MUSIC_CHECK = (voice, m * g)
@@ -375,7 +375,7 @@ if __name__ == "__main__":
             fh.write(f"file '{s}'\n")
     final = os.path.join(EP, os.path.basename(EP.rstrip("/")) + ".mp4")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-i", wav,
-                    "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1.0:LRA=11", "-c:a", "aac", "-b:a", "192k",
+                    "-c:v", "copy", "-af", f"loudnorm=I={getattr(script, 'LOUDNESS', -14)}:TP=-1.0:LRA=11", "-c:a", "aac", "-b:a", "192k",
                     "-ar", "48000", "-shortest", "-movflags", "+faststart", final], check=True)
     for s in segs:
         os.remove(s)
