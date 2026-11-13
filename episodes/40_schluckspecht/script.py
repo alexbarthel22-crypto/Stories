@@ -9,6 +9,7 @@ LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894")
 MARIE = person_spec(18, girl=True, top="#F2B233", hair="#2B1A10", skin="#C98B5E")
 ROLE, ROLE_TTS, ROLE_SAY = "EIN SCHLUCKSPECHT.", "ein Schluckspecht.", "ein Schluckspecht!"
 INTRO_LEN = 3.3
+MUSIC = "marimba"   # eigenes, per Code synthetisiertes Thema (tools/music.py) – lizenzfrei
 LAYOUT = dict(feet=1732, ky=1.15, phone=1.06)
 CAPTION_Y = 1650
 DAYBAR_Y = 1755
