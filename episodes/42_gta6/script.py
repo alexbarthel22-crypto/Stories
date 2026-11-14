@@ -1,12 +1,12 @@
 """TikTok-Folge: Heute ist Alex ... im GTA VI Fieber. Alltags-Comedy über einen Fan, keine Spielgrafik/Logos nachgebaut.
-Gesprochen: „G T A Sechs“. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
+Gesprochen: „Ge Te A Sechs“. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
 AL = alex(top="#F07FB0", top_style="tee", pants="#36B5C2", shoes="#FFFFFF")   # Miami-Look
 TOM = person_spec(12, top="#36B5C2", hair="#3B2A20")
 LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894")
-ROLE, ROLE_TTS, ROLE_SAY = "IM GTA VI FIEBER.", "im G T A Sechs Fieber.", "im G T A Sechs Fieber!"
+ROLE, ROLE_TTS, ROLE_SAY = "IM GTA VI FIEBER.", "im Ge Te A Sechs Fieber.", "im Ge Te A Sechs Fieber!"
 INTRO_LEN = 3.3
 MUSIC = "groove"
 MUSIC_START = 0.0
@@ -35,7 +35,7 @@ INTRO_CFG = dict(icon="🎮", bg="#E0457B", title_lines=["IM GTA VI", "FIEBER."]
 
 SCENES = [
     dict(id="what", bg="#E0457B", clock=None, title="GTA VI FIEBER?", dark=True, lines=[
-        ("Alex hat nur noch ein Thema: GTA VI.", "Aleks hat nur noch ein Thema: G T A Sechs."),
+        ("Alex hat nur noch ein Thema: GTA VI.", "Aleks hat nur noch ein Thema: Ge Te A Sechs."),
         ("Er zählt die Tage bis zum Release. Auf die Sekunde genau.", None),
     ], viz=dict(kind="bars", enter="zoom", head="SEINE GESPRÄCHSTHEMEN", rows=[("GTA VI", 1.0, "100 %", "#E0457B"), ("REST", 0.02, "0 %", "#555A66")],
                 pills=[("⏳", "Countdown: läuft 24/7", "#36B5C2"), ("🎮", "Gedanken: nur ein Spiel", "#2B2F3A")])),
@@ -64,7 +64,7 @@ SCENES = [
                 tags=[("MITTAGESSEN: TOAST 🍞", "#A8642E", 360, 820), ("SPECIAL EDITION + PINKER CONTROLLER", "#E0457B", 540, 990)],
                 move="bounce", alex=("happy", "idle", None))),
     dict(id="motto", bg="#2F6FA8", clock=None, title="SEIN MOTTO", dark=True, lines=[
-        ("Sein Motto: Erst GTA VI, dann leb ich wieder.", "Sein Motto: Erst G T A Sechs, dann leb ich wieder."),
+        ("Sein Motto: Erst GTA VI, dann leb ich wieder.", "Sein Motto: Erst Ge Te A Sechs, dann leb ich wieder."),
     ], viz=dict(kind="stage", **_BIG, enter="spin", particles=["⏳"], box="#FFF0F6", head="⏳ LEBEN: PAUSIERT", head_col="#E0457B",
                 items=[("⏸️", 300, 680, 140, 0, "pulse"), ("➡️", 540, 680, 90, 0, "bob"), ("🎮", 780, 680, 150, 0, "shake")],
                 tags=[("ERST DAS SPIEL, DANN DAS LEBEN", "#E0457B", 540, 960)], move="chomp", alex=("smug", "hips", None))),
@@ -85,7 +85,7 @@ SCENES = [
                                                                  (1, False, "Tom: Bro, das schreibst du heute zum 11. Mal 💀", "23:01")]),
                 alex=("happy", "idle", "📱"))),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
-        ("Woran du erkennst, dass jemand im GTA VI Fieber ist:", "Woran du erkennst, dass jemand im G T A Sechs Fieber ist:"),
+        ("Woran du erkennst, dass jemand im GTA VI Fieber ist:", "Woran du erkennst, dass jemand im Ge Te A Sechs Fieber ist:"),
         ("Er analysiert jede Wolke im Trailer.", None),
         ("Seine Krankmeldung steht schon.", None),
         ("Er isst nur Toast. Für die Special Edition.", None),
@@ -93,12 +93,12 @@ SCENES = [
     ], viz=dict(kind="signs", slide=True, items=[("Analysiert jede Wolke", "🔍"), ("Krankmeldung steht schon", "🤒"),
                                                  ("Isst nur Toast – spart", "🍞"), ("Countdown 11× am Tag", "⏳")])),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du auch jemanden im GTA VI Fieber? Markier sie oder ihn!", "Kennst du auch jemanden im G T A Sechs Fieber? Markier sie oder ihn!"),
+        ("Kennst du auch jemanden im GTA VI Fieber? Markier sie oder ihn!", "Kennst du auch jemanden im Ge Te A Sechs Fieber? Markier sie oder ihn!"),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ], viz=dict(kind="outro", q="Kennst du auch jemanden im GTA VI Fieber?", handle="@gta6_alex", icon="🎮", col="#E0457B")),
 ]
 
-_G6 = "; 'G T A' als einzelne Buchstaben 'Gee-Tee-Ah' deutsch buchstabiert, danach die Zahl 'Sechs'"
-GEMINI_LINE_MOOD = {"intro_role": "völlig überrascht und amüsiert, flüssig ausgerufen: 'im G T A Sechs Fieber!'" + _G6,
+_G6 = "; 'Ge Te A' deutsch buchstabiert wie im deutschen Alphabet: Ge, Te, A (niemals englisch Dschi-Ti-Ei), danach die Zahl 'Sechs'"
+GEMINI_LINE_MOOD = {"intro_role": "völlig überrascht und amüsiert, flüssig ausgerufen: 'im Ge Te A Sechs Fieber!'" + _G6,
                     "what_0": MOODS_BASE["what"] + _G6 + "; den Namen Alex deutsch: A-leks",
                     "motto_0": MOODS_BASE["motto"] + _G6, "signs_0": MOODS_BASE["signs"] + _G6, "outro_0": MOODS_BASE["outro"] + _G6}
