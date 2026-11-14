@@ -8,7 +8,7 @@ TOM = person_spec(12, top="#36B5C2", hair="#3B2A20")
 LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894")
 ROLE, ROLE_TTS, ROLE_SAY = "IM GTA VI FIEBER.", "im Ge Te A Sechs Fieber.", "im Ge Te A Sechs Fieber!"
 INTRO_LEN = 3.3
-MUSIC = "groove"
+MUSIC = False   # Musik auf Wunsch entfernt
 MUSIC_START = 0.0
 MUSIC_DB = -15
 MUSIC_DUCK_DB = -6
