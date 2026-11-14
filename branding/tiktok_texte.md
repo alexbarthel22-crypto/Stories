@@ -210,3 +210,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Schluckspecht 🍺 Trinkt alles. Sogar den Uwe 🫗 „Nur noch eins“ heißt bei ihm zwölf 🍻 Morgens sitzt er mit Restalkohol in der Berufsschule – der Lehrer reißt alle Fenster auf und sein Bro sagt: „Du riechst wie 'ne Kneipe“ 🪟💀 87 Pfandflaschen im Einkaufswagen, der Automat ist voll ♻️ Auf Lenas Party macht er betrunken Marie an … und denkt den ganzen Abend, es ist Lena 🥴💀 Und nachts: 14 Sprachnachrichten an die Bros – „Ich lieb euch so sehr“ 🥹🎤 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Schluckspecht aus deinem Freundeskreis! Und was soll Alex morgen sein?
 
 #heuteistalex #schluckspecht #nurnocheins #bros #comedy
+
+## TikTok Folge 15 – Kek
+Cover: `episodes/41_kek/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+ein Kek 🍪 Will unbedingt cool sein … und blamiert sich jedes Mal 🤡 Bro-Handshake mit Tom? Tom geht vorbei, Alex klatscht der Lehrerin ab ✋💀 Story „Neuer Wagen 😎“ – im Hintergrund das Autohaus und der Verkäufer, der ihn rauswirft 🏎️🚪 Lacht am lautesten über Toms Witz und fragt dann: „Was war der Witz?“ 😂 Lehnt sich für Lena cool an die Wand – die Wand war 'ne Tür 💥 Und sein Fallrückzieher trifft nicht den Ball, sondern Toms Kopf ⚽💫 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Kek aus deinem Freundeskreis! Und was soll Alex morgen sein?
+
+#heuteistalex #kek #cringe #bros #comedy

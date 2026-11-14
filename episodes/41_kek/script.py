@@ -1,12 +1,12 @@
 """TikTok-Folge: Heute ist Alex ... ein Kek (Jugendsprache: peinlicher Möchtegern, der sich ständig blamiert).
-Alltags-Comedy, Jugendliche 2026, nur Freunde/Bros. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), erst nach Freigabe. Vorschau: Ersatzstimme."""
+Alltags-Comedy, Jugendliche 2026, nur Freunde/Bros. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
 AL = alex(top="#F2C94C", top_style="hoodie", pants="#5C5C66", shoes="#FFFFFF")
 TOM = person_spec(12, top="#36B5C2", hair="#3B2A20")
 LENA = person_spec(4, girl=True, top="#46B39A", hair="#6B3E26", skin="#EBB894")
-ROLE, ROLE_TTS, ROLE_SAY = "EIN KEK.", "ein Kek.", "ein Kek!"
+ROLE, ROLE_TTS, ROLE_SAY = "EIN KEK.", "ein Keck.", "ein Keck!"   # Stimme: „Keck“, sonst sagt sie „Keks“
 INTRO_LEN = 3.3
 MUSIC = "groove"
 MUSIC_START = 0.0
@@ -35,7 +35,7 @@ INTRO_CFG = dict(icon="🍪", bg="#2FA36B", title_lines=["KEK."], sign_x=(190, 8
 
 SCENES = [
     dict(id="what", bg="#2FA36B", clock=None, title="WAS IST EIN KEK?", dark=True, lines=[
-        ("Ein Kek will unbedingt cool sein.", None),
+        ("Ein Kek will unbedingt cool sein.", "Ein Keck will unbedingt cool sein."),
         ("Und blamiert sich dabei jedes Mal. Wirklich jedes Mal.", None),
     ], viz=dict(kind="bars", enter="zoom", head="WILL SEIN VS. IST", rows=[("COOL", 0.04, "0 %", "#555A66"), ("CRINGE", 1.0, "100 %", "#E23B3B")],
                 pills=[("😎", "Selbstbild: Sigma", "#2B2F3A"), ("🤡", "Realität: Kek", "#E07A2E")])),
@@ -84,7 +84,7 @@ SCENES = [
                 tags=[("„FALLRÜCKZIEHER!“ 🦵", "#7A3FA8", 380, 790), ("TREFFER: TOMS KOPF 💫", "#E23B3B", 420, 990)],
                 fx="shock", move="bounce", alex=("shock", "idle", None))),
     dict(id="signs", bg="#D9534F", clock=None, title="DIE 4 ANZEICHEN", lines=[
-        ("Woran du einen Kek erkennst:", None),
+        ("Woran du einen Kek erkennst:", "Woran du einen Keck erkennst:"),
         ("Sein Handshake endet bei der Lehrerin.", None),
         ("Er posert mit Autos, die ihm nicht gehören.", None),
         ("Er lacht über Witze, die er nicht versteht.", None),
@@ -92,7 +92,14 @@ SCENES = [
     ], viz=dict(kind="signs", slide=True, items=[("Handshake mit der Lehrerin", "🤝"), ("Posert mit fremden Autos", "🏎️"),
                                                  ("Lacht, versteht's aber nicht", "😂"), ("Rizz endet an der Tür", "🚪")])),
     dict(id="outro", bg="#7B4FA8", clock=None, title=None, lines=[
-        ("Kennst du auch einen Kek? Markier sie oder ihn!", None),
+        ("Kennst du auch einen Kek? Markier sie oder ihn!", "Kennst du auch einen Keck? Markier sie oder ihn!"),
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ], viz=dict(kind="outro", q="Kennst du auch einen Kek?", handle="@kek_alex", icon="🍪", col="#2FA36B")),
 ]
+
+_ALEX = "; den Namen deutsch aussprechen: A-leks mit offenem A wie in 'Alexander', niemals englisch 'Äläx'"
+GEMINI_LINE_TEXT = {"handshake_1": "Tom geht vorbei. Aleks klatscht der Lehrerin ab.",
+                    "witz_0": "Tom erzählt einen Witz. Aleks lacht am lautesten."}
+GEMINI_LINE_MOOD = {k: MOODS[k.split("_")[0]] + _ALEX for k in GEMINI_LINE_TEXT}
+GEMINI_LINE_MOOD["signs_0"] = MOODS["signs"] + "; das letzte Wort heißt 'Keck' (wie das Adjektiv keck), niemals 'Keks', 'Geek' oder 'Kick'"
+GEMINI_LINE_MOOD["intro_role"] = "völlig überrascht und amüsiert, flüssig und kurz ausgerufen: 'ein Keck!' (wie 'keck', ohne s, niemals 'Keks') – das Wort 'ein' unbedingt mitsprechen"
