@@ -1,5 +1,5 @@
 """TikTok-Folge: Heute ist Alex ... im GTA VI Fieber. Alltags-Comedy über einen Fan, keine Spielgrafik/Logos nachgebaut.
-Gesprochen: „G T A Sechs“. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), erst nach Freigabe. Vorschau: Ersatzstimme."""
+Gesprochen: „G T A Sechs“. Stimme exakt wie Pick-me-Boy (gemini-3.8-flash-tts, Puck), tighten 1.08 0.22 + match_level. Freigegeben vom Nutzer."""
 from ep_base import *
 from alexlib import alex, person_spec
 
@@ -97,3 +97,8 @@ SCENES = [
         ("Und was soll Alex morgen sein? Schreib's in die Kommentare.", None),
     ], viz=dict(kind="outro", q="Kennst du auch jemanden im GTA VI Fieber?", handle="@gta6_alex", icon="🎮", col="#E0457B")),
 ]
+
+_G6 = "; 'G T A' als einzelne Buchstaben 'Gee-Tee-Ah' deutsch buchstabiert, danach die Zahl 'Sechs'"
+GEMINI_LINE_MOOD = {"intro_role": "völlig überrascht und amüsiert, flüssig ausgerufen: 'im G T A Sechs Fieber!'" + _G6,
+                    "what_0": MOODS_BASE["what"] + _G6 + "; den Namen Alex deutsch: A-leks",
+                    "motto_0": MOODS_BASE["motto"] + _G6, "signs_0": MOODS_BASE["signs"] + _G6, "outro_0": MOODS_BASE["outro"] + _G6}

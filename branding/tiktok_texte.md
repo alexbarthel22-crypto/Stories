@@ -219,3 +219,12 @@ Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
 ein Kek 🍪 Will unbedingt cool sein … und blamiert sich jedes Mal 🤡 Bro-Handshake mit Tom? Tom geht vorbei, Alex klatscht der Lehrerin ab ✋💀 Story „Neuer Wagen 😎“ – im Hintergrund das Autohaus und der Verkäufer, der ihn rauswirft 🏎️🚪 Lacht am lautesten über Toms Witz und fragt dann: „Was war der Witz?“ 😂 Lehnt sich für Lena cool an die Wand – die Wand war 'ne Tür 💥 Und sein Fallrückzieher trifft nicht den Ball, sondern Toms Kopf ⚽💫 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier den Kek aus deinem Freundeskreis! Und was soll Alex morgen sein?
 
 #heuteistalex #kek #cringe #bros #comedy
+
+## TikTok Folge 16 – im GTA VI Fieber
+Cover: `episodes/42_gta6/thumbnail.png`
+
+Beschreibung (beginnt mit der Rolle, weil „Alex ist heute:“ davorsteht):
+
+im GTA VI Fieber 🎮🔥 Nur noch ein Thema und der Countdown läuft 24/7 ⏳ 2 Uhr nachts, Trailer zum 300. Mal, Bild für Bild: „Die Wolke in Sekunde 12 ist ein Hinweis!“ 🔍☁️ Die Krankmeldung für den Release-Tag steht seit zwei Jahren – sein Husten klingt wie ein Seehund 🤒🦭 Mittags nur Toast, er spart für die Special Edition und den pinken Controller 🍞🐷 Beim Date erzählt er Lena eine Stunde von der Map: „Du erinnerst mich an den Strand im Trailer“ 🏖️💀 Und im Bro-Chat: „Nur noch 312 Tage!“ – zum 11. Mal heute 📱 Welches Anzeichen kennst du? 1, 2, 3 oder 4? 👇 Markier deinen Bro, der genauso drauf ist! Und was soll Alex morgen sein?
+
+#heuteistalex #gta6 #gaming #bros #comedy
