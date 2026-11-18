@@ -5,9 +5,10 @@ const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
 
 export async function build(renderer) {
   const scene = new THREE.Scene(); scene.background = new THREE.Color('#000003');
-  const SUN = V3(0.9, 0.35, 0.6).normalize();
+  const SUN = V3(0.45, -0.45, 0.8).normalize();
   const sun = new THREE.DirectionalLight('#fff6e8', 3.2); sun.position.copy(SUN).multiplyScalar(100); scene.add(sun);
-  scene.add(new THREE.HemisphereLight('#4a78c0', '#05070c', 0.35)); // Erdschein von oben
+  scene.add(new THREE.HemisphereLight('#4a78c0', '#05070c', 0.6)); // Erdschein von oben
+  { const e = new THREE.Scene(); e.background = new THREE.Color('#3a5a8a'); const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(e, 0.02).texture; scene.environmentIntensity = 0.8; }
   // Sterne
   { const r = rng(9), n = 3000, p = new Float32Array(n * 3); for (let i = 0; i < n; i++) { const v = V3(r() - 0.5, r() - 0.5, r() - 0.5).normalize().multiplyScalar(800); p.set([v.x, v.y, v.z], i * 3); }
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3));
@@ -29,8 +30,8 @@ export async function build(renderer) {
   const cells = canvasTex(512, 256, (g, w, h) => { g.fillStyle = '#0d1d4a'; g.fillRect(0, 0, w, h);
     for (let x = 0; x < w; x += 32) for (let y = 0; y < h; y += 32) { const gr = g.createLinearGradient(x, y, x + 32, y + 32); gr.addColorStop(0, '#22397a'); gr.addColorStop(1, '#0b1636'); g.fillStyle = gr; g.fillRect(x + 2, y + 2, 28, 28); }
     g.strokeStyle = '#9aa7c4'; g.lineWidth = 3; g.strokeRect(1, 1, w - 2, h - 2); });
-  const foilM = new THREE.MeshStandardMaterial({map: foil, metalness: 1, roughness: 0.3, color: '#ffffff'});
-  const cellM = new THREE.MeshStandardMaterial({map: cells, metalness: 0.5, roughness: 0.25, side: THREE.DoubleSide});
+  const foilM = new THREE.MeshStandardMaterial({map: foil, metalness: 0.65, roughness: 0.4, color: '#ffffff'});
+  const cellM = new THREE.MeshStandardMaterial({map: cells, metalness: 0.2, roughness: 0.45, side: THREE.DoubleSide});
   const whiteM = mat('#e8e8e4', {roughness: 0.5}), steel = mat('#9aa0a8', {metalness: 0.8, roughness: 0.35});
   function satellite(scale, seed) {
     const g = new THREE.Group(); g.scale.setScalar(scale);
@@ -63,7 +64,7 @@ export async function build(renderer) {
   const dr = rng(33); const dd = [];
   for (let i = 0; i < ND; i++) { const panel = dr() < 0.6; debris.setColorAt(i, new THREE.Color(panel ? (dr() < 0.5 ? '#2a4590' : '#9aa7c4') : (dr() < 0.6 ? '#d9a640' : '#e8e8e4')));
     const v = V3(dr() - 0.5, dr() - 0.5, dr() - 0.5).normalize().multiplyScalar(1.5 + Math.pow(dr(), 2) * 9);
-    dd.push({o: V3((dr() - 0.5) * 2, (dr() - 0.5) * 1, (dr() - 0.5) * 2), v, s: 0.05 + Math.pow(dr(), 3) * 0.6, w: V3(dr() * 9, dr() * 9, dr() * 9)}); }
+    dd.push({o: V3((dr() - 0.5) * 2, (dr() - 0.5) * 1, (dr() - 0.5) * 2), v, s: 0.04 + Math.pow(dr(), 3) * 0.38, w: V3(dr() * 9, dr() * 9, dr() * 9)}); }
   debris.frustumCulled = false; scene.add(debris);
   // Blitz
   const flashTex = canvasTex(128, 128, (g, w) => { const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,230,190,0.7)'); gr.addColorStop(1, 'rgba(255,180,120,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, w); });
@@ -77,8 +78,8 @@ export async function build(renderer) {
     const t = T - shot.t0, a = T - ORBIT_HIT;
     earth.rotation.y = -1.2 + T * 0.004;
     // Taumeln: Düsen feuern wirr, Drehung nimmt zu; nach dem Einschlag starker Drall
-    const spin = smooth(47.5, 50, T) * 0.25 + (a > 0 ? 0.9 * (1 - Math.exp(-a * 3)) : 0);
-    sat.rotation.set(0.25 + Math.sin(T * 0.7) * 0.05 + spin * (T - 47) * 0.5, -0.5 + spin * (T - 47) * 0.8, 0.15 + spin * (T - 47) * 0.3);
+    const spin = smooth(47.5, 50, T) * 0.25 + (a > 0 ? 0.45 * (1 - Math.exp(-a * 3)) : 0);
+    sat.rotation.set(1.15 + Math.sin(T * 0.7) * 0.05 + spin * (T - 47) * 0.35, -0.35 + spin * (T - 47) * 0.5, 0.25 + spin * (T - 47) * 0.25);
     sat.position.set(0, 0, 0).addScaledVector(V3(1.2, 0.4, -0.6), a > 0 ? (1 - Math.exp(-a * 2)) * 1.5 : 0);
     jets.forEach((j, i) => { const on = noise1(T * 4 + i * 3, i) > 0.15 && a < 1.5; j.visible = on; j.scale.set(1, 0.6 + 0.6 * Math.abs(noise1(T * 25, i + 5)), 1); });
     // linker Flügel zerbricht beim Einschlag
@@ -103,8 +104,8 @@ export async function build(renderer) {
     swg.attributes.position.needsUpdate = true;
     // Kamera: langsame Fahrt, Erschütterung beim Einschlag
     const u = smooth(0, 6, t), sh = a > 0 ? 0.25 * Math.exp(-a * 2.5) : 0;
-    camera.position.set(lerp(4.5, 2.5, u) + noise1(T * 12, 1) * sh, lerp(-6.5, -5.5, u) + noise1(T * 12, 2) * sh, lerp(15, 13, u));
-    camera.lookAt(lerp(-1, -1.5, u), lerp(4.5, 4.0, u), -4);
+    camera.position.set(lerp(4.0, 2.5, u) + noise1(T * 12, 1) * sh, lerp(-3.0, -2.4, u) + noise1(T * 12, 2) * sh, lerp(13, 11.5, u));
+    camera.lookAt(lerp(-0.8, -1.2, u), lerp(0.2, 0.0, u), 0);
     camera.updateProjectionMatrix();
   }};
 }
