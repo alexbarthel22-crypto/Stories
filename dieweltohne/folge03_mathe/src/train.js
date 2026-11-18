@@ -74,7 +74,7 @@ export async function build(renderer) {
   const wireM = new THREE.LineBasicMaterial({color: '#3b3f44'});
   for (const y of [5.6, 6.9]) { const pts = []; for (let x = -600; x <= 600; x += 5) pts.push(V3(x, y - (y > 6 ? Math.pow(Math.sin(((x + 600) % 55) / 55 * Math.PI), 1) * 0.6 : 0), 0)); scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), wireM)); }
   // Signale (Ks): beide zeigen Grün
-  const sigs = []; for (const [x, ry] of [[-150, 0], [150, Math.PI]]) { const g = new THREE.Group(); g.position.set(x, 0, ry ? -3.2 : 3.2); g.rotation.y = ry; scene.add(g);
+  const sigs = []; for (const [x, ry] of [[-38, 0], [42, Math.PI]]) { const g = new THREE.Group(); g.position.set(x, 0, ry ? -3.4 : 3.4); g.rotation.y = ry; g.scale.setScalar(1.4); scene.add(g);
     mesh(new THREE.CylinderGeometry(0.1, 0.12, 5, 8), mat('#5a5f66'), 0, 2.5, 0, g); mesh(new THREE.BoxGeometry(0.2, 1.4, 0.8), mat('#151515'), -0.12, 5.3, 0, g);
     mesh(new THREE.BoxGeometry(0.05, 0.4, 0.4), mat('#f2f2f2'), -0.1, 4.25, 0, g); // Mastschild
     const lamp = mesh(new THREE.SphereGeometry(0.15, 12, 8), new THREE.MeshStandardMaterial({color: '#111', emissive: '#3bdc6a', emissiveIntensity: 4}), -0.25, 5.5, 0, g); sigs.push(lamp); }
@@ -90,7 +90,7 @@ export async function build(renderer) {
   const addTree = (x, z, s) => { if (ti >= 1400) return; m4.compose(V3(x, s * 1.6, z), q, V3(s * 0.4, s * 3.2, s * 0.4)); trunks.setMatrixAt(ti, m4); m4.compose(V3(x, s * 4.2, z), q, V3(s * 1.9, s * 2.6, s * 1.9)); leaves.setMatrixAt(ti, m4); ti++; };
   for (let i = 0; i < 900; i++) { const x = -700 + rt() * 1400, z = -70 - rt() * 140 - Math.sin(x * 0.01) * 30; addTree(x, z, 2.2 + rt() * 1.6); }
   for (let i = 0; i < 300; i++) { const x = -700 + rt() * 1400, z = 140 + rt() * 200; addTree(x, z, 2 + rt() * 1.5); }
-  for (let x = -400; x < 400; x += 14 + rt() * 10) addTree(x, 40 + rt() * 4, 1.6 + rt());
+  for (let x = -400; x < 400; x += 14 + rt() * 10) addTree(x, -24 - rt() * 4, 1.6 + rt());
   leaves.count = trunks.count = ti; leaves.castShadow = trunks.castShadow = true; scene.add(leaves, trunks);
   // Hügel in der Ferne
   for (let i = 0; i < 14; i++) { const h = mesh(new THREE.SphereGeometry(1, 24, 12), mat('#6f8a55', {roughness: 1}), -900 + i * 140, -60, -700 - (i % 3) * 120, scene); h.scale.set(220, 140, 120); }
@@ -147,15 +147,15 @@ export async function build(renderer) {
     updateSparks(wireSparks, [{pos: V3(-3, 5.6, 0), dir: V3(0, -0.5, 0.3), t0: TRAIN_HIT + 0.15, t1: TRAIN_HIT + 2.2}, {pos: V3(4, 5.6, 0), dir: V3(0, -0.5, -0.3), t0: TRAIN_HIT + 0.4, t1: TRAIN_HIT + 1.5}], T);
     const src = [];
     if (tt > 0) {
-      src.push({type: 'burstSmoke', pos: V3(0, 1.5, 0), r: 18, t0: TRAIN_HIT, size: 9, rise: 1.2, share: 3});
+      src.push({type: 'smoke', pos: V3(0, 2.0, 0), r: 9, t0: TRAIN_HIT, size: 11, rise: 2.2, col: [0.72, 0.64, 0.52], alpha: 0.6, share: 3});
       trains.forEach(cars => cars.slice(0, 4).forEach((c, i) => src.push({type: 'smoke', pos: V3(c.position.x, 0.8, c.position.z), r: 6, t0: TRAIN_HIT + 0.1 + i * 0.25, size: 6, rise: 1.0, col: [0.62, 0.55, 0.44], alpha: 0.5, share: 1})));
     }
     updateParticles(dust, src, T, V3(2.5, 0, 1.2));
     flashL.position.copy(P); flashL.intensity = tt > 0 && tt < 0.4 ? 3000 * (1 - tt / 0.4) : 0;
     // Kamera: hoch über dem Feld, die Strecke läuft schräg durchs Bild; fährt langsam heran
     const u = smooth(0, 7, t), sh = tt > 0 ? 0.35 * Math.exp(-tt * 3) : 0;
-    camera.position.set(lerp(70, 48, u) + noise1(T * 13, 1) * sh, lerp(62, 34, u) + noise1(T * 13, 2) * sh, lerp(120, 78, u));
-    camera.lookAt(lerp(-6, 2, u), lerp(-6, 0, u), lerp(-10, -4, u));
+    camera.position.set(lerp(75, 52, u) + noise1(T * 13, 1) * sh, lerp(46, 26, u) + noise1(T * 13, 2) * sh, lerp(70, 44, u));
+    camera.lookAt(lerp(-10, -2, u), lerp(-13, -7, u), lerp(-4, -2, u));
     camera.updateProjectionMatrix();
   }};
 }
