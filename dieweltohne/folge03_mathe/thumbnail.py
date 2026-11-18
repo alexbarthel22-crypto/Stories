@@ -43,6 +43,6 @@ bw, gap, y0 = 112, 12, 1470
 x0 = (W - (7 * bw + 6 * gap)) / 2
 for i, c in enumerate(cols):
     draw.rounded_rectangle([x0 + i * (bw + gap), y0, x0 + i * (bw + gap) + bw, y0 + 26], 8, fill=c)
-text(W / 2, 1516, 'STUFE 7 IST RAKETENALARM', fit('STUFE 7 IST RAKETENALARM', F + 'InterDisplay-Black.otf', 860, 64), 'white', 3)
+text(W / 2, 1516, 'STUFE 7 IST ATOMKRIEG', fit('STUFE 7 IST ATOMKRIEG', F + 'InterDisplay-Black.otf', 860, 64), 'white', 3)
 img.save('thumbnail.jpg', quality=92)
 img.crop((0, 240, W, 1680)).resize((540, 720)).save(sys.argv[2] if len(sys.argv) > 2 else '/dev/null', 'JPEG') if len(sys.argv) > 2 else None

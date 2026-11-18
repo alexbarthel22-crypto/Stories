@@ -163,17 +163,17 @@ add('fsd_crowd_gasp', 28.5, 2.0, db=-14, fout=0.6)
 amb('fsd_wind', 31, 38.05, -20, off=1.0)
 amb('fsd_birdsong', 31, 33.5, -22)
 amb('fsd_train_rumble', 31, TRAIN_HIT + 0.05, -10)
-add('fsd_train_pass', TRAIN_HIT - 3.5, 3.5, db=-6, fin=2.5, fout=0.03)
+add('fsd_train_pass', TRAIN_HIT - 3.5, 3.5, db=-6, off=1.5, fin=2.0, fout=0.03)
 add('fsd_train_horn', 32.6, 2.2, db=-6, fout=0.4, pan=-0.4)
 add('fsd_train_horn', 33.6, 2.2, db=-8, fout=0.4, pan=0.4)
-add('fsd_train_brake', 34.0, TRAIN_HIT - 34.0 + 0.1, db=-4, fin=0.1, fout=0.05)
+add('fsd_train_brake', 34.0, TRAIN_HIT - 34.0 + 0.1, db=-4, off=4.0, fin=0.1, fout=0.05)
 add('fsd_metal_crash', TRAIN_HIT - 0.02, 3.0, db=4, peak_win=0.2, fout=1.0)
 add('fsd_metal_crash2', TRAIN_HIT + 0.1, 3.0, db=0, peak_win=0.2, fout=1.0, pan=0.3)
 add('fsd_car_crash', TRAIN_HIT + 0.05, 2.3, db=-2, off=3.15, fout=0.8, pan=-0.3)
 add('fsd_glass_break', TRAIN_HIT + 0.05, 2.5, db=-6, fout=0.8)
 add('fsd_impact_boom2', TRAIN_HIT, 2.5, db=-6, fout=1.5)
 add('fsd_electric_arc', TRAIN_HIT + 0.3, 0.6, db=-8, off=0.6, fout=0.3)     # Oberleitung reißt
-add('fsd_train_brake', TRAIN_HIT + 0.2, 2.0, db=-8, fout=0.8)
+add('fsd_train_brake', TRAIN_HIT + 0.2, 2.0, db=-10, off=6.0, fout=0.8)
 
 # ---------------- Stufe 5: Cockpit ----------------
 amb('fsd_jet_cabin', 38, 47.0, -8)
@@ -226,10 +226,35 @@ add('fsd_rocket_ignite', IGNITION - 0.02, 2.5, db=2, peak_win=0.3, fout=1.0)
 add('fsd_rocket_roar', IGNITION + 0.2, 84.0 - IGNITION - 0.2, db=0, fin=1.0, fout=0.05)
 add('fsd_jet_roar', LIFTOFF - 0.3, 84.0 - LIFTOFF + 0.3, db=-6, fin=0.4, fout=0.05)
 add('fsd_impact_boom', LIFTOFF - 0.02, 4.0, db=-4, fout=2.0)
-add('fsd_thunder_far', 80.5, 3.5, db=-10, fin=0.3, fout=1.0, pan=0.5)              # zweite Rakete in der Ferne
+add('fsd_thunder_far', 80.5, 3.5, db=-10, off=2.5, fin=0.3, fout=1.0, pan=0.5)              # zweite Rakete in der Ferne
 
 # ---------------- Finale ----------------
 amb('fsd_wind', 84.0, 90.0, -18, off=1.0)
-for k in range(8): add('fsd_thunder_far', FLASH0 + k * 0.55, 2.5, db=-8 - k * 0.5, fin=0.05, fout=1.2, pan=((k % 3) - 1) * 0.5)
+for k in range(8): add('fsd_thunder_far' + ('2' if k % 2 else ''), FLASH0 + k * 0.55, 2.5, db=-8 - k * 0.5, fin=0.05, fout=1.2, pan=((k % 3) - 1) * 0.5)
 add('fsd_impact_boom', FLASH0, 5.0, db=-6, fout=3.0)
 add('fsd_sub_rumble', 85.5, 4.45, db=-6, off=1.0, fin=0.5, fout=2.0)
+
+# ---------------- Ausgabe ----------------
+peak = np.abs(mix).max()
+if peak > 0.98: mix *= 0.98 / peak
+tmp = os.path.join(HERE, 'mix_roh.wav')
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', tmp], input=mix.tobytes(), check=True)
+out = os.path.join(HERE, 'mix.wav')
+# TikTok-Lautheit: ca. -14 LUFS, Spitzen begrenzt
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'acompressor=threshold=-30dB:ratio=3:attack=15:release=400:makeup=6,loudnorm=I=-14.5:TP=-2:LRA=11,alimiter=limit=0.79:attack=2:release=60', '-ar', str(SR), '-c:a', 'pcm_s16le', out], check=True)
+os.remove(tmp)
+print('mix.wav fertig, Ticks:', len(ticks))
+
+if '--mux' in sys.argv:
+    vid = os.path.join(HERE, 'video_stumm.mp4'); fin = os.path.join(HERE, 'folge03_mathe.mp4')
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', vid, '-i', out, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', '90', '-movflags', '+faststart', fin], check=True)
+    print('fertig:', fin)
+
+# Quellenangaben für die Videobeschreibung
+cred = []
+for f in sorted(os.listdir(RAW)):
+    if f.endswith('.json') and f[:-5] in _cache and _cache[f[:-5]] is not None:
+        m = json.load(open(os.path.join(RAW, f)))
+        src = 'Freesound, über den Datensatz FSD50K' if m['artist'].startswith('Freesound') else 'Wikimedia Commons'
+        cred.append(f"- {m['title'][5:]} – {m['license']} ({src})")
+open(os.path.join(HERE, 'quellen_geraeusche.md'), 'w').write('# Geräusche (echte Aufnahmen)\n\nAlle Geräusche sind echte Aufnahmen unter CC0 (frei nutzbar, keine Namensnennung nötig).\n\n' + '\n'.join(cred) + '\n\nBilder: NASA Black Marble (Erde bei Nacht) und NASA Blue Marble (Erde bei Tag), gemeinfrei, über Wikimedia Commons\n')

@@ -2,7 +2,7 @@
 
 ## Beschreibung (zum Kopieren)
 
-Keine Mathe mehr – die ganze Klasse jubelt 🎉 Doch jeder Computer der Welt rechnet mit Mathe. Nach 10 Sekunden meldet ein Bunker: Raketenstart 😳 Bei welcher Stufe hättest du aufgehört zu jubeln – 1 bis 7? 👇
+Keine Mathe mehr – die ganze Klasse jubelt 🎉 Doch jeder Computer der Welt rechnet mit Mathe. 10 Sekunden später: Zugunglück, Absturz, Atomalarm 😳 Bei welcher Stufe hättest du aufgehört zu jubeln – 1 bis 7? 👇
 
 #waswärewenn #dieweltohne #mathe #schule #gedankenexperiment
 
@@ -13,7 +13,7 @@ Achtet mal auf den Kontostand: −2.147.483.648 € ist kein Zufall 🤓 Das ist
 ## Thumbnail
 
 - Datei: `thumbnail.jpg` (1080 × 1920). Beim Hochladen auf „Cover bearbeiten“ tippen, dann „Aus Galerie hinzufügen“.
-- Motiv: Bunker im Rotlicht, Lagebildschirm mit „RAKETENSTART“. Der Kontrast zwischen „ohne Mathe“ (harmlos) und „Raketenalarm“ (Weltuntergang) macht neugierig.
+- Motiv: Bunker im Rotlicht, Lagebildschirm mit „RAKETENSTART“. Unten steht „STUFE 7 IST ATOMKRIEG“. Der Kontrast zwischen „ohne Mathe“ (harmlos) und „Raketenalarm“ (Weltuntergang) macht neugierig.
 - Neu erzeugen: `ONLY=bunker node src/still.js <ordner> 1830`, danach `python3 thumbnail.py <ordner>/clean_1830.png`.
 
 ## Warum so
@@ -28,8 +28,11 @@ Achtet mal auf den Kontostand: −2.147.483.648 € ist kein Zufall 🤓 Das ist
 - Jeder Prozessor rechnet: Ampelsteuerungen, Handys, Bankensysteme, Börsenhandel, Flugsteuerung (Fly-by-Wire) und Kraftwerksregelung arbeiten mit Computern.
 - 26. September 1983: Das sowjetische Frühwarnsystem Oko meldete den Start von US-Atomraketen, zuletzt von fünf. Der diensthabende Offizier Stanislaw Petrow hielt es für einen Fehlalarm und meldete eine Fehlfunktion statt eines Angriffs. Ursache war eine Fehldeutung von Sonnenlicht, das an Wolken gespiegelt wurde.
 - Bei einem gemeldeten Raketenangriff bleiben für die Entscheidung über einen Gegenschlag nach gängigen Schätzungen nur wenige Minuten.
+- Stellwerke sichern Zugfahrten per Computer, Signale zeigen nur Grün, wenn der Abschnitt frei ist. Im Video fällt diese Sicherung aus.
+- Es gibt über 10.000 aktive Satelliten. 2009 kollidierten tatsächlich zwei Satelliten (Iridium 33 und Kosmos 2251) und erzeugten Tausende Trümmerteile.
+- Interkontinentalraketen brauchen rund 30 Minuten bis ins Ziel. Gestartete Raketen lassen sich nicht zurückrufen.
 - −2.147.483.648 ist der kleinste Wert einer vorzeichenbehafteten 32-Bit-Ganzzahl.
-- Zugespitzt ist die Grundidee selbst: Mathe kann nicht „verschwinden“. Das Video ist ein Gedankenexperiment darüber, wie sehr unsere Welt auf Rechnungen beruht.
+- Zugespitzt ist die Grundidee selbst: Mathe kann nicht „verschwinden“. Das Video ist ein Gedankenexperiment darüber, wie sehr unsere Welt auf Rechnungen beruht. Der Gegenschlag am Ende ist bewusst das Worst-Case-Szenario.
 
 ## Hinweise
 
