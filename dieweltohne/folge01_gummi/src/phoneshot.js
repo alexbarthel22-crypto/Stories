@@ -38,13 +38,13 @@ export async function build(renderer) {
     const P = dust.geometry.attributes.position.array; const k = clamp((t - tv) / 0.9);
     dp.forEach((d, i) => { P[i * 3] = d[0] * (1 + k * 0.4) + (d[3] - 0.5) * k * 0.05; P[i * 3 + 1] = d[1] * (1 + k * 0.2) - k * k * 0.05 * d[4]; P[i * 3 + 2] = d[2] + (d[5] - 0.2) * k * 0.06; });
     dust.geometry.attributes.position.needsUpdate = true; dust.visible = t > tv && k < 1; dust.material.opacity = 1 - k;
-    updateScreen(phone, drops, {t: T, notify: 1 - smooth(1.0, 1.4, t), wet: 1, ingress: smooth(3.6, 6.2, t) * 0.75,
-      glitch: smooth(4.6, 5.6, t) * (1 - smooth(6.25, 6.3, t)), dead: smooth(6.1, 6.3, t) * (Math.floor(T * 20) % 7 === 0 && t < 6.6 ? 0.4 : 1)});
+    updateScreen(phone, drops, {t: T, notify: 1 - smooth(1.0, 1.4, t), wet: 1, ingress: smooth(2.9, 5.0, t) * 0.75,
+      glitch: smooth(3.8, 4.7, t) * (1 - smooth(5.15, 5.2, t)), dead: smooth(5.0, 5.2, t) * (Math.floor(T * 20) % 7 === 0 && t < 5.5 ? 0.4 : 1)});
     // Handy dreht sich langsam, damit man den nackten Rand sieht
-    const turn = smooth(0.9, 3.0, t) * (1 - smooth(3.2, 4.6, t));
+    const turn = smooth(0.8, 2.3, t) * (1 - smooth(2.5, 3.5, t));
     rig.rotation.set(-0.05 + noise1(T, 2) * 0.01, -0.85 * turn + noise1(T * 0.8, 4) * 0.015, 0.03);
     rig.position.set(0, -0.004, 0);
-    camera.position.set(0.0 + noise1(T, 1) * 0.002, 0.004, 0.36 - smooth(3.4, 6.5, t) * 0.09); camera.lookAt(0, 0.0, 0);
+    camera.position.set(0.0 + noise1(T, 1) * 0.002, 0.004, 0.36 - smooth(2.8, 5.8, t) * 0.09); camera.lookAt(0, 0.0, 0);
     camera.updateProjectionMatrix();
     void bgm; void lerp;
   }};

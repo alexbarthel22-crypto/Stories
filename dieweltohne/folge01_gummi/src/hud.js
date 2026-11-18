@@ -1,5 +1,5 @@
 // 2D-Einblendungen: Titel, Emblem, Countdown, Untertitel, Schlusskarte
-import {CAPTIONS, TAGS, VANISH, RETURN, worldLeft} from './timeline.js';
+import {CAPTIONS, STAGES, STAGE_OF, VANISH, RETURN, worldLeft} from './timeline.js';
 import {clamp, smooth} from './lib.js';
 
 const ORANGE = '#ff8a3d';
@@ -55,17 +55,17 @@ export function drawHUD(g, T, shot) {
     g.fillStyle = '#fff'; g.textAlign = 'center'; shadowText(g, '10 Sekunden lang nicht gäbe?', W / 2, 500);
     g.restore();
   }
-  emblem(g, T, clamp(T / 0.4) * (1 - smooth(4.6, 5.2, T)) + smooth(67.5, 68.5, T) * (1 - smooth(71, 72, T)));
+  emblem(g, T, clamp(T / 0.4) * (1 - smooth(4.6, 5.2, T)));
 
   // Countdown-Block links
-  let label, value, sub = TAGS[shot.id] || '', prog;
+  let label, value, sub = '', prog;
   if (T < VANISH) { label = 'GUMMI VERSCHWINDET IN'; value = fmt(VANISH - T); prog = 1 - (VANISH - T) / VANISH; }
   else if (T < RETURN) { label = 'GUMMI ZURÜCK IN'; const v = worldLeft(T); value = fmt(v); prog = 1 - v / 10; }
-  else if (shot.id === 'back') { label = 'GUMMI'; value = 'ZURÜCK'; prog = 1; sub = 'SCHÄDEN: BLEIBEN'; }
-  else { label = '5 MINUTEN SPÄTER'; value = '+5:00'; prog = 1; sub = 'STAU WELTWEIT'; }
+  else if (shot.id === 'back') { label = 'GUMMI'; value = 'ZURÜCK'; prog = 1; }
+  else { label = '5 MINUTEN SPÄTER'; value = '+5:00'; prog = 1; }
   if (shot.id === 'globe') { // Zähler statt Countdown
     const k = smooth(shot.t0 + 0.4, shot.t1 - 1.5, T);
-    label = 'FAHRZEUGE OHNE REIFEN'; value = de(1.5e9 * (k * k * (3 - 2 * k))); sub = 'GUMMI ZURÜCK IN ' + fmt(worldLeft(T));
+    label = 'FAHRZEUGE OHNE REIFEN'; value = de(1.5e9 * k); sub = 'GUMMI ZURÜCK IN ' + fmt(worldLeft(T));
   }
   const x = 64, y = 1000;
   g.save(); g.fillStyle = '#fff';
@@ -74,8 +74,22 @@ export function drawHUD(g, T, shot) {
   g.strokeStyle = T >= VANISH && T < RETURN ? ORANGE : '#fff'; g.beginPath(); g.arc(x + 30, y - 70, 28, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(prog)); g.stroke();
   g.font = '500 25px Plex'; g.textAlign = 'left'; g.textBaseline = 'alphabetic'; spaced(g, label, x, y, 3);
   g.font = '400 92px Garamond'; shadowText(g, value, x - 3, y + 88);
-  if (sub) { g.font = '400 21px Plex'; g.globalAlpha = 0.72; spaced(g, sub, x, y + 128, 3); }
+  if (sub) { g.font = '400 21px Plex'; g.globalAlpha = 0.72; spaced(g, sub, x, y + 128, 3); g.globalAlpha = 1; }
   g.restore();
+  // Gefahrenstufe: 7 Segmente von grün nach rot
+  const st = STAGE_OF[shot.id] || 0;
+  if (st) {
+    const yb = y + (sub ? 160 : 128), cols = ['#4cc76a', '#a5d34a', '#e8d13a', '#f3a531', '#f07a2a', '#e5482b', '#c4161c'];
+    g.save();
+    for (let i = 0; i < 7; i++) {
+      const on = i < st, pulse = on && i === st - 1 ? 0.75 + 0.25 * Math.sin(T * 8) : 1;
+      g.globalAlpha = on ? pulse : 0.22; g.fillStyle = on ? cols[i] : '#ffffff';
+      g.beginPath(); g.roundRect(x + i * 46, yb, 40, 10, 3); g.fill();
+    }
+    g.globalAlpha = 1; g.fillStyle = cols[st - 1]; g.font = '500 23px Plex';
+    spaced(g, `STUFE ${st}/7 · ${STAGES[st - 1]}`, x, yb + 44, 3);
+    g.restore();
+  }
 
   // Untertitel
   for (const [a, b, txt] of CAPTIONS) {

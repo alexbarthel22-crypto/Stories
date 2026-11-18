@@ -30,7 +30,9 @@ def load(name):
 def loudest(x, win):
     """Startsekunde des lautesten Fensters (für Einschläge, Kratzer usw.)."""
     e = (x ** 2).sum(1); n = int(win * SR)
-    c = np.convolve(e, np.ones(n), 'valid')
+    cs = np.concatenate([[0], np.cumsum(e, dtype=np.float64)])
+    if len(e) <= n: return 0.0
+    c = cs[n:] - cs[:-n]
     return max(0, int(c.argmax()) / SR)
 
 
@@ -55,7 +57,8 @@ def add(name, at, dur=None, db=0.0, off=0.0, fin=0.02, fout=0.05, speed=1.0, pan
     if dur is not None:
         n = int(dur * SR)
         if len(seg) < n:  # zu kurz: schleifen mit Überblendung
-            reps = int(np.ceil(n / max(1, len(seg) - SR))) + 1
+            if len(seg) == 0: return
+            reps = int(np.ceil(n / len(seg))) + 1
             seg = np.concatenate([seg] * reps)
         seg = seg[:n].copy()
     seg = seg.copy()
@@ -69,7 +72,7 @@ def add(name, at, dur=None, db=0.0, off=0.0, fin=0.02, fout=0.05, speed=1.0, pan
 
 
 # ---------------- Zeitleiste (identisch zu src/timeline.js) ----------------
-WK = [[5, 10], [8.4, 9.55], [13, 9.1], [20, 8.2], [27, 7.3], [33, 6.5], [40, 5.6], [47, 4.6], [55, 3.5], [62, 1.8], [68, 0.3], [70, 0]]
+WK = [[5, 10], [10, 9.3], [14.5, 8.8], [20, 8.2], [26.5, 7.5], [32.5, 6.8], [41.5, 5.6], [47, 4.8], [54, 3.6], [61, 2.4], [66.5, 1.2], [70, 0]]
 
 
 def world_left(T):
@@ -87,77 +90,103 @@ for f in range(150, 2101):
     if int(v * 10) < int(last * 10): ticks.append(f / 30)
     last = v
 
+
+def amb(name, t0, t1, db, off=0.0, xf=0.8, speed=1.0):
+    """Atmo über längere Strecken: Clip wiederholt mit Überblendung."""
+    x = load(name)
+    if x is None: return
+    L = len(x) / SR / speed - off
+    t = t0
+    while t < t1:
+        d = min(L, t1 - t + xf)
+        add(name, t, d, db=db, off=off, fin=xf if t > t0 else 0.3, fout=xf, speed=speed)
+        t += max(1.0, L - xf)
+
+
 # ---------------- Atmosphäre ----------------
-add('rain_street', 0, 40, db=-10, off=120, fin=0.3, fout=0.3)          # Straße im Regen
-add('city_berlin', 0, 5.1, db=-12, off=20, fin=0.3, fout=0.15)          # Verkehr bis zum Verschwinden
-add('car_away', 0.6, 4.4, db=-8, off=1.0, fout=0.1, pan=-0.3)            # vorbeifahrendes Auto
-add('rain_street', 40, 7, db=-27, off=300, fin=0.2, fout=0.2)           # Küche: Regen gedämpft draußen
-add('rain_street', 47, 8, db=-18, off=420, fin=0.2, fout=0.3)           # Flughafen
-add('thunder', 55, 7, db=-6, off=40, fin=0.4, fout=0.5, speed=0.6)     # Globus: tiefes Grollen
-add('rain_street', 62, 6, db=-26, off=600, fin=0.2, fout=0.2)           # Kinderzimmer
-add('rain_street', 68, 18.5, db=-11, off=900, fin=0.3, fout=3.0)        # danach wieder draußen
+amb('fsd_rain_heavy', 0, 10.2, -11, off=3)
+amb('fsd_traffic', 0, 5.2, -12)
+add('fsd_crowd', 4.2, 5.8, db=-15, fin=0.3)
+amb('fsd_rain_heavy', 10, 14.5, -24, off=3)                 # Gummibärchen: drinnen
+amb('fsd_rain_heavy', 14.5, 26.5, -12, off=3)
+add('fsd_crowd', 14.5, 5.5, db=-21, off=5)
+amb('fsd_rain_heavy', 26.5, 32.6, -4, off=3)                 # Handy ganz nah im Regen
+amb('fsd_rain_heavy', 32.5, 41.5, -19, off=3)
+amb('fsd_rain_heavy', 41.5, 47, -34, off=3)                 # Küche
+amb('fsd_rain_heavy', 47, 54, -18, off=3)
+amb('fsd_rain_heavy', 54, 61, -26, off=3)
+add('fsd_thunder', 66.5, 3.6, db=-4, off=2, speed=0.6, fin=0.3, fout=0.4)  # Grollen über der Erde
+amb('fsd_rain_heavy', 70, 87, -14, off=3)
+amb('fsd_fire', 70, 87, -8)
 
 # ---------------- Countdown-Ticks ----------------
-clock = load('clock')
+clock = load('fsd_clock')
 if clock is not None:
-    on = onsets(clock)
-    tick_off = on[2] if len(on) > 2 else 0
-    for s in [1, 2, 3, 4]: add('clock', s - 0.01, 0.16, db=-4, off=tick_off - 0.005, fout=0.04)
-    for T in ticks: add('clock', T, 0.16, db=-9 + (6 if T > 66 else 0), off=tick_off - 0.005, fout=0.04)
+    on = onsets(clock, 0.4)
+    tick_off = on[3] if len(on) > 3 else 0
+    for s in [1, 2, 3, 4]: add('fsd_clock', s - 0.005, 0.14, db=-2, off=tick_off - 0.005, fout=0.04)
+    for T in ticks: add('fsd_clock', T, 0.14, db=-8 + (5 if T > 66.5 else 0), off=tick_off - 0.005, fout=0.04)
 
-# ---------------- Ereignisse ----------------
-add('thunder', 4.98, 2.5, db=0, peak_win=0.4, fout=1.5)                 # Moment des Verschwindens
-# Felgen auf Asphalt
-add('metal_scratch', 5.08, 3.4, db=-3, peak_win=1.0, fout=0.4, pan=0.2)
-add('metal_rub', 5.15, 3.2, db=-6, peak_win=1.0, fout=0.4, pan=-0.2)
-add('metal_scratch', 8.4, 2.4, db=0, peak_win=1.5, speed=0.85, fout=0.2)  # Nahaufnahme Rad
-add('fireworks', 8.4, 2.4, db=-12, peak_win=2, fout=0.2)                  # Funkenknistern
-add('metal_rub', 10.8, 0.95, db=-4, peak_win=1.0, fout=0.1)
-add('metal_hits', 11.68, 1.5, db=2, peak_win=0.4, fout=0.8)               # Aufprall
-add('thud', 11.68, 0.6, db=4, fout=0.3)
-add('metal_hit', 11.72, 0.8, db=-2, fout=0.4)
-# Handy
-add('rain_street', 13, 7, db=-6, off=1500, fin=0.05, fout=0.1)          # Regen ganz nah
-add('splashes', 13, 7, db=-24, off=5, fout=0.2)
-add('buzz', 17.6, 1.7, db=-16, fin=0.6, fout=0.02)
-add('buzz', 19.0, 0.32, db=-6, peak_win=0.3, fout=0.02)
-# Schuhsohlen: Ausrutschen und Aufschlagen
+# ---------------- Stufe 1: harmlos ----------------
+add('fsd_thunder', 4.98, 3.0, db=-1, peak_win=0.4, fout=2.0)      # Moment des Verschwindens
+add('fsd_gasp', 5.35, 1.6, db=-15, fout=0.4)
+add('fsd_crinkle', 10.15, 3.5, db=-3, fin=0.05, fout=0.6)
+# ---------------- Stufe 2: peinlich ----------------
+add('fsd_laugh', 15.6, 4.4, db=-11, fin=0.2, fout=1.0)
+# ---------------- Stufe 3: schmerzhaft ----------------
 for i in range(6):
-    fall = 20 + 3.0 + i * 0.32 + (i % 2) * 0.25
-    add('thud', fall + 0.62, 0.5, db=0 - i, fout=0.2, pan=(i % 3 - 1) * 0.4)
-add('crowd', 23.5, 3.5, db=-20, off=10, fin=0.5, fout=0.5)
-# Hosen
-add('crowd', 27, 6, db=-22, off=20, fin=0.3, fout=0.3)
-add('laugh', 28.6, 4.2, db=-13, off=0.5, fin=0.2, fout=0.8)
-# Ballons
-add('crowd', 33, 7, db=-24, off=30, fin=0.3, fout=0.3)
-# Küche
-add('faucet', 40.5, 6.5, db=-4, off=5, fin=0.05, fout=0.3)
-add('stream', 40.55, 6.4, db=-6, off=10, fin=0.08, fout=0.3)
-add('splashes', 43.1, 3.9, db=-2, off=10, fin=0.05, fout=0.3)
-# Flugzeug
-add('plane', 47, 8, db=-2, peak_win=5, fin=0.3, fout=0.6)
-add('metal_scratch', 49.6, 5.4, db=0, peak_win=2.0, speed=0.7, fout=0.6)
-add('metal_rub', 49.65, 5.3, db=-3, peak_win=2.0, speed=0.6, fout=0.6)
-add('thud', 49.6, 0.8, db=4, speed=0.6, fout=0.3)
-add('fireworks', 49.7, 5.3, db=-10, peak_win=3, fout=0.6)
-# Weltweit
-add('siren_police', 56, 6, db=-26, off=3, fin=1.0, fout=0.8)
-add('horn', 58.5, 1.2, db=-24, fout=0.4)
-# Gummibärchen
-add('bag', 62.2, 2.2, db=-10, peak_win=1.5, fin=0.05, fout=0.4)
-# Rückkehr
-add('thunder', 69.98, 2.5, db=-1, peak_win=0.4, fout=1.5)
-add('horn', 71.6, 1.0, db=-10, fout=0.2, pan=0.3)
-add('horn', 74.3, 1.4, db=-14, fout=0.3, pan=-0.4)
-add('siren_police', 73, 5, db=-20, off=3, fin=1.5, fout=0.5)
-# 5 Minuten später
-add('siren_fire', 78, 7.2, db=-10, off=2, fin=0.3, fout=0.8)
-add('siren_police', 78, 7.2, db=-16, off=10, fin=0.3, fout=0.8, pan=0.4)
-add('horn', 79.2, 0.9, db=-14, pan=-0.5)
-add('horn', 81.0, 1.4, db=-17, pan=0.5)
-add('horn', 83.1, 0.7, db=-15)
-add('crowd', 78, 7, db=-22, off=40, fin=0.5, fout=1.0)
+    hit = 20 + 3.0 + i * 0.32 + (i % 2) * 0.25 + 0.56
+    add('fsd_thud2', hit, 0.45, db=-1 - i, peak_win=0.2, fout=0.2, pan=(i % 3 - 1) * 0.4)
+add('fsd_gasp', 23.3, 2.0, db=-9, fout=0.5)
+# ---------------- Stufe 4: teuer ----------------
+add('fsd_ebuzz', 30.3, 0.6, db=-14, fin=0.2)
+add('fsd_ebuzz', 30.9, 0.6, db=-9)
+add('fsd_ebuzz', 31.45, 0.25, db=-4, fout=0.02)
+# ---------------- Stufe 5: gefährlich ----------------
+add('fsd_screech', 32.5, 6.0, db=-5, peak_win=2.0, fin=0.05, fout=0.3)      # Felgen kreischen
+add('fsd_scrape', 32.6, 3.9, db=-4, fin=0.05, fout=0.4, pan=0.3)
+add('fsd_screech', 33.2, 3.2, db=-9, off=8, fout=0.4, pan=-0.3)
+add('fsd_scrape', 36.5, 2.0, db=0, speed=0.8, fout=0.2)                      # Nahaufnahme Rad
+add('fsd_screech', 38.5, 0.95, db=-6, peak_win=1.0, fout=0.1)
+add('fsd_crash', 39.38, 2.9, db=1, fout=1.0)                                 # Auffahrunfall
+add('fsd_crash_thud', 39.38, 1.0, db=2, fout=0.4)
+add('fsd_glass', 39.45, 1.9, db=-5, fout=0.5)
+add('fsd_gush', 42.0, 5.0, db=-4, peak_win=3, fin=0.05, fout=0.3)            # Rohre platzen
+add('fsd_spray', 42.0, 5.0, db=-6, fin=0.05, fout=0.3)
+add('fsd_spray2', 42.05, 5.0, db=-9, peak_win=3, fin=0.05, fout=0.3, pan=0.4)
+add('fsd_splash2', 44.6, 2.4, db=-3, peak_win=2, fin=0.05, fout=0.3)
+# ---------------- Stufe 6: tödlich ----------------
+add('fsd_hiss', 47.0, 4.3, db=-7, peak_win=3, fin=0.1, fout=0.05)            # Gas strömt aus
+add('fsd_screech', 48.6, 2.6, db=-12, peak_win=2.0, fin=1.2, fout=0.05)      # Auto mit Funken kommt näher
+add('fsd_explosion', 51.18, 5.0, db=3, fout=1.5)                             # Zündung
+add('fsd_explosion2', 51.2, 3.0, db=-2, peak_win=0.5, fout=1.5)
+add('fsd_glass', 51.25, 1.9, db=-3, fout=0.5)
+add('fsd_screams', 51.8, 2.2, db=-14, fin=0.2, fout=0.8)
+add('fsd_fire', 51.8, 2.3, db=-6, fin=0.4, fout=0.3)
+add('fsd_plane', 54.0, 7.0, db=-1, peak_win=5, fin=0.2, fout=0.8)            # Flugzeug
+add('fsd_screech', 55.9, 1.6, db=-4, peak_win=1.5, fout=0.3)                 # Aufsetzen auf Felgen
+add('fsd_crash', 57.3, 2.9, db=2, fout=1.0)                                  # Fahrwerk bricht
+add('fsd_crash_thud', 57.3, 1.0, db=3, speed=0.7, fout=0.4)
+add('fsd_scrape', 57.5, 3.5, db=-2, speed=0.7, fout=0.5)
+add('fsd_fire', 57.8, 3.2, db=-4, fin=0.5, fout=0.3)
+add('fsd_explosion2', 59.2, 1.8, db=0, peak_win=0.5, fout=0.6)
+# ---------------- Stufe 7: Weltuntergang ----------------
+add('fsd_rocket', 61.0, 3.2, db=-1, peak_win=3, fin=0.4, fout=0.1)          # Start
+add('fsd_explosion', 64.15, 5.0, db=4, speed=0.75, fout=1.0)                 # Explosion der Rakete
+add('fsd_thunder', 64.15, 2.4, db=-2, peak_win=0.4, speed=0.8, fout=1.0)
+add('fsd_siren_eu', 66.6, 3.4, db=-22, fin=1.0, fout=0.3)
+add('fsd_screams', 67.5, 2.5, db=-24, fin=0.5, fout=0.5)
+# ---------------- Rückkehr und danach ----------------
+add('fsd_thunder', 69.98, 2.5, db=-2, peak_win=0.4, fout=1.5)
+add('fsd_siren_eu', 72.0, 6.0, db=-11, off=4, fin=1.0, fout=0.6)
+add('fsd_horn1', 73.4, 1.6, db=-12, pan=0.3)
+add('fsd_horn3', 76.0, 1.6, db=-14, pan=-0.4)
+add('fsd_siren_eu', 78.0, 7.0, db=-9, off=10, fin=0.3, fout=1.0)
+add('fsd_siren2', 78.0, 7.0, db=-13, fin=0.3, fout=1.0, pan=0.4)
+add('fsd_horn1', 79.3, 1.6, db=-13, pan=-0.5)
+add('fsd_horn3', 81.2, 1.6, db=-15, pan=0.5)
+add('fsd_horn1', 83.0, 1.2, db=-14)
+add('fsd_crowd', 78.0, 7.0, db=-22, fin=0.5, fout=1.0)
 
 # ---------------- Ausgabe ----------------
 peak = np.abs(mix).max()
@@ -166,7 +195,7 @@ tmp = os.path.join(HERE, 'mix_roh.wav')
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', tmp], input=mix.tobytes(), check=True)
 out = os.path.join(HERE, 'mix.wav')
 # TikTok-Lautheit: ca. -14 LUFS, Spitzen begrenzt
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'loudnorm=I=-14:TP=-1.5:LRA=14', '-ar', str(SR), out], check=True)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'loudnorm=I=-14:TP=-1.5:LRA=14,alimiter=limit=0.85:attack=2:release=60', '-ar', str(SR), '-c:a', 'pcm_s16le', out], check=True)
 os.remove(tmp)
 print('mix.wav fertig, Ticks:', len(ticks))
 
@@ -178,7 +207,8 @@ if '--mux' in sys.argv:
 # Quellenangaben für die Videobeschreibung
 cred = []
 for f in sorted(os.listdir(RAW)):
-    if f.endswith('.json'):
+    if f.endswith('.json') and f[:-5] in _cache and _cache[f[:-5]] is not None:
         m = json.load(open(os.path.join(RAW, f)))
-        cred.append(f"- {m['title'][5:]} – {m['artist'] or 'unbekannt'} – {m['license']} (Wikimedia Commons)")
-open(os.path.join(HERE, 'quellen_geraeusche.md'), 'w').write('# Geräusche (echte Aufnahmen)\n\n' + '\n'.join(cred) + '\n\nErde bei Nacht: NASA Black Marble, gemeinfrei (Wikimedia Commons: The earth at night.jpg)\n')
+        src = 'Freesound, über den Datensatz FSD50K' if m['artist'].startswith('Freesound') else 'Wikimedia Commons'
+        cred.append(f"- {m['title'][5:]} – {m['license']} ({src})")
+open(os.path.join(HERE, 'quellen_geraeusche.md'), 'w').write('# Geräusche (echte Aufnahmen)\n\nAlle Geräusche sind echte Aufnahmen unter CC0 (frei nutzbar, keine Namensnennung nötig).\n\n' + '\n'.join(cred) + '\n\nErde bei Nacht: NASA Black Marble, gemeinfrei (Wikimedia Commons: The earth at night.jpg)\n')

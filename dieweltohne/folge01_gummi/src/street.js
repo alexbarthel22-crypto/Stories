@@ -4,6 +4,7 @@ import {THREE, envMap, mat, mesh, rng, clamp, smooth, lerp, easeOut, noise1, can
 import {Reflector} from 'three/addons/objects/Reflector.js';
 import {makePhone, makeHands, makeDrops, updateScreen} from './phone.js';
 import {VANISH, RETURN} from './timeline.js';
+import {particles, updateParticles, flicker} from './fx.js';
 
 const LANES = [-4.8, -1.6, 1.6, 4.8];
 const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -11,7 +12,7 @@ const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
 export function buildStreet(renderer) {
   const scene = new THREE.Scene(); scene.environment = envMap(renderer); scene.environmentIntensity = 0.55;
   scene.fog = new THREE.Fog('#8d97a3', 25, 190);
-  scene.add(skyDome('#5f6b7a', '#9aa4b0', '#b8bec4'));
+  const sky = skyDome('#5f6b7a', '#9aa4b0', '#b8bec4'); scene.add(sky);
   const hemi = new THREE.HemisphereLight('#c5d0dc', '#3b3a38', 1.5); scene.add(hemi);
   const sun = new THREE.DirectionalLight('#fff1dd', 1.4); sun.position.set(-30, 50, 20); sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, {left: -40, right: 40, top: 40, bottom: -40, near: 1, far: 150}); sun.shadow.bias = -0.0005;
@@ -114,6 +115,22 @@ export function buildStreet(renderer) {
   // Blaulicht
   const blueLight = new THREE.PointLight('#3a6bff', 0, 30); scene.add(blueLight);
 
+  // Feuer, Rauch, Feuerlicht
+  const fire = particles(2600, 'flame'); scene.add(fire);
+  const smoke = particles(1300, 'smoke'); scene.add(smoke);
+  const fireLights = [0, 1, 2].map(() => { const l = new THREE.PointLight('#ff7a2a', 0, 40, 1.6); scene.add(l); return l; });
+  // Gasanschluss an der Hauswand (für die Gas-Szene)
+  const gas = new THREE.Group(); gas.position.set(11.35, 0.15, 62); scene.add(gas);
+  const yellow = mat('#e6b422', {roughness: 0.5, metalness: 0.3});
+  mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.2, 12), yellow, -0.15, 0.45, 0, gas);
+  const elbow = mesh(new THREE.TorusGeometry(0.1, 0.05, 10, 16, Math.PI / 2), yellow, -0.05, 1.05, 0, gas); elbow.rotation.z = Math.PI / 2;
+  mesh(new THREE.BoxGeometry(0.35, 0.5, 0.45), mat('#d8d4c8', {roughness: 0.6}), -0.2, 1.4, 0.0, gas);
+  mesh(new THREE.BoxGeometry(0.02, 0.18, 0.25), mat('#222', {roughness: 0.2}), -0.38, 1.45, 0, gas);
+  const gasket = mesh(new THREE.TorusGeometry(0.058, 0.014, 8, 20), mat('#111', {roughness: 0.95}), -0.15, 0.62, 0, gas); gasket.rotation.x = Math.PI / 2;
+  const manhole = mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.03, 20), mat('#2d2d2d', {metalness: 0.7, roughness: 0.5}), 10.0, 0.16, 61.0, scene);
+  // Fensterscheiben, die bei der Explosion zerspringen
+  const shards = sparkSystem(900, 0.06); shards.material.blending = THREE.NormalBlending; shards.material.vertexColors = false; shards.material.color = new THREE.Color('#dfe9f2'); shards.material.needsUpdate = true; scene.add(shards);
+
   // Handy vor der Kamera (Intro)
   const camera = new THREE.PerspectiveCamera(50, 1080 / 1920, 0.02, 600); scene.add(camera);
   const phone = makePhone(); const hands = makeHands();
@@ -121,7 +138,7 @@ export function buildStreet(renderer) {
   rig.position.set(0.03, -0.075, -0.4); rig.rotation.set(-0.1, -0.06, 0.04);
   const drops = makeDrops(11, 140);
 
-  const S = {scene, camera, sun, cars, people, umbrella, balloons, puffs, looseTires, sparks, glassBits, rain, rainFar, splash, splash2, blueLight, rig, phone, drops};
+  const S = {scene, camera, sun, sky, hemi, fire, smoke, fireLights, gasket, manhole, shards, cars, people, umbrella, balloons, puffs, looseTires, sparks, glassBits, rain, rainFar, splash, splash2, blueLight, rig, phone, drops};
   return {scene, camera, update: (shot, T) => updateStreet(S, shot, T)};
 }
 
@@ -130,6 +147,13 @@ function hide(S) { S.cars.forEach(c => { c.visible = false; c.rotation.set(0, 0,
   S.people.forEach(p => { p.visible = false; p.rotation.set(0, 0, 0); p.userData.soles.forEach(s => s.visible = true); p.userData.pants.visible = true; const pt = p.userData.ponytail; if (pt) { pt.userData.band.visible = true; pt.userData.loose.visible = false; } p.userData.pl.forEach(g => g.visible = true); });
   S.umbrella.visible = false; S.balloons.forEach(b => { b.visible = false; b.userData.string.visible = false; }); S.puffs.forEach(p => p.material.opacity = 0);
   S.looseTires.forEach(t => t.visible = false); S.rig.visible = false; S.blueLight.intensity = 0;
+}
+function mood(S, kind) {
+  const night = kind === 'fire';
+  S.sky.material.color.set(night ? '#3b2a26' : '#ffffff');
+  S.scene.fog.color.set(night ? '#2b211d' : '#8d97a3'); S.scene.fog.near = night ? 15 : 25; S.scene.fog.far = night ? 150 : 190;
+  S.hemi.intensity = night ? 0.35 : 1.5; S.sun.intensity = night ? 0.12 : 1.4;
+  S.fireLights.forEach(l => l.intensity = 0);
 }
 function shake(cam, t, amp = 0.012, seed = 1) { cam.position.x += noise1(t, seed) * amp; cam.position.y += noise1(t, seed + 5) * amp; cam.rotation.z += noise1(t * 0.7, seed + 9) * amp * 0.5; }
 function look(cam, p, t) { cam.position.copy(p); cam.lookAt(t); }
@@ -162,7 +186,8 @@ function updateStreet(S, shot, T) {
   const cam = S.camera; cam.fov = 50; S.sparks.material.size = 0.09; cam.rotation.set(0, 0, 0);
   const t = T - shot.t0; // lokale Zeit
   updateRain(S.rain, T); updateRain(S.rainFar, T, 16); updateSplash(S.splash, T); updateSplash(S.splash2, T);
-  let emitters = [], glass = [];
+  let emitters = [], glass = [], fx = [], shardsE = [];
+  mood(S, shot.id === 'back' || shot.id === 'later' ? 'fire' : 'day');
   const tvG = VANISH - shot.t0; // Zeitpunkt des Verschwindens in lokaler Zeit (falls in dieser Einstellung)
 
   // Verkehr mit 4 Spuren, z-Position abhängig von der Zeit
@@ -191,10 +216,9 @@ function updateStreet(S, shot, T) {
       break;
     }
     case 'cars_wide': {
-      const tv = tvG; const L = traffic(tv, 14, 0, 6);
-      L.forEach(o => { if (t >= tv) emitters.push(...wheelEmitters(o.get, tv, tv + Math.abs(o.v) / 6, o.dir)); });
+      const tv = -0.01; const L = traffic(tv, 14, 0, 3.2);
+      L.forEach(o => { emitters.push(...wheelEmitters(o.get, tv, tv + Math.abs(o.v) / 3.2, o.dir)); });
       look(cam, V3(7.6 + t * 0.05, 1.05, 14 - t * 0.4), V3(1.8, 0.9, -8)); shake(cam, T, 0.008, 3);
-      if (t > tv && t < tv + 0.4) shake(cam, T * 6, 0.03, 4);
       break;
     }
     case 'cars_wheel': {
@@ -237,7 +261,7 @@ function updateStreet(S, shot, T) {
       const N = 6;
       for (let i = 0; i < N; i++) {
         const p = S.people[i]; p.visible = true;
-        const x = 7.6 + (i % 3) * 1.2 + (i * 0.37 % 0.4), z0 = -2 - i * 2.3 - (i % 2) * 1.1;
+        const x = 7.6 + (i % 3) * 1.2 + (i * 0.37 % 0.4), z0 = 7 - i * 2.3 - (i % 2) * 1.1;
         const fallT = 3.0 + i * 0.32 + (i % 2) * 0.25;
         const walkT = Math.min(t, fallT + 0.3);
         p.position.set(x, 0.15, z0 + walkT * 1.25); p.rotation.y = 0;
@@ -256,7 +280,7 @@ function updateStreet(S, shot, T) {
         const p = S.people[0]; p.updateMatrixWorld(true);
         look(cam, V3(p.position.x - 1.1, 0.42, p.position.z + 0.7), V3(p.position.x, 0.12, p.position.z + 0.05)); cam.fov = 40;
       } else {
-        look(cam, V3(8.3, 1.4, 6.5), V3(8.8, 0.5, -5)); cam.fov = 48;
+        look(cam, V3(8.3, 1.4, 15.5), V3(8.8, 0.5, 4)); cam.fov = 48;
       }
       shake(cam, T, 0.006, 9);
       traffic(-1, 8, 0, 6); S.cars.slice(0, 8).forEach(c => { c.userData.body.position.y = -0.12; });
@@ -278,7 +302,7 @@ function updateStreet(S, shot, T) {
       break;
     }
     case 'balloons': {
-      const tv = 0.6;
+      const tv = VANISH - shot.t0;
       const kid = S.people[10]; kid.visible = true; kid.scale.setScalar(0.62); kid.position.set(8.4, 0.15, 14); kid.rotation.y = -Math.PI / 2 - 0.3;
       posePerson(kid, {holdUp: 1 - smooth(tv + 0.6, tv + 1.4, t) * 0.6, look: 0}); kid.updateMatrixWorld(true);
       const hand = V3(); kid.userData.armR.userData.fore.getWorldPosition(hand); hand.y -= 0.17;
@@ -295,10 +319,10 @@ function updateStreet(S, shot, T) {
       });
       const wom = S.people[11]; wom.visible = true; wom.position.set(9.8, 0.15, 12.6); wom.rotation.y = -Math.PI / 2 + 0.9;
       posePerson(wom, {look: -0.6});
-      const pt = wom.userData.ponytail; const hairGone = t >= 3.6;
+      const pt = wom.userData.ponytail; const hairGone = t >= 3.5;
       pt.userData.band.visible = !hairGone; pt.userData.loose.visible = hairGone; pt.children[1].visible = !hairGone;
       // Kamera: erst Kind, dann Frau
-      const k = smooth(2.2, 2.9, t);
+      const k = smooth(2.5, 3.2, t);
       look(cam, V3(lerp(5.4, 8.6, k), lerp(1.1, 1.72, k), lerp(15.2, 11.3, k)), V3(lerp(8.4, 9.8, k), lerp(1.55, 1.62, k), lerp(14, 12.6, k)));
       cam.fov = lerp(55, 36, k); shake(cam, T, 0.005, 11);
       traffic(-1, 6, 14, 6); S.cars.slice(0, 6).forEach(c => { c.userData.body.position.y = -0.12; });
@@ -330,8 +354,43 @@ function updateStreet(S, shot, T) {
         }
       }
       for (let i = 4; i < 12; i++) placeCar(S.cars[i], LANES[i % 4], (i % 4 >= 2 ? 1 : -1) * (26 + i * 5), i % 4 >= 2 ? 1 : -1, 1, 0, true, 0);
-      look(cam, V3(6.2, 2.0 + t * 0.1, 30 - t * 0.5), V3(2.5, 0.2, 14)); cam.fov = 48; shake(cam, T, 0.004, 13);
+      look(cam, V3(6.2, 2.0 + t * 0.1, 30 - t * 0.5), V3(2.5, 0.6, 12)); cam.fov = 50; shake(cam, T, 0.004, 13);
+      S.cars[1].userData.body.rotation.z = 0.08;
+      fx.push({type: 'flame', pos: V3(-1.6, 0.8, -10), r: 1.6, t0: -5, size: 1.4, power: 1, share: 3},
+        {type: 'flame', pos: V3(4.8, 0.7, 10), r: 1.3, t0: -5, size: 1.2, share: 2},
+        {type: 'flame', pos: V3(11.6, 3.5, -2), r: 2.5, t0: -5, size: 1.8, share: 3}, {type: 'flame', pos: V3(11.6, 7.2, -4), r: 2.0, t0: -5, size: 1.5, share: 2},
+        {type: 'flame', pos: V3(-11.6, 4, -30), r: 3, t0: -5, size: 2.2, share: 3},
+        {type: 'smoke', pos: V3(-1.6, 2, -10), r: 1.5, t0: -9, size: 4, rise: 2.5, share: 2}, {type: 'smoke', pos: V3(11, 8, -3), r: 3, t0: -9, size: 6, rise: 2.2, share: 3},
+        {type: 'smoke', pos: V3(-11, 6, -30), r: 3, t0: -9, size: 8, rise: 2.5, share: 3});
+      S.fireLights[0].position.set(-1.6, 2, -10); S.fireLights[1].position.set(10.5, 4, -2); S.fireLights[2].position.set(4.8, 2, 10);
+      S.fireLights.forEach((l, i) => l.intensity = 90 * flicker(T, i));
       for (let i = 0; i < 4; i++) { const p = S.people[i]; p.visible = true; p.position.set(8 + i * 0.9, 0.15, 6 + i * 3); posePerson(p, {fall: 1, slipSide: 1}); }
+      break;
+    }
+    case 'gas': {
+      const ig = 4.2; // Zündung
+      S.gasket.visible = false;
+      // Gas strömt aus der Verbindung und dem Schacht (sichtbar als flimmernde Schwaden)
+      if (t < ig + 0.1) fx.push({type: 'smoke', pos: V3(11.15, 0.75, 62), r: 0.25, t0: -3, size: 0.9, rise: 0.5, col: [0.75, 0.8, 0.85], alpha: 0.18, share: 2},
+        {type: 'smoke', pos: V3(10.0, 0.25, 61), r: 0.4, t0: -3, size: 1.4, rise: 0.4, col: [0.75, 0.8, 0.85], alpha: 0.15, share: 2});
+      // Auto rutscht auf Felgen heran, Funken fliegen
+      const c = S.cars[0]; const zc = t => 92 - 9.5 * t + 0.4 * t * t;
+      placeCar(c, 4.8, zc(t), -1, 1, 0, true, 0);
+      emitters.push(...wheelEmitters(tb => ({x: 4.8, dir: -1, z: zc(tb)}), -1, 9, -1));
+      for (let i = 1; i < 7; i++) placeCar(S.cars[i], LANES[i % 3], 66 + i * 8, i % 3 >= 2 ? 1 : -1, 1, 0, true, 0);
+      for (let i = 0; i < 4; i++) { const p = S.people[i]; p.visible = true; p.position.set(8.0 + i * 0.7, 0.15, 50 - i * 2.2); p.rotation.y = Math.PI * 0.1; posePerson(p, {walk: 0, walkAmp: 0, look: 0.6, fall: t > ig + 0.15 ? clamp((t - ig - 0.15) / 0.7) : 0, slipSide: i % 2 ? 1 : -1}); }
+      if (t >= ig) {
+        fx.push({type: 'burst', pos: V3(10.4, 1.0, 62), r: 9, t0: ig, size: 6, rise: 2.5, power: 1.4, share: 5},
+          {type: 'burstSmoke', pos: V3(10.4, 2, 62), r: 10, t0: ig + 0.2, size: 8, rise: 1.5, share: 3},
+          {type: 'flame', pos: V3(10.8, 1.2, 62), r: 1.5, t0: ig + 0.6, size: 2.2, share: 3}, {type: 'flame', pos: V3(11.6, 4.5, 62), r: 2.5, t0: ig + 0.8, size: 2.0, share: 2},
+          {type: 'smoke', pos: V3(11, 5, 62), r: 2, t0: ig + 1, size: 7, rise: 3, share: 2});
+        shardsE.push({pos: V3(11.5, 4.5, 62), dir: V3(-1.4, 0.4, 0), t0: ig + 0.05, t1: ig + 0.25});
+        const k = t - ig; S.fireLights[0].position.set(10, 3, 62); S.fireLights[0].intensity = (k < 0.6 ? 2500 * (1 - k / 0.6) + 200 : 200) * flicker(T, 1);
+        S.fireLights[1].position.set(8, 6, 66); S.fireLights[1].intensity = k < 0.4 ? 1200 * (1 - k / 0.4) : 0;
+      }
+      if (t < 1.6) { look(cam, V3(10.1, 0.95, 63.3), V3(11.15, 0.65, 62)); cam.fov = 40; }
+      else { look(cam, V3(6.6, 1.7, 40), V3(8.6, 2.0, 62)); cam.fov = 46; }
+      shake(cam, T, 0.006, 21); if (t > ig && t < ig + 1.2) shake(cam, T * 9, 0.09 * (1 - (t - ig) / 1.2), 22);
       break;
     }
     case 'later': {
@@ -343,13 +402,23 @@ function updateStreet(S, shot, T) {
         if (c.userData.blue) { const on = Math.floor(T * 6) % 2; c.userData.blue[0].material.emissiveIntensity = on ? 5 : 0; c.userData.blue[1].material.emissiveIntensity = on ? 0 : 5; }
       }
       S.cars[32].position.set(-1.6, 0, -6); S.cars[33].position.set(4.8, 0, 12);
+      [[-1.6, -40], [4.8, -18], [1.6, 4], [-4.8, 20]].forEach(([x, z], i) => fx.push({type: 'flame', pos: V3(x, 0.8, z), r: 1.6, t0: -5, size: 2.2, share: 2}, {type: 'smoke', pos: V3(x, 3, z), r: 2, t0: -9, size: 9, rise: 3, share: 2}));
+      [[11.6, -25, 5], [-11.6, 8, 8], [11.6, 40, 4]].forEach(([x, z, y]) => fx.push({type: 'flame', pos: V3(x, y, z), r: 3.5, t0: -5, size: 3.5, share: 3}, {type: 'smoke', pos: V3(x, y + 4, z), r: 3, t0: -9, size: 14, rise: 3, share: 3}));
+      S.fireLights[0].position.set(11, 6, -25); S.fireLights[1].position.set(-11, 9, 8); S.fireLights[2].position.set(0, 3, -18);
+      S.fireLights.forEach((l, i) => l.intensity = 300 * flicker(T, i));
       S.blueLight.position.set(-1.6, 3, -6); S.blueLight.intensity = Math.floor(T * 6) % 2 ? 60 : 0;
       for (let i = 0; i < 10; i++) { const p = S.people[i]; p.visible = true; p.position.set(7.5 + (i % 3) * 1.2, 0.15, -30 + i * 6); p.rotation.y = i * 1.3; posePerson(p, {walk: 0, walkAmp: 0, look: Math.sin(T + i) * 0.4}); }
       look(cam, V3(14 - t * 0.5, 34 - t * 0.6, 30 - t * 1.0), V3(0, 0, -12 - t * 0.6)); cam.fov = 46;
       break;
     }
   }
+  S.fire.visible = fx.some(f => f.type === 'flame' || f.type === 'burst'); S.smoke.visible = fx.some(f => f.type === 'smoke' || f.type === 'burstSmoke'); S.shards.visible = shardsE.length > 0; S.sparks.visible = emitters.length > 0; S.glassBits.visible = glass.length > 0;
+  S.fireLights.forEach(l => l.visible = l.intensity > 0); S.blueLight.visible = S.blueLight.intensity > 0;
   updateSparks(S.sparks, emitters, t);
+  updateParticles(S.fire, fx.filter(f => f.type === 'flame' || f.type === 'burst'), t);
+  updateParticles(S.smoke, fx.filter(f => f.type === 'smoke' || f.type === 'burstSmoke'), t);
+  updateSparks(S.shards, shardsE, t, 9.8);
+  S.gasket.visible = shot.id !== 'gas';
   updateSparks(S.glassBits, glass, t, 9.8);
   cam.updateProjectionMatrix();
 }

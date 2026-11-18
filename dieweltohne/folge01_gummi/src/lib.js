@@ -177,17 +177,21 @@ export function posePerson(p, {walk = 0, walkAmp = 1, fall = 0, fallDir = 1, pan
   if (holdUp > 0) { // Arm hoch (Ballon halten / Handy)
     u.armR.rotation.x = lerp(u.armR.rotation.x, -2.6, holdUp); u.armR.userData.fore.rotation.x = lerp(-0.25, -0.2, holdUp);
   }
-  if (fall > 0) { // Ausrutschen: Beine nach vorn, Körper kippt nach hinten
-    const f = easeIn(clamp(fall * 1.15));
-    const slip = Math.sin(clamp(fall * 1.6) * Math.PI) * 0.9;
-    u.legL.rotation.x = lerp(sw, -1.3 - slip * 0.3, clamp(fall * 2)); u.legR.rotation.x = lerp(-sw, -0.9 - slip * 0.5, clamp(fall * 2));
-    u.legL.userData.knee.rotation.x = 0.1; u.legR.userData.knee.rotation.x = 0.4;
-    u.body.rotation.x = -f * 1.35 * fallDir; u.body.rotation.z = slipSide * f * 0.3;
-    u.body.position.y = -f * 0.55 + Math.sin(clamp(fall * 2) * Math.PI) * 0.12;
-    u.body.position.z = f * 0.35;
-    u.armL.rotation.x = lerp(u.armL.rotation.x, -2.3, clamp(fall * 2.2)); u.armR.rotation.x = lerp(u.armR.rotation.x, -1.8, clamp(fall * 2.2));
-    u.armL.rotation.z = -0.3 - f * 0.6; u.armR.rotation.z = 0.3 + f * 0.6;
-    u.head.rotation.x = f * 0.5;
+  if (fall > 0) { // Ausrutschen: Füße rutschen nach vorn, Körper kippt um die Füße nach hinten und liegt dann auf dem Boden
+    const f = clamp(fall);
+    const tip = easeIn(clamp((f - 0.08) / 0.62));                       // Kippen beschleunigt wie im freien Fall
+    const land = clamp((f - 0.7) / 0.3);                                  // Aufprall und Nachfedern
+    const bounce = Math.sin(land * Math.PI * 2) * Math.exp(-land * 4) * 0.08 * (land > 0);
+    const rot = -(Math.PI / 2 - 0.04) * tip + bounce;
+    u.body.rotation.x = rot * fallDir; u.body.rotation.z = slipSide * tip * 0.18;
+    u.body.position.z = 0.5 * easeOut(clamp(f / 0.45));                    // Füße schießen nach vorn
+    u.body.position.y = 0.15 * Math.sin(-rot);                            // Rücken liegt auf, nicht im Boden
+    const kick = Math.sin(clamp(f / 0.75) * Math.PI);                     // Beine fliegen hoch und fallen zurück
+    u.legL.rotation.x = -0.15 - kick * 1.0; u.legR.rotation.x = -0.35 - kick * 0.7;
+    u.legL.userData.knee.rotation.x = 0.15 + kick * 0.3; u.legR.userData.knee.rotation.x = 0.5;
+    u.armL.rotation.x = lerp(-0.3, -1.4, tip) - kick * 0.8; u.armR.rotation.x = lerp(-0.3, -1.1, tip) - kick * 0.9;
+    u.armL.rotation.z = -0.2 - tip * 0.9; u.armR.rotation.z = 0.2 + tip * 0.9;
+    u.head.rotation.x = 0.35 * tip - bounce * 2; u.hips.position.y = 0.92;
   }
   if (armsUp > 0) { u.armL.rotation.z = -armsUp * 2.4; u.armR.rotation.z = armsUp * 2.4; }
   // Hose

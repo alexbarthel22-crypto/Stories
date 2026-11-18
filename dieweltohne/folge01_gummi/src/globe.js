@@ -26,17 +26,17 @@ export async function build() {
     if (px[i] + px[i + 1] > 260 && r() < 0.6) { const lon = (x / 960) * Math.PI * 2 - Math.PI, lat = Math.PI / 2 - (y / 480) * Math.PI;
       pts.push([new THREE.Vector3(-Math.cos(lat) * Math.cos(lon), Math.sin(lat), Math.cos(lat) * Math.sin(lon)).multiplyScalar(1.004), r() * 4, 0.3 + r() * 0.6]); }
   }
-  const flashes = sparkSystem(pts.length, 0.035); earth.add(flashes);
+  const flashes = sparkSystem(pts.length, 0.05); earth.add(flashes);
   const camera = new THREE.PerspectiveCamera(32, 1080 / 1920, 0.01, 100);
 
   return {scene, camera, update(shot, T) {
     const t = T - shot.t0;
-    earth.rotation.y = -2.2 + t * 0.06; earth.rotation.x = 0.35;
+    earth.rotation.y = -2.2 + t * 0.08; earth.rotation.x = 0.35;
     const P = flashes.geometry.attributes.position.array, C = flashes.geometry.attributes.color.array;
-    const spread = smooth(0.2, 4.5, t);
-    pts.forEach((p, i) => { const on = p[1] / 4 < spread; const ph = (t * 1.3 + p[1] * 7) % 1; const k = on ? Math.max(0, 1 - ph / p[2]) : 0;
+    const spread = smooth(0.0, 2.6, t);
+    pts.forEach((p, i) => { const on = p[1] / 4 < spread; const k = on ? 0.55 + 0.45 * Math.abs(Math.sin(t * 9 + p[1] * 20)) : 0;
       P[i * 3] = p[0].x; P[i * 3 + 1] = p[0].y; P[i * 3 + 2] = p[0].z; C[i * 3] = k; C[i * 3 + 1] = k * 0.55; C[i * 3 + 2] = k * 0.15; });
     flashes.geometry.attributes.position.needsUpdate = true; flashes.geometry.attributes.color.needsUpdate = true;
-    camera.position.set(0, 0.1, 4.6 - smooth(0, 7, t) * 0.8); camera.lookAt(0, -0.1, 0); camera.updateProjectionMatrix();
+    camera.position.set(0, 0.1, 4.4 - smooth(0, 3.5, t) * 0.7); camera.lookAt(0, -0.1, 0); camera.updateProjectionMatrix();
   }};
 }
