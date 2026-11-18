@@ -78,6 +78,16 @@ export async function build(renderer) {
   const fireL = new THREE.PointLight('#ffb060', 0, 300, 2); scene.add(fireL);
   const fire = particles(1600, 'flame'); scene.add(fire);
   const smoke = particles(2600, 'smoke'); scene.add(smoke);
+  // Rauchsäule als weicher, aufgeblähter Schlauch (wächst mit der Rakete)
+  const puffT = canvasTex(256, 512, (g, w, h) => { g.clearRect(0, 0, w, h); const r2 = rng(19);
+    g.fillStyle = 'rgba(190,190,186,0.55)'; g.fillRect(0, 0, w, h); for (let i = 0; i < 420; i++) { const x = r2() * w, y = r2() * h, rad = 16 + r2() * 40; const v = 140 + r2() * 90;
+      const gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, `rgba(${v},${v},${v - 4},0.8)`); gr.addColorStop(1, `rgba(${v},${v},${v - 4},0)`); g.fillStyle = gr; g.fillRect(0, 0, w, h); } });
+  puffT.wrapS = puffT.wrapT = THREE.RepeatWrapping;
+  const colGeo = new THREE.CylinderGeometry(1, 1, 1, 28, 24, true); colGeo.translate(0, 0.5, 0);
+  { const P = colGeo.attributes.position; for (let i = 0; i < P.count; i++) { const y = P.getY(i); const k = 1 + 1.6 * Math.pow(1 - y, 2.5); P.setX(i, P.getX(i) * k); P.setZ(i, P.getZ(i) * k); } colGeo.computeVertexNormals(); }
+  const colM = new THREE.MeshStandardMaterial({color: '#d6d5d0', map: puffT, alphaMap: puffT, transparent: true, depthWrite: false, side: THREE.DoubleSide, roughness: 1});
+  const column = new THREE.Mesh(colGeo, colM); scene.add(column);
+  const column2 = new THREE.Mesh(colGeo, colM.clone()); scene.add(column2);
   const camera = new THREE.PerspectiveCamera(46, 1080 / 1920, 0.5, 4000);
   const CAM = V3(50, 2.0, 38);
 
@@ -96,6 +106,9 @@ export async function build(renderer) {
     const y2 = rise(T, LIFT2) * 1.2; m2.position.set(P2.x, y2 + 0.3, P2.z); m2.visible = y2 > 0;
     const n2 = V3(P2.x, Math.max(y2, 1), P2.z);
     core2.visible = T > LIFT2 - 0.3; core2.position.copy(n2); glow2.visible = core2.visible; glow2.position.copy(n2); glow2.scale.setScalar(45 * flicker(T, 5)); glow2.material.opacity = 0.9;
+    // Rauchsäulen
+    column.visible = out; if (out) { const h = Math.max(1, y1 - 1); column.scale.set(1.6 + h * 0.006, h, 1.6 + h * 0.006); column.position.set(0, 0, 0); puffT.offset.y = -T * 0.05; puffT.repeat.set(2, 1 + h / 60); }
+    column2.visible = y2 > 1; if (y2 > 1) { const h = y2 - 1; column2.scale.set(2.5 + h * 0.008, h, 2.5 + h * 0.008); column2.position.set(P2.x, 0, P2.z); }
     // Flammen und Rauch
     const fl = [], sm = [];
     if (ign) {
