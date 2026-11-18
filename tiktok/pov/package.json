@@ -1,0 +1,6 @@
+{
+  "name": "pov-stories",
+  "private": true,
+  "description": "POV-Comic-Stories: 3D-Szenen im Toon-Stil mit Fischauge, gerendert mit Three.js + Playwright + ffmpeg",
+  "dependencies": { "three": "0.170.0" }
+}

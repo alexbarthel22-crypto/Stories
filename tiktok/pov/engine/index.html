@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;background:#000;width:1080px;height:1920px;overflow:hidden}
+  #c{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  #ui{position:absolute;inset:0;font-family:Inter,"Liberation Sans",sans-serif;pointer-events:none}
+  .loc{position:absolute;left:56px;top:150px;color:#fff;transition:none}
+  .loc .t{font-weight:900;font-size:50px;letter-spacing:.14em;text-shadow:0 2px 6px rgba(0,0,0,.35)}
+  .loc .bar{width:150px;height:5px;background:#e0342a;margin:10px 0 12px}
+  .loc .s{font-weight:600;font-size:32px;text-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .loc.small .t{font-size:30px;letter-spacing:.06em}.loc.small .bar{display:none}.loc.small .s{font-size:22px;letter-spacing:.14em;font-weight:700;margin-top:2px}
+  .cap{position:absolute;left:60px;right:60px;text-align:center;font-weight:900;font-size:56px;line-height:1.15;
+       -webkit-text-stroke:11px #000;paint-order:stroke fill;letter-spacing:.01em}
+  .notif{position:absolute;left:40px;width:660px;top:120px;background:#f7f4ec;border:4px solid #111;border-radius:22px;padding:22px 30px;box-shadow:0 8px 0 rgba(0,0,0,.25)}
+  .notif .h{font-weight:800;font-size:28px;color:#222;display:flex;gap:12px;align-items:center}
+  .notif .h i{color:#e0342a;font-style:normal}
+  .notif .b{font-weight:800;font-size:40px;color:#111;margin-top:6px;line-height:1.15}
+  .fade{position:absolute;inset:0;background:#000}
+</style>
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js"}}</script>
+</head><body>
+<canvas id="c"></canvas><div id="ui"></div>
+<script type="module" src="main.js"></script>
+</body></html>

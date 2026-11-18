@@ -1,0 +1,123 @@
+{
+  "titel": "Aussichtspunkt – Beispiel",
+  "set": "aussicht",
+  "himmel": "abend",
+  "fov": 140,
+  "blick": "stadt",
+  "cast": {
+    "ich": {
+      "pos": [
+        0,
+        -1.5
+      ],
+      "pose": "aufstuetzen",
+      "oberteil": "#4f7a3a",
+      "hose": "#2c3c5e",
+      "haut": "#ecd6bd",
+      "stimme": "gemini:Fenrir",
+      "regie": "junger Mann, leise, angespannt"
+    },
+    "mia": {
+      "pos": [
+        -1.6,
+        -1.95
+      ],
+      "stimme": "gemini:Leda",
+      "frisur": "bob",
+      "haare": "#b98a4e",
+      "oberteil": "#8b2525",
+      "hose": "#1e2433",
+      "brille": true,
+      "augen": "#9cc7e0",
+      "regie": "junge Frau, nervös, gedämpft"
+    }
+  },
+  "beats": [
+    {
+      "ort": [
+        "LICHTENBERG-HÖHE",
+        "Aussichtspunkt · Freitag, 18:12"
+      ],
+      "blick": "stadt",
+      "dauer": 2.6
+    },
+    {
+      "blick": "mia",
+      "drehung": 0.9,
+      "wer": "mia",
+      "sagt": "Ich muss dir was sagen.",
+      "pose": {
+        "mia": "erklaeren",
+        "ich": "runter"
+      },
+      "wie": "zögernd, ernst"
+    },
+    {
+      "wer": "ich",
+      "sagt": "Jetzt? Hier oben?",
+      "ort": null,
+      "wie": "überrascht, leicht genervt"
+    },
+    {
+      "wer": "mia",
+      "sagt": "Ich hab's gestern gefunden. Im Keller von meinem Opa.",
+      "pose": {
+        "mia": "arme_verschraenkt"
+      },
+      "stimmung": {
+        "mia": "angst"
+      },
+      "wie": "leise, unheimlich, fast flüsternd"
+    },
+    {
+      "meldung": {
+        "titel": "Unbekannt",
+        "text": "Hör auf, danach zu suchen.",
+        "icon": "💬",
+        "dauer": 2.4
+      },
+      "dauer": 1.4,
+      "sfx": "ping.wav"
+    },
+    {
+      "pose": {
+        "ich": "handy"
+      },
+      "handy": {
+        "typ": "nachricht",
+        "name": "Unbekannt",
+        "text": [
+          "Hör auf, danach zu suchen.",
+          "Wir sehen dich."
+        ]
+      },
+      "blick": [
+        0,
+        -30
+      ],
+      "wer": "ich",
+      "sagt": "Mia… wer hat meine Nummer?",
+      "wie": "erschrocken, stockend"
+    },
+    {
+      "blick": "mia",
+      "pose": {
+        "ich": "runter",
+        "mia": "zeigen"
+      },
+      "schaut": {
+        "mia": "skyline"
+      },
+      "wer": "mia",
+      "sagt": "Schau. Da unten.",
+      "pause": 0.2,
+      "wie": "ängstlich, flüsternd"
+    },
+    {
+      "blick": "skyline",
+      "drehung": 1.2,
+      "dauer": 2.4,
+      "blende": 0.8
+    }
+  ]
+}
