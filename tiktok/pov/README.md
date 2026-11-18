@@ -75,7 +75,14 @@ plus eine kurze Pause. Ohne Satz dauert er `dauer` Sekunden.
 | `meldung` | Benachrichtigungskarte oben | `{"titel": "Mama", "text": "Anruf fehlgeschlagen", "icon": "📞", "dauer": 3}` |
 | `text` | Freier Untertitel ohne Stimme (z. B. Geräusch) | `"text": "*Explosion*"` |
 | `blende` | Schwarzblende (Dauer in s) | `0.8` |
-| `sfx` | Geräusch aus `sfx/` abspielen | `"ping.wav"` oder `{"datei": "boom.wav", "ab": 0.3, "lautstaerke": 0.8}` |
+| `sfx` | Geräusch aus `sfx/` abspielen (auch Liste) | `"ping.wav"` oder `{"datei": "sirene_fern.wav", "ab": 0.3, "lautstaerke": 0.5, "dauer": 4}` |
+| `telefon` | Satz klingt wie durchs Handy | `true` |
+| `atmo` | Lautstärke einer Atmo-Spur ab diesem Beat ändern (weich) | `{"voegel.wav": 0, "atmo_stadt.wav": 0.05}` |
+| `musik` | Musik ab diesem Beat (Kreuzblende), `null` = aus | `{"datei": "gen/musik_2_spannung.mp3", "lautstaerke": 0.24, "einblenden": 2}` |
+| `zoom` | Fischauge enger/weiter stellen (Grad), `0` = zurück | `"zoom": 78, "zoom_dauer": 1.4, "zoom_ab": 0.5` |
+| `schuetteln` | Kamera erschüttern (Stärke) | `0.6` |
+| `schwarz` | Schwarzbild für diesen Beat (z. B. Abspann mit `text`) | `true` |
+| `effekt` | Spezialeffekte des Sets, z. B. Stromausfall in Wellen (Dauer s) | `{"stromausfall": 3.5}` |
 
 **Handy-Bildschirme** (`"handy": {...}`; damit es sichtbar ist, braucht „ich“ die Pose `handy`):
 - `{"typ": "anruf", "name": "Mama", "status": "Anruf wird aufgebaut"}`: ausgehender Anruf
@@ -101,6 +108,8 @@ plus eine kurze Pause. Ohne Satz dauert er `dauer` Sekunden.
 | `regie` | Standard-Sprechweise der Figur |
 | `farbe` | Untertitelfarbe (Standard: Gelb für andere, Weiß für „ich“) |
 | `tempo` | Sprechtempo, z. B. `1.15` |
+| `mantel` | langer Mantel (`true`) |
+| `details` | `none` = keine schwarzen Knopf-Striche auf dem Oberteil |
 
 ### Story-Einstellungen
 
@@ -113,7 +122,10 @@ plus eine kurze Pause. Ohne Satz dauert er `dauer` Sekunden.
 | `wackeln` | Handkamera-Wackeln (0 = aus, 1 = normal, 2 = stark) |
 | `ort_klein` | `true` = kleine Ortsangabe (Stil „16:49 / VILLA · SALON“) |
 | `untertitel_y` | Höhe der Untertitel (0 = oben, 1 = unten; Standard 0.6) |
-| `atmo`, `atmo_lautstaerke` | Hintergrundrauschen (Wind/Stadt), `null` = aus |
+| `atmo_spuren` | Durchlaufende Umgebungsgeräusche | `[{"datei": "atmo_wind.wav", "lautstaerke": 0.3}, …]` |
+| `max_pause` | Lange Sprechpausen in Sätzen werden auf diesen Wert gekürzt (s, Standard 0.45) |
+| `ducking` | Wie stark die Musik unter Sprache leiser wird (0–1, Standard 0.6) |
+| `stimme_lautstaerke` | Gesamtlautstärke der Stimmen |
 
 ### Benannte Blickpunkte im Set `aussicht`
 
@@ -142,3 +154,33 @@ Tipps für den Look des Originals:
 - Figuren 1–2 m vor die Kamera stellen.
 - Oft zwischen Gesicht, Umgebung und Handy hin- und herschauen.
 - Kurze Sätze schreiben und wichtige Momente mit einer `meldung` oder einem Handy-Bildschirm zeigen.
+
+## Ton: Geräusche, Atmo, Musik
+
+`python3 tools/sfx_synth.py` erzeugt die Geräuschbibliothek in `sfx/`. Alles ist per Synthese erzeugt
+und deshalb frei verwendbar:
+
+| Datei | Inhalt |
+|---|---|
+| `atmo_wind.wav`, `atmo_stadt.wav`, `voegel.wav` | nahtlose Schleifen für `atmo_spuren` |
+| `auto_vorbei.wav` | Auto fährt vorbei (Doppler, links → rechts) |
+| `vibration.wav`, `klingelton.wav`, `anruf_ende.wav`, `ping.wav` | Handy |
+| `sirene_fern.wav` | Martinshorn in der Ferne |
+| `hubschrauber_fern.wav` | Hubschrauber in der Ferne |
+| `stromausfall.wav` | dumpfer Schlag + absackendes Brummen |
+| `herzschlag.wav`, `riser.wav`, `drone.wav` | Spannung |
+
+Musik liegt in `sfx/gen/` (mit Lyria erzeugt, über `../audio/lyria.py "<Prompt>" <datei.mp3>`).
+Die Musik wird unter Sprache automatisch leiser (Ducking).
+
+Stimmen werden aufbereitet (Low-Cut, sanfter Kompressor). Lange Pausen werden gekürzt.
+Erzeugt Gemini einen Satz falsch, erzeugst du ihn gezielt neu:
+`python3 tools/prep.py stories/<name>.json --neu "Anfang des Satzes"`.
+Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“ hat Gemini mehrfach „halb acht“ gesprochen.
+
+## Stories
+
+- `stories/beispiel.json`: kurzer Test (20 s)
+- `stories/jens_1830.json`: **„Jens – 18:30“** (ca. 92 s). Jens trifft am Aussichtspunkt einen Fremden im grauen Mantel.
+  Der sagt voraus, dass um halb sieben die Lichter ausgehen. Dann folgen ein abgebrochener Anruf seines Bruders Tobi
+  und eine Nachricht von „Unbekannt“. Um 18:30 erlischt die ganze Stadt, und Tobi steht plötzlich hinter Jens.
