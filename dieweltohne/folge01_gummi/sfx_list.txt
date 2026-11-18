@@ -1,0 +1,23 @@
+rain_street|File:Urban Street on a Rainy Afternoon.flac
+city_berlin|File:184809 qubodup first-day-of-urban-spring-in-berlin-2013-04-14.flac
+car_away|File:255122 ylearkisto henkiloauto-lahto-asfaltilla-a-car-pulling-away-on-asphalt.wav
+car_approach|File:255126 ylearkisto henkiloauto-tulo-asfaltilla-a-car-approaching-stopping-on-asphalt.wav
+metal_scratch|File:Scratching metal door (Gravity Sound).wav
+metal_rub|File:Rubbing metal door (Gravity Sound).wav
+metal_hits|File:Metal pole hits (Gravity Sound).wav
+metal_hit|File:Metal Hit (Gravity Sound).mp3
+buzz|File:Aggressive electric buzzing.ogg
+faucet|File:Faucet water into sink.ogg
+splashes|File:Bathtub water splashes.ogg
+stream|File:433589 jackthemurray stream-river-water-up-close.wav
+plane|File:428086 inspectorj airplane-boeing-flyby-right-to-left-a.wav
+crowd|File:360703 eguobyte large-crowd-medium-distance-stereo.wav
+laugh|File:72843 lonemonk approx-800-laughter-only-1.wav
+clock|File:Clock (tic tac).ogg
+siren_police|File:American police siren i.ogg
+siren_fire|File:WWS Firetruckssirenfrominside.ogg
+horn|File:Car Horn.wav
+bag|File:Plastic bag.ogg
+thud|File:Dull thud.ogg
+thunder|File:Light Rain Distant Thunder July 5th 2016.wav
+fireworks|File:Silvester fireworks from the street 04 rest.ogg

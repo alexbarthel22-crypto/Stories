@@ -1,0 +1,6 @@
+node_modules/
+folge*/sfx_raw/*.wav
+folge*/sfx_raw/*.orig
+folge*/video_stumm.mp4
+folge*/mix_roh.wav
+__pycache__/
