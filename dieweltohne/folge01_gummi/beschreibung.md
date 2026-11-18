@@ -2,14 +2,15 @@
 
 ## Zum Kopieren
 
-Was wäre, wenn es Gummi 10 Sekunden lang nicht gäbe? 🛞 Reifen weg, Hosen unten, Handys kaputt – und ein Flugzeug landet auf blanken Felgen. Was hätte dich am härtesten getroffen? 👇
+Was wäre, wenn es Gummi 10 Sekunden lang nicht gäbe? 😳 Erst rutschen nur die Hosen … am Ende brennt die Welt 🔥 Bei welcher Stufe hättest du Panik bekommen? 👇
 
-#waswärewenn #dieweltohne #gedankenexperiment #wissen #physik #gummi #lernenmittiktok #fyp
+#waswärewenn #dieweltohne #gedankenexperiment #wissen #gummi #weltuntergang #lernenmittiktok #fyp
 
 ## Erster Kommentar zum Anpinnen
 
 Gummibärchen haben überlebt 🐻 Welches Material soll als Nächstes verschwinden?
 
 ## Hinweise
-- TikTok verlangt bei KI-erzeugten oder stark animierten realistischen Inhalten das Label „KI-generierter Inhalt“. Das Video ist eine 3D-Animation; setze das Label vorsichtshalber.
-- Einige Geräusche stehen unter CC BY (Namensnennung). Die Liste steht in `quellen_geraeusche.md`. Am einfachsten: die Namen in einen Kommentar oder in die Profil-Bio-Linkseite schreiben.
+- Das Video ist eine 3D-Animation. TikTok verlangt für KI-generierte oder realistisch wirkende synthetische Inhalte das Label „KI-generiert“. Setze es zur Sicherheit.
+- Alle Geräusche sind echte Aufnahmen unter CC0 (frei nutzbar, keine Namensnennung nötig). Die Liste steht in `quellen_geraeusche.md`.
+- Fakt im Video: Die Challenger-Katastrophe 1986 wurde durch einen versagenden Gummi-Dichtungsring (O-Ring) an einer Feststoffrakete ausgelöst.
