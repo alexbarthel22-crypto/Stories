@@ -1,5 +1,5 @@
 // 2D-Einblendungen: Titel, Emblem, Countdowns, Messwerte, Gefahrenstufe, Untertitel
-import {CAPTIONS, STAGES, STAGE_OF, VANISH, RETURN, ALARM, DECIDE_START, worldLeft} from './timeline.js';
+import {CAPTIONS, STAGES, STAGE_OF, VANISH, RETURN, ALARM, DECIDE_START, TRAIN_HIT, ORBIT_HIT, COUNTER, IGNITION, FLASH0, worldLeft} from './timeline.js';
 import {clamp, smooth, rng} from './lib.js';
 const GLC = '0123456789+−×÷=∞√∑∫πΔ≠≈%#?!'.split('');
 // Ziffern verrutschen, solange die Mathe fehlt
@@ -70,7 +70,7 @@ export function drawHUD(g, T, shot) {
   if (T < VANISH) { label = 'MATHE VERSCHWINDET IN'; value = fmt(VANISH - T); prog = 1 - (VANISH - T) / VANISH; if (VANISH - T < 3.5) alarm = 1; }
   else if (T < RETURN) { label = 'MATHE ZURÜCK IN'; value = garble(fmt(wl), T); prog = 1 - wl / 10; accent = ORANGE; }
   else if (T < ALARM + 6) { label = 'MATHE'; value = 'ZURÜCK'; prog = 1; }
-  if (T >= ALARM && T >= RETURN + 0.0 && (shot.id === 'bunker' || shot.id === 'earth' || shot.id === 'decide')) {
+  if (T >= ALARM && T >= RETURN + 0.0 && (shot.id === 'bunker' || (shot.id === 'earth' && T < COUNTER))) {
     label = 'ENTSCHEIDUNG IN'; value = fmt(DECIDE_START - (T - ALARM)).slice(0, -4); prog = (T - ALARM) / DECIDE_START; accent = '#e5482b'; alarm = 1; sub = 'RAKETENSTART GEMELDET'; }
   else if (T >= ALARM && T < RETURN) sub = 'RAKETENSTART GEMELDET';
   const ws = 'MATHE ZURÜCK IN ' + garble(fmt(wl), T, 0.2);
@@ -94,11 +94,18 @@ export function drawHUD(g, T, shot) {
     const t = T - shot.t0, alt = 1310 - 850 * Math.pow(smooth(1.2, 9, t), 1.4);
     label = 'FLUGHÖHE'; value = garble(de(alt) + ' ft', T, 0.25); sub = ws; alarm = t > 2 ? 1 : 0;
   }
-  if (shot.id === 'grid') {
-    const t = T - shot.t0, f = 50 - 2.5 * smooth(0.3, 4.2, t) - 0.04 * Math.sin(t * 13);
-    label = 'NETZFREQUENZ'; value = t > 4.4 ? 'ABSCHALTUNG' : dec(Math.max(47.5, f), 2) + ' Hz'; sub = ws; alarm = t > 1.2 ? 1 : 0;
-  }
-  if (shot.id === 'crossing' || shot.id === 'street' || shot.id === 'class_glitch' || (shot.id === 'bunker' && T < RETURN)) { if (!sub) sub = ''; }
+  if (shot.id === 'train') { // Abstand der Züge (beide ca. 100 km/h)
+    const d = Math.max(0, (TRAIN_HIT - T) * 56);
+    label = 'ABSTAND DER ZÜGE'; value = T < TRAIN_HIT ? garble(de(d) + ' m', T, 0.15) : 'KOLLISION'; sub = ws; alarm = T > TRAIN_HIT - 2.5 ? 1 : 0; }
+  if (shot.id === 'orbit') {
+    const k = smooth(shot.t0 + 0.3, shot.t1 - 0.3, T);
+    label = 'SATELLITEN AUSSER KONTROLLE'; value = de(10400 * k); sub = ws; alarm = T > ORBIT_HIT ? 1 : 0; }
+  if (shot.id === 'earth' && T >= COUNTER) {
+    label = 'RAKETEN IN DER LUFT'; value = de(5 + Math.floor(180 * smooth(COUNTER, shot.t1, T))); sub = 'GEGENSCHLAG'; prog = 1; accent = '#e5482b'; alarm = 1; }
+  if (shot.id === 'launch') {
+    label = 'EINSCHLAG IN'; value = fmt(30 * 60 - Math.max(0, T - IGNITION)).slice(0, -4); sub = 'GEGENSCHLAG'; prog = 1; accent = '#e5482b'; alarm = 1; }
+  if (shot.id === 'final') {
+    label = 'EINSCHLÄGE'; value = de(Math.max(0, Math.floor((T - FLASH0) / 0.15) + (T >= FLASH0 ? 1 : 0)) * 7); sub = ''; prog = 1; accent = '#e5482b'; alarm = 1; }
   const x = 64, y = 1000;
   g.save(); g.fillStyle = '#fff';
   g.strokeStyle = 'rgba(255,255,255,0.25)'; g.lineWidth = 4; g.beginPath(); g.arc(x + 30, y - 70, 28, 0, Math.PI * 2); g.stroke();
@@ -125,6 +132,7 @@ export function drawHUD(g, T, shot) {
     g.restore();
   }
   // "5 Stunden später" Einblendung
+  if (shot.id === 'final') { const a = smooth(84, 84.3, T) * (1 - smooth(86.4, 86.9, T)); if (a > 0) { g.save(); g.globalAlpha = a; g.fillStyle = '#fff'; g.textAlign = 'center'; g.font = '500 30px Plex'; spaced(g, '30 MINUTEN SPÄTER', W / 2, 330, 8); g.restore(); } }
   if (shot.id === 'earth') { const a = smooth(66, 66.3, T) * (1 - smooth(68.6, 69.1, T)); if (a > 0) { g.save(); g.globalAlpha = a; g.fillStyle = '#fff'; g.textAlign = 'center'; g.font = '500 30px Plex'; spaced(g, '26. SEPTEMBER 1983', W / 2, 330, 8); g.restore(); } }
 
   // Untertitel

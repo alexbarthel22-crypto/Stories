@@ -9,9 +9,9 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 const hud = document.getElementById('hud').getContext('2d');
 
-const files = {classroom: './classroom.js', city: './city_sun.js', cockpit: './cockpit.js', grid: './grid.js', bunker: './bunker.js', earth: './earth.js'};
-const SET_OF = {intro: 'classroom', class_wait: 'classroom', class_glitch: 'classroom', street: 'city', crossing: 'city', bank: 'city',
-  plane: 'cockpit', grid: 'grid', bunker: 'bunker', decide: 'bunker', earth: 'earth'};
+const files = {classroom: './classroom.js', city: './city_sun.js', train: './train.js', cockpit: './cockpit.js', orbit: './orbit.js', bunker: './bunker.js', earth: './earth.js', silo: './silo.js'};
+const SET_OF = {intro: 'classroom', class_wait: 'classroom', class_glitch: 'classroom', street: 'city', bank: 'city', train: 'train',
+  plane: 'cockpit', orbit: 'orbit', bunker: 'bunker', earth: 'earth', launch: 'silo', final: 'earth'};
 // Nur die Sets laden, die gebraucht werden (zum schnellen Testen: ?only=cockpit)
 const only = new URLSearchParams(location.search).get('only');
 if (only) for (const k of Object.keys(files)) if (!only.split(',').includes(k)) delete files[k];

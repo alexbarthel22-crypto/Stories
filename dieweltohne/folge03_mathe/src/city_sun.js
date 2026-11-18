@@ -197,7 +197,7 @@ export async function build(renderer) {
   const camera = new THREE.PerspectiveCamera(48, 1080 / 1920, 0.03, 1500); scene.add(camera);
   const phone = makePhone(); phone.userData.caseM.color.set('#2a2d33'); const hands = makeHands('#d9a47e', '#3a3f48');
   const rig = new THREE.Group(); rig.add(phone, hands); camera.add(rig); rig.position.set(0.0, -0.06, -0.26); rig.rotation.set(-0.08, 0.0, 0.02);
-  const BANK = 31, MIN_AT = BANK + 2.6; // Banking-App: Kontostand kippt
+  const BANK = 24, MIN_AT = BANK + 2.6; // Banking-App: Kontostand kippt
   function bankApp(g, st, SW, SH) {
     const t = st.T, r = rng(Math.floor(t * 18) + 3);
     g.fillStyle = '#f3f5f9'; g.fillRect(0, 0, SW, SH);
