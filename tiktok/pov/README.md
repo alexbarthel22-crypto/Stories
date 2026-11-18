@@ -184,3 +184,27 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/jens_1830.json`: **„Jens – 18:30“** (ca. 92 s). Jens trifft am Aussichtspunkt einen Fremden im grauen Mantel.
   Der sagt voraus, dass um halb sieben die Lichter ausgehen. Dann folgen ein abgebrochener Anruf seines Bruders Tobi
   und eine Nachricht von „Unbekannt“. Um 18:30 erlischt die ganze Stadt, und Tobi steht plötzlich hinter Jens.
+
+## Neu: Felder für mehr Spannung und Details
+
+| Feld (Beat) | Wirkung |
+|---|---|
+| `handy: {typ:"nachricht", text:[…], nach_und_nach: 1.2, neu_ab: 2}` | Nachrichten erscheinen nacheinander (mit „schreibt …“); `neu_ab` = so viele sind schon da |
+| `handy: {…, tippen: "Wer bist du?"}` | Tastatur + Text wird Buchstabe für Buchstabe getippt (`sfx: tippen.wav`) |
+| `handy: {…, uhr: "18:27"}` | Uhrzeit auf dem Handy |
+| `ende: true` / `"Text"`, `ende_unter` | große Abspann-Karte („FORTSETZUNG FOLGT“), bleibt bis zum Schluss (mit `schwarz: true`) |
+| `auto: {spur: 1\|2, ab, farbe, tempo}` | Auto fährt zur Zeit `ab` am Spieler vorbei, Geräusch wird automatisch passend gelegt |
+| `effekt: {flackern: s}` | Laternen flackern (`sfx: summen.wav`) |
+| `effekt: {hubschrauber: {ab, dauer, von:[x,y,z], nach:[x,y,z]}}` | Hubschrauber mit Suchscheinwerfer |
+| `laufen: {"name": {nach:[x,z], zeit, ab}}` | eigene Laufzeit/Startzeit pro Figur (`zeit: 0.01` = teleportieren) |
+| `hintergrund: [{wer, sagt, wie, ab, lautstaerke, funk}]` | Sätze nebenbei (ohne Untertitel, ohne Einfluss aufs Timing); `funk: true` = Funkgerät |
+| `funk: true` (Satz) | Stimme klingt wie Funkgerät |
+
+Cast-Optionen: `typ: "transporter"` (Fahrzeug, fährt über `laufen`), `taschenlampe: true` (sichtbar in Pose `leuchten`),
+`handy_bild` (was auf dem Handy einer Figur zu sehen ist), `schaut` (Startblick). Neue Posen: `leuchten`, `rennen`, `haende_tasche`;
+POV: `rennen`. Story: `nacht` (wie dunkel es nach dem Stromausfall wird), `handy_fov` (Zoom beim Blick aufs Handy, Standard 96).
+Beim Blick aufs Handy zoomt das Bild automatisch heran; die Hand hält das Gerät von hinten, der Bildschirm bleibt frei.
+
+Neue Geräusche: `tippen, gesendet, stich, braam, summen, jogger, transporter, tueren, glocke, rennen, atem_schwer,
+atmo_laub, zug_fern, funk_knacken, hund_fern` · Musik: `gen/musik_4_flucht.mp3`, `gen/musik_5_lauern.mp3`.
+In der Szene laufen automatisch: Vogelschwarm, Herbstlaub im Wind, Flugzeug mit Blinklicht, Fensterlichter, die beim Stromausfall ausgehen.
