@@ -73,6 +73,10 @@ export class Character {
         const d = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.07, 0.01), dm); d.position.set(x, y, 0.112); body.add(d);
       }
     }
+    if (spec.mantel) {
+      const coat = ink(new THREE.CylinderGeometry(0.19, 0.25, 0.55, 16), toon(top), 1.3); coat.scale.z = 0.75; coat.position.y = 0.62; body.add(coat);
+      const lap = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.5, 0.01), flat('#141414')); lap.position.set(0, 0.95, 0.118); body.add(lap);
+    }
     const neck = ink(new THREE.CylinderGeometry(0.05, 0.055, 0.12, 10), toon(skin), 0.9); neck.position.y = 1.47; body.add(neck);
     const collar = ink(new THREE.TorusGeometry(0.075, 0.025, 6, 16), toon(top), 0.8); collar.rotation.x = Math.PI / 2; collar.position.y = 1.43; body.add(collar);
     // Kopf

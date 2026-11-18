@@ -4,7 +4,7 @@ const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt
 export class Overlay {
   constructor(el, story) {
     this.el = el; this.story = story;
-    el.innerHTML = '<div class="loc"></div><div class="cap"></div><div class="notif"></div><div class="fade"></div>';
+    el.innerHTML = '<div class="fade"></div><div class="loc"></div><div class="cap"></div><div class="notif"></div>';
     this.loc = el.querySelector('.loc'); this.cap = el.querySelector('.cap'); this.notif = el.querySelector('.notif'); this.fade = el.querySelector('.fade');
     this.capY = story.untertitel_y ?? 0.6;
     this.last = {};

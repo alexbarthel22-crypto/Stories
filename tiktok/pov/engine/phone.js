@@ -36,7 +36,7 @@ export function drawPhone(g, spec, t) {
     c.font = F(800, 34); c.fillText(spec.name || '', W / 2, 270);
     c.fillStyle = '#9fb3aa'; c.font = F(500, 19);
     const dots = '.'.repeat(1 + (Math.floor(t * 2) % 3));
-    c.fillText((spec.status || (spec.typ === 'eingehend' ? 'Eingehender Anruf' : 'Anruf wird aufgebaut')) + (spec.typ === 'anruf' ? dots : ''), W / 2, 308);
+    c.fillText((spec.status || (spec.typ === 'eingehend' ? 'Eingehender Anruf' : 'Anruf wird aufgebaut')) + (spec.typ === 'anruf' && !spec.status ? dots : ''), W / 2, 308);
     for (let i = 0; i < 3; i++) { c.fillStyle = '#2c3a35'; c.beginPath(); c.arc(W / 2 + (i - 1) * 80, 430, 26, 0, 7); c.fill(); }
     c.fillStyle = '#d6372f'; c.beginPath(); c.arc(spec.typ === 'eingehend' ? W / 2 - 70 : W / 2, 530, 34, 0, 7); c.fill();
     c.fillStyle = '#fff'; c.fillRect((spec.typ === 'eingehend' ? W / 2 - 70 : W / 2) - 14, 526, 28, 8);

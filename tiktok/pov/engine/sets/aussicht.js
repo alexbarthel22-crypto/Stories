@@ -73,7 +73,8 @@ export function build(scene, seed = 3) {
   slope.rotation.x = -Math.PI / 2 - Math.atan2(DROP, RUN); slope.position.set(0, -DROP / 2, Z0 - RUN / 2);
   // Bäume am Abhang + im Tal
   const treeGeo = new THREE.IcosahedronGeometry(1, 0);
-  const NT = 260, trees = inkInstanced(treeGeo, toon('#ffffff'), NT, 0.7);
+  const cityMat = toon('#ffffff', { noCache: true }), dimmable = [cityMat];
+  const NT = 260, trees = inkInstanced(treeGeo, cityMat, NT, 0.7);
   const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), Pv = new THREE.Vector3(), C = new THREE.Color();
   for (let i = 0; i < NT; i++) {
     let x, y, z, s;
@@ -86,10 +87,11 @@ export function build(scene, seed = 3) {
 
   // ---------- Häusermeer ----------
   const ground = add(new THREE.Mesh(new THREE.CircleGeometry(2600, 64), toon('#c4896a'))); ground.rotation.x = -Math.PI / 2; ground.position.y = -70.2;
+  const lights = [];
   const NB = 4200, box = new THREE.BoxGeometry(1, 1, 1); box.translate(0, 0.5, 0);
-  const city = inkInstanced(box, toon('#ffffff'), NB, 0.45);
+  const city = inkInstanced(box, cityMat, NB, 0.45);
   const roofGeo = new THREE.ConeGeometry(0.75, 1, 4, 1); roofGeo.rotateY(Math.PI / 4); roofGeo.translate(0, 0.5, 0);
-  const roofs = inkInstanced(roofGeo, toon('#ffffff'), NB, 0.4);
+  const roofs = inkInstanced(roofGeo, cityMat, NB, 0.4);
   let nb = 0, nr = 0;
   for (let i = 0; i < NB * 3 && nb < NB; i++) {
     const a = (r() - 0.5) * 3.4, d = 50 + Math.pow(r(), 0.8) * 900;
@@ -100,6 +102,9 @@ export function build(scene, seed = 3) {
     Q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), a + (r() < 0.5 ? 0 : Math.PI / 2) + (r() - 0.5) * 0.2);
     city.setMatrixAt(nb, M.compose(Pv.set(x, -70, z), Q, S.set(w, h, dd)));
     city.setColorAt(nb, C.set(PAL_CITY[(r() * PAL_CITY.length) | 0])); nb++;
+    // beleuchtete Fenster (zur Kamera zeigende Seite)
+    const nl = r() < 0.65 ? 1 + ((r() * 3) | 0) : 0, toO = Math.atan2(-x, -z), half = Math.max(w, dd) / 2 + 0.8 + d * 0.004;
+    for (let k = 0; k < nl; k++) { const lat = (r() - 0.5) * w * 0.8; lights.push(x + Math.sin(toO) * half + Math.cos(toO) * lat, -69 + r() * h * 0.85, z + Math.cos(toO) * half - Math.sin(toO) * lat, 3.2 + r() * 2.0); }
     if (r() < 0.55) {
       roofs.setMatrixAt(nr, M.compose(Pv.set(x, -70 + h, z), Q, S.set(w, 2 + r() * 2.5, dd)));
       roofs.setColorAt(nr, C.set(PAL_ROOF[(r() * PAL_ROOF.length) | 0])); nr++;
@@ -109,6 +114,7 @@ export function build(scene, seed = 3) {
   city.castShadow = roofs.castShadow = false; add(city); add(roofs);
   // Fluss
   const river = add(new THREE.Mesh(new THREE.PlaneGeometry(1400, 40), toon('#7f95ad'))); river.rotation.x = -Math.PI / 2; river.position.set(300, -69.9, -520);
+  dimmable.push(ground.material, river.material);
 
   // ---------- Skyline ----------
   const skyline = new THREE.Group(); add(skyline);
@@ -120,8 +126,13 @@ export function build(scene, seed = 3) {
   for (let i = 0; i < 34; i++) {
     const a = THREE.MathUtils.degToRad(-14 + (r() - 0.5) * 16), d = 560 + r() * 90;
     const hgt = 30 + Math.pow(r(), 1.6) * 150, w = 14 + r() * 18;
-    const m = edges(ink(new THREE.BoxGeometry(w, hgt, w * (0.7 + r() * 0.5)), toon(PAL_SKY[i % PAL_SKY.length], { map: winTex, noCache: true }), 0.6), 20);
+    const sm = toon(PAL_SKY[i % PAL_SKY.length], { map: winTex, noCache: true }); dimmable.push(sm);
+    const m = edges(ink(new THREE.BoxGeometry(w, hgt, w * (0.7 + r() * 0.5)), sm, 0.6), 20);
     m.position.set(Math.sin(a) * d, -70 + hgt / 2, -Math.cos(a) * d); m.rotation.y = a; m.castShadow = false; skyline.add(m);
+    for (let yy = 4; yy < hgt - 3; yy += 3.2) for (let c = -2; c <= 2; c++) if (r() < 0.42) {
+      const off = w * 0.62 + 3.5, px = m.position.x - Math.sin(a) * off + Math.cos(a) * c * w * 0.18, pz = m.position.z + Math.cos(a) * off + Math.sin(a) * c * w * 0.18;
+      lights.push(px, -70 + yy, pz, 3.0);
+    }
     if (r() < 0.3) { const t = ink(new THREE.ConeGeometry(w * 0.45, hgt * 0.18, 4), toon('#8a96a8'), 0.5); t.position.set(m.position.x, -70 + hgt + hgt * 0.09, m.position.z); t.rotation.y = a + Math.PI / 4; skyline.add(t); }
   }
 
@@ -139,10 +150,14 @@ export function build(scene, seed = 3) {
     const door = ink(new THREE.BoxGeometry(1.0, 2.1, 0.1), toon('#5a3b2b'), 0.5); door.position.set(x + w * 0.5, 1.05, 14.15); add(door);
     x += w;
   }
+  // Fensterlichter als Punkte (gehen beim Stromausfall wellenartig aus)
+  const lightPts = makeLights(lights, r); add(lightPts);
+  const lampOn = new THREE.MeshBasicMaterial({ color: '#ffe9a8' }), lampOff = toon('#77786f');
+  const lamps = [];
   // Laternen
   for (let lx = -48; lx <= 48; lx += 16) {
     const p = ink(new THREE.CylinderGeometry(0.06, 0.08, 4.6, 8), toon('#2a2a2c'), 0.6); p.position.set(lx, 2.3, 3.3); add(p);
-    const l = ink(new THREE.BoxGeometry(0.35, 0.45, 0.35), toon('#efe6c8'), 0.6); l.position.set(lx, 4.7, 3.3); add(l);
+    const l = ink(new THREE.BoxGeometry(0.35, 0.45, 0.35), lampOn, 0.6); l.position.set(lx, 4.7, 3.3); add(l); lamps.push(l);
   }
   // Straßenbäume
   for (let tx = -44; tx <= 44; tx += 14 + r() * 6) {
@@ -159,7 +174,46 @@ export function build(scene, seed = 3) {
   // Mülltonne
   const bin = add(edges(ink(new THREE.CylinderGeometry(0.3, 0.27, 0.95, 14), toon('#2f5f9a'), 0.7))); bin.position.set(6, 0.47, 3.0);
 
+  // pro Frame: Stromausfall-Zustand setzen. blackout = Sekunden seit Beginn (oder < 0), dur = Dauer der Welle
+  root.userData.update = ({ blackout = -1, dur = 3, px = 768, t = 0 }) => {
+    const u = lightPts.material.uniforms; u.uT.value = blackout; u.uDur.value = dur; u.uPx.value = px; u.uTime.value = t;
+    const off = blackout >= dur * 0.85 || (blackout >= dur * 0.7 && Math.sin(t * 50) > 0);
+    lamps.forEach((l) => (l.material = off ? lampOff : lampOn));
+    // Stadt wird nach und nach dunkler/bläulicher
+    const k = blackout < 0 ? 0 : Math.min(1, blackout / (dur * 1.2));
+    dimmable.forEach((m) => { if (!m.userData.base) m.userData.base = m.color.clone(); m.color.copy(m.userData.base).lerp(DIM, k * 0.86); });
+    const fog = root.parent?.fog; if (fog) { if (!fog.userData) fog.userData = {}; if (!fog.userData.base) fog.userData.base = fog.color.clone(); fog.color.copy(fog.userData.base).lerp(FOG_DIM, k * 0.8); }
+  };
   return root;
+}
+
+const DIM = new THREE.Color('#1a2040'), FOG_DIM = new THREE.Color('#4a3f5e');
+function makeLights(arr, r) {
+  const n = arr.length / 4, pos = new Float32Array(n * 3), size = new Float32Array(n), delay = new Float32Array(n), seed = new Float32Array(n);
+  const cx = Math.sin(-14 * Math.PI / 180) * 600, cz = -Math.cos(-14 * Math.PI / 180) * 600;
+  for (let i = 0; i < n; i++) {
+    pos.set([arr[i * 4], arr[i * 4 + 1], arr[i * 4 + 2]], i * 3); size[i] = arr[i * 4 + 3];
+    delay[i] = Math.min(1, Math.hypot(arr[i * 4] - cx, arr[i * 4 + 2] - cz) / 900) * 0.8 + r() * 0.15; seed[i] = r() * 100;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
+  g.setAttribute('aDelay', new THREE.BufferAttribute(delay, 1)); g.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
+  const m = new THREE.ShaderMaterial({
+    uniforms: { uT: { value: -1 }, uDur: { value: 3 }, uPx: { value: 768 }, uTime: { value: 0 } },
+    vertexShader: `attribute float aSize, aDelay, aSeed; uniform float uT, uDur, uPx, uTime; varying float vOn; varying float vSeed;
+      void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); gl_Position = projectionMatrix * mv;
+        gl_PointSize = max(1.5, aSize * uPx / -mv.z);
+        float k = aDelay * uDur; vOn = 1.0;
+        if (uT >= 0.0) { if (uT > k) vOn = 0.0; else if (uT > k - 0.3) vOn = step(0.0, sin(uTime * 47.0 + aSeed)); }
+        vSeed = aSeed; }`,
+    fragmentShader: `varying float vOn; varying float vSeed;
+      void main(){ if (vOn < 0.5) discard; vec2 c = gl_PointCoord - 0.5; if (max(abs(c.x), abs(c.y)) > 0.42) discard;
+        vec3 col = mix(vec3(1.0,0.83,0.45), vec3(1.0,0.93,0.7), fract(vSeed));
+        gl_FragColor = vec4(col, 1.0);
+        #include <colorspace_fragment>
+      }`,
+  });
+  const p = new THREE.Points(g, m); p.frustumCulled = false; return p;
 }
 
 function car(color, r) {

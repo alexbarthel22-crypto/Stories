@@ -8,13 +8,16 @@
 - mischt Stimmen + Atmo + Geräusche zu build/<name>/mix.wav
 - schreibt build/<name>/timeline.json für die Render-Engine
 """
-import base64, hashlib, json, os, re, subprocess, sys, urllib.request
+import base64, hashlib, json, time, urllib.error, os, re, subprocess, sys, urllib.request
 import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 44100
 args = [a for a in sys.argv[1:] if not a.startswith('--')]
 NO_TTS = '--ohne-stimmen' in sys.argv
+# --neu "Textstück" erzeugt passende Sätze neu (mehrfach möglich)
+NEU = [sys.argv[i + 1] for i, a in enumerate(sys.argv[:-1]) if a == '--neu']
+args = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith('--') and sys.argv[i - 1] != '--neu']
 story_path = args[0]
 story = json.load(open(story_path))
 name = os.path.splitext(os.path.basename(story_path))[0]
@@ -45,6 +48,7 @@ def tts(text, spec, regie=None):
     regie = regie or spec.get('regie', '')
     key = hashlib.sha1(json.dumps([prov, v, text, regie, spec.get('stimme_einstellungen'), spec.get('tempo')]).encode()).hexdigest()[:16]
     fn = os.path.join(out, 'voice', key + ('.wav' if prov == 'gemini' else '.mp3'))
+    if os.path.exists(fn) and any(x in text for x in NEU): os.remove(fn)
     if not os.path.exists(fn):
         if prov == 'gemini':
             # kurzes Format, sonst liest Gemini die Anweisung mit vor
@@ -54,7 +58,12 @@ def tts(text, spec, regie=None):
                     'speechConfig': {'voiceConfig': {'prebuiltVoiceConfig': {'voiceName': v}}}}}
             req = urllib.request.Request(f'https://generativelanguage.googleapis.com/v1beta/models/{spec.get("modell", "gemini-3.8-flash-tts")}:generateContent',
                 data=json.dumps(body).encode(), headers={'Content-Type': 'application/json', 'x-goog-api-key': os.environ['GEMINI_API_KEY']})
-            r = json.load(urllib.request.urlopen(req, timeout=300))
+            for tries in range(8):
+                try:
+                    r = json.load(urllib.request.urlopen(req, timeout=300)); break
+                except urllib.error.HTTPError as e:
+                    if e.code not in (429, 500, 503) or tries == 7: raise
+                    wait = 15 * (tries + 1); print(f'  (Gemini ausgelastet, warte {wait}s …)'); time.sleep(wait)
             p = r['candidates'][0]['content']['parts'][0]['inlineData']; data = base64.b64decode(p['data'])
             if 'wav' not in p['mimeType']:  # rohes PCM (L16, 24 kHz)
                 rate = int(re.search(r'rate=(\d+)', p['mimeType']).group(1)) if 'rate=' in p['mimeType'] else 24000
@@ -73,7 +82,23 @@ def tts(text, spec, regie=None):
     # Stille am Anfang/Ende abschneiden
     nz = np.where(np.abs(a) > 0.01)[0]
     if len(nz): a = a[max(0, nz[0] - 600): nz[-1] + 1500]
-    return a
+    return kurze_pausen(a, story.get('max_pause', 0.45))
+
+
+def kurze_pausen(a, maxp):
+    """lange Sprechpausen innerhalb eines Satzes auf maxp Sekunden kürzen"""
+    hop = int(0.02 * SR); n = len(a) // hop
+    if n < 3: return a
+    rms = np.sqrt(np.mean(a[:n * hop].reshape(n, hop) ** 2, 1)); quiet = rms < max(0.004, rms.max() * 0.03)
+    keep = np.ones(len(a), bool); i = 0
+    while i < n:
+        if quiet[i]:
+            j = i
+            while j < n and quiet[j]: j += 1
+            if (j - i) * hop > maxp * SR: keep[(i * hop + int(maxp * SR / 2)):(j * hop - int(maxp * SR / 2))] = False
+            i = j
+        else: i += 1
+    return a[keep]
 
 
 def load_wav_tempo(fn, tempo):
@@ -118,7 +143,7 @@ for b in story['beats']:
         if NO_TTS or not spec.get('stimme'):
             n = max(0.9, len(b['sagt']) * 0.065); a = None
         else:
-            who_now = who; a = tts(b['sagt'], spec, b.get('wie')); n = len(a) / SR; voice.append((start, a, b.get('lautstaerke', 1.0)))
+            who_now = who; a = tts(b['sagt'], spec, b.get('wie')); n = len(a) / SR; voice.append((start, a, b.get('lautstaerke', 1.0), b.get('telefon', False)))
         parts = chunks(b['sagt']); L = [len(p) + 4 for p in parts]; ct = start; caps = []
         for p, l in zip(parts, L):
             d = n * l / sum(L); caps.append({'text': p, 't0': round(ct, 3), 't1': round(ct + d + (0.25 if p == parts[-1] else 0), 3)}); ct += d
@@ -130,29 +155,85 @@ for b in story['beats']:
     t += dur; b['t1'] = round(t, 3); beats.append(b)
 total = t + story.get('nachlauf', 0.5)
 
-# ---------- Ton mischen ----------
+# ---------- Ton mischen (Stereo) ----------
+def load_st(fn):
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', fn, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
+    return np.frombuffer(raw, np.float32).reshape(-1, 2).copy()
+
+def telefon(a):
+    """Stimme klingt wie durchs Handy: Bandpass 300-3400 Hz + leichte Verzerrung"""
+    from scipy import signal
+    sos = signal.butter(4, [320, 3300], 'bandpass', fs=SR, output='sos')
+    y = signal.sosfilt(sos, a) * 2.2
+    return np.tanh(y * 1.5) / 1.5
+
+def gain_curve(points, n, ramp=1.2):
+    """points: [(zeit, wert)] -> Lautstärkekurve mit weichen Übergängen"""
+    g = np.zeros(n, np.float32); cur = 0.0; last = 0
+    for t0, v in sorted(points):
+        i = min(n, int(t0 * SR)); g[last:i] = cur
+        r = min(n, i + int(ramp * SR)); g[i:r] = np.linspace(cur, v, r - i, endpoint=False) if r > i else v; cur = v; last = r
+    g[last:] = cur; return g
+
 N = int((total + 1) * SR)
-mix = np.zeros(N, np.float32)
-for st, a, vol in voice:
-    i = int(st * SR); mix[i:i + len(a)] += a[:N - i] * vol
-rng = np.random.default_rng(1)
-amb = story.get('atmo', 'stadt')
-if amb:
-    # Wind/Stadtrauschen: gefiltertes braunes Rauschen + langsames Pulsieren
-    w = np.cumsum(rng.standard_normal(N).astype(np.float32)); w -= np.convolve(w, np.ones(4410) / 4410, mode='same'); w /= np.abs(w).max() + 1e-9
-    lfo = 0.6 + 0.4 * np.sin(np.arange(N) / SR * 0.35)
-    mix += w * lfo * story.get('atmo_lautstaerke', 0.05)
 sfxdir = os.path.join(ROOT, 'sfx')
-for b in beats:
-    for s in ([b['sfx']] if isinstance(b.get('sfx'), (str, dict)) else b.get('sfx', [])):
+voc = np.zeros(N, np.float32)
+for st, a, vol, tel in voice:
+    if tel: a = telefon(a)
+    i = int(st * SR); voc[i:i + len(a)] += a[:N - i] * vol
+mix = np.stack([voc, voc], 1)
+
+# Atmo-Spuren: laufen durch, Lautstärke pro Beat über "atmo": {"datei": wert} änderbar
+spuren = story.get('atmo_spuren', [])
+for sp in spuren:
+    fn = os.path.join(sfxdir, sp['datei'])
+    if not os.path.exists(fn): print('  (Atmo fehlt:', sp['datei'], ')'); continue
+    a = load_st(fn); reps = int(np.ceil(N / len(a))); a = np.tile(a, (reps, 1))[:N]
+    pts = [(0, sp.get('lautstaerke', 0.3))] + [(bb['t0'] + bb.get('atmo_ab', 0), bb['atmo'][sp['datei']]) for bb in beats if sp['datei'] in bb.get('atmo', {})]
+    g = gain_curve(pts, N, sp.get('rampe', 1.5)); g[:int(1.0 * SR)] *= np.linspace(0, 1, int(1.0 * SR))
+    mix += a * g[:, None]
+
+# Musik: "musik": {"datei", "lautstaerke", "einblenden"} startet ab dem Beat (Kreuzblende), "musik": null stoppt
+mus_ev = [(bb['t0'], bb['musik']) for bb in beats if 'musik' in bb]
+music = np.zeros((N, 2), np.float32)
+for k, (t0, m) in enumerate(mus_ev):
+    if not m: continue
+    t1 = mus_ev[k + 1][0] if k + 1 < len(mus_ev) else total + 1
+    fi, fo = m.get('einblenden', 2.0), m.get('ausblenden', 2.5)
+    fn = os.path.join(sfxdir, m['datei'])
+    if not os.path.exists(fn): print('  (Musik fehlt:', m['datei'], ')'); continue
+    a = load_st(fn)[int(m.get('start', 0) * SR):]
+    i0 = int(t0 * SR); i1 = min(N, int((t1 + fo) * SR)); L = i1 - i0
+    if len(a) < L:  # verlängern: Ende in den Anfang überblenden
+        xf = int(3 * SR); b2 = a.copy()
+        while len(b2) < L:
+            w = np.linspace(0, 1, xf)[:, None]; seam = b2[-xf:] * (1 - w) + a[:xf] * w
+            b2 = np.concatenate([b2[:-xf], seam, a[xf:]])
+        a = b2
+    seg = a[:L] * m.get('lautstaerke', 0.25)
+    env = np.ones(L); nfi = min(L, int(fi * SR)); env[:nfi] = np.linspace(0, 1, nfi)
+    nfo = min(L, int(fo * SR)); env[-nfo:] = np.minimum(env[-nfo:], np.linspace(1, 0, nfo))
+    music[i0:i1] += seg * env[:, None]
+# Ducking: Musik unter Sprache leiser
+vabs = np.abs(voc); k = int(0.05 * SR)
+vl = np.convolve(vabs, np.ones(k) / k, mode='same'); vl = np.convolve((vl > 0.02).astype(np.float32), np.ones(int(0.4 * SR)) / int(0.4 * SR), mode='same')
+duck = 1 - story.get('ducking', 0.45) * np.clip(vl, 0, 1)
+mix += music * duck[:, None]
+
+for bb in beats:
+    for s in ([bb['sfx']] if isinstance(bb.get('sfx'), (str, dict)) else bb.get('sfx', [])):
         s = {'datei': s} if isinstance(s, str) else s
         fn = os.path.join(sfxdir, s['datei'])
         if not os.path.exists(fn): print('  (Geräusch fehlt:', s['datei'], ')'); continue
-        a = load_wav(fn) * s.get('lautstaerke', 0.6); i = int((b['t0'] + s.get('ab', 0)) * SR); mix[i:i + len(a)] += a[:N - i]
+        a = load_st(fn) * s.get('lautstaerke', 0.6)
+        if s.get('dauer'):
+            a = a[:int(s['dauer'] * SR)].copy(); f = min(len(a), int(0.4 * SR)); a[-f:] *= np.linspace(1, 0, f)[:, None]
+        i = int((bb['t0'] + s.get('ab', 0)) * SR); mix[i:i + len(a)] += a[:N - i]
+# sanfter Limiter
 peak = np.abs(mix).max()
-if peak > 0.95: mix *= 0.95 / peak
+mix = np.tanh(mix / max(peak, 1e-6) * 1.6) / np.tanh(1.6) * 0.93 if peak > 0.9 else mix
 pcm = (np.clip(mix, -1, 1) * 32767).astype('<i2').tobytes()
-subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 's16le', '-ar', str(SR), '-ac', '1', '-i', '-', os.path.join(out, 'mix.wav')], input=pcm, check=True)
+subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 's16le', '-ar', str(SR), '-ac', '2', '-i', '-', os.path.join(out, 'mix.wav')], input=pcm, check=True)
 
 story_out = {k: v for k, v in story.items() if k != 'beats'}
 json.dump({'fps': FPS, 'total': round(total, 3), 'story': story_out, 'beats': beats, 'lines': lines}, open(os.path.join(out, 'timeline.json'), 'w'), ensure_ascii=False)
