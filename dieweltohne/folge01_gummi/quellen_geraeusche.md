@@ -2,11 +2,18 @@
 
 Alle Geräusche sind echte Aufnahmen unter CC0 (frei nutzbar, keine Namensnennung nötig).
 
+- FSD50K 156121 (freesound.org/s/156121) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 54510 (freesound.org/s/54510) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 26275 (freesound.org/s/26275) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 9197 (freesound.org/s/9197) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 212186 (freesound.org/s/212186) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 398999 (freesound.org/s/398999) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 405650 (freesound.org/s/405650) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 10760 (freesound.org/s/10760) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 119850 (freesound.org/s/119850) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 407097 (freesound.org/s/407097) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 161996 (freesound.org/s/161996) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 184725 (freesound.org/s/184725) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 100943 (freesound.org/s/100943) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 151402 (freesound.org/s/151402) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 160793 (freesound.org/s/160793) – CC0 (Freesound, über den Datensatz FSD50K)
@@ -17,7 +24,6 @@ Alle Geräusche sind echte Aufnahmen unter CC0 (frei nutzbar, keine Namensnennun
 - FSD50K 327534 (freesound.org/s/327534) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 179867 (freesound.org/s/179867) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 175844 (freesound.org/s/175844) – CC0 (Freesound, über den Datensatz FSD50K)
-- FSD50K 337721 (freesound.org/s/337721) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 251958 (freesound.org/s/251958) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 240718 (freesound.org/s/240718) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 420560 (freesound.org/s/420560) – CC0 (Freesound, über den Datensatz FSD50K)

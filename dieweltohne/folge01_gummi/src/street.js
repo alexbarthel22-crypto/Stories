@@ -5,6 +5,7 @@ import {Reflector} from 'three/addons/objects/Reflector.js';
 import {makePhone, makeHands, makeDrops, updateScreen} from './phone.js';
 import {VANISH, RETURN} from './timeline.js';
 import {particles, updateParticles, flicker} from './fx.js';
+import {decorateBuilding, addStreetFurniture, makeCrowd, updateCrowd} from './city.js';
 
 const LANES = [-4.8, -1.6, 1.6, 4.8];
 const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -50,6 +51,7 @@ export function buildStreet(renderer) {
       // Fassade zur Straße: Box-Seite +x/-x bekommt Textur
       b.material = s > 0 ? [new THREE.MeshStandardMaterial({map: tex}), new THREE.MeshStandardMaterial({map: tex, roughness: 0.85}), mat('#6d6a66'), mat(c), mat(c), mat(c)]
         : [new THREE.MeshStandardMaterial({map: tex}), new THREE.MeshStandardMaterial({map: tex, roughness: 0.85}), mat('#6d6a66'), mat(c), mat(c), mat(c)];
+      decorateBuilding(scene, s, z, w, h, d, r);
       // Dachkante
       mesh(new THREE.BoxGeometry(d + 0.6, 0.5, w + 0.2), mat('#7d7368'), s * (11.5 + d / 2) - s * 0.3, h + 0.25, z + w / 2, scene);
       // Ladenmarkise
@@ -57,6 +59,8 @@ export function buildStreet(renderer) {
       z += w;
     }
   }
+  const city = addStreetFurniture(scene);
+  const crowd = makeCrowd(scene, 26);
   // Laternen und Bäume
   for (let z = -180; z < 180; z += 18) for (const s of [-1, 1]) {
     mesh(new THREE.CylinderGeometry(0.06, 0.09, 5.5, 8), mat('#2c2f33', {metalness: 0.6, roughness: 0.4}), s * 7.0, 2.75, z, scene);
@@ -138,7 +142,7 @@ export function buildStreet(renderer) {
   rig.position.set(0.03, -0.075, -0.4); rig.rotation.set(-0.1, -0.06, 0.04);
   const drops = makeDrops(11, 140);
 
-  const S = {scene, camera, sun, sky, hemi, fire, smoke, fireLights, gasket, manhole, shards, cars, people, umbrella, balloons, puffs, looseTires, sparks, glassBits, rain, rainFar, splash, splash2, blueLight, rig, phone, drops};
+  const S = {scene, camera, sun, sky, city, crowd, hemi, fire, smoke, fireLights, gasket, manhole, shards, cars, people, umbrella, balloons, puffs, looseTires, sparks, glassBits, rain, rainFar, splash, splash2, blueLight, rig, phone, drops};
   return {scene, camera, update: (shot, T) => updateStreet(S, shot, T)};
 }
 
@@ -154,6 +158,7 @@ function mood(S, kind) {
   S.scene.fog.color.set(night ? '#2b211d' : '#8d97a3'); S.scene.fog.near = night ? 15 : 25; S.scene.fog.far = night ? 150 : 190;
   S.hemi.intensity = night ? 0.35 : 1.5; S.sun.intensity = night ? 0.12 : 1.4;
   S.fireLights.forEach(l => l.intensity = 0);
+  S.city.skyline.forEach((m, i) => m.color.set(night ? ['#3a2e2b', '#43342f', '#352a27'][i] : ['#8f99a5', '#a3acb6', '#8a949f'][i]));
 }
 function shake(cam, t, amp = 0.012, seed = 1) { cam.position.x += noise1(t, seed) * amp; cam.position.y += noise1(t, seed + 5) * amp; cam.rotation.z += noise1(t * 0.7, seed + 9) * amp * 0.5; }
 function look(cam, p, t) { cam.position.copy(p); cam.lookAt(t); }
@@ -194,8 +199,8 @@ function updateStreet(S, shot, T) {
   const traffic = (tv, n = 14, base = 0, decel = 6, stopNear = 0) => {
     const list = [];
     for (let i = 0; i < n; i++) {
-      const lane = i % 4, x = LANES[lane], dir = lane >= 2 ? 1 : -1, v = dir * (11 + (i * 7 % 5));
-      const z0 = base + (lane >= 2 ? -1 : 1) * (8 + Math.floor(i / 4) * 17 + (i * 13 % 7)) + stopNear * dir;
+      const lane = i % 4, x = LANES[lane], dir = lane >= 2 ? 1 : -1, v = dir * (11 + lane * 0.7);
+      const z0 = base + (lane >= 2 ? -1 : 1) * (8 + Math.floor(i / 4) * 19 + lane * 3) + stopNear * dir;
       const c = S.cars[i];
       const get = tb => ({x, dir, z: slideZ(z0, v, tv, decel, tb)});
       const z = get(t).z;
@@ -363,7 +368,7 @@ function updateStreet(S, shot, T) {
         {type: 'smoke', pos: V3(-1.6, 2, -10), r: 1.5, t0: -9, size: 4, rise: 2.5, share: 2}, {type: 'smoke', pos: V3(11, 8, -3), r: 3, t0: -9, size: 6, rise: 2.2, share: 3},
         {type: 'smoke', pos: V3(-11, 6, -30), r: 3, t0: -9, size: 8, rise: 2.5, share: 3});
       S.fireLights[0].position.set(-1.6, 2, -10); S.fireLights[1].position.set(10.5, 4, -2); S.fireLights[2].position.set(4.8, 2, 10);
-      S.fireLights.forEach((l, i) => l.intensity = 90 * flicker(T, i));
+      S.fireLights.forEach((l, i) => l.intensity = 90 * (0.88 + 0.12 * Math.sin(T * 2.3 + i * 2)));
       for (let i = 0; i < 4; i++) { const p = S.people[i]; p.visible = true; p.position.set(8 + i * 0.9, 0.15, 6 + i * 3); posePerson(p, {fall: 1, slipSide: 1}); }
       break;
     }
@@ -399,14 +404,14 @@ function updateStreet(S, shot, T) {
         const lane = i % 4, c = S.cars[i], dir = lane >= 2 ? 1 : -1;
         const z = -60 + Math.floor(i / 4) * 12.5 + (i * 37 % 5) - (lane % 2) * 4;
         placeCar(c, LANES[lane] + Math.sin(i * 3.1) * 0.5, z, dir, 1, 0, true, 0); c.rotation.y += Math.sin(i * 1.7) * 0.25;
-        if (c.userData.blue) { const on = Math.floor(T * 6) % 2; c.userData.blue[0].material.emissiveIntensity = on ? 5 : 0; c.userData.blue[1].material.emissiveIntensity = on ? 0 : 5; }
+        if (c.userData.blue) { const ph = Math.sin(T * Math.PI * 2 * 1.2); c.userData.blue[0].material.emissiveIntensity = 2.5 + 2.5 * ph; c.userData.blue[1].material.emissiveIntensity = 2.5 - 2.5 * ph; }
       }
       S.cars[32].position.set(-1.6, 0, -6); S.cars[33].position.set(4.8, 0, 12);
       [[-1.6, -40], [4.8, -18], [1.6, 4], [-4.8, 20]].forEach(([x, z], i) => fx.push({type: 'flame', pos: V3(x, 0.8, z), r: 1.6, t0: -5, size: 2.2, share: 2}, {type: 'smoke', pos: V3(x, 3, z), r: 2, t0: -9, size: 9, rise: 3, share: 2}));
       [[11.6, -25, 5], [-11.6, 8, 8], [11.6, 40, 4]].forEach(([x, z, y]) => fx.push({type: 'flame', pos: V3(x, y, z), r: 3.5, t0: -5, size: 3.5, share: 3}, {type: 'smoke', pos: V3(x, y + 4, z), r: 3, t0: -9, size: 14, rise: 3, share: 3}));
       S.fireLights[0].position.set(11, 6, -25); S.fireLights[1].position.set(-11, 9, 8); S.fireLights[2].position.set(0, 3, -18);
-      S.fireLights.forEach((l, i) => l.intensity = 300 * flicker(T, i));
-      S.blueLight.position.set(-1.6, 3, -6); S.blueLight.intensity = Math.floor(T * 6) % 2 ? 60 : 0;
+      S.fireLights.forEach((l, i) => l.intensity = 220 * (0.88 + 0.12 * Math.sin(T * 2.1 + i * 2)));
+      S.blueLight.position.set(-1.6, 3, -6); S.blueLight.intensity = 6 + 6 * Math.sin(T * Math.PI * 2 * 1.2);
       for (let i = 0; i < 10; i++) { const p = S.people[i]; p.visible = true; p.position.set(7.5 + (i % 3) * 1.2, 0.15, -30 + i * 6); p.rotation.y = i * 1.3; posePerson(p, {walk: 0, walkAmp: 0, look: Math.sin(T + i) * 0.4}); }
       look(cam, V3(14 - t * 0.5, 34 - t * 0.6, 30 - t * 1.0), V3(0, 0, -12 - t * 0.6)); cam.fov = 46;
       break;
@@ -414,6 +419,10 @@ function updateStreet(S, shot, T) {
   }
   S.fire.visible = fx.some(f => f.type === 'flame' || f.type === 'burst'); S.smoke.visible = fx.some(f => f.type === 'smoke' || f.type === 'burstSmoke'); S.shards.visible = shardsE.length > 0; S.sparks.visible = emitters.length > 0; S.glassBits.visible = glass.length > 0;
   S.fireLights.forEach(l => l.visible = l.intensity > 0); S.blueLight.visible = S.blueLight.intensity > 0;
+  { const mode = shot.id === 'intro' || (shot.id === 'balloons' && T < VANISH) ? 'walk' : 'chaos';
+    const avoid = S.people.filter(p => p.visible).map(p => ({x: p.position.x, z: p.position.z, r: 1.6})); avoid.push({x: cam.position.x, z: cam.position.z, r: 5});
+    S.city.furniture.forEach(g => { g.visible = Math.hypot(g.position.x - cam.position.x, g.position.z - cam.position.z) > 3.2; });
+    updateCrowd(S.crowd, T, mode, avoid); }
   updateSparks(S.sparks, emitters, t);
   updateParticles(S.fire, fx.filter(f => f.type === 'flame' || f.type === 'burst'), t);
   updateParticles(S.smoke, fx.filter(f => f.type === 'smoke' || f.type === 'burstSmoke'), t);

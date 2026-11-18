@@ -107,7 +107,7 @@ def amb(name, t0, t1, db, off=0.0, xf=0.8, speed=1.0):
 amb('fsd_rain_heavy', 0, 10.2, -11, off=3)
 amb('fsd_traffic', 0, 5.2, -12)
 add('fsd_crowd', 4.2, 5.8, db=-15, fin=0.3)
-amb('fsd_rain_heavy', 10, 14.5, -24, off=3)                 # Gummibärchen: drinnen
+amb('fsd_rain_heavy', 10, 14.5, -19, off=3)                 # Gummibärchen: drinnen
 amb('fsd_rain_heavy', 14.5, 26.5, -12, off=3)
 add('fsd_crowd', 14.5, 5.5, db=-21, off=5)
 amb('fsd_rain_heavy', 26.5, 32.6, -4, off=3)                 # Handy ganz nah im Regen
@@ -116,8 +116,32 @@ amb('fsd_rain_heavy', 41.5, 47, -34, off=3)                 # Küche
 amb('fsd_rain_heavy', 47, 54, -18, off=3)
 amb('fsd_rain_heavy', 54, 61, -26, off=3)
 add('fsd_thunder', 66.5, 3.6, db=-4, off=2, speed=0.6, fin=0.3, fout=0.4)  # Grollen über der Erde
-amb('fsd_rain_heavy', 70, 87, -14, off=3)
-amb('fsd_fire', 70, 87, -8)
+amb('fsd_rain_heavy', 70, 90, -14, off=3)
+amb('fsd_fire', 70, 90, -8)
+
+# ---------------- Stadt ----------------
+amb('fsd_city_hum', 0, 5.4, -10)                                              # Verkehr läuft noch
+add('fsd_car_pass', 0.3, 4.6, db=-8, peak_win=3, fin=0.3, fout=0.4, pan=-0.4)
+add('fsd_bus', 1.5, 3.6, db=-16, fin=0.6, fout=0.5, pan=0.5)
+add('fsd_bell', 2.4, 0.3, db=-18, pan=0.6)
+add('fsd_crowd2', 0, 5.3, db=-18, fin=0.3, fout=0.3)
+amb('fsd_city_hum', 5.0, 10.2, -16)                                           # danach: Stadt verstummt nicht ganz
+amb('fsd_crowd2', 4.2, 10.0, -16)
+add('fsd_bus_brake', 6.0, 4.0, db=-17, off=2, fin=0.3, fout=0.8, pan=-0.5)
+amb('fsd_city_hum', 14.5, 26.5, -17)
+amb('fsd_crowd2', 14.5, 20.0, -17)
+add('fsd_dog', 21.0, 5.5, db=-24, fin=0.3, fout=1.0, pan=0.6)
+amb('fsd_crowd', 20.0, 26.5, -18)
+amb('fsd_city_hum', 32.5, 41.5, -18)
+amb('fsd_crowd2', 32.5, 41.5, -19)
+add('fsd_horn1', 34.8, 1.6, db=-15, pan=-0.6)
+add('fsd_horn3', 37.0, 1.6, db=-17, pan=0.5)
+add('fsd_horn1', 40.2, 1.6, db=-13, pan=0.3)
+amb('fsd_city_hum', 47, 54, -18)
+amb('fsd_crowd2', 47, 51.2, -18)
+add('fsd_dog', 51.5, 2.5, db=-18, off=8, fin=0.1, fout=0.8, pan=-0.6)
+amb('fsd_city_hum', 70, 90, -20)
+add('fsd_horn3', 71.2, 1.6, db=-15, pan=0.5)
 
 # ---------------- Countdown-Ticks ----------------
 clock = load('fsd_clock')
@@ -132,7 +156,7 @@ add('fsd_thunder', 4.98, 3.0, db=-1, peak_win=0.4, fout=2.0)      # Moment des V
 add('fsd_gasp', 5.35, 1.6, db=-15, fout=0.4)
 add('fsd_crinkle', 10.15, 3.5, db=-3, fin=0.05, fout=0.6)
 # ---------------- Stufe 2: peinlich ----------------
-add('fsd_laugh', 15.6, 4.4, db=-11, fin=0.2, fout=1.0)
+add('fsd_gasp', 15.4, 1.8, db=-14, fout=0.5)                                 # erschrockenes Luftholen statt Gelächter
 # ---------------- Stufe 3: schmerzhaft ----------------
 for i in range(6):
     hit = 20 + 3.0 + i * 0.32 + (i % 2) * 0.25 + 0.56
@@ -181,12 +205,14 @@ add('fsd_thunder', 69.98, 2.5, db=-2, peak_win=0.4, fout=1.5)
 add('fsd_siren_eu', 72.0, 6.0, db=-11, off=4, fin=1.0, fout=0.6)
 add('fsd_horn1', 73.4, 1.6, db=-12, pan=0.3)
 add('fsd_horn3', 76.0, 1.6, db=-14, pan=-0.4)
-add('fsd_siren_eu', 78.0, 7.0, db=-9, off=10, fin=0.3, fout=1.0)
-add('fsd_siren2', 78.0, 7.0, db=-13, fin=0.3, fout=1.0, pan=0.4)
+add('fsd_siren_eu', 78.0, 12.0, db=-9, off=10, fin=0.3, fout=2.5)
+add('fsd_siren2', 78.0, 11.3, db=-13, fin=0.3, fout=2.0, pan=0.4)
 add('fsd_horn1', 79.3, 1.6, db=-13, pan=-0.5)
 add('fsd_horn3', 81.2, 1.6, db=-15, pan=0.5)
 add('fsd_horn1', 83.0, 1.2, db=-14)
-add('fsd_crowd', 78.0, 7.0, db=-22, fin=0.5, fout=1.0)
+add('fsd_crowd', 78.0, 12.0, db=-22, fin=0.5, fout=2.5)
+add('fsd_horn3', 86.2, 1.6, db=-17, pan=-0.3)
+add('fsd_dog', 84.0, 6.0, db=-26, off=2, fin=0.5, fout=2.0)
 
 # ---------------- Ausgabe ----------------
 peak = np.abs(mix).max()
@@ -195,7 +221,7 @@ tmp = os.path.join(HERE, 'mix_roh.wav')
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', tmp], input=mix.tobytes(), check=True)
 out = os.path.join(HERE, 'mix.wav')
 # TikTok-Lautheit: ca. -14 LUFS, Spitzen begrenzt
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'loudnorm=I=-14:TP=-1.5:LRA=14,alimiter=limit=0.85:attack=2:release=60', '-ar', str(SR), '-c:a', 'pcm_s16le', out], check=True)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'acompressor=threshold=-30dB:ratio=3:attack=15:release=400:makeup=6,loudnorm=I=-14:TP=-1.5:LRA=11,alimiter=limit=0.85:attack=2:release=60', '-ar', str(SR), '-c:a', 'pcm_s16le', out], check=True)
 os.remove(tmp)
 print('mix.wav fertig, Ticks:', len(ticks))
 

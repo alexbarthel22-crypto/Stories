@@ -18,8 +18,7 @@ export const SHOTS = [
   {id: 'rocket', t0: 61, t1: 66.5},       // Stufe 7: Rakete explodiert
   {id: 'globe', t0: 66.5, t1: 70},        // Stufe 7: die Welt brennt
   {id: 'back', t0: 70, t1: 78},           // Gummi zurück, Straße brennt
-  {id: 'later', t0: 78, t1: 85},          // 5 Minuten später, Luftbild bei Nacht
-  {id: 'end', t0: 85, t1: 90},
+  {id: 'later', t0: 78, t1: 90},          // 5 Minuten später, Luftbild bei Nacht
 ];
 
 export const VANISH = 5.0, RETURN = 70.0;
@@ -63,6 +62,7 @@ export const CAPTIONS = [
   [66.8, 69.9, 'Überall auf der Welt. Gleichzeitig.'],
   [70.6, 73.8, 'Der Gummi ist zurück.'],
   [74.0, 77.8, 'Aber die Welt brennt.'],
-  [78.4, 81.4, 'Fünf Minuten später: Jede Straße ist blockiert.'],
-  [81.6, 84.8, 'Kein Krankenwagen kommt durch. Alle stehen auf Felgen.'],
+  [78.4, 81.8, 'Fünf Minuten später: Jede Straße ist blockiert.'],
+  [82.0, 85.6, 'Kein Krankenwagen kommt durch. Alle stehen auf Felgen.'],
+  [85.9, 89.8, 'Zehn Sekunden ohne Gummi. Und nichts ist mehr, wie es war.'],
 ];
