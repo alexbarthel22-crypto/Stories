@@ -209,6 +209,165 @@ def stille_drone(d=20):
     x = x * (0.7 + 0.3 * smooth_rand(d, 0.2)) + lp(brown(d), 120) * 0.3
     return fade(stereo(x, np.roll(x, 900)), 3, 3)
 
+# ---------- Spannung & Umgebung (Story "Jens – 18:30") ----------
+def tippen(d=3.0):
+    x = np.zeros(int(d * SR)); s = 0.05
+    while s < d - 0.1:
+        n = int(0.03 * SR); c = hp(noise(0.03), 2500, 2) * env_ad(n, 0.0005, 0.004) + bp(noise(0.03), 300, 900, 2) * env_ad(n, 0.001, 0.006) * 0.4
+        i = int(s * SR); x[i:i + n] += c * R.uniform(0.5, 1.0); s += R.uniform(0.07, 0.16)
+    return reverb(x, 0.2, 0.08)
+
+def gesendet():
+    d = 0.45; tt = t_(d); k = tt / d
+    w = bp(noise(d), 600, 5000, 2) * np.sin(np.pi * k) ** 2
+    blip = np.sin(2 * np.pi * np.cumsum(900 + 900 * k) / SR) * np.exp(-((tt - 0.3) / 0.05) ** 2) * 0.5
+    return lp(w * 0.6 + blip, 6000)
+
+def stich(d=5.0):
+    # Kino-"Hit": tiefer Schlag + metallischer Nachklang + Sub-Abfall
+    tt = t_(d)
+    boom = np.sin(2 * np.pi * (48 * np.exp(-tt * 0.6) + 22) * tt) * np.exp(-tt * 1.2)
+    crack = lp(noise(d), 2500) * np.exp(-tt * 18) * 0.8
+    metal = sum(np.sin(2 * np.pi * f * tt + R.uniform(0, 6)) * np.exp(-tt * dk) * a for f, dk, a in ((311, 1.1, 0.3), (437, 1.6, 0.22), (622, 2.2, 0.15), (893, 3.0, 0.1), (1291, 4.0, 0.06)))
+    x = reverb(boom * 1.2 + crack + metal, 3.0, 0.45)
+    return stereo(x, np.roll(x, 400))
+
+def braam(d=4.0):
+    tt = t_(d); e = np.minimum(1, tt / 0.08) * np.exp(-tt * 0.5)
+    x = sum(signal.sawtooth(2 * np.pi * f * tt * (1 + 0.002 * k)) for k, f in enumerate((41.2, 41.4, 82.4, 61.7, 123.5))) * e
+    cut = 200 + 1800 * np.exp(-tt * 1.4); y = np.zeros_like(x); seg = SR // 50
+    for i in range(0, len(x), seg): y[i:i + seg] = lp(x[max(0, i - seg):i + seg], max(80, cut[i]), 2)[-len(x[i:i + seg]):]
+    y = reverb(y, 2.5, 0.4)
+    return stereo(y, np.roll(y, 300))
+
+def summen(d=4.0):
+    # Laterne flackert: Netzbrummen, das an- und abreißt, mit Knacksern
+    tt = t_(d); b = signal.sawtooth(2 * np.pi * 100 * tt) * 0.6 + np.sin(2 * np.pi * 50 * tt) * 0.5 + signal.square(2 * np.pi * 200 * tt) * 0.15
+    b = bp(b, 80, 4000, 2) + hp(noise(d), 3000, 2) * 0.06
+    gate = (np.sin(tt * 31) + np.sin(tt * 53) + (np.sin(tt * 7) > 0.6) * 2 > 1.2).astype(float)
+    gate = lp(gate, 200, 1)
+    x = b * (0.45 + 0.55 * gate)
+    for _ in range(int(d * 2)):
+        i = int(R.uniform(0, d - 0.03) * SR); c = hp(noise(0.015), 1500) * env_ad(int(0.015 * SR), 0.0005, 0.003); x[i:i + len(c)] += c * 0.5
+    return pan(reverb(x * np.minimum(1, np.minimum(tt / 0.1, (d - tt) / 0.3)), 0.6, 0.2), 0.25)
+
+def schritt(hart=1.0):
+    n = int(0.16 * SR); tt = t_(0.16)
+    thump = np.sin(2 * np.pi * 70 * tt) * env_ad(n, 0.002, 0.025) * 0.7
+    grit = bp(noise(0.16), 900, 5000, 2) * env_ad(n, 0.001, 0.03) * 0.5 * hart
+    grit2 = bp(noise(0.16), 2000, 8000, 2) * env_ad(n, 0.02, 0.04) * 0.25 * np.roll(np.ones(n), 0)
+    return thump + grit + np.roll(grit2, int(0.03 * SR))
+
+def atmer(d, rate=1.6, laut=1.0, rau=1.0):
+    """schweres Atmen: ein/aus als gefiltertes Rauschen mit Formanten"""
+    x = np.zeros(int(d * SR)); s = 0.0; k = 0
+    while s < d - 0.6:
+        per = 1 / rate * R.uniform(0.9, 1.1); inh = k % 2 == 0; L = int(per * 0.5 * SR); e = np.sin(np.linspace(0, np.pi, L)) ** (1.5 if inh else 1.0)
+        src = noise(per * 0.5)
+        v = (bp(src, 500, 1300, 2) * 0.8 + bp(src, 1600, 2600, 2) * 0.5 + bp(src, 2800, 4200, 2) * 0.25 * rau) * e * (0.7 if inh else 1.0)
+        i = int(s * SR); x[i:i + L] += v[:len(x) - i] * laut; s += per * 0.5; k += 1
+    return x
+
+def jogger(d=5.0):
+    tt = t_(d); x = np.zeros(len(tt)); c = 2.4; s = 0.1
+    while s < d - 0.2:
+        st = schritt(0.8) * R.uniform(0.7, 1.0); i = int(s * SR); x[i:i + len(st)] += st[:len(x) - i]; s += 1 / 2.9
+    x += atmer(d, 2.9, 0.6)
+    prox = 1 / (1 + ((tt - c) / 0.8) ** 2)
+    x = lp(x, 6000) * prox
+    return fade(pan(reverb(x, 0.5, 0.15), np.tanh((tt - c) / 0.9) * -0.85), 0.2, 0.4)
+
+def transporter(d=9.0, stop=4.2):
+    # Motor nähert sich (Drehzahl steigt), Reifen quietschen, dann Leerlauf
+    tt = t_(d); rpm = np.where(tt < stop - 0.6, 34 + 10 * np.minimum(1, tt / 2.5), 0.0)
+    rpm = np.where(tt >= stop - 0.6, 24, rpm); rpm = lp(rpm, 3, 1)
+    ph = 2 * np.pi * np.cumsum(rpm) / SR
+    eng = sum(np.sin(ph * k + 0.3 * k) / k ** 0.8 for k in range(1, 14)) * (1 + 0.3 * np.sin(ph * 0.5))
+    eng = lp(eng, 1300) + lp(brown(d), 200) * 0.4
+    near = np.minimum(1, (0.15 + tt / stop) ** 2); near = np.where(tt > stop, 1.0, near)
+    eng *= near * np.where(tt > stop, 0.55, 1.0)
+    tire = bp(noise(d), 300, 2500, 2) * near * np.where(tt < stop, 0.35, 0.0)
+    sq = np.zeros(len(tt)); i0 = int((stop - 0.85) * SR); L = int(0.95 * SR); k = np.linspace(0, 1, L)
+    f = 1900 + 300 * np.sin(2 * np.pi * 7 * k) - 400 * k
+    sq[i0:i0 + L] = (np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.5 + bp(noise(0.95), 1500, 4000, 2)[:L] * 0.6) * np.sin(np.pi * k) ** 0.5
+    x = eng * 0.9 + tire + sq * 0.8
+    x = reverb(x, 0.9, 0.25)
+    return fade(pan(x, np.clip(0.85 - tt / stop * 0.6, 0.25, 0.85)), 0.8, 0.8)
+
+def tueren():
+    d = 2.0; x = np.zeros(int(d * SR))
+    for st, v in ((0.05, 1.0), (0.62, 0.8)):
+        n = int(0.4 * SR); tt = t_(0.4)
+        slam = np.sin(2 * np.pi * 62 * tt) * env_ad(n, 0.002, 0.06) + bp(noise(0.4), 150, 1400, 2) * env_ad(n, 0.001, 0.035) * 0.9
+        latch = hp(noise(0.4), 2500) * env_ad(n, 0.0005, 0.006) * 0.4
+        i = int(st * SR); x[i:i + n] += (slam + np.roll(latch, int(0.012 * SR))) * v
+    return pan(reverb(x, 1.0, 0.3), 0.3)
+
+def glocke(d=12.0, f0=98.0):
+    # Kirchturmglocke in der Ferne, schlägt einmal (halbe Stunde)
+    tt = t_(d); x = np.zeros(len(tt))
+    for r_, a, dk in ((0.5, 0.5, 0.35), (1.0, 1.0, 0.6), (1.183, 0.6, 0.9), (1.506, 0.45, 1.1), (2.0, 0.5, 1.3), (2.514, 0.25, 1.8), (2.662, 0.2, 2.0), (3.011, 0.15, 2.4)):
+        x += np.sin(2 * np.pi * f0 * r_ * tt * (1 + 0.0007 * np.sin(2 * np.pi * 1.5 * tt))) * a * np.exp(-tt * dk * 0.45)
+    x[:int(0.004 * SR)] *= np.linspace(0, 1, int(0.004 * SR))
+    x = lp(x, 1800) + bp(noise(d), 600, 2500) * np.exp(-tt * 30) * 0.3
+    x = reverb(x, 5.0, 0.7, 0.12)
+    return pan(x, -0.45)
+
+def rennen(d=7.0, rate=3.3):
+    # eigene Schritte im Sprint + Kleidung + schweres Atmen
+    x = np.zeros(int(d * SR)); s = 0.05
+    while s < d - 0.2:
+        st = schritt(1.1) * R.uniform(0.75, 1.0) * 1.3; i = int(s * SR); x[i:i + len(st)] += st[:len(x) - i]; s += 1 / rate * R.uniform(0.96, 1.04)
+    rust = bp(noise(d), 1000, 5000, 2) * (0.5 + 0.5 * np.abs(np.sin(np.pi * rate * t_(d)))) * 0.08
+    br = atmer(d, 2.4, 0.9)
+    tt = t_(d); env = np.minimum(1, np.minimum(tt / 0.3, (d - tt) / 0.6))
+    return pan(reverb((x + rust + br) * env, 0.5, 0.15), 0.0)
+
+def atem_schwer(d=8.0):
+    tt = t_(d); rate = 2.4 - 1.1 * tt / d
+    x = np.zeros(int(d * SR)); s = 0
+    seg = atmer(d, 1.0, 1.0)  # Platzhalter für Länge
+    x = atmer(d, 2.0, 1.0) * np.linspace(1, 0.6, len(x))
+    return pan(reverb(x, 0.4, 0.12), 0.0)
+
+def laub(d=60):
+    # Blätterrascheln im Wind (loop)
+    g = smooth_rand(d, 0.25, 0.1, 1.0) ** 1.6
+    ch = []
+    for k in range(2):
+        grains = (R.random(int(d * SR)) < 0.004 * (0.3 + g)).astype(float)
+        grains = lp(grains * R.uniform(0.3, 1, int(d * SR)), 9000, 1)
+        g2 = signal.fftconvolve(grains, np.exp(-np.arange(int(0.006 * SR)) / (0.0015 * SR)))[:int(d * SR)]
+        ch.append(hp(g2 * noise(d), 1800, 2) * 0.6 + bp(noise(d), 2500, 7000, 2) * g * 0.12)
+    return loopable(stereo(*ch))
+
+def zug_fern(d=22.0):
+    tt = t_(d); env = np.minimum(1, np.minimum(tt / 6, (d - tt) / 6)) ** 1.5
+    rum = lp(brown(d), 160) * 0.9; cl = np.zeros(len(tt)); s = 0.4
+    while s < d - 0.5:
+        for o in (0, 0.13):
+            n = int(0.08 * SR); c = bp(noise(0.08), 150, 900, 2) * env_ad(n, 0.002, 0.02); i = int((s + o) * SR); cl[i:i + n] += c
+        s += 0.92
+    horn = (np.sin(2 * np.pi * 370 * tt) + np.sin(2 * np.pi * 440 * tt) * 0.8) * ((tt > 7) & (tt < 8.6)) * 0.25
+    horn = lp(horn, 1500) * np.minimum(1, np.minimum((tt - 7) / 0.15, (8.6 - tt) / 0.3)).clip(0, 1)
+    x = reverb((rum + cl * 0.6 + horn) * env, 3.0, 0.6)
+    return pan(lp(x, 1500), np.linspace(-0.6, 0.4, len(x)))
+
+def funk_knacken():
+    d = 0.35; x = bp(noise(d), 800, 3500, 2) * env_ad(int(d * SR), 0.003, 0.08)
+    beep = np.sin(2 * np.pi * 1200 * t_(0.08)) * 0.4; x[:len(beep)] += beep
+    return x
+
+def hund_fern(d=6.0):
+    # entfernter Hund: kurze, raue Bell-Laute
+    x = np.zeros(int(d * SR)); s = 0.4
+    for k in range(4):
+        L = int(0.18 * SR); tt = t_(0.18); f = 520 - 900 * (tt - 0.05) ** 2 * 10
+        v = signal.sawtooth(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / 0.18) ** 0.6
+        v = bp(v, 400, 2200, 2) + bp(noise(0.18), 600, 1800, 2) * 0.3 * np.sin(np.pi * tt / 0.18)
+        i = int(s * SR); x[i:i + L] += v; s += R.uniform(0.35, 0.6) if k % 2 == 0 else R.uniform(0.9, 1.3)
+    return pan(lp(reverb(x, 2.0, 0.65), 2500), 0.6)
+
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)
@@ -217,3 +376,7 @@ if __name__ == '__main__':
     save('klingelton.wav', klingelton()); save('anruf_ende.wav', anruf_ende()); save('sirene_fern.wav', sirene_fern())
     save('stromausfall.wav', stromausfall()); save('herzschlag.wav', herzschlag()); save('hubschrauber_fern.wav', hubschrauber_fern())
     save('riser.wav', riser()); save('drone.wav', stille_drone())
+    save('tippen.wav', tippen(), 0.5); save('gesendet.wav', gesendet(), 0.5); save('stich.wav', stich()); save('braam.wav', braam())
+    save('summen.wav', summen(), 0.7); save('jogger.wav', jogger(), 0.8); save('transporter.wav', transporter()); save('tueren.wav', tueren())
+    save('glocke.wav', glocke(), 0.8); save('rennen.wav', rennen()); save('atem_schwer.wav', atem_schwer(), 0.8); save('atmo_laub.wav', laub(), 0.6)
+    save('zug_fern.wav', zug_fern(), 0.7); save('funk_knacken.wav', funk_knacken(), 0.6); save('hund_fern.wav', hund_fern(), 0.6)

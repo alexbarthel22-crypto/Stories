@@ -14,10 +14,25 @@ const HANDS = {
   aufstuetzen: (s) => ({ p: V(s * 0.27, 0.92, -0.58), f: V(s * 0.15, -0.25, -1), u: V(0, 1, 0), c: [0.15, 0.15] }),
   vor: (s) => ({ p: V(s * 0.22, 1.12, -0.5), f: V(s * 0.12, 0.25, -1), u: V(0, 1, 0.25), c: [0.1, 0.1] }),
   zeigen: (s) => (s > 0 ? { p: V(0.2, 1.36, -0.64), f: V(0.15, 0.12, -1), u: V(0, 1, 0), c: [0, 1] } : HANDS.runter(s)),
-  handy: (s) => (s > 0 ? { p: V(0.05, 1.33, -0.27), f: V(-0.15, 1, 0.3), u: V(0, -0.3, -1), c: [0.6, 0.6] } : HANDS.runter(s)),
-  handy_beide: (s) => ({ p: V(s * 0.07, 1.33, -0.27), f: V(-s * 0.4, 1, 0.25), u: V(0, -0.25, -1), c: [0.6, 0.6] }),
+  handy: (s) => (s > 0 ? phoneGrip(s) : HANDS.runter(s)),
+  handy_beide: (s) => phoneGrip(s),
+  rennen: (s) => ({ p: V(s * 0.27, 1.0, -0.12), f: V(s * 0.1, 0.6, -1), u: V(s, 0.3, 0), c: [0.9, 0.9] }),
   abwehr: (s) => ({ p: V(s * 0.2, 1.3, -0.42), f: V(s * 0.1, 1, -0.2), u: V(0, 0.2, 1), c: [0, 0] }),
 };
+// Handy-Platz vor dem Gesicht (Körperkoordinaten). Bildschirm zeigt zum Auge; die Hand liegt dahinter.
+export const PHONE_AT = V(0.03, 1.43, -0.29);
+const EYE_L = V(0, 1.62, 0.0);
+function phoneFrame() {
+  const n = EYE_L.clone().sub(PHONE_AT).normalize();
+  const up = V(0, 1, 0).addScaledVector(n, -n.y).normalize();
+  return { n, up, side: new THREE.Vector3().crossVectors(up, n).normalize() };
+}
+function phoneGrip(s) {
+  const { n, up, side } = phoneFrame();
+  // Handfläche hinter dem unteren Drittel, Finger zeigen am Rücken nach oben; links = Daumen/Stütze von der Seite
+  const p = PHONE_AT.clone().addScaledVector(n, -0.032).addScaledVector(up, -0.075).addScaledVector(side, s > 0 ? 0.006 : -0.03);
+  return { p, f: up.clone().addScaledVector(side, -s * 0.15), u: n.clone().negate(), c: [0.05, 0.08] };
+}
 export const POV_POSES = Object.keys(HANDS);
 
 export class PovBody {
@@ -38,7 +53,7 @@ export class PovBody {
       this.root.add(sleeve, cuff, hand.g);
       return { s, sleeve, cuff, hand, shoulder: V(s * 0.21, 1.3, 0.14) };
     });
-    this.phone = phoneMesh(); this.phone.scale.setScalar(1.25); this.root.add(this.phone); this.phone.visible = false;
+    this.phone = phoneMesh(); this.phone.scale.setScalar(1.4); this.root.add(this.phone); this.phone.visible = false;
     this.root.traverse((o) => { if (o.isMesh && !o.material.isShaderMaterial) o.castShadow = true; });
     this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion();
   }
@@ -64,13 +79,14 @@ export class PovBody {
       // leichtes Zittern / Atmen
       p.y += Math.sin(st.t * 1.7 + arm.s) * 0.006; p.x += Math.sin(st.t * 1.1 + arm.s * 2) * 0.004;
       if (st.walk > 0.1 && (st.pose === 'runter')) p.z += Math.sin(st.t * 7.5 + (arm.s > 0 ? 0 : Math.PI)) * 0.12 * Math.min(1, st.walk);
+      if (st.pose === 'rennen') { const ph = st.t * 10 + (arm.s > 0 ? 0 : Math.PI); p.z += Math.sin(ph) * 0.2 * Math.min(1, st.walk); p.y += Math.cos(ph) * 0.07 * Math.min(1, st.walk); }
       // Hand ausrichten: lokale -Z = Fingerrichtung, +Y = Handrücken
       const z = f.clone().negate(), x = new THREE.Vector3().crossVectors(u, z).normalize(), y = new THREE.Vector3().crossVectors(z, x);
       this._m.makeBasis(x, y, z); arm.hand.g.quaternion.setFromRotationMatrix(this._m); arm.hand.g.position.copy(p);
       const c = [A.c[0] + (B.c[0] - A.c[0]) * k, A.c[1] + (B.c[1] - A.c[1]) * k];
       arm.hand.fingers.forEach((fp, i) => (fp.rotation.x = -1.5 * (i === 0 ? c[0] : c[1])));
       // Ärmel von Schulter bis Handgelenk
-      const wrist = p.clone().addScaledVector(f, 0.055);
+      const wrist = p.clone().addScaledVector(f, -0.062); // Handgelenk hinter dem Handballen
       const dir = wrist.clone().sub(arm.shoulder), len = dir.length(); dir.normalize();
       arm.sleeve.position.copy(arm.shoulder).addScaledVector(dir, len / 2 - 0.02);
       arm.sleeve.scale.set(1, len - 0.04, 1);
@@ -78,16 +94,18 @@ export class PovBody {
       arm.cuff.position.copy(wrist).addScaledVector(dir, -0.04); arm.cuff.quaternion.copy(arm.sleeve.quaternion);
     }
     // Beine laufen
-    const w = Math.min(1, (st.walk || 0) / 1.2), ph = st.t * 7.5;
+    const w = Math.min(1, (st.walk || 0) / 1.2), ph = st.t * (st.walk > 2.5 ? 10 : 7.5);
     this.legs[0].rotation.x = Math.sin(ph) * 0.45 * w; this.legs[1].rotation.x = -Math.sin(ph) * 0.45 * w;
     this.root.position.y = Math.abs(Math.cos(ph)) * 0.03 * w;
     // Handy in der rechten Hand, Bildschirm zum Auge
     const show = (st.pose === 'handy' || st.pose === 'handy_beide') && k > 0.3;
     this.phone.visible = show;
     if (show) {
-      const hp = this.arms[0].hand.g.position, both = st.pose === 'handy_beide';
-      this.phone.position.set(both ? 0 : hp.x - 0.005, hp.y + 0.06, hp.z + 0.025);
-      this.phone.lookAt(this.root.localToWorld(V(0, EYE, 0.05)));
+      // kleine Handbewegung mitnehmen, damit das Handy nicht "klebt"
+      const hp = this.arms[0].hand.g.position, base = phoneGrip(1).p;
+      this.phone.position.copy(PHONE_AT).add(hp.clone().sub(base).multiplyScalar(k));
+      this.phone.position.lerp(hp, 1 - k);
+      this.phone.lookAt(this.root.localToWorld(EYE_L.clone()));
     }
   }
 }

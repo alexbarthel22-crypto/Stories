@@ -12,12 +12,15 @@ export const info = {
   },
 };
 
+const flatDark = new THREE.MeshBasicMaterial({ color: '#2a2a30' });
 const PAL_CITY = ['#ebe5da', '#ddd0bd', '#cdb9a2', '#f1ece3', '#bcae9f', '#d9c4aa', '#aab2b8', '#c9937a', '#e2d6c6'];
 const PAL_ROOF = ['#7d5d4c', '#5f5c66', '#8c6c57', '#6e4a3e', '#9a8a7c'];
 const PAL_TREE = ['#c86c3c', '#d99d3d', '#7e8c3c', '#a9472f', '#b8822f', '#6d7d3a'];
+const PAL_CARS = ['#e9e6df', '#2d3a4a', '#b8b8b2', '#7a2a24', '#3f6b4a', '#d8a83a'];
 const PAL_ROW = ['#e8c7a6', '#cfd8c1', '#e8d8a4', '#c69f7a', '#d8b3ae', '#a9b9c9', '#e3e0d6'];
 
-export function build(scene, seed = 3) {
+export function build(scene, seed = 3, ctx = {}) {
+  const beats = ctx.beats || [], story = ctx.story || {};
   const r = rng(seed);
   const root = new THREE.Group(); scene.add(root);
   const add = (o) => (root.add(o), o);
@@ -137,6 +140,7 @@ export function build(scene, seed = 3) {
   }
 
   // ---------- Reihenhäuser hinter der Straße ----------
+  const winLit = new THREE.MeshBasicMaterial({ color: '#ffd98a' }), winDark = toon('#3b4656'), litWins = [];
   let x = -60;
   while (x < 60) {
     const w = 5.5 + r() * 3.5, h = 6.5 + r() * 4, col = PAL_ROW[(r() * PAL_ROW.length) | 0];
@@ -144,8 +148,9 @@ export function build(scene, seed = 3) {
     house.position.set(x + w / 2, h / 2, 18.7); add(house);
     const corn = edges(ink(new THREE.BoxGeometry(w, 0.35, 9.4), toon('#8a7a6a'), 0.6)); corn.position.set(x + w / 2, h + 0.1, 18.7); add(corn);
     for (let fy = 0; fy < 2; fy++) for (let fx = 0; fx < 2; fx++) {
-      const win = edges(ink(new THREE.BoxGeometry(1.1, 1.5, 0.1), toon('#3b4656'), 0.5));
+      const lit = r() < 0.45, win = edges(ink(new THREE.BoxGeometry(1.1, 1.5, 0.1), lit ? winLit : winDark, 0.5));
       win.position.set(x + w * (0.3 + fx * 0.42), 2.3 + fy * 3, 14.15); add(win);
+      if (lit) { litWins.push({ m: win, d: r() }); const fr = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.5, 0.12), flatDark); fr.position.copy(win.position); add(fr); }
     }
     const door = ink(new THREE.BoxGeometry(1.0, 2.1, 0.1), toon('#5a3b2b'), 0.5); door.position.set(x + w * 0.5, 1.05, 14.15); add(door);
     x += w;
@@ -171,10 +176,20 @@ export function build(scene, seed = 3) {
   add(car('#c43a2e', r)).position.set(-9, 0, 5.4);
   const c2 = add(car('#e9e6df', r)); c2.position.set(13, 0, 9.4); c2.rotation.y = Math.PI;
   const c3 = add(car('#6d8fb0', r)); c3.position.set(27, 0, 5.4);
+  // Fließender Verkehr: Beat-Feld "auto": {spur: 1|2, farbe, ab, tempo} -> fährt zur Zeit t0+ab an x=0 vorbei
+  const traffic = [];
+  for (const b of beats) for (const a of [].concat(b.auto || [])) {
+    const cg = add(car(a.farbe || PAL_CARS[traffic.length % PAL_CARS.length], r)); const lane = a.spur === 2 ? 2 : 1;
+    cg.position.set(0, 0, lane === 1 ? 6.0 : 8.9); cg.rotation.y = lane === 1 ? 0 : Math.PI; cg.visible = false;
+    const lights = headlights(cg); traffic.push({ g: cg, tc: b.t0 + (a.ab || 0), v: (a.tempo || 13) * (lane === 1 ? 1 : -1), lights });
+  }
   // Mülltonne
   const bin = add(edges(ink(new THREE.CylinderGeometry(0.3, 0.27, 0.95, 14), toon('#2f5f9a'), 0.7))); bin.position.set(6, 0.47, 3.0);
 
   // pro Frame: Stromausfall-Zustand setzen. blackout = Sekunden seit Beginn (oder < 0), dur = Dauer der Welle
+  const flick = beats.filter((b) => b.effekt?.flackern).map((b) => ({ t0: b.t0 + (b.effekt.flackern_ab || 0), t1: b.t0 + (b.effekt.flackern_ab || 0) + b.effekt.flackern }));
+  const animBirds = birds(add, r), animLeaves = leaves(add, r, story.start || info.start), animPlane = plane(add);
+  const hb = beats.find((b) => b.effekt?.hubschrauber), animHeli = heli(add, hb ? { t0: hb.t0 + (hb.effekt.hubschrauber.ab || 0), ...hb.effekt.hubschrauber } : null);
   root.userData.update = ({ blackout = -1, dur = 3, px = 768, t = 0 }) => {
     const u = lightPts.material.uniforms; u.uT.value = blackout; u.uDur.value = dur; u.uPx.value = px; u.uTime.value = t;
     const off = blackout >= dur * 0.85 || (blackout >= dur * 0.7 && Math.sin(t * 50) > 0);
@@ -182,6 +197,13 @@ export function build(scene, seed = 3) {
     // Stadt wird nach und nach dunkler/bläulicher
     const k = blackout < 0 ? 0 : Math.min(1, blackout / (dur * 1.2));
     dimmable.forEach((m) => { if (!m.userData.base) m.userData.base = m.color.clone(); m.color.copy(m.userData.base).lerp(DIM, k * 0.86); });
+    litWins.forEach((w) => (w.m.material = blackout >= dur * (0.3 + w.d * 0.5) ? winDark : winLit));
+    // flackernde Laternen (Beat-Effekt "flackern": Sekunden)
+    const fl = flick.find((f) => t >= f.t0 && t < f.t1);
+    if (fl && !off) lamps.forEach((l, i) => { const h = Math.sin(t * 31 + i * 7) + Math.sin(t * 53 + i * 3) + (Math.sin(t * 7 + i) > 0.6 ? 2 : 0); l.material = h > 1.2 ? lampOff : lampOn; });
+    // Verkehr
+    for (const c of traffic) { const x = (t - c.tc) * c.v; c.g.visible = Math.abs(x) < 70; c.g.position.x = x; c.lights.visible = k > 0.2 || story.himmel === 'daemmerung'; c.g.children.forEach((w) => { if (w.userData.wheel) w.rotation.y = -x / 0.36; }); }
+    animBirds(t, blackout); animLeaves(t); animPlane(t); animHeli(t, k);
     const fog = root.parent?.fog; if (fog) { if (!fog.userData) fog.userData = {}; if (!fog.userData.base) fog.userData.base = fog.color.clone(); fog.color.copy(fog.userData.base).lerp(FOG_DIM, k * 0.8); }
   };
   return root;
@@ -223,6 +245,93 @@ function car(color, r) {
   const glass = ink(new THREE.BoxGeometry(2.0, 0.5, 1.74), toon('#4a5a6e'), 0); glass.position.set(-0.3, 1.36, 0); g.add(glass);
   for (const [x, z] of [[-1.4, 0.9], [1.4, 0.9], [-1.4, -0.9], [1.4, -0.9]]) {
     const w = ink(new THREE.CylinderGeometry(0.36, 0.36, 0.26, 16), toon('#1e1e20'), 0.7); w.rotation.x = Math.PI / 2; w.position.set(x, 0.36, z); g.add(w);
+    const hub = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.08, 0.27), toon('#9a9a9a')); hub.position.copy(w.position); hub.rotation.x = Math.PI / 2; hub.userData.wheel = true; g.add(hub);
   }
   return g;
+}
+
+// ---------- Details, die sich bewegen ----------
+const BEAM = new THREE.MeshBasicMaterial({ color: '#fff3c4', transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false });
+export function headlights(g, len = 9, front = 2.15) {
+  const grp = new THREE.Group(); g.add(grp);
+  for (const z of [-0.6, 0.6]) {
+    const l = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.16, 0.34), new THREE.MeshBasicMaterial({ color: '#fff6d6' })); l.position.set(front, 0.72, z); g.add(l);
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(1.6, len, 20, 1, true), BEAM); cone.rotation.z = Math.PI / 2; cone.position.set(front + len / 2, 0.55, z); grp.add(cone);
+  }
+  return grp;
+}
+function birds(add, r) {
+  // kleiner Vogelschwarm über dem Abhang; flattert, kreist, fliegt beim Stromausfall auf und davon
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute([-0.5, 0.25, 0, 0, 0, 0.12, 0, 0, -0.12, 0.5, 0.25, 0, 0, 0, -0.12, 0, 0, 0.12], 3));
+  const N = 18, m = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial({ color: '#221c26', side: THREE.DoubleSide }), N); add(m); m.frustumCulled = false;
+  const B = Array.from({ length: N }, () => ({ ph: r() * 6.28, rad: 9 + r() * 7, h: 6 + r() * 6, sp: 0.18 + r() * 0.08, fl: 9 + r() * 4, off: [(r() - 0.5) * 6, (r() - 0.5) * 3] }));
+  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), E = new THREE.Euler();
+  return (t, bo) => {
+    B.forEach((b, i) => {
+      const a = b.ph + t * b.sp, flee = bo > 0 ? bo : 0;
+      P.set(-8 + Math.cos(a) * b.rad + b.off[0], b.h + Math.sin(t * 0.7 + i) * 0.8 + flee * flee * 2.2, -26 + Math.sin(a) * b.rad * 0.6 + b.off[1] - flee * 9);
+      E.set(0, -a, Math.sin(t * 0.9 + i) * 0.3); Q.setFromEuler(E);
+      const flap = Math.sin(t * (flee ? 16 : b.fl) + i * 1.3); S.set(0.9, flap * 1.1, 0.9);
+      m.setMatrixAt(i, M.compose(P, Q, S));
+    });
+    m.instanceMatrix.needsUpdate = true;
+  };
+}
+function leaves(add, r, start) {
+  // Herbstlaub, das der Wind über den Gehweg treibt
+  const N = 70, geo = new THREE.PlaneGeometry(0.09, 0.06), m = new THREE.InstancedMesh(geo, toon('#ffffff', { side: THREE.DoubleSide, noCache: true }), N);
+  const C = new THREE.Color(), L = Array.from({ length: N }, () => ({ x: r() * 40, z: start[1] + (r() - 0.3) * 5.5, sp: 0.6 + r() * 1.6, ph: r() * 6.28, spin: 2 + r() * 6 }));
+  L.forEach((l, i) => m.setColorAt(i, C.set(PAL_TREE[(r() * PAL_TREE.length) | 0])));
+  m.receiveShadow = true; add(m); m.frustumCulled = false;
+  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(1, 1, 1), E = new THREE.Euler();
+  return (t) => {
+    const gust = 0.6 + 0.4 * Math.sin(t * 0.37) * Math.sin(t * 0.23 + 1);
+    L.forEach((l, i) => {
+      const x = ((l.x + t * l.sp * gust * 1.4) % 40) - 20 + start[0];
+      const hop = Math.max(0, Math.sin(t * l.sp * 3 + l.ph)) * 0.18 * gust;
+      P.set(x, 0.02 + hop, l.z + Math.sin(t * 0.8 + l.ph) * 0.3);
+      E.set(-Math.PI / 2 + Math.sin(t * l.spin + l.ph) * hop * 6, t * l.spin * 0.3 + l.ph, 0); Q.setFromEuler(E);
+      m.setMatrixAt(i, M.compose(P, Q, S));
+    });
+    m.instanceMatrix.needsUpdate = true;
+  };
+}
+function plane(add) {
+  // Flugzeug hoch am Himmel mit Blinklicht
+  const g = new THREE.Group(); add(g);
+  const mat = new THREE.MeshBasicMaterial({ color: '#3a3550', fog: false });
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(1.4, 16, 4, 8), mat); body.rotation.z = Math.PI / 2; g.add(body);
+  const wing = new THREE.Mesh(new THREE.BoxGeometry(4, 0.3, 26), mat); g.add(wing);
+  const tail = new THREE.Mesh(new THREE.BoxGeometry(2.5, 4, 0.3), mat); tail.position.set(-8, 2, 0); g.add(tail);
+  const blink = new THREE.Mesh(new THREE.SphereGeometry(1.6, 8, 6), new THREE.MeshBasicMaterial({ color: '#ff3b30', fog: false })); blink.position.y = -1.6; g.add(blink);
+  return (t) => { g.position.set(-700 + t * 9, 420, -1300); blink.visible = (t % 1.2) < 0.12; };
+}
+function heli(add, H) {
+  if (!H) return () => {};
+  // Polizeihubschrauber mit Suchscheinwerfer, der über die dunkle Stadt streicht
+  const g = new THREE.Group(); add(g); g.visible = false;
+  const dark = toon('#2a3442'), stripe = toon('#d9dde3');
+  const body = ink(new THREE.SphereGeometry(1.5, 16, 12), dark, 1.0); body.scale.set(1.6, 1, 1); g.add(body);
+  const band = ink(new THREE.SphereGeometry(1.52, 16, 12, 0, Math.PI * 2, 1.3, 0.35), stripe, 0.6); band.scale.set(1.6, 1, 1); g.add(band);
+  const boom = ink(new THREE.CylinderGeometry(0.22, 0.4, 5, 8), dark, 0.8); boom.rotation.z = Math.PI / 2; boom.position.x = -4; g.add(boom);
+  const fin = ink(new THREE.BoxGeometry(0.9, 1.4, 0.15), dark, 0.6); fin.position.set(-6.3, 0.6, 0); g.add(fin);
+  const rotor = new THREE.Mesh(new THREE.BoxGeometry(11, 0.06, 0.35), new THREE.MeshBasicMaterial({ color: '#141418', transparent: true, opacity: 0.75 })); rotor.position.y = 1.4; g.add(rotor);
+  const rotor2 = rotor.clone(); rotor2.rotation.y = Math.PI / 2; rotor.add(rotor2);
+  for (const z of [-0.9, 0.9]) { const sk = ink(new THREE.BoxGeometry(3.2, 0.1, 0.12), dark, 0.5); sk.position.set(0, -1.4, z); g.add(sk); }
+  const red = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 6), new THREE.MeshBasicMaterial({ color: '#ff2a2a', fog: false })); red.position.set(-6.4, 1.3, 0); g.add(red);
+  const beamPivot = new THREE.Group(); beamPivot.position.set(1.8, -1.2, 0); g.add(beamPivot);
+  const beamMat = new THREE.MeshBasicMaterial({ color: '#f3f6ff', transparent: true, opacity: 0.13, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false });
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(9, 90, 24, 1, true), beamMat); cone.position.y = -45; beamPivot.add(cone);
+  const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.45, 10, 8), new THREE.MeshBasicMaterial({ color: '#ffffff', fog: false })); lamp.position.copy(beamPivot.position); g.add(lamp);
+  const von = new THREE.Vector3(...(H.von || [160, 40, -160])), nach = new THREE.Vector3(...(H.nach || [-40, 25, -70])), dur = H.dauer || 14;
+  return (t) => {
+    const k = (t - H.t0) / dur; g.visible = k >= 0; if (k < 0) return;
+    const e = Math.min(1, k); const ee = 1 - (1 - e) * (1 - e);
+    g.position.lerpVectors(von, nach, ee); g.position.y += Math.sin(t * 1.3) * 0.4;
+    const dir = nach.clone().sub(von); g.rotation.set(0, Math.atan2(-dir.z, dir.x), -0.12 * (1 - e) + Math.sin(t * 0.8) * 0.03);
+    rotor.rotation.y = t * 31;
+    beamPivot.rotation.set(Math.sin(t * 0.7) * 0.45, 0, -0.5 + Math.sin(t * 0.43) * 0.35);
+    red.visible = (t % 1.0) < 0.15;
+  };
 }

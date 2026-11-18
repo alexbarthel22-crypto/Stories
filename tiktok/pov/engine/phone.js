@@ -6,7 +6,7 @@ const W = 300, H = 620;
 export function phoneMesh() {
   const g = new THREE.Group();
   const body = ink(new THREE.BoxGeometry(0.074, 0.152, 0.009), toon('#161618'), 1.1); g.add(body);
-  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const c = document.createElement('canvas'); c.width = W * 2; c.height = H * 2;
   const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
   const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.067, 0.143), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
   screen.position.z = 0.0052; g.add(screen);
@@ -17,19 +17,26 @@ export function phoneMesh() {
 
 function roundRect(c, x, y, w, h, r) { c.beginPath(); c.roundRect(x, y, w, h, r); }
 
-// spec: {typ:'anruf'|'eingehend'|'alarm'|'nachricht'|'aus', name, status, text, titel}
-export function drawPhone(g, spec, t) {
+// spec: {typ:'anruf'|'eingehend'|'alarm'|'nachricht'|'aus', name, status, text, titel, uhr,
+//        nach_und_nach: Sekunden zwischen eingehenden Nachrichten, tippen: "Text, der gerade getippt wird", tipp_ab: Sekunden}
+// dt = Sekunden seit dieser Bildschirm erschienen ist
+export function drawPhone(g, spec, t, dt = 99) {
   const S = g.userData.screen; if (!S) return;
   spec = spec || { typ: 'aus' };
-  const key = JSON.stringify(spec) + '|' + (spec.typ === 'anruf' || spec.typ === 'eingehend' ? Math.floor(t * 2) : 0);
+  const msgs0 = Array.isArray(spec.text) ? spec.text : spec.text ? [spec.text] : [];
+  const iv = spec.nach_und_nach || 0;
+  const neu0 = spec.neu_ab ?? 0, shown = iv ? Math.min(msgs0.length, neu0 + 1 + Math.floor(Math.max(0, dt - 0.2) / iv)) : msgs0.length;
+  const typing = iv && shown < msgs0.length && (dt - 0.2) % iv > iv - 0.9 && !msgs0[shown].startsWith('>');
+  const nt = spec.tippen ? Math.max(0, Math.min(spec.tippen.length, Math.floor((dt - (spec.tipp_ab ?? 0.3)) * (spec.tipp_tempo || 14)))) : 0;
+  const key = JSON.stringify(spec) + '|' + (spec.typ === 'anruf' || spec.typ === 'eingehend' ? Math.floor(t * 2) : 0) + '|' + shown + '|' + typing + '|' + nt + '|' + (spec.tippen ? Math.floor(t * 2.5) % 2 : 0);
   if (key === S.key) return; S.key = key;
-  const c = S.canvas.getContext('2d');
+  const c = S.canvas.getContext('2d'); c.setTransform(2, 0, 0, 2, 0, 0);
   c.textAlign = 'center'; c.textBaseline = 'middle';
   const F = (w, s) => `${w} ${s}px Inter, "Liberation Sans", sans-serif`;
   if (spec.typ === 'aus') { c.fillStyle = '#0b0b0d'; c.fillRect(0, 0, W, H); }
   else if (spec.typ === 'anruf' || spec.typ === 'eingehend') {
     c.fillStyle = '#17241f'; c.fillRect(0, 0, W, H);
-    c.fillStyle = '#9fb3aa'; c.font = F(600, 16); c.fillText('17:41', W / 2, 26);
+    c.fillStyle = '#9fb3aa'; c.font = F(600, 16); c.fillText(spec.uhr || '18:26', W / 2, 26);
     const ring = spec.typ === 'eingehend' ? 1 + Math.sin(t * 8) * 0.06 : 1;
     c.fillStyle = spec.farbe || '#3f7a5c'; c.beginPath(); c.arc(W / 2, 170, 52 * ring, 0, 7); c.fill();
     c.fillStyle = '#e9efe9'; c.font = F(800, 50); c.fillText((spec.name || '?')[0].toUpperCase(), W / 2, 172);
@@ -51,16 +58,40 @@ export function drawPhone(g, spec, t) {
     c.fillStyle = '#fff'; c.font = F(800, 22); c.fillText('OK', W / 2, H - 40);
   } else if (spec.typ === 'nachricht') {
     c.fillStyle = '#f2efe8'; c.fillRect(0, 0, W, H);
-    c.fillStyle = '#26323a'; c.fillRect(0, 0, W, 70); c.fillStyle = '#fff'; c.font = F(800, 24); c.fillText(spec.name || 'Chat', W / 2, 40);
-    const msgs = Array.isArray(spec.text) ? spec.text : [spec.text || ''];
-    let y = 100; c.textAlign = 'left';
-    for (const m of msgs) {
-      const mine = m.startsWith('>'); const txt = mine ? m.slice(1).trim() : m;
-      c.font = F(600, 19); const lines = splitLines(c, txt, W - 110);
-      const bh = lines.length * 24 + 20, bw = Math.min(W - 60, Math.max(...lines.map((l) => c.measureText(l).width)) + 28);
-      const x = mine ? W - 20 - bw : 20;
-      c.fillStyle = mine ? '#c8ecc0' : '#ffffff'; roundRect(c, x, y, bw, bh, 14); c.fill();
-      c.fillStyle = '#1d1d1d'; lines.forEach((l, i) => c.fillText(l, x + 14, y + 22 + i * 24)); y += bh + 12;
+    c.fillStyle = '#26323a'; c.fillRect(0, 0, W, 78);
+    c.fillStyle = '#9fb0bb'; c.font = F(600, 13); c.textAlign = 'left'; c.fillText(spec.uhr || '18:26', 14, 13); c.textAlign = 'right'; c.fillText('▂▄▆ 41%', W - 12, 13); c.textAlign = 'center';
+    c.fillStyle = spec.name === 'Unbekannt' ? '#7a2a2a' : '#4f7d9c'; c.beginPath(); c.arc(38, 48, 17, 0, 7); c.fill();
+    c.fillStyle = '#fff'; c.font = F(800, 17); c.fillText(spec.name === 'Unbekannt' ? '?' : (spec.name || '?')[0], 38, 49);
+    c.textAlign = 'left'; c.font = F(800, 23); c.fillText(spec.name || 'Chat', 66, 44);
+    c.fillStyle = '#9fb0bb'; c.font = F(500, 13); c.fillText(typing ? 'schreibt …' : spec.name === 'Unbekannt' ? 'Unbekannte Nummer' : 'online', 66, 64);
+    const keyb = !!spec.tippen, bottom = keyb ? H - 250 : H - 20;
+    // Nachrichten von unten nach oben stapeln (wie echte Chats)
+    const items = msgs0.slice(0, shown).map((m) => ({ mine: m.startsWith('>'), txt: m.startsWith('>') ? m.slice(1).trim() : m }));
+    if (typing) items.push({ dots: true });
+    c.font = F(700, 28);
+    const lay = items.map((it) => { if (it.dots) return { ...it, lines: [], bw: 70, bh: 40 }; const lines = splitLines(c, it.txt, W - 80); return { ...it, lines, bh: lines.length * 33 + 22, bw: Math.min(W - 50, Math.max(...lines.map((l) => c.measureText(l).width)) + 30) }; });
+    let y = bottom - lay.reduce((a, it) => a + it.bh + 12, 0);
+    y = Math.max(92, y);
+    for (const it of lay) {
+      const x = it.mine ? W - 16 - it.bw : 16;
+      c.fillStyle = it.mine ? '#c8ecc0' : spec.name === 'Unbekannt' ? '#ffffff' : '#ffffff';
+      roundRect(c, x, y, it.bw, it.bh, 15); c.fill(); c.font = F(700, 28);
+      if (it.dots) { c.fillStyle = '#8a8a8a'; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(x + 20 + i * 15, y + 20 - (Math.floor(t * 6) % 3 === i ? 4 : 0), 5, 0, 7); c.fill(); } }
+      else { c.fillStyle = '#1d1d1d'; it.lines.forEach((l, i) => c.fillText(l, x + 15, y + 27 + i * 33)); }
+      y += it.bh + 12;
+    }
+    if (keyb) {
+      c.fillStyle = '#fff'; c.fillRect(0, H - 250, W, 52); c.strokeStyle = '#ccc'; c.lineWidth = 2; roundRect(c, 10, H - 242, W - 64, 36, 18); c.stroke();
+      const txt = spec.tippen.slice(0, nt) + (Math.floor(t * 2.5) % 2 ? '|' : ' ');
+      c.fillStyle = '#1d1d1d'; c.font = F(600, 18); c.fillText(txt.length > 24 ? '…' + txt.slice(-23) : txt, 24, H - 224);
+      c.fillStyle = '#2f8f5a'; c.beginPath(); c.arc(W - 28, H - 224, 17, 0, 7); c.fill(); c.fillStyle = '#fff'; c.font = F(900, 18); c.textAlign = 'center'; c.fillText('➤', W - 27, H - 223);
+      c.fillStyle = '#d4d6db'; c.fillRect(0, H - 198, W, 198);
+      const rows = ['qwertzuiop', 'asdfghjkl', 'yxcvbnm'], cur = spec.tippen[nt - 1]?.toLowerCase();
+      c.font = F(600, 16);
+      rows.forEach((row, ri) => { const kw = 27, x0 = (W - row.length * (kw + 2)) / 2; [...row].forEach((ch, i) => {
+        const hot = ch === cur && Math.floor(t * 14) % 2 === 0; c.fillStyle = hot ? '#8a8f99' : '#fff'; roundRect(c, x0 + i * (kw + 2), H - 188 + ri * 46, kw, 40, 5); c.fill();
+        c.fillStyle = '#222'; c.textAlign = 'center'; c.fillText(ch, x0 + i * (kw + 2) + kw / 2, H - 167 + ri * 46); }); });
+      c.fillStyle = cur === ' ' ? '#8a8f99' : '#fff'; roundRect(c, 70, H - 50, W - 140, 38, 5); c.fill();
     }
     c.textAlign = 'center';
   }

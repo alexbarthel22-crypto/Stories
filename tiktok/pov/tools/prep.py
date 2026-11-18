@@ -143,7 +143,7 @@ for b in story['beats']:
         if NO_TTS or not spec.get('stimme'):
             n = max(0.9, len(b['sagt']) * 0.065); a = None
         else:
-            who_now = who; a = tts(b['sagt'], spec, b.get('wie')); n = len(a) / SR; voice.append((start, a, b.get('lautstaerke', 1.0), b.get('telefon', False)))
+            who_now = who; a = tts(b['sagt'], spec, b.get('wie')); n = len(a) / SR; voice.append((start, a, b.get('lautstaerke', 1.0), 'funk' if b.get('funk') else b.get('telefon', False)))
         parts = chunks(b['sagt']); L = [len(p) + 4 for p in parts]; ct = start; caps = []
         for p, l in zip(parts, L):
             d = n * l / sum(L); caps.append({'text': p, 't0': round(ct, 3), 't1': round(ct + d + (0.25 if p == parts[-1] else 0), 3)}); ct += d
@@ -151,6 +151,14 @@ for b in story['beats']:
         env = envelope(a, nf) if a is not None else [round(0.5 + 0.4 * np.sin(i * 1.7), 3) for i in range(nf)]
         lines.append({'who': who, 't0': round(start, 3), 't1': round(start + n, 3), 'caps': caps, 'env': env, 'color': b.get('farbe')})
         dur = max(dur, (start - t) + n + b.get('pause', 0.3))
+    # Hintergrund-Sätze: laufen parallel (ohne Einfluss aufs Timing), standardmäßig ohne Untertitel
+    for h in b.get('hintergrund', []):
+        hs = cast.get(h['wer'], {}); st = t + h.get('ab', 0)
+        if NO_TTS or not hs.get('stimme'): continue
+        who_now = h['wer']; a = tts(h['sagt'], hs, h.get('wie')); n = len(a) / SR
+        voice.append((st, a, h.get('lautstaerke', 0.4), 'funk' if h.get('funk') else h.get('telefon', False)))
+        caps = [{'text': p, 't0': round(st, 3), 't1': round(st + n, 3)} for p in [h['sagt']]] if h.get('untertitel') else []
+        lines.append({'who': h['wer'], 't0': round(st, 3), 't1': round(st + n, 3), 'caps': caps, 'env': envelope(a, int(n * FPS) + 1), 'color': h.get('farbe'), 'bg': True})
     if dur <= 0: dur = 1.5
     t += dur; b['t1'] = round(t, 3); beats.append(b)
 total = t + story.get('nachlauf', 0.5)
@@ -195,6 +203,9 @@ voc = np.zeros(N, np.float32)
 for st, a, vol, tel in voice:
     a = sprache(a) * story.get('stimme_lautstaerke', 1.0)
     if tel: a = telefon(a) * 0.9
+    if tel == 'funk':  # Funkgerät: Knacken vorne/hinten + Rauschen
+        kn = load_wav(os.path.join(ROOT, 'sfx', 'funk_knacken.wav')) * 0.5
+        a = np.concatenate([kn, a + np.random.default_rng(1).standard_normal(len(a)) * 0.02, kn])
     i = int(st * SR); voc[i:i + len(a)] += a[:N - i] * vol
 mix = np.stack([voc, voc], 1)
 
@@ -243,7 +254,16 @@ for bb in beats:
         a = load_st(fn) * s.get('lautstaerke', 0.6)
         if s.get('dauer'):
             a = a[:int(s['dauer'] * SR)].copy(); f = min(len(a), int(0.4 * SR)); a[-f:] *= np.linspace(1, 0, f)[:, None]
-        i = int((bb['t0'] + s.get('ab', 0)) * SR); mix[i:i + len(a)] += a[:N - i]
+        i = int((bb['t0'] + s.get('ab', 0)) * SR)
+        if i < 0: a = a[-i:]; i = 0
+        mix[i:i + len(a)] += a[:N - i]
+for bb in beats:
+    for au in ([bb['auto']] if isinstance(bb.get('auto'), dict) else bb.get('auto', [])):
+        a = load_st(os.path.join(sfxdir, 'auto_vorbei.wav')) * au.get('lautstaerke', 0.45)
+        if au.get('spur', 1) == 2: a = a[:, ::-1]
+        i = int((bb['t0'] + au.get('ab', 0) - 3.5) * SR)
+        if i < 0: a = a[-i:]; i = 0
+        mix[i:i + len(a)] += a[:N - i]
 # sanfter Limiter
 peak = np.abs(mix).max()
 mix = np.tanh(mix / max(peak, 1e-6) * 1.6) / np.tanh(1.6) * 0.93 if peak > 0.9 else mix

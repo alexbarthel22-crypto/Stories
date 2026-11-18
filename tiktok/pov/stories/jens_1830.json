@@ -1,21 +1,28 @@
 {
  "titel": "Jens – 18:30",
  "set": "aussicht",
- "himmel": "abend",
+ "himmel": "daemmerung",
  "fov": 140,
  "blick": "stadt",
+ "nacht": 0.6,
+ "max_pause": 0.45,
  "atmo_spuren": [
   {
    "datei": "atmo_wind.wav",
-   "lautstaerke": 0.32
+   "lautstaerke": 0.3
   },
   {
    "datei": "atmo_stadt.wav",
-   "lautstaerke": 0.24
+   "lautstaerke": 0.26,
+   "rampe": 0.35
   },
   {
    "datei": "voegel.wav",
-   "lautstaerke": 0.14
+   "lautstaerke": 0.12
+  },
+  {
+   "datei": "atmo_laub.wav",
+   "lautstaerke": 0.2
   }
  ],
  "cast": {
@@ -24,7 +31,7 @@
     0,
     -1.5
    ],
-   "pose": "aufstuetzen",
+   "pose": "handy",
    "oberteil": "#5a6b3a",
    "hose": "#2c3c5e",
    "haut": "#ecd6bd",
@@ -33,9 +40,10 @@
   },
   "fremder": {
    "pos": [
-    -2.3,
-    -1.95
+    -5.5,
+    13.0
    ],
+   "pose": "handy",
    "mantel": true,
    "oberteil": "#5d6168",
    "hose": "#26262a",
@@ -46,7 +54,14 @@
    "augen": "#8fa3ad",
    "details": "none",
    "stimme": "gemini:Algenib",
-   "regie": "älterer Mann, ruhige tiefe raue Stimme"
+   "regie": "älterer Mann, ruhige tiefe raue Stimme",
+   "handy_bild": {
+    "typ": "nachricht",
+    "name": "Jens",
+    "text": [
+     "Schau über die Straße."
+    ]
+   }
   },
   "tobi": {
    "pos": [
@@ -55,122 +70,440 @@
    ],
    "frisur": "kurz",
    "haare": "#3b2a1d",
-   "oberteil": "#2f4f7a",
+   "oberteil": "#2a2f3a",
    "hose": "#1e2433",
    "augen": "#7a9a6a",
    "details": "none",
    "stimme": "gemini:Fenrir",
    "farbe": "#8fd8ff",
-   "regie": "junger Mann"
+   "regie": "junger Mann",
+   "handy_bild": {
+    "typ": "anruf",
+    "name": "Jens",
+    "status": "00:12"
+   }
+  },
+  "jogger": {
+   "pos": [
+    -60,
+    1.5
+   ],
+   "oberteil": "#d9482b",
+   "hose": "#1d1d1f",
+   "schuhe": "#f2f2f2",
+   "frisur": "zopf",
+   "haare": "#d8b25a",
+   "haut": "#efd9c4",
+   "details": "none"
+  },
+  "paar_frau": {
+   "pos": [
+    -7.2,
+    -1.95
+   ],
+   "frisur": "lang",
+   "haare": "#6b3a22",
+   "oberteil": "#c9a43b",
+   "hose": "#3a3f55",
+   "details": "none",
+   "schaut": "stadt",
+   "stimme": "gemini:Kore",
+   "regie": "junge Frau"
+  },
+  "paar_mann": {
+   "pos": [
+    -7.9,
+    -1.95
+   ],
+   "frisur": "kurz",
+   "haare": "#2a221c",
+   "oberteil": "#3f5f8a",
+   "hose": "#2a2a2a",
+   "brille": true,
+   "details": "none",
+   "schaut": "stadt",
+   "pose": "handy",
+   "stimme": "gemini:Charon",
+   "regie": "junger Mann",
+   "handy_bild": {
+    "typ": "anruf",
+    "name": "Kamera",
+    "status": "Foto"
+   }
+  },
+  "transporter": {
+   "typ": "transporter",
+   "pos": [
+    -75,
+    6.0
+   ],
+   "richtung": 90
+  },
+  "agent1": {
+   "pos": [
+    -45,
+    45
+   ],
+   "taschenlampe": true,
+   "oberteil": "#16181c",
+   "hose": "#111215",
+   "schuhe": "#0a0a0a",
+   "frisur": "kurz",
+   "haare": "#151515",
+   "brille": true,
+   "details": "none",
+   "stimme": "gemini:Orus",
+   "regie": "Mann, kalt, sachlich"
+  },
+  "agent2": {
+   "pos": [
+    -46,
+    46
+   ],
+   "taschenlampe": true,
+   "oberteil": "#16181c",
+   "hose": "#111215",
+   "schuhe": "#0a0a0a",
+   "frisur": "none",
+   "haut": "#c99d7b",
+   "details": "none",
+   "stimme": "gemini:Alnilam",
+   "regie": "Mann, hart"
   }
  },
  "beats": [
   {
    "ort": [
     "WALDHEIM-HÖHE",
-    "Aussichtspunkt · Sonntag, 18:04"
+    "Aussichtspunkt · 18:26"
    ],
-   "blick": "stadt",
-   "dauer": 2.6,
-   "schaut": {
-    "fremder": "stadt"
-   },
-   "musik": {
-    "datei": "gen/musik_1_unruhe.mp3",
-    "lautstaerke": 0.22,
-    "einblenden": 3
-   }
-  },
-  {
-   "blick": "skyline",
-   "drehung": 2.4,
-   "dauer": 1.5
-  },
-  {
-   "sfx": {
-    "datei": "vibration.wav",
-    "lautstaerke": 0.7
-   },
-   "pose": {
-    "ich": "handy"
-   },
-   "handy": {
-    "typ": "nachricht",
-    "name": "Tobi",
-    "text": [
-     "Bin gleich oben.",
-     "Muss dir was zeigen. Nicht am Telefon."
-    ]
-   },
    "blick": [
     0,
-    -30
+    -34
    ],
-   "dauer": 2.3
+   "schnitt": true,
+   "dauer": 2.9,
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "18:26",
+    "text": [
+     "Jens.",
+     "Dreh dich jetzt nicht um."
+    ],
+    "nach_und_nach": 1.2
+   },
+   "sfx": [
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.2
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 1.4
+    },
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.55,
+     "ab": 1.4
+    }
+   ],
+   "musik": {
+    "datei": "gen/musik_5_lauern.mp3",
+    "lautstaerke": 0.3,
+    "einblenden": 1.0
+   },
+   "hintergrund": [
+    {
+     "wer": "paar_frau",
+     "sagt": "Schau mal, wie schön die Stadt leuchtet.",
+     "wie": "verliebt, entspannt, leise",
+     "ab": 0.1,
+     "lautstaerke": 0.4
+    }
+   ]
   },
   {
    "wer": "ich",
-   "sagt": "Nicht am Telefon? Was soll das denn, Tobi.",
-   "wie": "murmelnd, genervt, leise"
+   "sagt": "Was zur… wer ist das?",
+   "wie": "flüsternd, irritiert"
+  },
+  {
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "18:26",
+    "text": [
+     "Jens.",
+     "Dreh dich jetzt nicht um."
+    ],
+    "tippen": "Wer bist du?"
+   },
+   "dauer": 1.9,
+   "sfx": {
+    "datei": "tippen.wav",
+    "lautstaerke": 0.45,
+    "ab": 0.3,
+    "dauer": 1.2
+   }
+  },
+  {
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "18:27",
+    "text": [
+     "Jens.",
+     "Dreh dich jetzt nicht um.",
+     ">Wer bist du?",
+     "In vier Minuten geht in der ganzen Stadt das Licht aus.",
+     "Und dann holen sie dich."
+    ],
+    "nach_und_nach": 1.1,
+    "neu_ab": 2
+   },
+   "dauer": 3.5,
+   "sfx": [
+    {
+     "datei": "gesendet.wav",
+     "lautstaerke": 0.45
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 1.45
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 2.7
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.5,
+     "ab": 2.7
+    }
+   ],
+   "ort": [
+    "WALDHEIM-HÖHE",
+    "Aussichtspunkt · 18:27"
+   ]
+  },
+  {
+   "wer": "ich",
+   "sagt": "Sehr witzig, Tobi. Echt.",
+   "wie": "leise, nervös, genervt",
+   "ort": null,
+   "hintergrund": [
+    {
+     "wer": "paar_mann",
+     "sagt": "Komm, noch ein Foto, bevor's dunkel wird.",
+     "wie": "fröhlich, beiläufig",
+     "ab": 0.2,
+     "lautstaerke": 0.25
+    }
+   ]
+  },
+  {
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "18:27",
+    "text": [
+     "In vier Minuten geht in der ganzen Stadt das Licht aus.",
+     "Und dann holen sie dich.",
+     "Ich bin nicht Tobi.",
+     "Schau über die Straße."
+    ],
+    "nach_und_nach": 1.1,
+    "neu_ab": 2
+   },
+   "dauer": 2.9,
+   "sfx": [
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.25
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 1.35
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.45,
+     "ab": 1.35
+    }
+   ]
   },
   {
    "pose": {
     "ich": "runter"
    },
    "blick": "fremder",
-   "drehung": 1.3,
-   "schaut": {
-    "fremder": "ich"
+   "drehung": 2.0,
+   "dauer": 3.3,
+   "effekt": {
+    "flackern": 3.2
    },
-   "wer": "fremder",
-   "sagt": "Schöner Abend, nicht wahr?",
-   "wie": "ruhig und freundlich, aber unheimlich",
-   "pause_vor": 0.7,
-   "ort": null
-  },
-  {
-   "wer": "ich",
-   "sagt": "Äh… ja. Total schön.",
-   "wie": "überrumpelt, unsicher"
-  },
-  {
-   "wer": "fremder",
-   "sagt": "Genießen Sie ihn. Um halb sieben gehen hier die Lichter aus.",
-   "wie": "leise, langsam, bedeutungsvoll",
-   "pose": {
-    "fremder": "erklaeren"
+   "sfx": [
+    {
+     "datei": "summen.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.1
+    },
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.55,
+     "dauer": 7
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 2.0
+    }
+   ],
+   "zoom": 50,
+   "zoom_dauer": 1.2,
+   "zoom_ab": 2.0,
+   "auto": {
+    "spur": 1,
+    "ab": 1.0,
+    "farbe": "#e9e6df"
    }
   },
   {
    "wer": "ich",
-   "sagt": "Wie bitte? Was meinen Sie damit?",
-   "wie": "irritiert"
+   "sagt": "Da steht einer. Und schaut genau zu mir.",
+   "wie": "flüsternd, angespannt",
+   "laufen": {
+    "jogger": [
+     -10,
+     1.5
+    ]
+   },
+   "laufzeit": 0.01
   },
   {
-   "wer": "fremder",
-   "sagt": "Fragen Sie Ihren Bruder.",
-   "wie": "kühl, fast flüsternd",
-   "pose": {
-    "fremder": "idle"
+   "laufen": {
+    "jogger": [
+     42,
+     1.5
+    ]
    },
-   "pause": 0.5
+   "laufzeit": 8.6,
+   "dauer": 2.3,
+   "zoom": 0,
+   "zoom_dauer": 0.8,
+   "zoom_ab": 1.6,
+   "sfx": {
+    "datei": "jogger.wav",
+    "lautstaerke": 0.75,
+    "ab": -0.8
+   }
   },
   {
    "laufen": {
     "fremder": [
-     5.5,
-     12.4
+     -45,
+     40
     ]
    },
-   "laufzeit": 10,
-   "dauer": 1.2,
-   "blick": "fremder"
+   "laufzeit": 0.01,
+   "dauer": 1.2
   },
   {
    "wer": "ich",
-   "sagt": "Hey! Woher kennen Sie meinen Bruder?",
-   "wie": "laut rufend, verunsichert",
-   "pause": 0.6
+   "sagt": "Wo… wo ist er hin?",
+   "wie": "leise, verstört",
+   "pause_vor": 0.2,
+   "sfx": {
+    "datei": "hund_fern.wav",
+    "lautstaerke": 0.3,
+    "ab": 0.6
+   }
+  },
+  {
+   "laufen": {
+    "fremder": [
+     1.05,
+     -1.9
+    ]
+   },
+   "laufzeit": 0.01,
+   "wer": "fremder",
+   "sagt": "Nicht erschrecken, Jens.",
+   "wie": "ruhig, tief, sehr nah",
+   "pause_vor": 0.5,
+   "blick": "fremder",
+   "drehung": 0.35,
+   "blick_verzoegerung": 1.1,
+   "schuetteln": 0.9,
+   "schuetteln_ab": 1.1,
+   "schaut": {
+    "fremder": "ich"
+   },
+   "pose": {
+    "fremder": "haende_tasche"
+   },
+   "sfx": {
+    "datei": "stich.wav",
+    "lautstaerke": 0.85,
+    "ab": 1.1
+   },
+   "musik": null
+  },
+  {
+   "wer": "ich",
+   "sagt": "Scheiße! Wer sind Sie?!",
+   "wie": "erschrocken, laut",
+   "stimmung": {
+    "fremder": null
+   }
+  },
+  {
+   "wer": "fremder",
+   "sagt": "Jemand, der deinem Vater was schuldet.",
+   "wie": "ruhig, ernst",
+   "pose": {
+    "fremder": "erklaeren"
+   },
+   "musik": {
+    "datei": "gen/musik_2_spannung.mp3",
+    "lautstaerke": 0.24,
+    "einblenden": 2
+   },
+   "sfx": {
+    "datei": "zug_fern.wav",
+    "lautstaerke": 0.35
+   }
+  },
+  {
+   "wer": "fremder",
+   "sagt": "Um halb sieben fällt in der ganzen Stadt der Strom aus. Das ist kein Zufall.",
+   "wie": "leise, eindringlich"
+  },
+  {
+   "wer": "ich",
+   "sagt": "Mein Vater ist seit einem Jahr tot.",
+   "wie": "leise, verletzt, ungläubig",
+   "pose": {
+    "fremder": "idle"
+   }
+  },
+  {
+   "wer": "fremder",
+   "sagt": "Ist er das?",
+   "wie": "ruhig, vielsagend, fast flüsternd",
+   "pause": 0.9,
+   "sfx": {
+    "datei": "braam.wav",
+    "lautstaerke": 0.5,
+    "ab": 1.0
+   }
   },
   {
    "sfx": {
@@ -182,288 +515,399 @@
    },
    "handy": {
     "typ": "eingehend",
-    "name": "Tobi"
+    "name": "Tobi",
+    "uhr": "18:28"
    },
    "blick": [
-    -160,
-    -30
+    -75,
+    -34
    ],
-   "drehung": 0.7,
-   "dauer": 2.0,
-   "musik": {
-    "datei": "gen/musik_2_spannung.mp3",
-    "lautstaerke": 0.24,
-    "einblenden": 2
-   }
+   "drehung": 0.6,
+   "wer": "fremder",
+   "sagt": "Geh nicht ran.",
+   "wie": "leise, warnend",
+   "pause_vor": 0.9,
+   "pause": 0.3
   },
   {
    "handy": {
     "typ": "anruf",
     "name": "Tobi",
-    "status": "Verbunden"
+    "status": "00:01",
+    "uhr": "18:28"
    },
    "wer": "tobi",
    "telefon": true,
-   "sagt": "Jens! Bist du noch oben? Bleib da. Geh auf keinen Fall zur Straße!",
-   "wie": "atemlos und panisch, als würde er rennen"
+   "sagt": "Jens! Die waren in unserer Wohnung, alles durchwühlt! Wo bist du?",
+   "wie": "atemlos, panisch"
   },
   {
    "wer": "ich",
-   "sagt": "Tobi, was ist hier los? Da war gerade so ein komischer Typ.",
-   "wie": "verwirrt, schnell"
-  },
-  {
-   "wer": "tobi",
-   "telefon": true,
-   "sagt": "Grauer Mantel? Wo ist er jetzt?",
-   "wie": "erschrocken, eindringlich"
+   "sagt": "Oben am Aussichtspunkt. Am Geländer.",
+   "wie": "schnell, unsicher",
+   "handy": {
+    "typ": "anruf",
+    "name": "Tobi",
+    "status": "00:06",
+    "uhr": "18:28"
+   }
   },
   {
    "blick": "fremder",
-   "drehung": 1.6,
+   "drehung": 0.7,
    "pose": {
     "ich": "runter"
    },
-   "dauer": 1.5,
-   "sfx": {
-    "datei": "auto_vorbei.wav",
-    "lautstaerke": 0.55,
-    "ab": 0.2
-   },
-   "zoom": 78,
-   "zoom_dauer": 1.4,
-   "zoom_ab": 0.6
-  },
-  {
-   "wer": "ich",
-   "sagt": "Er steht auf der anderen Straßenseite. Er schaut mich an.",
-   "wie": "verängstigt, ernst, leise"
-  },
-  {
-   "wer": "tobi",
-   "telefon": true,
-   "sagt": "Hör mir zu. Er war heute bei Papa. Und um achtzehn Uhr dreißig…",
-   "wie": "hastig, flüsternd, gehetzt",
-   "pose": {
-    "fremder": "winken"
+   "wer": "fremder",
+   "sagt": "Jetzt wissen sie, wo du bist.",
+   "wie": "leise, resigniert, unheimlich",
+   "pause_vor": 0.4,
+   "sfx": [
+    {
+     "datei": "anruf_ende.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.1
+    }
+   ],
+   "meldung": {
+    "titel": "Tobi",
+    "text": "Anruf beendet",
+    "icon": "📵",
+    "dauer": 2.4
    }
   },
   {
-   "sfx": {
-    "datei": "anruf_ende.wav",
-    "lautstaerke": 0.6
-   },
-   "meldung": {
-    "titel": "Tobi",
-    "text": "Anruf beendet – kein Netz",
-    "icon": "📵",
-    "dauer": 2.8
-   },
-   "pose": {
-    "ich": "handy",
-    "fremder": "idle"
-   },
-   "handy": {
-    "typ": "anruf",
-    "name": "Tobi",
-    "status": "Anruf beendet"
-   },
    "blick": [
-    -158,
-    -28
-   ],
-   "drehung": 0.5,
-   "dauer": 1.6,
-   "zoom": 0,
-   "zoom_dauer": 0.4
-  },
-  {
-   "wer": "ich",
-   "sagt": "Tobi? Tobi!",
-   "wie": "panisch",
-   "laufen": {
-    "fremder": [
-     -45,
-     40
-    ]
-   },
-   "laufzeit": 0.01
-  },
-  {
-   "blick": [
-    -158,
+    165,
     -6
    ],
-   "drehung": 0.8,
-   "pose": {
-    "ich": "runter"
+   "drehung": 1.0,
+   "laufen": {
+    "transporter": [
+     -2.5,
+     6.0
+    ],
+    "agent1": {
+     "nach": [
+      -3.2,
+      7.7
+     ],
+     "zeit": 0.01,
+     "ab": 4.0
+    },
+    "agent2": {
+     "nach": [
+      -1.8,
+      7.7
+     ],
+     "zeit": 0.01,
+     "ab": 4.0
+    }
    },
-   "wer": "ich",
-   "sagt": "Wo… wo ist er hin?",
-   "wie": "flüsternd, verstört",
-   "pause_vor": 0.7,
+   "laufzeit": 4.2,
+   "dauer": 4.4,
    "sfx": {
-    "datei": "sirene_fern.wav",
-    "lautstaerke": 0.36,
-    "ab": 0.4
+    "datei": "transporter.wav",
+    "lautstaerke": 0.85
    },
-   "zoom": 80,
-   "zoom_dauer": 1.2,
-   "zoom_ab": 0.4
-  },
-  {
-   "blick": "stadt",
-   "drehung": 1.8,
-   "dauer": 2.0,
-   "text": "*Sirenen in der Ferne*",
-   "text_farbe": "#d8d8d8",
-   "atmo": {
-    "voegel.wav": 0
-   },
-   "zoom": 0,
-   "zoom_dauer": 1.2
-  },
-  {
-   "sfx": {
-    "datei": "vibration.wav",
-    "lautstaerke": 0.7
-   },
-   "pose": {
-    "ich": "handy"
-   },
-   "handy": {
-    "typ": "nachricht",
-    "name": "Unbekannt",
-    "text": [
-     "18:30.",
-     "Schau hin, Jens."
-    ]
-   },
-   "blick": [
-    0,
-    -30
-   ],
-   "dauer": 2.6,
    "ort": [
     "WALDHEIM-HÖHE",
     "Aussichtspunkt · 18:29"
-   ]
-  },
-  {
-   "wer": "ich",
-   "sagt": "Woher hat der meine Nummer?",
-   "wie": "leise, zitternd"
-  },
-  {
-   "blick": "stadt",
-   "drehung": 1.2,
-   "pose": {
-    "ich": "aufstuetzen"
-   },
-   "dauer": 3.0,
-   "musik": null,
-   "sfx": {
-    "datei": "herzschlag.wav",
-    "lautstaerke": 0.75,
-    "dauer": 3.8
-   },
-   "ort": [
-    "WALDHEIM-HÖHE",
-    "Aussichtspunkt · 18:30"
-   ]
-  },
-  {
-   "effekt": {
-    "stromausfall": 3.5
-   },
-   "sfx": {
-    "datei": "stromausfall.wav",
-    "lautstaerke": 0.9
-   },
-   "schuetteln": 0.6,
-   "dauer": 4.0,
-   "atmo": {
-    "atmo_stadt.wav": 0.03
-   },
+   ],
    "musik": {
     "datei": "gen/musik_3_dunkel.mp3",
-    "lautstaerke": 0.2,
-    "einblenden": 1.5
+    "lautstaerke": 0.24,
+    "einblenden": 1.0
+   },
+   "atmo": {
+    "voegel.wav": 0
    }
   },
   {
+   "sfx": {
+    "datei": "tueren.wav",
+    "lautstaerke": 0.7
+   },
+   "laufen": {
+    "agent1": [
+     1.6,
+     7.6
+    ],
+    "agent2": [
+     1.9,
+     8.3
+    ]
+   },
+   "laufzeit": 1.2,
+   "dauer": 1.2
+  },
+  {
+   "laufen": {
+    "agent1": [
+     1.4,
+     3.6
+    ],
+    "agent2": [
+     1.0,
+     4.1
+    ]
+   },
+   "laufzeit": 3.0,
    "wer": "ich",
-   "sagt": "Die ganze Stadt… ist dunkel.",
-   "wie": "fassungslos, flüsternd",
-   "blick": "skyline",
-   "drehung": 2.5,
+   "sagt": "Was wollen die von mir?",
+   "wie": "flüsternd, panisch",
+   "hintergrund": [
+    {
+     "wer": "agent1",
+     "sagt": "Zielperson gesichtet. Aussichtspunkt.",
+     "wie": "kalt, sachlich, Funkspruch",
+     "ab": 0.6,
+     "lautstaerke": 0.7,
+     "funk": true
+    }
+   ]
+  },
+  {
+   "ort": [
+    "WALDHEIM-HÖHE",
+    "Aussichtspunkt · 18:30"
+   ],
+   "sfx": {
+    "datei": "glocke.wav",
+    "lautstaerke": 0.6
+   },
+   "dauer": 1.9,
+   "blick": [
+    178,
+    -8
+   ],
+   "drehung": 0.8,
+   "laufen": {
+    "agent1": [
+     1.0,
+     2.4
+    ],
+    "agent2": [
+     -0.8,
+     2.7
+    ]
+   },
+   "laufzeit": 3.5
+  },
+  {
+   "effekt": {
+    "stromausfall": 3.0,
+    "hubschrauber": {
+     "ab": 2.5,
+     "dauer": 16,
+     "von": [
+      120,
+      45,
+      -140
+     ],
+     "nach": [
+      -30,
+      26,
+      -60
+     ]
+    }
+   },
+   "sfx": [
+    {
+     "datei": "stromausfall.wav",
+     "lautstaerke": 0.95
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6
+    }
+   ],
+   "schuetteln": 0.7,
+   "dauer": 2.6,
+   "atmo": {
+    "atmo_stadt.wav": 0.0,
+    "atmo_laub.wav": 0.12
+   },
+   "musik": null,
+   "pose": {
+    "agent1": "leuchten",
+    "agent2": "leuchten"
+   },
+   "pose_verzoegerung": 1.6,
    "ort": null,
+   "hintergrund": [
+    {
+     "wer": "paar_frau",
+     "sagt": "Was ist denn jetzt los?!",
+     "wie": "erschrocken",
+     "ab": 1.2,
+     "lautstaerke": 0.35
+    }
+   ],
+   "atmo_ab": 0.25
+  },
+  {
+   "wer": "fremder",
+   "sagt": "Lauf, Jens! Lauf!",
+   "wie": "schreiend, drängend",
+   "pose": {
+    "fremder": "zeigen"
+   },
    "sfx": {
     "datei": "hubschrauber_fern.wav",
-    "lautstaerke": 0.38,
+    "lautstaerke": 0.45,
     "ab": 0.5
+   },
+   "musik": {
+    "datei": "gen/musik_4_flucht.mp3",
+    "lautstaerke": 0.3,
+    "einblenden": 0.3
+   }
+  },
+  {
+   "laufen": {
+    "ich": [
+     21,
+     -1.2
+    ],
+    "agent1": [
+     9,
+     -0.6
+    ],
+    "agent2": [
+     7,
+     -0.2
+    ],
+    "jogger": {
+     "nach": [
+      -60,
+      40
+     ],
+     "zeit": 0.01
+    }
+   },
+   "laufzeit": 5.0,
+   "pose": {
+    "ich": "rennen",
+    "agent1": "leuchten",
+    "agent2": "leuchten"
+   },
+   "blick": [
+    -92,
+    -5
+   ],
+   "drehung": 0.45,
+   "dauer": 5.0,
+   "sfx": [
+    {
+     "datei": "rennen.wav",
+     "lautstaerke": 0.8
+    },
+    {
+     "datei": "sirene_fern.wav",
+     "lautstaerke": 0.3,
+     "ab": 1.0
+    },
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.5,
+     "dauer": 6
+    }
+   ],
+   "schuetteln": 0.3,
+   "hintergrund": [
+    {
+     "wer": "agent2",
+     "sagt": "Er läuft! Hinterher!",
+     "wie": "laut rufend, von weitem",
+     "ab": 0.8,
+     "lautstaerke": 0.4
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.6
+    },
+    {
+     "datei": "atem_schwer.wav",
+     "lautstaerke": 0.6,
+     "dauer": 7
+    }
+   ],
+   "blick": [
+    -90,
+    -34
+   ],
+   "drehung": 0.5,
+   "dauer": 3.3,
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "18:30",
+    "text": [
+     "Das am Telefon",
+     "war nicht Tobi."
+    ],
+    "nach_und_nach": 1.3
+   },
+   "musik": null
+  },
+  {
+   "wer": "ich",
+   "sagt": "Was…?",
+   "wie": "atemlos, geschockt, flüsternd",
+   "sfx": {
+    "datei": "stich.wav",
+    "lautstaerke": 0.4
    }
   },
   {
    "laufen": {
     "tobi": [
-     0.7,
-     0.6
+     25.5,
+     -1.3
     ]
    },
    "laufzeit": 0.01,
-   "wer": "tobi",
-   "sagt": "Jens.",
-   "wie": "außer Atem, leise",
-   "pause_vor": 0.7,
-   "stimmung": {
-    "tobi": "angst"
-   }
-  },
-  {
    "blick": "tobi",
-   "drehung": 0.7,
+   "drehung": 0.6,
    "pose": {
-    "ich": "runter"
-   },
-   "wer": "ich",
-   "sagt": "Tobi! Was zur Hölle passiert hier?",
-   "wie": "aufgewühlt, laut",
-   "schuetteln": 0.25
-  },
-  {
-   "wer": "tobi",
-   "sagt": "Papa wusste es. Und jetzt wissen sie, dass wir es auch wissen.",
-   "wie": "ernst, eindringlich, gehetzt",
-   "pose": {
-    "tobi": "erklaeren"
-   }
-  },
-  {
-   "wer": "tobi",
-   "sagt": "Wir müssen weg. Sofort.",
-   "wie": "drängend",
-   "pose": {
-    "tobi": "zeigen"
+    "ich": "runter",
+    "tobi": "handy"
    },
    "schaut": {
-    "tobi": "rechts"
+    "tobi": "ich"
    },
-   "pause": 0.5
+   "wer": "tobi",
+   "sagt": "Jens? Da bist du ja.",
+   "wie": "ganz ruhig, freundlich, unheimlich lächelnd",
+   "pause_vor": 1.0,
+   "pause": 0.7,
+   "sfx": {
+    "datei": "drone.wav",
+    "lautstaerke": 0.45,
+    "dauer": 6
+   },
+   "zoom": 80,
+   "zoom_dauer": 2.0,
+   "zoom_ab": 0.4
   },
   {
    "schwarz": true,
-   "blende": 0.5,
-   "text": "FORTSETZUNG FOLGT …",
-   "text_farbe": "#ffffff",
-   "dauer": 2.6,
-   "musik": null,
+   "ende": "FORTSETZUNG FOLGT",
+   "ende_unter": "TEIL 2",
+   "ende_ab": 0.3,
+   "dauer": 3.4,
    "sfx": {
-    "datei": "drone.wav",
-    "lautstaerke": 0.4,
-    "dauer": 3.0
+    "datei": "braam.wav",
+    "lautstaerke": 0.75
    }
   }
- ],
- "max_pause": 0.45
+ ]
 }

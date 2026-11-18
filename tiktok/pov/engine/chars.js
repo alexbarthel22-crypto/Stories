@@ -1,8 +1,9 @@
 // Figuren im Comic-Stil: einfache Körperformen mit dicken Umrissen, große runde Augen,
 // Mund mit 3 Formen (Lippensynchron), Gesten über Gelenkwinkel.
 import * as THREE from 'three';
-import { toon, ink, canvasTex, flat } from './toon.js';
+import { toon, ink, edges, canvasTex, flat } from './toon.js';
 import { phoneMesh } from './phone.js';
+import { headlights } from './sets/aussicht.js';
 
 const ease = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -49,12 +50,16 @@ const POSES = {
   handy: { R: [-0.55, -0.1, -1.75], L: [0.05, 0.1, -0.25] },
   aufstuetzen: { R: [-0.85, 0.1, -0.35], L: [-0.85, 0.1, -0.35] },
   haende_hoch: { R: [-0.4, 2.6, -0.3], L: [-0.4, 2.6, -0.3] },
+  leuchten: { R: [-1.25, -0.12, -0.25], L: [0.05, 0.1, -0.2] },
+  rennen: { R: [-0.3, 0.15, -1.6], L: [-0.3, 0.15, -1.6] },
+  haende_tasche: { R: [0.12, 0.05, -0.55], L: [0.12, 0.05, -0.55] },
 };
 export const POSE_NAMES = Object.keys(POSES);
 
 export class Character {
   constructor(name, spec) {
     this.name = name; this.spec = spec;
+    if (spec.typ === 'transporter') return this.buildVan(spec);
     const skin = spec.skin || '#ecdcc6', top = spec.top || '#8b2525', pants = spec.pants || '#1e2433', hairC = spec.hair || '#b98a4e', shoes = spec.shoes || '#1b1b1b';
     const g = (this.root = new THREE.Group());
     const body = (this.body = new THREE.Group()); g.add(body);
@@ -101,10 +106,45 @@ export class Character {
       const thumb = ink(new THREE.CapsuleGeometry(0.014, 0.03, 3, 6), toon(skin), 0.8); thumb.position.set(-s * 0.03, -0.27, 0.02); thumb.rotation.z = -s * 0.6; el.add(thumb);
       return { sh, el, hand, side: s };
     });
+    if (spec.taschenlampe) {
+      const fl = (this.flash = new THREE.Group()); fl.position.set(0, -0.33, 0.02); this.arms[1].el.add(fl);
+      fl.add(ink(new THREE.CylinderGeometry(0.022, 0.03, 0.17, 10), toon('#1a1a1a'), 0.8));
+      const lens = new THREE.Mesh(new THREE.CircleGeometry(0.03, 12), new THREE.MeshBasicMaterial({ color: '#fffbe8' })); lens.rotation.x = Math.PI / 2; lens.position.y = -0.087; fl.add(lens);
+      const beam = new THREE.Mesh(new THREE.ConeGeometry(1.4, 9, 20, 1, true), new THREE.MeshBasicMaterial({ color: '#fff4cc', transparent: true, opacity: 0.17, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
+      beam.position.y = -4.6; fl.add(beam); fl.visible = false;
+    }
     this.phone = phoneMesh(); this.phone.scale.setScalar(0.9); this.phone.visible = false;
     this.phone.position.set(0, -0.33, 0.03); this.phone.rotation.set(-Math.PI / 2 + 0.3, 0, Math.PI);
     this.arms[0].el.add(this.phone);
     g.traverse((o) => { if (o.isMesh && o.material && !o.material.isShaderMaterial && !o.material.transparent) o.castShadow = true; });
+  }
+
+  buildVan(spec) {
+    // dunkler Transporter: fährt über "laufen", Räder drehen, Scheinwerfer an
+    const g = (this.root = new THREE.Group()); const col = spec.farbe_auto || '#1c1f24';
+    const v = (this.van = new THREE.Group()); g.add(v);
+    const body = edges(ink(new THREE.BoxGeometry(5.2, 1.9, 2.0, 8, 2, 2), toon(col), 1.0)); body.position.y = 1.35; v.add(body);
+    const nose = edges(ink(new THREE.BoxGeometry(0.9, 1.05, 1.96), toon(col), 1.0)); nose.position.set(2.95, 0.92, 0); v.add(nose);
+    const ws = ink(new THREE.BoxGeometry(0.1, 0.75, 1.8), toon('#2b3644'), 0.6); ws.position.set(2.62, 1.85, 0); ws.rotation.z = -0.35; v.add(ws);
+    for (const z of [-1.01, 1.01]) { const sw = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.6, 0.02), toon('#2b3644')); sw.position.set(2.0, 1.85, z); v.add(sw); }
+    const door = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.5, 0.02), new THREE.MeshBasicMaterial({ color: '#08080a' })); door.position.set(0.3, 1.3, 1.01); v.add(door);
+    this.wheels = [];
+    for (const [x, z] of [[-1.7, 0.95], [1.9, 0.95], [-1.7, -0.95], [1.9, -0.95]]) {
+      const w = ink(new THREE.CylinderGeometry(0.42, 0.42, 0.3, 16), toon('#121214'), 0.7); w.rotation.x = Math.PI / 2; w.position.set(x, 0.42, z); v.add(w);
+      const hub = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.08, 0.31), toon('#777')); hub.position.copy(w.position); hub.rotation.x = Math.PI / 2; v.add(hub); this.wheels.push(hub);
+    }
+    this.beams = headlights(v, 11, 3.42);
+    const tail = [-1, 1].map((s) => { const l = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.3, 0.18), new THREE.MeshBasicMaterial({ color: '#ff2a1a' })); l.position.set(-2.62, 1.0, s * 0.85); v.add(l); return l; });
+    this.isVan = true; this.dist = 0; this.lastT = 0;
+    this.phone = new THREE.Group(); this.phone.visible = false;
+    g.traverse((o) => { if (o.isMesh && o.material && !o.material.isShaderMaterial && !o.material.transparent) o.castShadow = true; });
+    return this;
+  }
+  updateVan(s) {
+    if (s.walk > 0.05 || this.face === undefined) this.face = s.walk > 0.05 ? s.facing : (this.spec.richtung ?? 90) * Math.PI / 180;
+    this.root.rotation.y = this.face - Math.PI / 2; // Modell zeigt nach +X
+    const sp = s.walk || 0; this.wheels.forEach((w) => (w.rotation.y = -s.t * sp / 0.42));
+    this.van.rotation.z = -Math.min(0.04, sp * 0.004) + (sp < 0.3 && sp > 0.02 ? 0.03 : 0); // Nicken beim Bremsen
   }
 
   hair(style, color, head) {
@@ -125,6 +165,7 @@ export class Character {
 
   // state: {t, talk(0..1), pose, prevPose, poseK, facing(rad), walk(speed m/s), headYaw, blinkOff}
   update(s) {
+    if (this.isVan) return this.updateVan(s);
     const t = s.t;
     this.root.rotation.y = s.facing;
     // Atmen / Gewicht verlagern
@@ -132,7 +173,8 @@ export class Character {
     this.body.position.y = br * 0.004;
     this.body.rotation.z = Math.sin(t * 0.45 + (s.blinkOff || 0)) * 0.015;
     // Laufen
-    const ph = t * 7.5, w = Math.min(1, (s.walk || 0) / 1.2);
+    const run = (s.walk || 0) > 2.6, ph = t * (run ? 11 : 7.5), w = Math.min(1, (s.walk || 0) / 1.2) * (run ? 1.5 : 1);
+    this.body.rotation.x = run ? 0.18 : 0;
     this.legs[0].rotation.x = Math.sin(ph) * 0.5 * w; this.legs[1].rotation.x = -Math.sin(ph) * 0.5 * w;
     this.body.position.y += Math.abs(Math.cos(ph)) * 0.025 * w;
     // Arme: Pose mischen
@@ -147,6 +189,7 @@ export class Character {
       arm.el.rotation.set(ex, 0, 0);
     });
     this.phone.visible = s.pose === 'handy' && k > 0.5;
+    if (this.flash) this.flash.visible = s.pose === 'leuchten' && k > 0.4;
     // Kopf: leicht nicken beim Reden, zur Kamera drehen
     this.head.rotation.set(Math.sin(t * 5.2) * 0.04 * (s.talk > 0.05 ? 1 : 0) + (s.headPitch || 0), s.headYaw || 0, Math.sin(t * 0.7) * 0.03);
     // Blinzeln
