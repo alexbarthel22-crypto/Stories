@@ -184,6 +184,9 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/jens_1830.json`: **„Jens – 18:30“** (ca. 92 s). Jens trifft am Aussichtspunkt einen Fremden im grauen Mantel.
   Der sagt voraus, dass um halb sieben die Lichter ausgehen. Dann folgen ein abgebrochener Anruf seines Bruders Tobi
   und eine Nachricht von „Unbekannt“. Um 18:30 erlischt die ganze Stadt, und Tobi steht plötzlich hinter Jens.
+- `stories/jens_1830_teil2.json`: **„Jens – 18:30 · Teil 2“** (ca. 77 s, Set `gasse`). Flucht im Gewitterregen in die Färbergasse.
+  Tobi trägt ein Funkgerät und verrät Jens. Agenten mit Taschenlampen kommen, ein Hubschrauber kreist, ein Transporter versperrt die Einfahrt,
+  eine Katze erschreckt ihn. Eine grüne Tür knarrt auf. Im Hinterzimmer mit Kerzen und Pinnwand steht sein totgeglaubter Vater. Dann hämmert es an der Tür.
 
 ## Neu: Felder für mehr Spannung und Details
 
@@ -208,3 +211,36 @@ Beim Blick aufs Handy zoomt das Bild automatisch heran; die Hand hält das Gerä
 Neue Geräusche: `tippen, gesendet, stich, braam, summen, jogger, transporter, tueren, glocke, rennen, atem_schwer,
 atmo_laub, zug_fern, funk_knacken, hund_fern` · Musik: `gen/musik_4_flucht.mp3`, `gen/musik_5_lauern.mp3`.
 In der Szene laufen automatisch: Vogelschwarm, Herbstlaub im Wind, Flugzeug mit Blinklicht, Fensterlichter, die beim Stromausfall ausgehen.
+
+## Set `gasse` (Teil 2): Altstadtgasse bei Nacht, Gewitter und Regen
+
+Himmel `"himmel": "nacht"`. Die Gasse läuft entlang Z, die Einfahrt liegt bei z ≈ +14, das Ende bei z ≈ −30. Die grüne Tür ist rechts (x = 2.6, z −2.2 … −1.0), dahinter das Hinterzimmer (x 2.9 … 8.2).
+Blickpunkte: `gasse, ende, einfahrt, tuer, links, rechts, tonnen, himmel, fenster, boden, zimmer, pinnwand`.
+
+Automatisch zu sehen:
+- Regenstreifen und Spritzer in den Pfützen, Wasser aus den Fallrohren, Dampf aus dem Gully
+- schaukelnde Wäsche und ein schwingendes „Café Mond“-Schild
+- flackernde Kerzenfenster mit Spiegelung auf dem nassen Pflaster, eine Nachbarin als Silhouette im Fenster
+- tote Lichterkette, Graffiti, Plakate, Fahrrad, Mülltonnen mit Katze, Flaschenkiste
+- Auto mit Warnblinker an der Einfahrt
+- im Zimmer: Pinnwand mit Fotos und roten Fäden, Kerzen, eine Uhr mit laufendem Sekundenzeiger, Bücherregal, Radio
+
+| Feld | Wirkung |
+|---|---|
+| `effekt: {blitz: s \| [s, …]}` | Blitz: Himmel und Szene leuchten auf, Blitz am Himmel (`sfx: donner_nah.wav`) |
+| `effekt: {katze: s}` | Katze springt von der Tonne, Deckel klappert (`sfx: tonne_katze.wav`) |
+| `effekt: {tuer_auf: s}`, `effekt: {tuer_zu: s}` | grüne Tür knarrt auf (`knarren.wav`) bzw. knallt zu (`tuer_knall.wav`) |
+| `hall: 0.7` (Beat, Satz oder Story) | Raumhall auf der Stimme (Nachhallzeit in s) |
+| `gedaempft: true` (Satz/Hintergrund) | Stimme klingt wie durch eine Tür |
+| `handy: {…, tropfen: true}` | Regentropfen auf dem Display |
+
+Cast: `funkgeraet: true` (Funkgerät an der Brust, rote LED blinkt bei Funksprüchen), `kerze: true` (Pose `kerze`, Kerze wirft warmes Licht aufs Gesicht),
+`schirm: "#farbe"` (Regenschirm, Pose `schirm`). Neue Posen: `funken`, `kerze`, `schirm`, `flehen`.
+
+Neue Geräusche:
+- Atmo: `atmo_regen`, `atmo_tropfen` (Tropfen und Regenrinne), `atmo_drinnen` (gedämpfter Regen im Raum)
+- Effekte: `donner_nah, donner_fern, rennen_nass, stiefel_nass, tonne_katze, knarren, tuer_knall, klopfen, ticken, heli_nah, autoalarm_fern`
+- erzeugen: `python3 tools/sfx_synth.py teil2`
+
+Musik: `gen/musik_6_regen.mp3` (kalt, pulsierend) und `gen/musik_7_enthuellung.mp3` (Spieluhr, Streicher).
+Thumbnail: `node tools/thumbnail.js <name> --bei <s> --titel "Zeile|*gelb*|Zeile" --unter "TEIL 2"`.

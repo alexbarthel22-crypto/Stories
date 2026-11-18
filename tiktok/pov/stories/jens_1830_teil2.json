@@ -1,0 +1,896 @@
+{
+ "titel": "Jens – 18:30 · Teil 2",
+ "set": "gasse",
+ "himmel": "nacht",
+ "fov": 140,
+ "blick": "gasse",
+ "max_pause": 0.45,
+ "handy_fov": 96,
+ "seed": 11,
+ "atmo_spuren": [
+  {
+   "datei": "atmo_regen.wav",
+   "lautstaerke": 0.5
+  },
+  {
+   "datei": "atmo_tropfen.wav",
+   "lautstaerke": 0.28
+  },
+  {
+   "datei": "atmo_wind.wav",
+   "lautstaerke": 0.16
+  },
+  {
+   "datei": "atmo_drinnen.wav",
+   "lautstaerke": 0.0
+  }
+ ],
+ "cast": {
+  "ich": {
+   "pos": [
+    -0.6,
+    19.0
+   ],
+   "pose": "rennen",
+   "oberteil": "#5a6b3a",
+   "hose": "#2c3c5e",
+   "haut": "#ecd6bd",
+   "stimme": "gemini:Puck",
+   "regie": "junger Mann, Anfang zwanzig"
+  },
+  "tobi": {
+   "pos": [
+    -0.2,
+    16.6
+   ],
+   "pose": "rennen",
+   "frisur": "kurz",
+   "haare": "#3b2a1d",
+   "oberteil": "#2a2f3a",
+   "hose": "#1e2433",
+   "augen": "#7a9a6a",
+   "details": "none",
+   "funkgeraet": true,
+   "stimme": "gemini:Fenrir",
+   "regie": "junger Mann"
+  },
+  "vater": {
+   "pos": [
+    7.25,
+    -1.6
+   ],
+   "pose": "kerze",
+   "schaut": [
+    -90,
+    0
+   ],
+   "frisur": "kurz",
+   "haare": "#5e5248",
+   "oberteil": "#4a3a2e",
+   "hose": "#2a2622",
+   "schuhe": "#1a1410",
+   "brille": true,
+   "augen": "#6a8a5a",
+   "haut": "#e6cdb2",
+   "details": "none",
+   "kerze": true,
+   "blickhoehe": 1.45,
+   "stimme": "gemini:Iapetus",
+   "regie": "Mann um die fünfzig, warme, raue, tiefe Stimme"
+  },
+  "agent1": {
+   "pos": [
+    -60,
+    80
+   ],
+   "taschenlampe": true,
+   "oberteil": "#16181c",
+   "hose": "#111215",
+   "schuhe": "#0a0a0a",
+   "frisur": "kurz",
+   "haare": "#151515",
+   "brille": true,
+   "details": "none",
+   "stimme": "gemini:Orus",
+   "regie": "Mann, kalt, sachlich"
+  },
+  "agent2": {
+   "pos": [
+    -61,
+    81
+   ],
+   "taschenlampe": true,
+   "oberteil": "#16181c",
+   "hose": "#111215",
+   "schuhe": "#0a0a0a",
+   "frisur": "none",
+   "haut": "#c99d7b",
+   "details": "none",
+   "stimme": "gemini:Alnilam",
+   "regie": "Mann, hart"
+  },
+  "zentrale": {
+   "pos": [
+    -70,
+    90
+   ],
+   "stimme": "gemini:Rasalgethi",
+   "regie": "Mann, Funkspruch, emotionslos, militärisch knapp"
+  },
+  "nachbarin": {
+   "pos": [
+    -72,
+    92
+   ],
+   "stimme": "gemini:Autonoe",
+   "regie": "ältere Frau, ruft aus einem Fenster"
+  },
+  "passant": {
+   "pos": [
+    -14,
+    -33.6
+   ],
+   "pose": "schirm",
+   "schirm": "#8a2a3a",
+   "oberteil": "#3a4a5a",
+   "hose": "#222",
+   "frisur": "kurz",
+   "haare": "#2a2a2a",
+   "details": "none",
+   "schaut": [
+    -90,
+    0
+   ]
+  },
+  "transporter": {
+   "typ": "transporter",
+   "pos": [
+    -60,
+    18.4
+   ],
+   "richtung": 90
+  }
+ },
+ "beats": [
+  {
+   "schwarz": true,
+   "text": "TEIL 2",
+   "text_farbe": "#ffd400",
+   "dauer": 2.4,
+   "blick": "gasse",
+   "schnitt": true,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.55,
+     "ab": 0
+    },
+    {
+     "datei": "donner_nah.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.5
+    }
+   ],
+   "musik": {
+    "datei": "gen/musik_6_regen.mp3",
+    "lautstaerke": 0.2,
+    "einblenden": 2.0
+   },
+   "hall": 0.9
+  },
+  {
+   "ort": [
+    "FÄRBERGASSE",
+    "Altstadt · 18:34"
+   ],
+   "blick": "gasse",
+   "schnitt": true,
+   "pose": {
+    "ich": "rennen",
+    "tobi": "rennen",
+    "passant": "schirm"
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      -0.4,
+      0.6
+     ],
+     "zeit": 3.6
+    },
+    "tobi": {
+     "nach": [
+      -0.4,
+      -1.7
+     ],
+     "zeit": 3.3
+    },
+    "passant": {
+     "nach": [
+      16,
+      -33.6
+     ],
+     "zeit": 16
+    }
+   },
+   "wer": "tobi",
+   "sagt": "Hier rein! Schnell!",
+   "wie": "völlig außer Atem, keuchend, in Panik, gehetzt geflüstert-gerufen",
+   "pause_vor": 0.5,
+   "dauer": 3.8,
+   "effekt": {
+    "blitz": 2.2
+   },
+   "sfx": [
+    {
+     "datei": "rennen_nass.wav",
+     "lautstaerke": 0.7,
+     "ab": 0,
+     "dauer": 3.6
+    },
+    {
+     "datei": "donner_nah.wav",
+     "lautstaerke": 0.75,
+     "ab": 2.6
+    },
+    {
+     "datei": "sirene_fern.wav",
+     "lautstaerke": 0.18,
+     "ab": 0.2
+    }
+   ],
+   "hall": 0.9
+  },
+  {
+   "pose": {
+    "ich": "runter",
+    "tobi": "idle"
+   },
+   "blick": "tobi",
+   "drehung": 0.6,
+   "wer": "tobi",
+   "sagt": "Die suchen dich überall. Die ganze Stadt ist dunkel.",
+   "wie": "atemlos, keuchend zwischen den Worten, panisch, gehetzt",
+   "sfx": [
+    {
+     "datei": "atem_schwer.wav",
+     "lautstaerke": 0.35,
+     "ab": 0,
+     "dauer": 5
+    }
+   ],
+   "hintergrund": [
+    {
+     "wer": "nachbarin",
+     "sagt": "Hallo? Ist da unten jemand?",
+     "wie": "ängstlich, ruft aus dem Fenster, hallend",
+     "ab": 2.2,
+     "lautstaerke": 0.32
+    }
+   ],
+   "hall": 0.9
+  },
+  {
+   "wer": "ich",
+   "sagt": "Du hast mich doch angerufen. Du wolltest wissen, wo ich bin.",
+   "wie": "noch außer Atem, misstrauisch, zitternd, scharf",
+   "blick": [
+    12,
+    28
+   ],
+   "drehung": 1.2,
+   "blick_verzoegerung": 0.3,
+   "hall": 0.9
+  },
+  {
+   "blick": "tobi",
+   "drehung": 0.7,
+   "wer": "tobi",
+   "sagt": "Ich? Nein! Mein Handy ist seit heute Mittag weg.",
+   "wie": "zu schnell, nervös, ertappt, Stimme überschlägt sich",
+   "pose": {
+    "tobi": "achselzucken"
+   },
+   "stimmung": {
+    "tobi": "angst"
+   },
+   "hall": 0.9
+  },
+  {
+   "pose": {
+    "ich": "handy",
+    "tobi": "idle"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "18:34",
+    "text": [
+     "Er lügt.",
+     "Schau auf seine Brust."
+    ],
+    "nach_und_nach": 1.3,
+    "tropfen": true
+   },
+   "dauer": 3.5,
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.3
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 1.6
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.55,
+     "ab": 1.6
+    }
+   ],
+   "hall": 0.9
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": "tobi",
+   "drehung": 0.7,
+   "zoom": 38,
+   "zoom_ab": 0.5,
+   "zoom_dauer": 1.0,
+   "wer": "zentrale",
+   "sagt": "Team zwei. Status?",
+   "funk": true,
+   "lautstaerke": 0.85,
+   "farbe": "#ff7a6a",
+   "pause_vor": 1.4,
+   "sfx": [
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.5,
+     "ab": 0,
+     "dauer": 9
+    }
+   ]
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.7,
+   "wer": "ich",
+   "sagt": "Tobi… was ist das?",
+   "wie": "geschockt, heiser geflüstert, ungläubig",
+   "musik": null,
+   "hall": 0.9
+  },
+  {
+   "wer": "tobi",
+   "sagt": "Es tut mir leid, Jens. Die haben meine Schwester.",
+   "wie": "verzweifelt, den Tränen nah, stockend",
+   "pose": {
+    "tobi": "flehen"
+   },
+   "effekt": {
+    "blitz": 1.4
+   },
+   "sfx": [
+    {
+     "datei": "donner_nah.wav",
+     "lautstaerke": 0.6,
+     "ab": 2.0
+    }
+   ],
+   "musik": {
+    "datei": "gen/musik_5_lauern.mp3",
+    "lautstaerke": 0.22,
+    "einblenden": 1.5
+   },
+   "hall": 0.9
+  },
+  {
+   "wer": "tobi",
+   "sagt": "Ich hatte keine Wahl.",
+   "wie": "gebrochen, leise",
+   "pose": {
+    "tobi": "idle"
+   },
+   "hall": 0.9
+  },
+  {
+   "wer": "tobi",
+   "sagt": "Er ist hier. Färbergasse.",
+   "wie": "leise, gebrochen, spricht in ein Funkgerät, schaut weg",
+   "pose": {
+    "tobi": "funken"
+   },
+   "schaut": {
+    "tobi": [
+     0,
+     0
+    ]
+   },
+   "pause_vor": 0.4,
+   "sfx": [
+    {
+     "datei": "funk_knacken.wav",
+     "lautstaerke": 0.3,
+     "ab": 0.25
+    },
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 1.9
+    }
+   ],
+   "pause": 0.2,
+   "laufen": {
+    "tobi": {
+     "nach": [
+      1.6,
+      -1.0
+     ],
+     "zeit": 1.4,
+     "ab": 0.1
+    }
+   },
+   "hall": 0.9
+  },
+  {
+   "wer": "zentrale",
+   "sagt": "Verstanden. Zugriff.",
+   "funk": true,
+   "lautstaerke": 0.85,
+   "farbe": "#ff7a6a",
+   "sfx": []
+  },
+  {
+   "blick": "ende",
+   "drehung": 0.9,
+   "zoom": 75,
+   "zoom_dauer": 1.2,
+   "pose": {
+    "agent1": "leuchten",
+    "agent2": "leuchten",
+    "tobi": "idle"
+   },
+   "schaut": {
+    "tobi": "ich"
+   },
+   "laufen": {
+    "agent1": {
+     "nach": [
+      -0.9,
+      -29.0
+     ],
+     "zeit": 0.01
+    },
+    "agent2": {
+     "nach": [
+      0.8,
+      -29.6
+     ],
+     "zeit": 0.01
+    }
+   },
+   "effekt": {
+    "hubschrauber": {
+     "ab": 0.0,
+     "dauer": 13,
+     "von": [
+      80,
+      60,
+      -110
+     ],
+     "nach": [
+      4,
+      34,
+      -16
+     ]
+    }
+   },
+   "musik": {
+    "datei": "gen/musik_4_flucht.mp3",
+    "lautstaerke": 0.26,
+    "einblenden": 0.3
+   },
+   "sfx": [
+    {
+     "datei": "heli_nah.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.0
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.5
+    }
+   ],
+   "dauer": 1.0,
+   "hall": 0.9
+  },
+  {
+   "laufen": {
+    "agent1": {
+     "nach": [
+      -0.9,
+      -15
+     ],
+     "zeit": 7.5
+    },
+    "agent2": {
+     "nach": [
+      0.7,
+      -16
+     ],
+     "zeit": 7.8
+    }
+   },
+   "wer": "agent1",
+   "sagt": "Keine Bewegung!",
+   "wie": "laut, scharf, ruft über Distanz",
+   "sfx": [
+    {
+     "datei": "stiefel_nass.wav",
+     "lautstaerke": 0.55,
+     "ab": 0.0
+    }
+   ],
+   "pause": 0.4,
+   "hall": 0.9
+  },
+  {
+   "blick": "einfahrt",
+   "drehung": 0.8,
+   "zoom": 0,
+   "zoom_dauer": 0.6,
+   "laufen": {
+    "transporter": {
+     "nach": [
+      -1.5,
+      18.4
+     ],
+     "zeit": 2.8
+    }
+   },
+   "sfx": [
+    {
+     "datei": "transporter.wav",
+     "lautstaerke": 0.55,
+     "ab": -1.6
+    },
+    {
+     "datei": "tueren.wav",
+     "lautstaerke": 0.5,
+     "ab": 2.6
+    }
+   ],
+   "wer": "ich",
+   "sagt": "Nein, nein, nein…",
+   "wie": "panisch, verzweifelt, schnell atmend",
+   "pause_vor": 1.2,
+   "dauer": 3.6,
+   "hall": 0.9
+  },
+  {
+   "blick": "tonnen",
+   "drehung": 0.25,
+   "effekt": {
+    "katze": 0.05
+   },
+   "schuetteln": 1.0,
+   "schuetteln_ab": 0.05,
+   "laufen": {
+    "ich": {
+     "nach": [
+      -0.1,
+      1.1
+     ],
+     "zeit": 0.5
+    }
+   },
+   "sfx": [
+    {
+     "datei": "tonne_katze.wav",
+     "lautstaerke": 1.0,
+     "ab": 0.0
+    }
+   ],
+   "dauer": 1.6,
+   "hall": 0.9
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "blick": "gasse",
+   "drehung": 0.5,
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "18:35",
+    "text": [
+     "Er lügt.",
+     "Schau auf seine Brust.",
+     "Grüne Tür. Rechts von dir.",
+     "JETZT."
+    ],
+    "nach_und_nach": 0.9,
+    "neu_ab": 2,
+    "tropfen": true
+   },
+   "dauer": 2.7,
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.25
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 1.15
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 1.15
+    }
+   ],
+   "hall": 0.9
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": "tuer",
+   "drehung": 0.6,
+   "effekt": {
+    "tuer_auf": 0.4
+   },
+   "sfx": [
+    {
+     "datei": "knarren.wav",
+     "lautstaerke": 1.0,
+     "ab": 0.4
+    }
+   ],
+   "wer": "ich",
+   "sagt": "Was…?",
+   "wie": "fassungslos, leise",
+   "pause_vor": 1.6,
+   "dauer": 3.0,
+   "hintergrund": [
+    {
+     "wer": "agent2",
+     "sagt": "Zielperson rührt sich nicht!",
+     "wie": "ruft, hart",
+     "ab": 0.3,
+     "lautstaerke": 0.45
+    }
+   ],
+   "hall": 0.9
+  },
+  {
+   "pose": {
+    "ich": "rennen"
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      2.0,
+      -1.6
+     ],
+     "zeit": 1.0
+    }
+   },
+   "dauer": 1.0,
+   "sfx": [
+    {
+     "datei": "rennen_nass.wav",
+     "lautstaerke": 0.7,
+     "ab": 0,
+     "dauer": 1.6
+    }
+   ],
+   "hintergrund": [
+    {
+     "wer": "tobi",
+     "sagt": "Jens! Nicht!",
+     "wie": "ruft verzweifelt",
+     "ab": 0.2,
+     "lautstaerke": 0.7
+    }
+   ],
+   "hall": 0.9
+  },
+  {
+   "laufen": {
+    "ich": {
+     "nach": [
+      3.9,
+      -1.6
+     ],
+     "zeit": 0.9
+    }
+   },
+   "blick": "zimmer",
+   "drehung": 0.5,
+   "effekt": {
+    "tuer_zu": 0.9
+   },
+   "schuetteln": 1.1,
+   "schuetteln_ab": 0.95,
+   "sfx": [
+    {
+     "datei": "tuer_knall.wav",
+     "lautstaerke": 1.0,
+     "ab": 0.9
+    }
+   ],
+   "dauer": 1.6,
+   "pose": {
+    "ich": "runter"
+   },
+   "atmo": {
+    "atmo_regen.wav": 0.07,
+    "atmo_tropfen.wav": 0.03,
+    "atmo_drinnen.wav": 0.5,
+    "atmo_wind.wav": 0.0
+   },
+   "atmo_ab": 0.9,
+   "musik": null,
+   "hall": 0.9
+  },
+  {
+   "ort": [
+    "HINTERZIMMER",
+    "Färbergasse 13 · 18:35"
+   ],
+   "wer": "ich",
+   "sagt": "Hallo…?",
+   "wie": "flüsternd, außer Atem, ängstlich",
+   "pause_vor": 1.6,
+   "sfx": [
+    {
+     "datei": "ticken.wav",
+     "lautstaerke": 0.9,
+     "ab": 0,
+     "dauer": 30
+    },
+    {
+     "datei": "atem_schwer.wav",
+     "lautstaerke": 0.4,
+     "ab": 0,
+     "dauer": 5
+    }
+   ],
+   "pause": 1.0,
+   "hall": 0.7
+  },
+  {
+   "schaut": {
+    "vater": "ich"
+   },
+   "pose": {
+    "vater": "kerze"
+   },
+   "zoom": 70,
+   "zoom_ab": 0.6,
+   "zoom_dauer": 2.0,
+   "wer": "vater",
+   "sagt": "Du bist groß geworden, Jens.",
+   "wie": "warm, leise, rau, bewegt",
+   "pause_vor": 1.2,
+   "musik": {
+    "datei": "gen/musik_7_enthuellung.mp3",
+    "lautstaerke": 0.3,
+    "einblenden": 1.0
+   },
+   "sfx": [
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.6
+    }
+   ],
+   "hall": 0.7
+  },
+  {
+   "wer": "ich",
+   "sagt": "…Papa?",
+   "wie": "fassungslos, flüsternd, zitternd",
+   "pause_vor": 0.6,
+   "pause": 1.0,
+   "zoom": 55,
+   "zoom_dauer": 2.5,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.55,
+     "ab": 0.9
+    }
+   ],
+   "hall": 0.7
+  },
+  {
+   "wer": "vater",
+   "sagt": "Hör mir gut zu. Was heute passiert ist, war nur der Anfang.",
+   "wie": "ernst, eindringlich, leise",
+   "hall": 0.7
+  },
+  {
+   "wer": "vater",
+   "sagt": "Um Mitternacht…",
+   "wie": "ernst, bricht ab",
+   "pause": 0.15,
+   "hall": 0.7
+  },
+  {
+   "schuetteln": 1.2,
+   "schuetteln_ab": 0.1,
+   "sfx": [
+    {
+     "datei": "klopfen.wav",
+     "lautstaerke": 0.95,
+     "ab": 0.1
+    }
+   ],
+   "blick": [
+    90,
+    -4
+   ],
+   "drehung": 0.35,
+   "blick_verzoegerung": 0.2,
+   "zoom": 0,
+   "zoom_dauer": 0.3,
+   "dauer": 2.4,
+   "hintergrund": [
+    {
+     "wer": "agent1",
+     "sagt": "Aufmachen! Sofort!",
+     "wie": "brüllt, gedämpft durch eine Tür",
+     "ab": 0.9,
+     "lautstaerke": 0.75,
+     "untertitel": true,
+     "gedaempft": true,
+     "hall": 0.4
+    }
+   ],
+   "musik": null,
+   "hall": 0.7
+  },
+  {
+   "schwarz": true,
+   "ende": "FORTSETZUNG FOLGT",
+   "ende_unter": "TEIL 3",
+   "ende_ab": 0.5,
+   "dauer": 3.6,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.0
+    },
+    {
+     "datei": "donner_fern.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.6
+    }
+   ],
+   "ort": null,
+   "hall": 0.7
+  }
+ ]
+}

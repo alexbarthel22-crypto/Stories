@@ -369,7 +369,193 @@ def hund_fern(d=6.0):
     return pan(lp(reverb(x, 2.0, 0.65), 2500), 0.6)
 
 
+# ---------- Teil 2: Regen, Gewitter, Gasse, Hinterzimmer ----------
+def grains(d, rate, f_lo, f_hi, dec=(0.004, 0.02), amp=(0.2, 1.0)):
+    """viele kurze, resonante Tropfen-Klicks (für Regen/Tropfen)"""
+    x = np.zeros(int(d * SR)); n = int(d * rate)
+    for _ in range(n):
+        i = int(R.uniform(0, d - 0.1) * SR); f = R.uniform(f_lo, f_hi); dk = R.uniform(*dec); L = int(dk * 6 * SR)
+        tt = np.arange(L) / SR; g = np.sin(2 * np.pi * f * tt * (1 - 0.3 * tt / (dk * 6))) * np.exp(-tt / dk) * R.uniform(*amp)
+        x[i:i + L] += g[:len(x) - i]
+    return x
+
+def regen(d=60):
+    ch = []
+    for k in range(2):
+        g = 0.75 + 0.25 * smooth_rand(d, 0.15, 0, 1)
+        hiss = bp(pink(d), 500, 9000, 2) * 0.55 * g + hp(noise(d), 6000, 2) * 0.12
+        drops = hp(grains(d, 900, 2500, 7000, (0.0008, 0.003), (0.1, 0.6)), 1500, 2) * 0.5
+        near = grains(d, 70, 900, 2500, (0.002, 0.008), (0.2, 0.8)) * 0.35
+        low = lp(brown(d), 250) * 0.25
+        ch.append(hiss + drops + near + low)
+    return loopable(stereo(*ch))
+
+def tropfen(d=60):
+    # einzelne Tropfen in Pfützen / auf Blech + eine plätschernde Regenrinne links
+    ch = []
+    for k in range(2):
+        x = np.zeros(int(d * SR)); s_ = R.uniform(0, 0.5)
+        while s_ < d - 0.3:
+            f = R.uniform(700, 2400); L = int(0.12 * SR); tt = t_(0.12)
+            pl = np.sin(2 * np.pi * f * tt * (1 + 0.6 * tt / 0.12)) * np.exp(-tt / R.uniform(0.012, 0.04)) * R.uniform(0.2, 0.7)
+            i = int(s_ * SR); x[i:i + L] += pl[:len(x) - i]; s_ += R.exponential(0.22)
+        gush = bp(noise(d), 250, 2800, 2) * (0.5 + 0.5 * smooth_rand(d, 3.0, 0.2, 1.0)) * (0.5 if k == 0 else 0.15)
+        gush += grains(d, 400, 500, 1800, (0.003, 0.01), (0.1, 0.5)) * (0.4 if k == 0 else 0.12)
+        ch.append(reverb(x, 0.8, 0.3) + gush)
+    return loopable(stereo(*ch))
+
+def donner(d=9.0, nah=True):
+    tt = t_(d); x = np.zeros(len(tt))
+    if nah:
+        crack = hp(noise(0.5), 1200, 2) * env_ad(int(0.5 * SR), 0.001, 0.12) * 2.6
+        crack += bp(noise(0.5), 300, 3000, 2) * env_ad(int(0.5 * SR), 0.001, 0.15) * 0.9
+        x[:len(crack)] += crack
+    rum = lp(brown(d), 160 if nah else 110, 4) * 3.0
+    env = np.zeros(len(tt)); t0 = 0.05 if nah else 0.6
+    for k in range(6):
+        c = t0 + k * R.uniform(0.35, 0.9); a = R.uniform(0.5, 1.0) * (0.85 ** k)
+        env += a * np.exp(-np.maximum(0, tt - c) / R.uniform(0.6, 1.4)) * (tt >= c - 0.15) * np.clip((tt - c + 0.15) / 0.15, 0, 1)
+    x += rum * env * (1.0 if nah else 0.7)
+    x = reverb(x, 3.5, 0.5, 0.05)
+    return fade(pan(x, np.linspace(-0.3, 0.3, len(x))), 0.01, 1.5)
+
+def bubbles(d, n, f_lo=500, f_hi=2600):
+    # Minnaert-Blasen: kurze, nach oben gleitende Sinus-Pieper = typischer Wasserklang
+    x = np.zeros(int(d * SR))
+    for _ in range(n):
+        i = int(R.uniform(0, d * 0.7) * SR); f0 = R.uniform(f_lo, f_hi); tau = R.uniform(0.003, 0.012); L = int(tau * 7 * SR); tt = np.arange(L) / SR
+        b = np.sin(2 * np.pi * f0 * tt * (1 + tt / (tau * 3))) * np.exp(-tt / tau) * R.uniform(0.3, 1.0); x[i:i + L] += b[:len(x) - i]
+    return x
+
+def splash_step(hart=1.0):
+    # Fuß tritt in eine Pfütze: Platschen + Blasen + Sprühtropfen, kaum Absatz
+    n = int(0.4 * SR); tt = t_(0.4)
+    thump = np.sin(2 * np.pi * 85 * tt) * env_ad(n, 0.002, 0.015) * 0.15 * hart
+    slosh = bp(noise(0.4), 400, 6000, 2) * (np.minimum(1, tt / 0.004) * np.exp(-tt / 0.05)) * 0.9
+    bub = bubbles(0.4, 14) * 0.9
+    spray = grains(0.4, 300, 2500, 7000, (0.0008, 0.003), (0.1, 0.5)) * np.exp(-tt / 0.1)
+    return thump + slosh + bub + spray
+
+def rennen_nass(d=4.0, rate=3.3):
+    x = np.zeros(int(d * SR)); s_ = 0.05
+    while s_ < d - 0.3:
+        st = splash_step(1.0) * R.uniform(0.8, 1.0); i = int(s_ * SR); x[i:i + len(st)] += st[:len(x) - i]; s_ += 1 / rate * R.uniform(0.95, 1.05)
+    x += atmer(d, 2.4, 0.45)
+    return pan(reverb(x, 0.8, 0.25), 0.0)
+
+def stiefel_nass(d=8.0):
+    x = np.zeros(int(d * SR))
+    for off, rate in ((0.0, 1.9), (0.24, 1.85)):
+        s_ = off
+        while s_ < d - 0.4:
+            near = 0.1 + 0.9 * (s_ / d) ** 1.4
+            st = splash_step(1.0) * R.uniform(0.8, 1.0)
+            st = lp(st, 1500) * (1 - near) + st * near
+            i = int(s_ * SR); x[i:i + len(st)] += st[:len(x) - i] * near; s_ += 1 / rate * R.uniform(0.97, 1.03)
+    return pan(reverb(x, 1.6, 0.45, 0.05), 0.0)
+
+def tonne_katze(d=2.6):
+    x = np.zeros(int(d * SR))
+    # Katze: "Miau"-Schrei (Formant wandert i -> a -> u) + Fauchen
+    L = int(0.6 * SR); tt = t_(0.6); k = tt / 0.6
+    f0 = 520 + 380 * np.sin(np.pi * k) ** 0.6
+    src = signal.sawtooth(2 * np.pi * np.cumsum(f0) / SR) * np.sin(np.pi * k) ** 0.5
+    v = np.zeros(L)
+    for a, b in ((0, 0.3), (0.3, 0.7), (0.7, 1.0)):
+        m = (k >= a) & (k < b); fc = 2600 if a == 0 else 1500 if a == 0.3 else 900
+        v += bp(src, fc * 0.7, fc * 1.3, 2) * m
+    hiss = bp(noise(0.6), 2500, 8000, 2) * np.exp(-np.maximum(0, tt - 0.45) / 0.08) * (tt > 0.45) * 0.7
+    x[:L] += (v * 1.6 + hiss)
+    # Blechdeckel scheppert: harte, helle Schläge + metallisches Rasseln, kurze Nachklänge
+    for st, v_ in ((0.15, 1.0), (0.42, 0.9), (0.55, 0.6), (0.63, 0.45), (0.69, 0.35), (0.74, 0.25), (0.78, 0.18)):
+        n = int(0.5 * SR); tt = t_(0.5)
+        hit = bp(noise(0.5), 1200, 9000, 2) * np.exp(-tt / 0.03) * 1.4
+        for fr, a, dk in ((1320, 0.4, 0.09), (2170, 0.45, 0.07), (3390, 0.35, 0.05), (4730, 0.25, 0.04), (6110, 0.15, 0.03)):
+            hit += np.sin(2 * np.pi * fr * R.uniform(0.96, 1.04) * tt) * np.exp(-tt / dk) * a
+        i = int(st * SR); x[i:i + n] += hit[:len(x) - i] * v_ * 1.2
+    return pan(reverb(x, 1.0, 0.3), np.linspace(-0.5, -0.1, len(x)))
+
+def knarren(d=3.2):
+    # alte Holztür: unregelmäßige Reibimpulse, jeder Impuls regt Holzresonanzen an
+    tt = t_(d); rate = 16 + 55 * np.sin(np.pi * np.clip(tt / d, 0, 1)) ** 1.5 + smooth_rand(d, 3, -10, 10)
+    ph = np.cumsum(np.maximum(6, rate)) / SR; idx = np.nonzero(np.diff(np.floor(ph)) > 0)[0]
+    imp = np.zeros(len(tt)); imp[idx] = R.uniform(0.3, 1.0, len(idx)) * (0.5 + 0.5 * np.sin(np.pi * tt[idx] / d))
+    L = int(0.04 * SR); k = np.arange(L) / SR
+    ir = sum(np.sin(2 * np.pi * f * k) * np.exp(-k / dk) * a for f, a, dk in ((480, 1.0, 0.012), (1090, 0.8, 0.009), (1730, 0.6, 0.007), (2480, 0.4, 0.005), (3400, 0.2, 0.004)))
+    x = signal.fftconvolve(imp, ir)[:len(tt)]
+    x += bp(noise(d), 800, 3000, 2) * signal.fftconvolve(imp, np.ones(int(0.004 * SR)))[:len(tt)] * 0.15
+    x *= np.minimum(1, np.minimum(tt / 0.15, (d - tt) / 0.3)).clip(0, 1)
+    return pan(reverb(x, 0.9, 0.35), 0.55)
+
+def tuer_knall():
+    d = 3.0; n = int(0.6 * SR); tt = t_(0.6); x = np.zeros(int(d * SR))
+    slam = np.sin(2 * np.pi * 48 * tt) * env_ad(n, 0.002, 0.12) * 1.3 + bp(noise(0.6), 80, 1800, 2) * env_ad(n, 0.001, 0.06) * 1.1
+    latch = hp(noise(0.6), 2500) * env_ad(n, 0.0005, 0.008) * 0.6
+    frame = sum(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.12) * a for f, a in ((140, 0.4), (310, 0.3), (720, 0.15)))
+    rattle = grains(0.5, 60, 1500, 4000, (0.003, 0.012), (0.1, 0.35))
+    x[:n] += slam + frame + np.roll(latch, int(0.015 * SR)); x[int(0.04 * SR):int(0.04 * SR) + len(rattle)] += rattle
+    return pan(reverb(x, 1.6, 0.5, 0.02), -0.5)
+
+def klopfen(d=2.6):
+    x = np.zeros(int(d * SR))
+    for st, v in ((0.0, 1.0), (0.33, 0.95), (0.62, 1.0), (1.25, 1.0), (1.5, 0.9)):
+        n = int(0.35 * SR); tt = t_(0.35)
+        bang = np.sin(2 * np.pi * 75 * tt) * env_ad(n, 0.002, 0.07) * 1.2 + bp(noise(0.35), 150, 900, 2) * env_ad(n, 0.001, 0.04)
+        bang += grains(0.35, 25, 1500, 3500, (0.003, 0.008), (0.05, 0.2))
+        i = int(st * SR); x[i:i + n] += bang * v
+    return pan(reverb(x, 0.8, 0.3), -0.6)
+
+def ticken(d=30.0):
+    x = np.zeros(int(d * SR)); k = 0
+    for s_ in np.arange(0.1, d - 0.1, 0.5):
+        n = int(0.05 * SR); tt = t_(0.05); f = 2600 if k % 2 == 0 else 2100
+        c = np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.004) + bp(noise(0.05), 1000, 6000, 2) * np.exp(-tt / 0.002) * 0.6
+        i = int(s_ * SR); x[i:i + n] += c; k += 1
+    return pan(reverb(x, 0.5, 0.2), 0.3)
+
+def drinnen(d=60):
+    # Regen draußen, gehört durch Fenster und Wand (tiefpassgefiltert) + Prasseln an der Scheibe + Kerzenknistern
+    r_ = regen(d + 2.0)
+    ch = []
+    for k in range(2):
+        x = lp(r_[:, k], 2600, 2) * 0.7 + lp(r_[:, k], 500, 2) * 0.5 + lp(brown(d), 90) * 0.15
+        x += grains(d, 1.5, 3000, 7000, (0.001, 0.004), (0.05, 0.25))
+        ch.append(x[:int(d * SR)])
+    return loopable(stereo(*ch))
+
+def heli_nah(d=14.0):
+    tt = t_(d); near = np.clip(tt / 6.0, 0, 1) ** 1.5 * np.where(tt > 10, np.clip(1 - (tt - 10) / 4, 0.3, 1), 1)
+    br = 14.5 + 0.5 * np.sin(2 * np.pi * 0.07 * tt); ph = np.cumsum(br) / SR
+    chop = (0.5 + 0.5 * np.cos(2 * np.pi * ph)) ** 6
+    blade = lp(noise(d), 900, 2) * chop * 1.4 + np.sin(2 * np.pi * np.cumsum(br * 2) / SR) * chop * 0.4
+    turb = (np.sin(2 * np.pi * 2350 * tt) * 0.05 + bp(noise(d), 1800, 4000, 2) * 0.08) * near
+    rumble = lp(brown(d), 120) * 0.8
+    x = (blade + rumble) * (0.2 + 0.8 * near) + turb
+    x = lp(x, 900) * (1 - near) + lp(x, 6000) * near
+    return fade(pan(reverb(x, 1.2, 0.3), np.linspace(-0.6, 0.2, len(x))), 1.5, 2.0)
+
+def autoalarm_fern(d=10.0):
+    # typische Autoalarm-Folge: Trillern, Auf-und-ab, schnelle Zwitscher-Töne, dazu Hupe
+    tt = t_(d); seg = tt % 6.0
+    f = np.where(seg < 2.0, np.where((tt * 8) % 2 < 1, 1050, 1450), np.where(seg < 4.0, 900 + 900 * ((tt * 3) % 1), np.where((tt * 14) % 2 < 1, 2100, 1600)))
+    x = signal.square(2 * np.pi * np.cumsum(f) / SR) * 0.3
+    honk = (seg < 2.0) * ((tt * 2) % 1 < 0.5)
+    x = x * (1 - 0.5 * honk) + signal.sawtooth(2 * np.pi * 420 * tt) * honk * 0.25
+    x = lp(bp(x, 400, 4000, 2), 2200)
+    return fade(pan(reverb(x, 2.2, 0.65, 0.08), 0.7), 0.3, 1.5)
+
+TEIL2 = {'atmo_regen.wav': (lambda: regen(), 0.7), 'atmo_tropfen.wav': (lambda: tropfen(), 0.6), 'donner_nah.wav': (lambda: donner(9.0, True), 0.95),
+         'donner_fern.wav': (lambda: donner(10.0, False), 0.8), 'rennen_nass.wav': (rennen_nass, 0.9), 'stiefel_nass.wav': (stiefel_nass, 0.8),
+         'tonne_katze.wav': (tonne_katze, 0.9), 'knarren.wav': (knarren, 0.8), 'tuer_knall.wav': (tuer_knall, 0.95), 'klopfen.wav': (klopfen, 0.95),
+         'ticken.wav': (ticken, 0.5), 'atmo_drinnen.wav': (lambda: drinnen(), 0.6), 'heli_nah.wav': (heli_nah, 0.85), 'autoalarm_fern.wav': (autoalarm_fern, 0.6)}
+
+
 if __name__ == '__main__':
+    import sys
+    if len(sys.argv) > 1:
+        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else {k: TEIL2[k] for k in sys.argv[1:]}):
+            f_, pk = TEIL2[n_]; save(n_, f_(), pk); print(' ', n_)
+        sys.exit()
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)
     save('atmo_wind.wav', wind(), 0.8); save('atmo_stadt.wav', stadt(), 0.8); save('voegel.wav', voegel(), 0.7)
     save('auto_vorbei.wav', auto_vorbei()); save('vibration.wav', vibration())

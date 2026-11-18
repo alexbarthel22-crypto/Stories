@@ -95,6 +95,16 @@ export function drawPhone(g, spec, t, dt = 99) {
     }
     c.textAlign = 'center';
   }
+  if (spec.tropfen) { // Regentropfen auf dem Display
+    let sd = 7; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < (spec.tropfen === true ? 16 : spec.tropfen); i++) {
+      const x = rnd() * W, y = 90 + rnd() * (H - 120), rr = 4 + rnd() * 9;
+      c.fillStyle = 'rgba(160,190,230,0.22)'; c.beginPath(); c.ellipse(x, y, rr, rr * 1.15, 0, 0, 7); c.fill();
+      c.strokeStyle = 'rgba(40,60,90,0.35)'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(x, y + 1, rr, rr * 1.15, 0, 0.2, 2.9); c.stroke();
+      c.fillStyle = 'rgba(255,255,255,0.75)'; c.beginPath(); c.arc(x - rr * 0.35, y - rr * 0.4, rr * 0.28, 0, 7); c.fill();
+      if (rnd() < 0.3) { c.fillStyle = 'rgba(160,190,230,0.18)'; c.fillRect(x - 1.5, y + rr, 3, 8 + rnd() * 20); }
+    }
+  }
   S.tex.needsUpdate = true;
 }
 function splitLines(c, text, maxW) {

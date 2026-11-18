@@ -9,6 +9,9 @@ export const SKIES = {
     cloudLit: '#ffffff', cloudShade: '#b9c6d8', fog: '#c9dbea', sunColor: '#fff6e8', sunI: 2.4, amb: '#c8d6ea', ambI: 1.4, sunDir: [0.4, 0.8, 0.45] },
   daemmerung: { top: '#1d2a52', mid: '#3e4778', low: '#a86a7e', horizon: '#e5937a', sunAz: 0, sunEl: -2, glow: '#f0a080',
     cloudLit: '#c8708a', cloudShade: '#5a4a72', fog: '#8a7090', sunColor: '#d8b0c0', sunI: 1.2, amb: '#7a7fae', ambI: 1.3, sunDir: [0.45, 0.5, 0.75] },
+  // Gewitternacht: bewölkt, kaltes Mondlicht, Stadtglühen am Horizont (für Regen-Sets)
+  nacht: { top: '#070a17', mid: '#121831', low: '#262a48', horizon: '#3d3552', sunAz: 30, sunEl: 40, glow: '#3a3f66',
+    cloudLit: '#3a3d5c', cloudShade: '#1a1c2e', fog: '#1d2238', sunColor: '#a9b8ec', sunI: 0.9, amb: '#6d7cb0', ambI: 1.15, sunDir: [-0.35, 0.85, 0.4] },
 };
 
 export function buildSky(scene, preset = 'abend', seed = 7) {

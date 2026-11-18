@@ -58,12 +58,12 @@ def tts(text, spec, regie=None):
                     'speechConfig': {'voiceConfig': {'prebuiltVoiceConfig': {'voiceName': v}}}}}
             req = urllib.request.Request(f'https://generativelanguage.googleapis.com/v1beta/models/{spec.get("modell", "gemini-3.8-flash-tts")}:generateContent',
                 data=json.dumps(body).encode(), headers={'Content-Type': 'application/json', 'x-goog-api-key': os.environ['GEMINI_API_KEY']})
-            for tries in range(8):
+            for tries in range(16):
                 try:
                     r = json.load(urllib.request.urlopen(req, timeout=300)); break
                 except urllib.error.HTTPError as e:
-                    if e.code not in (429, 500, 503) or tries == 7: raise
-                    wait = 15 * (tries + 1); print(f'  (Gemini ausgelastet, warte {wait}s …)'); time.sleep(wait)
+                    if e.code not in (429, 500, 503) or tries == 15: raise
+                    wait = min(120, 15 * (tries + 1)); print(f'  (Gemini ausgelastet, warte {wait}s …)'); time.sleep(wait)
             p = r['candidates'][0]['content']['parts'][0]['inlineData']; data = base64.b64decode(p['data'])
             if 'wav' not in p['mimeType']:  # rohes PCM (L16, 24 kHz)
                 rate = int(re.search(r'rate=(\d+)', p['mimeType']).group(1)) if 'rate=' in p['mimeType'] else 24000
@@ -143,22 +143,22 @@ for b in story['beats']:
         if NO_TTS or not spec.get('stimme'):
             n = max(0.9, len(b['sagt']) * 0.065); a = None
         else:
-            who_now = who; a = tts(b['sagt'], spec, b.get('wie')); n = len(a) / SR; voice.append((start, a, b.get('lautstaerke', 1.0), 'funk' if b.get('funk') else b.get('telefon', False)))
+            who_now = who; a = tts(b['sagt'], spec, b.get('wie')); n = len(a) / SR; voice.append((start, a, b.get('lautstaerke', 1.0), 'funk' if b.get('funk') else b.get('telefon', False), b.get('hall', story.get('hall', 0)), b.get('gedaempft', False)))
         parts = chunks(b['sagt']); L = [len(p) + 4 for p in parts]; ct = start; caps = []
         for p, l in zip(parts, L):
             d = n * l / sum(L); caps.append({'text': p, 't0': round(ct, 3), 't1': round(ct + d + (0.25 if p == parts[-1] else 0), 3)}); ct += d
         nf = int(n * FPS) + 1
         env = envelope(a, nf) if a is not None else [round(0.5 + 0.4 * np.sin(i * 1.7), 3) for i in range(nf)]
-        lines.append({'who': who, 't0': round(start, 3), 't1': round(start + n, 3), 'caps': caps, 'env': env, 'color': b.get('farbe')})
+        lines.append({'who': who, 't0': round(start, 3), 't1': round(start + n, 3), 'caps': caps, 'env': env, 'color': b.get('farbe'), 'funk': bool(b.get('funk'))})
         dur = max(dur, (start - t) + n + b.get('pause', 0.3))
     # Hintergrund-Sätze: laufen parallel (ohne Einfluss aufs Timing), standardmäßig ohne Untertitel
     for h in b.get('hintergrund', []):
         hs = cast.get(h['wer'], {}); st = t + h.get('ab', 0)
         if NO_TTS or not hs.get('stimme'): continue
         who_now = h['wer']; a = tts(h['sagt'], hs, h.get('wie')); n = len(a) / SR
-        voice.append((st, a, h.get('lautstaerke', 0.4), 'funk' if h.get('funk') else h.get('telefon', False)))
+        voice.append((st, a, h.get('lautstaerke', 0.4), 'funk' if h.get('funk') else h.get('telefon', False), h.get('hall', b.get('hall', story.get('hall', 0))), h.get('gedaempft', False)))
         caps = [{'text': p, 't0': round(st, 3), 't1': round(st + n, 3)} for p in [h['sagt']]] if h.get('untertitel') else []
-        lines.append({'who': h['wer'], 't0': round(st, 3), 't1': round(st + n, 3), 'caps': caps, 'env': envelope(a, int(n * FPS) + 1), 'color': h.get('farbe'), 'bg': True})
+        lines.append({'who': h['wer'], 't0': round(st, 3), 't1': round(st + n, 3), 'caps': caps, 'env': envelope(a, int(n * FPS) + 1), 'color': h.get('farbe'), 'bg': True, 'funk': bool(h.get('funk'))})
     if dur <= 0: dur = 1.5
     t += dur; b['t1'] = round(t, 3); beats.append(b)
 total = t + story.get('nachlauf', 0.5)
@@ -200,8 +200,21 @@ def gain_curve(points, n, ramp=1.2):
 N = int((total + 1) * SR)
 sfxdir = os.path.join(ROOT, 'sfx')
 voc = np.zeros(N, np.float32)
-for st, a, vol, tel in voice:
+def hall(a, rt):
+    # einfacher Raumhall: Faltung mit abklingendem Rauschen ("hall": Nachhallzeit in s)
+    L = int(rt * SR); k = np.arange(L) / SR
+    ir = np.random.default_rng(3).standard_normal(L) * np.exp(-k * 6.9 / rt); ir[0] = 0
+    from scipy.signal import fftconvolve, butter, sosfilt
+    wet = fftconvolve(a, ir)[:len(a) + L]; wet = sosfilt(butter(2, 3500, 'lowpass', fs=SR, output='sos'), wet)
+    wet *= 0.3 * np.abs(a).max() / (np.abs(wet).max() + 1e-9)
+    out = np.zeros(len(a) + L, np.float32); out[:len(a)] += a; out += wet; return out
+def gedaempft(a):
+    from scipy.signal import butter, sosfilt
+    return sosfilt(butter(4, 700, 'lowpass', fs=SR, output='sos'), a) * 1.6
+for st, a, vol, tel, hl, ged in voice:
     a = sprache(a) * story.get('stimme_lautstaerke', 1.0)
+    if ged: a = gedaempft(a)
+    if hl: a = hall(a, hl)
     if tel: a = telefon(a) * 0.9
     if tel == 'funk':  # Funkgerät: Knacken vorne/hinten + Rauschen
         kn = load_wav(os.path.join(ROOT, 'sfx', 'funk_knacken.wav')) * 0.5

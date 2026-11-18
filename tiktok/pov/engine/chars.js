@@ -53,6 +53,10 @@ const POSES = {
   leuchten: { R: [-1.25, -0.12, -0.25], L: [0.05, 0.1, -0.2] },
   rennen: { R: [-0.3, 0.15, -1.6], L: [-0.3, 0.15, -1.6] },
   haende_tasche: { R: [0.12, 0.05, -0.55], L: [0.12, 0.05, -0.55] },
+  funken: { R: [-0.35, -0.55, -2.1], L: [0.05, 0.1, -0.25] },
+  kerze: { R: [-0.7, -0.25, -1.2], L: [0.05, 0.1, -0.2] },
+  schirm: { R: [-0.55, -0.2, -1.35], L: [0.05, 0.1, -0.2] },
+  flehen: { R: [-0.75, -0.2, -0.9], L: [-0.75, -0.2, -0.9] },
 };
 export const POSE_NAMES = Object.keys(POSES);
 
@@ -112,6 +116,26 @@ export class Character {
       const lens = new THREE.Mesh(new THREE.CircleGeometry(0.03, 12), new THREE.MeshBasicMaterial({ color: '#fffbe8' })); lens.rotation.x = Math.PI / 2; lens.position.y = -0.087; fl.add(lens);
       const beam = new THREE.Mesh(new THREE.ConeGeometry(1.4, 9, 20, 1, true), new THREE.MeshBasicMaterial({ color: '#fff4cc', transparent: true, opacity: 0.17, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
       beam.position.y = -4.6; fl.add(beam); fl.visible = false;
+    }
+    if (spec.funkgeraet) { // Funkgerät an der Brust, rote LED blinkt
+      const fg = (this.radio = new THREE.Group()); fg.position.set(-0.075, 1.21, 0.112); fg.rotation.x = -0.12; body.add(fg);
+      fg.add(ink(new THREE.BoxGeometry(0.06, 0.11, 0.035), toon('#1b1c1f'), 0.7));
+      const ant = ink(new THREE.CylinderGeometry(0.006, 0.009, 0.08, 6), toon('#111'), 0.5); ant.position.set(0.018, 0.09, 0); fg.add(ant);
+      const grill = new THREE.Mesh(new THREE.PlaneGeometry(0.04, 0.04), flat('#3a3c42')); grill.position.set(0, -0.02, 0.0185); fg.add(grill);
+      this.led = new THREE.Mesh(new THREE.SphereGeometry(0.009, 8, 6), new THREE.MeshBasicMaterial({ color: '#ff2a1a' })); this.led.position.set(-0.016, 0.04, 0.019); fg.add(this.led);
+    }
+    if (spec.kerze) { // Kerze vor der Brust, wirft warmes Licht aufs Gesicht (sichtbar in Pose "kerze")
+      const k = (this.candle = new THREE.Group()); k.position.set(-0.11, 1.2, 0.42); body.add(k);
+      k.add(ink(new THREE.CylinderGeometry(0.055, 0.05, 0.015, 14), toon('#b08a3a'), 0.6));
+      const c = ink(new THREE.CylinderGeometry(0.02, 0.021, 0.13, 10), toon('#efe6cf'), 0.6); c.position.y = 0.072; k.add(c);
+      this.flame = new THREE.Mesh(new THREE.ConeGeometry(0.016, 0.065, 8), new THREE.MeshBasicMaterial({ color: '#ffc04a' })); this.flame.position.y = 0.175; k.add(this.flame);
+      const core = new THREE.Mesh(new THREE.SphereGeometry(0.008, 6, 4), new THREE.MeshBasicMaterial({ color: '#fff6d0' })); core.position.y = -0.018; this.flame.add(core);
+      this.candleLight = new THREE.PointLight('#ffae55', 0, 0, 1.4); this.candleLight.position.set(0, 0.24, 0.05); k.add(this.candleLight); k.visible = false;
+    }
+    if (spec.schirm) { // Regenschirm
+      const u = (this.umbrella = new THREE.Group()); u.position.set(-0.13, 1.25, 0.2); body.add(u);
+      const stick = ink(new THREE.CylinderGeometry(0.008, 0.008, 0.85, 6), toon('#222'), 0.5); stick.position.y = 0.42; u.add(stick);
+      const can = ink(new THREE.ConeGeometry(0.6, 0.28, 10, 1, true), toon(spec.schirm === true ? '#2a2a3a' : spec.schirm, { side: THREE.DoubleSide, noCache: true }), 0.8); can.position.y = 0.9; u.add(can);
     }
     this.phone = phoneMesh(); this.phone.scale.setScalar(0.9); this.phone.visible = false;
     this.phone.position.set(0, -0.33, 0.03); this.phone.rotation.set(-Math.PI / 2 + 0.3, 0, Math.PI);
@@ -190,6 +214,9 @@ export class Character {
     });
     this.phone.visible = s.pose === 'handy' && k > 0.5;
     if (this.flash) this.flash.visible = s.pose === 'leuchten' && k > 0.4;
+    if (this.led) this.led.visible = s.funk ? Math.floor(t * 8) % 2 === 0 : (t + (s.blinkOff || 0)) % 1.3 < 0.16;
+    if (this.candle) { const on = s.pose === 'kerze' && k > 0.35; this.candle.visible = on; const fl = 0.8 + 0.12 * Math.sin(t * 9.3) + 0.08 * Math.sin(t * 21.1);
+      this.flame.scale.set(1, 0.8 + fl * 0.4, 1); this.flame.rotation.z = Math.sin(t * 4.7) * 0.1; this.candleLight.intensity = on ? 1.6 * fl * Math.min(1, (k - 0.35) * 3) : 0; }
     // Kopf: leicht nicken beim Reden, zur Kamera drehen
     this.head.rotation.set(Math.sin(t * 5.2) * 0.04 * (s.talk > 0.05 ? 1 : 0) + (s.headPitch || 0), s.headYaw || 0, Math.sin(t * 0.7) * 0.03);
     // Blinzeln

@@ -238,7 +238,7 @@ function makeLights(arr, r) {
   const p = new THREE.Points(g, m); p.frustumCulled = false; return p;
 }
 
-function car(color, r) {
+export function car(color, r) {
   const g = new THREE.Group();
   const body = edges(ink(new THREE.BoxGeometry(4.3, 0.75, 1.85), toon(color), 0.9)); body.position.y = 0.65; g.add(body);
   const cab = edges(ink(new THREE.BoxGeometry(2.1, 0.65, 1.7), toon(color), 0.9)); cab.position.set(-0.3, 1.33, 0); g.add(cab);
@@ -307,7 +307,7 @@ function plane(add) {
   const blink = new THREE.Mesh(new THREE.SphereGeometry(1.6, 8, 6), new THREE.MeshBasicMaterial({ color: '#ff3b30', fog: false })); blink.position.y = -1.6; g.add(blink);
   return (t) => { g.position.set(-700 + t * 9, 420, -1300); blink.visible = (t % 1.2) < 0.12; };
 }
-function heli(add, H) {
+export function heli(add, H) {
   if (!H) return () => {};
   // Polizeihubschrauber mit Suchscheinwerfer, der über die dunkle Stadt streicht
   const g = new THREE.Group(); add(g); g.visible = false;

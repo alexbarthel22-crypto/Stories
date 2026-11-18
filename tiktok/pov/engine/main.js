@@ -183,7 +183,7 @@ window.render = (f) => {
     else if (cast[fv]) { const Q = posAt(fv, t).p; facing = Math.atan2(Q[0] - P.p[0], Q[1] - P.p[1]); }
     else { const s = Array.isArray(fv) ? fv : spots[fv] || [0, 0]; facing = s[0] * D2R + Math.PI; }
     const cp = at(tracks.pose[n], t);
-    c.update({ t, talk: talkAt(n, t), pose: cp.v, prevPose: cp.prev, poseK: (t - cp.t) / 0.4, facing, walk: P.speed, mood: at(tracks.mood[n], t).v, blinkOff: n.length * 0.37 });
+    c.update({ t, talk: talkAt(n, t), pose: cp.v, prevPose: cp.prev, poseK: (t - cp.t) / 0.4, facing, walk: P.speed, mood: at(tracks.mood[n], t).v, blinkOff: n.length * 0.37, funk: lines.some((l) => l.funk && t >= l.t0 && t < l.t1) });
     if (c.phone.visible) drawPhone(c.phone, c.spec.handy_bild || { typ: 'nachricht', name: 'Jens', text: ['18:30.', 'Schau hin, Jens.'] }, t);
   }
   // Sonne folgt dem Spieler (Schattenbereich)
@@ -197,7 +197,7 @@ window.render = (f) => {
     const U = scene.getObjectByName('sky').children[0].material.uniforms, NIGHT = new THREE.Color('#0b0f22');
     for (const k of Object.keys(sky.base.u)) U[k].value.copy(sky.base.u[k]).lerp(NIGHT, nk * 0.75);
     scene.getObjectByName('sky').children.forEach((o, i) => { if (i && o.material) o.material.opacity = 0.92 * (1 - nk * 0.55); }); }
-  setRoot?.userData?.update?.({ blackout: bo ? t - bo.t : -1, dur: bo ? bo.dur : 3, t, px: q.get('flat') ? (H / 2) / Math.tan(+(q.get('flat')) * D2R / 2) : cam.rt.width / 2 });
+  setRoot?.userData?.update?.({ blackout: bo ? t - bo.t : -1, dur: bo ? bo.dur : 3, t, eye, sky, yaw, px: q.get('flat') ? (H / 2) / Math.tan(+(q.get('flat')) * D2R / 2) : cam.rt.width / 2 });
   if (q.get('flat')) {
     flatCam.position.copy(eye); flatCam.rotation.set(pitch, yaw, roll, 'YXZ'); flatCam.updateMatrixWorld();
     renderer.shadowMap.needsUpdate = true; renderer.setRenderTarget(null); renderer.render(scene, flatCam);
