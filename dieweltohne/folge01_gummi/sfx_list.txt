@@ -1,5 +1,3 @@
-rain_street|File:Urban Street on a Rainy Afternoon.flac
-city_berlin|File:184809 qubodup first-day-of-urban-spring-in-berlin-2013-04-14.flac
 car_away|File:255122 ylearkisto henkiloauto-lahto-asfaltilla-a-car-pulling-away-on-asphalt.wav
 car_approach|File:255126 ylearkisto henkiloauto-tulo-asfaltilla-a-car-approaching-stopping-on-asphalt.wav
 metal_scratch|File:Scratching metal door (Gravity Sound).wav
@@ -19,5 +17,7 @@ siren_fire|File:WWS Firetruckssirenfrominside.ogg
 horn|File:Car Horn.wav
 bag|File:Plastic bag.ogg
 thud|File:Dull thud.ogg
-thunder|File:Light Rain Distant Thunder July 5th 2016.wav
 fireworks|File:Silvester fireworks from the street 04 rest.ogg
+rain_street|File:Urban Street on a Rainy Afternoon.flac
+city_berlin|File:184809 qubodup first-day-of-urban-spring-in-berlin-2013-04-14.flac
+thunder|File:Light Rain Distant Thunder July 5th 2016.wav
