@@ -154,11 +154,15 @@ def anruf_ende():
     return lp(hp(x, 300), 3400)
 
 def sirene_fern(d=16):
-    tt = t_(d); f = 950 + 330 * np.sin(2 * np.pi * tt / 3.4 - np.pi / 2)
-    ph = 2 * np.pi * np.cumsum(f) / SR; s = signal.sawtooth(ph) + 0.5 * np.sin(ph)
-    s = lp(s, 2200) * np.minimum(1, tt / 4) * (0.8 + 0.2 * smooth_rand(d, 0.5))
-    s = reverb(s, 2.5, 0.75)
-    return fade(pan(s, -0.35 + 0.2 * np.sin(tt * 0.3)), 2, 3)
+    # deutsches Martinshorn ("Tatütata"): Wechsel zwischen ~466 Hz und ~622 Hz, aus der Ferne
+    tt = t_(d); per = 1.3
+    f = np.where((tt % per) < per / 2, 466.0, 622.0)
+    f = lp(f, 25, 1) * (1 + 0.012 * np.sin(2 * np.pi * 0.15 * tt))   # weiche Übergänge + leichter Doppler
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    s = sum(np.sin(ph * k) / k ** 1.3 for k in range(1, 7))
+    s = lp(s, 1800, 2) * np.minimum(1, tt / 5) * (0.75 + 0.25 * smooth_rand(d, 0.4))
+    s = reverb(s, 2.8, 0.7, 0.05)
+    return fade(pan(s, -0.35 + 0.25 * np.sin(tt * 0.25)), 3, 3)
 
 def stromausfall():
     d = 5.0; tt = t_(d)
@@ -192,7 +196,7 @@ def hubschrauber_fern(d=16):
     body = lp(pink(d), 250, 2) * 0.25
     whine = np.sin(2 * np.pi * 2350 * tt + 3 * np.sin(2 * np.pi * 0.3 * tt)) * 0.025
     x = (x * 1.4 + body + whine) * np.minimum(1, np.minimum(tt / 4, (d - tt) / 4))
-    x = reverb(lp(x, 1800), 1.6, 0.45)
+    x = reverb(hp(lp(x, 1800), 110, 2), 1.6, 0.45)
     return pan(x, np.linspace(0.7, -0.6, len(x)))
 
 def riser(d=5):

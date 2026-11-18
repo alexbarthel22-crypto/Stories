@@ -11,7 +11,7 @@
   },
   {
    "datei": "atmo_stadt.wav",
-   "lautstaerke": 0.3
+   "lautstaerke": 0.24
   },
   {
    "datei": "voegel.wav",
@@ -304,7 +304,7 @@
    "pause_vor": 0.7,
    "sfx": {
     "datei": "sirene_fern.wav",
-    "lautstaerke": 0.45,
+    "lautstaerke": 0.36,
     "ab": 0.4
    },
    "zoom": 80,
@@ -387,7 +387,7 @@
    },
    "musik": {
     "datei": "gen/musik_3_dunkel.mp3",
-    "lautstaerke": 0.3,
+    "lautstaerke": 0.2,
     "einblenden": 1.5
    }
   },
@@ -400,7 +400,7 @@
    "ort": null,
    "sfx": {
     "datei": "hubschrauber_fern.wav",
-    "lautstaerke": 0.5,
+    "lautstaerke": 0.38,
     "ab": 0.5
    }
   },

@@ -32,7 +32,7 @@ renderer.setPixelRatio(1); renderer.setSize(W, H, false);
 canvas.style.width = '1080px'; canvas.style.height = '1920px';
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap; renderer.shadowMap.autoUpdate = false;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-const cam = new FisheyeCamera(renderer, { size: Math.round((ST.cube || 1536) * scale), fov: ST.fov || 140 });
+const cam = new FisheyeCamera(renderer, { size: Math.round((ST.cube || 1152) * scale), fov: ST.fov || 140 });
 
 const scene = new THREE.Scene();
 const sky = buildSky(scene, ST.sky || 'abend', ST.seed || 7);

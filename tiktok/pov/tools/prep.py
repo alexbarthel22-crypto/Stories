@@ -160,12 +160,26 @@ def load_st(fn):
     raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', fn, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.float32).reshape(-1, 2).copy()
 
+def mavg(x, k):
+    """schneller gleitender Mittelwert (zentriert)"""
+    k = max(1, int(k)); c = np.cumsum(np.concatenate([np.zeros(k // 2 + 1), x, np.zeros(k - k // 2)]))
+    return ((c[k:] - c[:-k]) / k)[:len(x)]
+
 def telefon(a):
     """Stimme klingt wie durchs Handy: Bandpass 300-3400 Hz + leichte Verzerrung"""
     from scipy import signal
-    sos = signal.butter(4, [320, 3300], 'bandpass', fs=SR, output='sos')
-    y = signal.sosfilt(sos, a) * 2.2
-    return np.tanh(y * 1.5) / 1.5
+    sos = signal.butter(4, [350, 2900], 'bandpass', fs=SR, output='sos')
+    y = signal.sosfilt(sos, a) * 2.0
+    return np.tanh(y * 1.15) / 1.15
+
+def sprache(a):
+    """Stimme aufbereiten: Low-Cut gegen Brummen + sanfter Kompressor für gleichmäßige Lautstärke"""
+    from scipy import signal
+    a = signal.sosfilt(signal.butter(2, 95, 'highpass', fs=SR, output='sos'), a)
+    k = int(0.03 * SR); env = np.sqrt(np.maximum(mavg(a ** 2, k), 0)) + 1e-6
+    thr = 0.08; g = np.where(env > thr, (thr / env) ** 0.45, 1.0)
+    g = mavg(g, k)
+    y = a * g; return y / (np.abs(y).max() + 1e-9) * 0.8
 
 def gain_curve(points, n, ramp=1.2):
     """points: [(zeit, wert)] -> Lautstärkekurve mit weichen Übergängen"""
@@ -179,7 +193,8 @@ N = int((total + 1) * SR)
 sfxdir = os.path.join(ROOT, 'sfx')
 voc = np.zeros(N, np.float32)
 for st, a, vol, tel in voice:
-    if tel: a = telefon(a)
+    a = sprache(a) * story.get('stimme_lautstaerke', 1.0)
+    if tel: a = telefon(a) * 0.9
     i = int(st * SR); voc[i:i + len(a)] += a[:N - i] * vol
 mix = np.stack([voc, voc], 1)
 
@@ -216,8 +231,8 @@ for k, (t0, m) in enumerate(mus_ev):
     music[i0:i1] += seg * env[:, None]
 # Ducking: Musik unter Sprache leiser
 vabs = np.abs(voc); k = int(0.05 * SR)
-vl = np.convolve(vabs, np.ones(k) / k, mode='same'); vl = np.convolve((vl > 0.02).astype(np.float32), np.ones(int(0.4 * SR)) / int(0.4 * SR), mode='same')
-duck = 1 - story.get('ducking', 0.45) * np.clip(vl, 0, 1)
+vl = mavg(vabs, k); vl = mavg((vl > 0.02).astype(np.float32), 0.4 * SR)
+duck = 1 - story.get('ducking', 0.6) * np.clip(vl, 0, 1)
 mix += music * duck[:, None]
 
 for bb in beats:
