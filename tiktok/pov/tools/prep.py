@@ -207,7 +207,7 @@ def hall(a, rt):
     from scipy.signal import fftconvolve, butter, sosfilt
     wet = fftconvolve(a, ir)[:len(a) + L]; wet = sosfilt(butter(2, 3500, 'lowpass', fs=SR, output='sos'), wet)
     wet *= 0.3 * np.abs(a).max() / (np.abs(wet).max() + 1e-9)
-    out = np.zeros(len(a) + L, np.float32); out[:len(a)] += a; out += wet; return out
+    out = np.zeros(len(a) + L, np.float32); out[:len(a)] += a; out[:len(wet)] += wet; return out
 def gedaempft(a):
     from scipy.signal import butter, sosfilt
     return sosfilt(butter(4, 700, 'lowpass', fs=SR, output='sos'), a) * 1.6

@@ -113,8 +113,8 @@ export class Character {
     if (spec.taschenlampe) {
       const fl = (this.flash = new THREE.Group()); fl.position.set(0, -0.33, 0.02); this.arms[1].el.add(fl);
       fl.add(ink(new THREE.CylinderGeometry(0.022, 0.03, 0.17, 10), toon('#1a1a1a'), 0.8));
-      const lens = new THREE.Mesh(new THREE.CircleGeometry(0.03, 12), new THREE.MeshBasicMaterial({ color: '#fffbe8' })); lens.rotation.x = Math.PI / 2; lens.position.y = -0.087; fl.add(lens);
-      const beam = new THREE.Mesh(new THREE.ConeGeometry(1.4, 9, 20, 1, true), new THREE.MeshBasicMaterial({ color: '#fff4cc', transparent: true, opacity: 0.17, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
+      const lens = new THREE.Mesh(new THREE.CircleGeometry(0.045, 12), new THREE.MeshBasicMaterial({ color: '#fffbe8' })); lens.rotation.x = Math.PI / 2; lens.position.y = -0.087; fl.add(lens);
+      const beam = new THREE.Mesh(new THREE.ConeGeometry(1.4, 9, 20, 1, true), new THREE.MeshBasicMaterial({ color: '#fff4cc', transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
       beam.position.y = -4.6; fl.add(beam); fl.visible = false;
     }
     if (spec.funkgeraet) { // Funkgerät an der Brust, rote LED blinkt

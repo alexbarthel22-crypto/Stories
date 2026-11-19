@@ -208,5 +208,5 @@ window.render = (f) => {
   if (tracks.black.some((e) => t >= e.t0 && t < e.t1)) fade = 1;
   overlay.update(t, { ende: tracks.ende && t >= tracks.ende.t0 ? { ...tracks.ende, k: t - tracks.ende.t0 } : null, lines, label: at(tracks.label, t).v, notify: tracks.notify.find((n) => t >= n.t0 && t < n.t1), fade, caps: tracks.cap, cast: ST.cast });
 };
-window.SCENE = scene; window.THREE = THREE; window.FLATCAM = flatCam;
+window.SCENE = scene; window.THREE = THREE; window.FLATCAM = flatCam; window.CAM = cam;
 window.READY = true;

@@ -36,7 +36,8 @@
    "hose": "#2c3c5e",
    "haut": "#ecd6bd",
    "stimme": "gemini:Puck",
-   "regie": "junger Mann, Anfang zwanzig"
+   "regie": "junger Mann, Anfang zwanzig",
+   "modell": "gemini-3.8-flash-lite-tts"
   },
   "tobi": {
    "pos": [
@@ -52,7 +53,8 @@
    "details": "none",
    "funkgeraet": true,
    "stimme": "gemini:Fenrir",
-   "regie": "junger Mann"
+   "regie": "junger Mann",
+   "modell": "gemini-3.8-flash-lite-tts"
   },
   "vater": {
    "pos": [
@@ -76,7 +78,8 @@
    "kerze": true,
    "blickhoehe": 1.45,
    "stimme": "gemini:Iapetus",
-   "regie": "Mann um die fünfzig, warme, raue, tiefe Stimme"
+   "regie": "Mann um die fünfzig, warme, raue, tiefe Stimme",
+   "modell": "gemini-3.8-flash-lite-tts"
   },
   "agent1": {
    "pos": [
@@ -92,7 +95,8 @@
    "brille": true,
    "details": "none",
    "stimme": "gemini:Orus",
-   "regie": "Mann, kalt, sachlich"
+   "regie": "Mann, kalt, sachlich",
+   "modell": "gemini-3.8-flash-lite-tts"
   },
   "agent2": {
    "pos": [
@@ -107,7 +111,8 @@
    "haut": "#c99d7b",
    "details": "none",
    "stimme": "gemini:Alnilam",
-   "regie": "Mann, hart"
+   "regie": "Mann, hart",
+   "modell": "gemini-3.8-flash-lite-tts"
   },
   "zentrale": {
    "pos": [
@@ -115,7 +120,8 @@
     90
    ],
    "stimme": "gemini:Rasalgethi",
-   "regie": "Mann, Funkspruch, emotionslos, militärisch knapp"
+   "regie": "Mann, Funkspruch, emotionslos, militärisch knapp",
+   "modell": "gemini-3.8-flash-lite-tts"
   },
   "nachbarin": {
    "pos": [
@@ -123,7 +129,8 @@
     92
    ],
    "stimme": "gemini:Autonoe",
-   "regie": "ältere Frau, ruft aus einem Fenster"
+   "regie": "ältere Frau, ruft aus einem Fenster",
+   "modell": "gemini-3.8-flash-lite-tts"
   },
   "passant": {
    "pos": [
@@ -176,7 +183,7 @@
     "lautstaerke": 0.2,
     "einblenden": 2.0
    },
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "ort": [
@@ -239,7 +246,7 @@
      "ab": 0.2
     }
    ],
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "pose": {
@@ -268,7 +275,7 @@
      "lautstaerke": 0.32
     }
    ],
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "wer": "ich",
@@ -280,7 +287,7 @@
    ],
    "drehung": 1.2,
    "blick_verzoegerung": 0.3,
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "blick": "tobi",
@@ -294,7 +301,7 @@
    "stimmung": {
     "tobi": "angst"
    },
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "pose": {
@@ -335,7 +342,7 @@
      "ab": 1.6
     }
    ],
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "pose": {
@@ -349,7 +356,7 @@
    "wer": "zentrale",
    "sagt": "Team zwei. Status?",
    "funk": true,
-   "lautstaerke": 0.85,
+   "lautstaerke": 1.25,
    "farbe": "#ff7a6a",
    "pause_vor": 1.4,
    "sfx": [
@@ -368,7 +375,7 @@
    "sagt": "Tobi… was ist das?",
    "wie": "geschockt, heiser geflüstert, ungläubig",
    "musik": null,
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "wer": "tobi",
@@ -392,7 +399,7 @@
     "lautstaerke": 0.22,
     "einblenden": 1.5
    },
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "wer": "tobi",
@@ -401,7 +408,7 @@
    "pose": {
     "tobi": "idle"
    },
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "wer": "tobi",
@@ -440,13 +447,13 @@
      "ab": 0.1
     }
    },
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "wer": "zentrale",
    "sagt": "Verstanden. Zugriff.",
    "funk": true,
-   "lautstaerke": 0.85,
+   "lautstaerke": 1.25,
    "farbe": "#ff7a6a",
    "sfx": []
   },
@@ -513,7 +520,7 @@
     }
    ],
    "dauer": 1.0,
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "laufen": {
@@ -543,7 +550,7 @@
     }
    ],
    "pause": 0.4,
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "blick": "einfahrt",
@@ -576,7 +583,7 @@
    "wie": "panisch, verzweifelt, schnell atmend",
    "pause_vor": 1.2,
    "dauer": 3.6,
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "blick": "tonnen",
@@ -603,7 +610,7 @@
     }
    ],
    "dauer": 1.6,
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "pose": {
@@ -648,7 +655,7 @@
      "ab": 1.15
     }
    ],
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "pose": {
@@ -680,7 +687,7 @@
      "lautstaerke": 0.45
     }
    ],
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "pose": {
@@ -713,7 +720,7 @@
      "lautstaerke": 0.7
     }
    ],
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "laufen": {
@@ -744,14 +751,14 @@
     "ich": "runter"
    },
    "atmo": {
-    "atmo_regen.wav": 0.07,
+    "atmo_regen.wav": 0.1,
     "atmo_tropfen.wav": 0.03,
     "atmo_drinnen.wav": 0.5,
     "atmo_wind.wav": 0.0
    },
    "atmo_ab": 0.9,
    "musik": null,
-   "hall": 0.9
+   "hall": 0.5
   },
   {
    "ort": [
@@ -765,9 +772,9 @@
    "sfx": [
     {
      "datei": "ticken.wav",
-     "lautstaerke": 0.9,
+     "lautstaerke": 0.7,
      "ab": 0,
-     "dauer": 30
+     "dauer": 14.7
     },
     {
      "datei": "atem_schwer.wav",
@@ -843,7 +850,7 @@
    "sfx": [
     {
      "datei": "klopfen.wav",
-     "lautstaerke": 0.95,
+     "lautstaerke": 1.0,
      "ab": 0.1
     }
    ],
@@ -862,7 +869,7 @@
      "sagt": "Aufmachen! Sofort!",
      "wie": "brüllt, gedämpft durch eine Tür",
      "ab": 0.9,
-     "lautstaerke": 0.75,
+     "lautstaerke": 1.15,
      "untertitel": true,
      "gedaempft": true,
      "hall": 0.4
