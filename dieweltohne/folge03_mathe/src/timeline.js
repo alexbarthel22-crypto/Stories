@@ -58,7 +58,7 @@ export const CAPTIONS = [
   [50.2, 52.9, 'Jetzt nicht mehr.'],
   [53.4, 55.8, 'Und in einem Bunker rechnet ein Frühwarnsystem.'],
   [56.2, 58.8, 'Es meldet: Raketenstart.'],
-  [59.4, 62.2, 'Die Mathe ist zurück.'],
+  [59.4, 62.2, 'Mathe ist zurück.'],
   [62.4, 65.9, 'Aber der Alarm ist schon raus.'],
   [66.4, 69.4, '1983 passierte genau das. Damals war es ein Fehlalarm.'],
   [69.6, 71.4, 'Ein Offizier glaubte dem Computer nicht.'],

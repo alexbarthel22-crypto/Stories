@@ -2,7 +2,7 @@
 import {CAPTIONS, STAGES, STAGE_OF, VANISH, RETURN, ALARM, DECIDE_START, TRAIN_HIT, ORBIT_HIT, COUNTER, IGNITION, FLASH0, worldLeft} from './timeline.js';
 import {clamp, smooth, rng} from './lib.js';
 const GLC = '0123456789+−×÷=∞√∑∫πΔ≠≈%#?!'.split('');
-// Ziffern verrutschen, solange die Mathe fehlt
+// Ziffern verrutschen, solange Mathe fehlt
 function garble(txt, T, k = 0.35) { const r = rng(Math.floor(T * 14) * 13 + 5); return txt.split('').map(c => /[0-9]/.test(c) && r() < k ? GLC[Math.floor(r() * GLC.length)] : c).join(''); }
 function glitchBars(g, T, amt) { const r = rng(Math.floor(T * 30) + 77); for (let i = 0; i < 14 * amt; i++) { const y = r() * H, h = 3 + r() * 60;
   g.fillStyle = ['rgba(0,255,140,0.35)', 'rgba(255,0,180,0.35)', 'rgba(60,140,255,0.4)', 'rgba(255,255,255,0.5)', 'rgba(0,0,0,0.6)'][Math.floor(r() * 5)]; g.fillRect((r() - 0.5) * 200, y, W + 200, h); } }
@@ -56,7 +56,7 @@ export function drawHUD(g, T, shot) {
   if (ta > 0) {
     g.save(); g.globalAlpha = ta; g.textBaseline = 'alphabetic'; g.fillStyle = '#fff';
     g.font = '400 68px Garamond';
-    const l1a = 'Was wäre, wenn die ', l1b = 'Mathe';
+    const l1a = 'Was wäre, wenn ', l1b = 'Mathe';
     const w1 = g.measureText(l1a).width, w2 = g.measureText(l1b).width, x0 = W / 2 - (w1 + w2) / 2;
     g.textAlign = 'left'; shadowText(g, l1a, x0, 420); g.fillStyle = ORANGE; shadowText(g, l1b, x0 + w1, 420);
     g.fillStyle = '#fff'; g.textAlign = 'center'; shadowText(g, '10 Sekunden verschwindet?', W / 2, 500);

@@ -1,5 +1,5 @@
 // Frühwarnzentrale im Bunker: Erst zeigen alle Bildschirme Rechenmüll, dann meldet das System einen Raketenstart.
-// Nach der Rückkehr der Mathe werden die Bildschirme klar – der Alarm bleibt. Am Ende: ein Offizier muss entscheiden.
+// Nach der Rückkehr von Mathe werden die Bildschirme klar – der Alarm bleibt. Am Ende: ein Offizier muss entscheiden.
 import {THREE, mat, mesh, rng, clamp, smooth, lerp, noise1, canvasTex, makePerson, posePerson} from './lib.js';
 import {VANISH, RETURN, ALARM, DECIDE_START} from './timeline.js';
 const V3 = (x, y, z) => new THREE.Vector3(x, y, z);

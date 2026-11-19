@@ -1,4 +1,4 @@
-// Klassenzimmer, Mittag, Mathearbeit. Um 12:00 verschwindet die Mathe: Tafel, Uhr und Taschenrechner zeigen Unsinn, die Klasse jubelt.
+// Klassenzimmer, Mittag, Mathearbeit. Um 12:00 verschwindet Mathe: Tafel, Uhr und Taschenrechner zeigen Unsinn, die Klasse jubelt.
 import {THREE, RoundedBoxGeometry, mat, mesh, rng, clamp, smooth, lerp, noise1, canvasTex, makePerson, posePerson, easeOut} from './lib.js';
 import {makePhone, makeHands, updateScreen} from './phone.js';
 import {VANISH} from './timeline.js';

@@ -1,4 +1,4 @@
-// Innenstadt am Mittag, während die Mathe fehlt: Bildschirme zeigen Unsinn, alle Ampeln grün, Unfall auf der Kreuzung, Banking-App.
+// Innenstadt am Mittag, während Mathe fehlt: Bildschirme zeigen Unsinn, alle Ampeln grün, Unfall auf der Kreuzung, Banking-App.
 import {THREE, mat, mesh, rng, clamp, smooth, lerp, easeOut, noise1, canvasTex, tileTex, asphaltTex, makePerson, posePerson, makeCar} from './lib.js';
 import {decorateBuilding, addStreetFurniture, LIT} from './city.js';
 import {skyMaterial} from './beach.js';
