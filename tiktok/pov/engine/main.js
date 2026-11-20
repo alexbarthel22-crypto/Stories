@@ -54,7 +54,7 @@ const overlay = new Overlay(document.getElementById('ui'), ST);
 const beats = TL.beats, lines = TL.lines;
 const actors = ['ich', ...Object.keys(cast)];
 const startPos = (n) => { const p = n === 'ich' ? me.pos || set.info.start : ST.cast[n].pos || [0, -1.5]; return [p[0], p[1]]; };
-const tracks = { look: [], pose: {}, mood: {}, face: {}, walk: {}, phone: [], label: [], notify: [], fade: [], cap: [], shake: [], black: [], blackout: null, fov: [{ t: -1, v: ST.fov || 140, dur: 0 }] };
+const tracks = { look: [], pose: {}, mood: {}, face: {}, walk: {}, phone: [], label: [{ t: -1, v: null }], notify: [], fade: [], cap: [], shake: [], black: [], blackout: null, fov: [{ t: -1, v: ST.fov || 140, dur: 0 }] };
 actors.forEach((a) => { tracks.pose[a] = [{ t: -1, v: a === 'ich' ? me.pose || 'runter' : ST.cast[a].pose || 'idle' }]; tracks.mood[a] = [{ t: -1, v: ST.cast[a]?.mood || null }]; tracks.face[a] = [{ t: -1, v: a === 'ich' ? null : ST.cast[a].face || 'ich' }]; tracks.walk[a] = []; });
 const pos0 = Object.fromEntries(actors.map((a) => [a, startPos(a)]));
 const cur = Object.fromEntries(actors.map((a) => [a, startPos(a)]));
