@@ -190,6 +190,9 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/jens_1830_teil3.json`: **„Jens – 18:30 · Teil 3“** (ca. 91 s, Set `ubahn`). Flucht durch eine Falltür in den stillgelegten U-Bahnhof Färberplatz.
   Der Vater erzählt vom Umspannwerk. Ratten huschen vorbei, und trotz „Kein Netz“ kommt eine Nachricht. Doch der Vater hat gar kein Handy.
   Die Verfolger kommen die Leiter herunter, ein Geisterzug fährt ein. In der Tür steht der Fremde aus Teil 1 mit dem Handy: „Steig ein, Jens.“
+- `stories/jens_1830_teil4.json`: **„Jens – 18:30 · Teil 4“** (ca. 80 s, Set `zug`). Jens fährt mit, der Vater rennt schreiend am Bahnsteig mit.
+  Der Fremde heißt Martin Krause und sagt: Hinter dem Stromausfall steckt der Vater. Er zeigt ein Überwachungsvideo aus dem Umspannwerk.
+  Dann kommen die Notbremse, Schläge aufs Dach und eine Nachricht von Tobi („ER = dein Vater“), und der Vater steht im nächsten Wagen.
 
 ## Neu: Felder für mehr Spannung und Details
 
@@ -277,3 +280,26 @@ Neue Geräusche:
 - erzeugen: `python3 tools/sfx_synth.py teil3`
 
 Musik: `gen/musik_8_tunnel.mp3`, `gen/musik_9_zug.mp3`.
+
+## Set `zug` (Teil 4): im fahrenden Geisterzug
+
+Der Wagen steht still (x −1.35 … 1.35, z −7.5 … 7.5), die Welt draußen zieht vorbei: am Anfang der Bahnsteig auf der +X-Seite, danach Tunnel und Lampen.
+Blickpunkte: `gegenueber, tuer, fenster, vorne, hinten, decke, boden, durchgang, plan`.
+
+Automatisch zu sehen:
+- Sitzbänke, Haltestangen, schaukelnde Griffe, Liniennetz „Linie 0“ bis zum Umspannwerk Nord, alte Werbung, Kratzer in den Scheiben, Notbremse
+- eine Zeitung („Ingenieur tot – Unfall im Werk?“) und eine Flasche, die beim Anfahren und Bremsen rollt
+- Tunnellampen, deren Licht durch den Wagen wandert
+- dahinter der nächste Wagen mit rotem Notlicht
+
+| Feld | Wirkung |
+|---|---|
+| `effekt: {fahrt: {ab, v, dauer}}` | Geschwindigkeit v (m/s) ansteuern; `v: 0` = bremsen (`zug_anfahrt.wav`, `notbremse.wav`) |
+| `effekt: {licht_aus: s}` | Hauptlicht aus, rotes Notlicht |
+| `effekt: {dach: [s, …]}` | Schläge aufs Dach, Delle in der Decke wächst (`dach_schlag.wav`) |
+| `effekt: {durchgang: s}` | Verbindungstür nach vorne gleitet auf |
+| `effekt: {flackern: s}` | Licht flackert |
+| `handy: {typ: "video", name, text, laenge}` | Überwachungsvideo spielt auf dem Handy ab |
+
+Cast: Pose `sitzen`, `gegenlauf: true` (die Figur schaut entgegen ihrer Bewegung, z. B. wenn sie neben dem Zug herrennt).
+Neue Geräusche: `atmo_zug_innen, zug_anfahrt, notbremse, dach_schlag, schaben` (`python3 tools/sfx_synth.py teil4`). Musik: `gen/musik_10_fahrt.mp3`, `gen/musik_11_dach.mp3`.

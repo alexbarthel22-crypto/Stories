@@ -1,0 +1,503 @@
+{
+ "titel": "Jens – 18:30 · Teil 4",
+ "set": "zug",
+ "himmel": "nacht",
+ "fov": 140,
+ "blick": "fenster",
+ "max_pause": 0.45,
+ "handy_fov": 96,
+ "seed": 31,
+ "hall": 0.35,
+ "ducking": 0.75,
+ "atmo_spuren": [
+  {
+   "datei": "atmo_zug_innen.wav",
+   "lautstaerke": 0.15
+  },
+  {
+   "datei": "atmo_tunnel.wav",
+   "lautstaerke": 0.25
+  },
+  {
+   "datei": "neon_summen.wav",
+   "lautstaerke": 0.1
+  }
+ ],
+ "cast": {
+  "ich": {
+   "pos": [
+    0.15,
+    -0.4
+   ],
+   "pose": "runter",
+   "oberteil": "#5a6b3a",
+   "hose": "#2c3c5e",
+   "haut": "#ecd6bd",
+   "stimme": "gemini:Puck",
+   "regie": "junger Mann, Anfang zwanzig",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "vater": {
+   "pos": [
+    2.7,
+    -0.8
+   ],
+   "pose": "rennen",
+   "frisur": "kurz",
+   "haare": "#5e5248",
+   "oberteil": "#4a3a2e",
+   "hose": "#2a2622",
+   "schuhe": "#1a1410",
+   "brille": true,
+   "augen": "#6a8a5a",
+   "haut": "#e6cdb2",
+   "details": "none",
+   "blickhoehe": 1.45,
+   "stimme": "gemini:Iapetus",
+   "regie": "Mann um die fünfzig, warme, raue, tiefe Stimme",
+   "modell": "gemini-3.8-flash-tts",
+   "taschenlampe": true,
+   "licht": true,
+   "gegenlauf": true
+  },
+  "krause": {
+   "pos": [
+    0.3,
+    3.6
+   ],
+   "pose": "idle",
+   "mantel": true,
+   "oberteil": "#5d6168",
+   "hose": "#26262a",
+   "schuhe": "#141414",
+   "frisur": "kurz",
+   "haare": "#a9a9a9",
+   "haut": "#e3cdb6",
+   "augen": "#8fa3ad",
+   "details": "none",
+   "stimme": "gemini:Algenib",
+   "regie": "älterer Mann, ruhige tiefe raue Stimme",
+   "modell": "gemini-3.8-flash-tts"
+  }
+ },
+ "beats": [
+  {
+   "schwarz": true,
+   "text": "TEIL 4",
+   "text_farbe": "#ffd400",
+   "dauer": 2.2,
+   "blick": "fenster",
+   "schnitt": true,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    },
+    {
+     "datei": "zug_tueren.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.4
+    }
+   ],
+   "musik": {
+    "datei": "gen/musik_10_fahrt.mp3",
+    "lautstaerke": 0.16,
+    "einblenden": 3
+   }
+  },
+  {
+   "ort": [
+    "SONDERFAHRT",
+    "Linie 0 · 18:42"
+   ],
+   "blick": "fenster",
+   "schnitt": true,
+   "effekt": {
+    "fahrt": {
+     "ab": 0.4,
+     "v": 13,
+     "dauer": 9
+    }
+   },
+   "laufen": {
+    "vater": {
+     "nach": [
+      2.7,
+      13
+     ],
+     "zeit": 5.5,
+     "ab": 0.2
+    },
+    "krause": {
+     "nach": [
+      -1.03,
+      0.3
+     ],
+     "zeit": 2.5,
+     "ab": 2.5
+    }
+   },
+   "sfx": [
+    {
+     "datei": "zug_anfahrt.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.3
+    },
+    {
+     "datei": "klopfen.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.6
+    }
+   ],
+   "atmo": {
+    "atmo_zug_innen.wav": 0.5
+   },
+   "atmo_ab": 1.0,
+   "dauer": 5.4,
+   "hintergrund": [
+    {
+     "wer": "vater",
+     "sagt": "Jens! Steig aus! Jens!",
+     "wie": "schreit verzweifelt, rennt",
+     "ab": 0.4,
+     "lautstaerke": 1.05,
+     "gedaempft": true,
+     "untertitel": true
+    }
+   ]
+  },
+  {
+   "laufen": {
+    "vater": {
+     "nach": [
+      60,
+      70
+     ],
+     "zeit": 0.01
+    }
+   },
+   "pose": {
+    "krause": "sitzen"
+   },
+   "schaut": {
+    "krause": "ich"
+   },
+   "blick": "krause",
+   "drehung": 0.8,
+   "wer": "krause",
+   "sagt": "Setz dich, Jens. Wir haben Zeit bis Mitternacht.",
+   "wie": "ruhig, tief, gelassen",
+   "pause_vor": 0.6
+  },
+  {
+   "wer": "ich",
+   "sagt": "Wer sind Sie?",
+   "wie": "misstrauisch, angespannt"
+  },
+  {
+   "wer": "krause",
+   "sagt": "Martin Krause. Ich habe zwanzig Jahre mit deinem Vater im Umspannwerk gearbeitet.",
+   "wie": "ruhig, sachlich"
+  },
+  {
+   "wer": "ich",
+   "sagt": "Dann wissen Sie, wer hinter dem Stromausfall steckt.",
+   "wie": "herausfordernd"
+  },
+  {
+   "wer": "krause",
+   "sagt": "Ja.",
+   "wie": "ruhig",
+   "pause": 0.7
+  },
+  {
+   "wer": "krause",
+   "sagt": "Dein Vater.",
+   "wie": "leise, schwer",
+   "zoom": 60,
+   "zoom_dauer": 1.5,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.6
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.4
+    }
+   ],
+   "pause": 0.6
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "wer": "ich",
+   "sagt": "Nein! Er musste fliehen. Vor Leuten wie Ihnen!",
+   "wie": "wütend, laut, verzweifelt"
+  },
+  {
+   "wer": "krause",
+   "sagt": "Dann schau dir das an.",
+   "wie": "ruhig, leise",
+   "pause": 0.1
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "video",
+    "name": "Unbekannt",
+    "uhr": "18:44",
+    "netz": "Kein Netz",
+    "text": "Umspannwerk, vor einem Jahr.",
+    "laenge": 6.5
+   },
+   "dauer": 7.0,
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.2
+    },
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.5,
+     "dauer": 7
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "wer": "ich",
+   "sagt": "Das… das ist Papa.",
+   "wie": "fassungslos, leise, Stimme bricht"
+  },
+  {
+   "wer": "krause",
+   "sagt": "Er hat seinen Tod vorgetäuscht. Und heute um Mitternacht legt er die ganze Stadt lahm.",
+   "wie": "ernst, eindringlich, ruhig"
+  },
+  {
+   "wer": "ich",
+   "sagt": "Warum sollte er das tun?",
+   "wie": "verzweifelt, leise"
+  },
+  {
+   "wer": "krause",
+   "sagt": "Das fragst du ihn am besten selbst.",
+   "wie": "ruhig, düster",
+   "effekt": {
+    "flackern": 2.5
+   },
+   "musik": null
+  },
+  {
+   "effekt": {
+    "fahrt": {
+     "ab": 0.1,
+     "v": 0,
+     "dauer": 2.4
+    },
+    "licht_aus": 2.4
+   },
+   "schuetteln": 1.4,
+   "schuetteln_ab": 0.2,
+   "sfx": [
+    {
+     "datei": "notbremse.wav",
+     "lautstaerke": 0.9,
+     "ab": 0.0
+    }
+   ],
+   "atmo": {
+    "atmo_zug_innen.wav": 0.0
+   },
+   "atmo_ab": 0.5,
+   "dauer": 3.4,
+   "blick": "vorne",
+   "drehung": 0.4
+  },
+  {
+   "effekt": {
+    "dach": [
+     0.6,
+     1.9
+    ]
+   },
+   "blick": "decke",
+   "drehung": 0.35,
+   "blick_verzoegerung": 0.6,
+   "schuetteln": 0.9,
+   "schuetteln_ab": 0.6,
+   "sfx": [
+    {
+     "datei": "dach_schlag.wav",
+     "lautstaerke": 0.9,
+     "ab": 0.6
+    },
+    {
+     "datei": "dach_schlag.wav",
+     "lautstaerke": 0.9,
+     "ab": 1.9
+    },
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.5,
+     "ab": 0,
+     "dauer": 12
+    }
+   ],
+   "dauer": 3.4,
+   "musik": {
+    "datei": "gen/musik_11_dach.mp3",
+    "lautstaerke": 0.22,
+    "einblenden": 0.5
+   }
+  },
+  {
+   "blick": "krause",
+   "drehung": 0.5,
+   "wer": "krause",
+   "sagt": "Er ist hier.",
+   "wie": "flüsternd, angespannt"
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "Tobi",
+    "uhr": "18:46",
+    "netz": "Kein Netz",
+    "text": [
+     "Jens, es tut mir leid.",
+     "Er hat mich gezwungen.",
+     "ER = dein Vater."
+    ],
+    "nach_und_nach": 1.2
+   },
+   "dauer": 4.2,
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.25
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 1.45
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 2.65
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 2.65
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter",
+    "vater": "leuchten"
+   },
+   "laufen": {
+    "vater": {
+     "nach": [
+      0.0,
+      -9.4
+     ],
+     "zeit": 0.01
+    }
+   },
+   "blick": "vorne",
+   "drehung": 0.6,
+   "sfx": [
+    {
+     "datei": "schaben.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.0
+    }
+   ],
+   "effekt": {
+    "durchgang": 2.2
+   },
+   "dauer": 3.6
+  },
+  {
+   "wer": "vater",
+   "sagt": "Jens. Komm zu mir. Sofort.",
+   "wie": "ruhig, kalt, bestimmt",
+   "laufen": {
+    "vater": {
+     "nach": [
+      0.0,
+      -7.9
+     ],
+     "zeit": 1.5
+    }
+   },
+   "zoom": 75,
+   "zoom_dauer": 1.5,
+   "sfx": [
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.0
+    }
+   ]
+  },
+  {
+   "blick": "krause",
+   "drehung": 0.6,
+   "zoom": 0,
+   "zoom_dauer": 0.4,
+   "wer": "krause",
+   "sagt": "Wenn du jetzt zu ihm gehst, erfährst du nie die Wahrheit.",
+   "wie": "flüsternd, eindringlich"
+  },
+  {
+   "blick": "vorne",
+   "drehung": 0.4,
+   "dauer": 1.6,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.4
+    }
+   ],
+   "musik": null
+  },
+  {
+   "schwarz": true,
+   "ende": "FORTSETZUNG FOLGT",
+   "ende_unter": "TEIL 5 · WEM GLAUBT JENS?",
+   "ende_ab": 0.4,
+   "dauer": 3.8,
+   "ort": null
+  }
+ ]
+}

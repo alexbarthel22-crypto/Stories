@@ -56,6 +56,7 @@ const POSES = {
   funken: { R: [-0.35, -0.55, -2.1], L: [0.05, 0.1, -0.25] },
   kerze: { R: [-0.7, -0.25, -1.2], L: [0.05, 0.1, -0.2] },
   schirm: { R: [-0.55, -0.2, -1.35], L: [0.05, 0.1, -0.2] },
+  sitzen: { R: [-0.45, 0.12, -0.7], L: [-0.45, 0.12, -0.7] },
   flehen: { R: [-0.75, -0.2, -0.9], L: [-0.75, -0.2, -0.9] },
 };
 export const POSE_NAMES = Object.keys(POSES);
@@ -204,6 +205,7 @@ export class Character {
     const run = (s.walk || 0) > 2.6, ph = t * (run ? 11 : 7.5), w = Math.min(1, (s.walk || 0) / 1.2) * (run ? 1.5 : 1);
     this.body.rotation.x = run ? 0.18 : 0;
     this.legs[0].rotation.x = Math.sin(ph) * 0.5 * w; this.legs[1].rotation.x = -Math.sin(ph) * 0.5 * w;
+    if (s.pose === 'sitzen') { this.legs.forEach((l) => (l.rotation.x = -1.45)); this.body.position.y -= 0.4; }
     this.body.position.y += Math.abs(Math.cos(ph)) * 0.025 * w;
     // Arme: Pose mischen
     const A = POSES[s.prevPose] || POSES.idle, B = POSES[s.pose] || POSES.idle, k = ease(s.poseK ?? 1);

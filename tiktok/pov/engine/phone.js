@@ -28,7 +28,7 @@ export function drawPhone(g, spec, t, dt = 99) {
   const neu0 = spec.neu_ab ?? 0, shown = iv ? Math.min(msgs0.length, neu0 + 1 + Math.floor(Math.max(0, dt - 0.2) / iv)) : msgs0.length;
   const typing = iv && shown < msgs0.length && (dt - 0.2) % iv > iv - 0.9 && !msgs0[shown].startsWith('>');
   const nt = spec.tippen ? Math.max(0, Math.min(spec.tippen.length, Math.floor((dt - (spec.tipp_ab ?? 0.3)) * (spec.tipp_tempo || 14)))) : 0;
-  const key = JSON.stringify(spec) + '|' + (spec.typ === 'anruf' || spec.typ === 'eingehend' ? Math.floor(t * 2) : 0) + '|' + shown + '|' + typing + '|' + nt + '|' + (spec.tippen ? Math.floor(t * 2.5) % 2 : 0);
+  const key = JSON.stringify(spec) + '|' + (spec.typ === 'anruf' || spec.typ === 'eingehend' ? Math.floor(t * 2) : 0) + '|' + shown + '|' + typing + '|' + nt + '|' + (spec.tippen ? Math.floor(t * 2.5) % 2 : 0) + '|' + (spec.typ === 'video' ? Math.floor(dt * 8) : 0);
   if (key === S.key) return; S.key = key;
   const c = S.canvas.getContext('2d'); c.setTransform(2, 0, 0, 2, 0, 0);
   c.textAlign = 'center'; c.textBaseline = 'middle';
@@ -48,6 +48,25 @@ export function drawPhone(g, spec, t, dt = 99) {
     c.fillStyle = '#d6372f'; c.beginPath(); c.arc(spec.typ === 'eingehend' ? W / 2 - 70 : W / 2, 530, 34, 0, 7); c.fill();
     c.fillStyle = '#fff'; c.fillRect((spec.typ === 'eingehend' ? W / 2 - 70 : W / 2) - 14, 526, 28, 8);
     if (spec.typ === 'eingehend') { c.fillStyle = '#2fb45a'; c.beginPath(); c.arc(W / 2 + 70, 530, 34, 0, 7); c.fill(); }
+  } else if (spec.typ === 'video') { // Überwachungsvideo (Nachricht mit Video), spielt ab
+    c.fillStyle = '#0d0f0e'; c.fillRect(0, 0, W, H);
+    c.fillStyle = '#9fb0bb'; c.font = F(600, 13); c.textAlign = 'left'; c.fillText(spec.uhr || '18:44', 14, 13); c.textAlign = 'right'; c.fillText(spec.netz || '▂▄▆ 41%', W - 12, 13); c.textAlign = 'center';
+    c.fillStyle = '#e8e8e8'; c.font = F(800, 17); c.fillText(spec.name || 'Unbekannt', W / 2, 44);
+    const vx = 10, vy = 150, vw = W - 20, vh = 230, p = Math.min(1, dt / (spec.laenge || 8));
+    c.fillStyle = '#26302a'; c.fillRect(vx, vy, vw, vh);
+    c.fillStyle = '#3a463e'; c.fillRect(vx + 150, vy + 60, 120, 110); // Schaltschrank
+    for (let i = 0; i < 12; i++) { c.fillStyle = (i * 7 + Math.floor(dt * 3)) % 5 === 0 ? '#c8ff8a' : '#55604f'; c.fillRect(vx + 160 + (i % 4) * 26, vy + 72 + Math.floor(i / 4) * 22, 12, 10); }
+    c.fillStyle = '#6a7a6a'; c.fillRect(vx + 240, vy + 120 - 30 * Math.min(1, Math.max(0, (p - 0.55) * 4)), 8, 40); // Hebel
+    const fx = vx + 60 + Math.min(1, p * 1.6) * 110; // Person geht zum Schrank
+    c.fillStyle = '#121512'; c.beginPath(); c.arc(fx, vy + 85, 16, 0, 7); c.fill(); c.fillRect(fx - 20, vy + 102, 40, 80);
+    c.strokeStyle = '#121512'; c.lineWidth = 9; c.beginPath(); c.moveTo(fx + 14, vy + 115); c.lineTo(fx + 14 + 40 * Math.min(1, Math.max(0, (p - 0.45) * 3)), vy + 105); c.stroke();
+    c.strokeStyle = '#b8c8b8'; c.lineWidth = 2; c.beginPath(); c.arc(fx - 6, vy + 84, 5, 0, 7); c.arc(fx + 8, vy + 84, 5, 0, 7); c.stroke(); // Brille
+    c.fillStyle = 'rgba(255,255,255,0.05)'; for (let y = vy; y < vy + vh; y += 4) c.fillRect(vx, y, vw, 1);
+    c.fillStyle = '#e8f0e8'; c.font = F(700, 12); c.textAlign = 'left'; c.fillText(spec.titel || 'UMSPANNWERK NORD · CAM 03', vx + 8, vy + 16);
+    const sec = 31 + Math.floor(dt); c.fillText((spec.datum || '14.11.2025 23:58:') + String(sec % 60).padStart(2, '0'), vx + 8, vy + vh - 10);
+    if (Math.floor(dt * 2) % 2 === 0) { c.fillStyle = '#ff3a2a'; c.beginPath(); c.arc(vx + vw - 40, vy + 14, 5, 0, 7); c.fill(); c.fillStyle = '#ff3a2a'; c.fillText('REC', vx + vw - 32, vy + 18); }
+    c.fillStyle = '#333'; c.fillRect(vx, vy + vh + 10, vw, 5); c.fillStyle = '#e8e8e8'; c.fillRect(vx, vy + vh + 10, vw * p, 5);
+    c.textAlign = 'center'; c.fillStyle = '#e8e8e8'; c.font = F(700, 22); if (spec.text) wrap(c, spec.text, W / 2, vy + vh + 60, W - 40, 28);
   } else if (spec.typ === 'alarm') {
     c.fillStyle = '#2a0c0c'; c.fillRect(0, 0, W, H);
     c.fillStyle = '#e1251b'; roundRect(c, 14, 90, W - 28, H - 170, 22); c.fill();

@@ -672,11 +672,66 @@ TEIL3 = {'tuer_aufbrechen.wav': (tuer_aufbrechen, 0.95), 'leiter.wav': (leiter, 
          'rennen_hall.wav': (rennen_hall, 0.9), 'ratten.wav': (ratten, 0.8), 'hund_hall.wav': (hund_hall, 0.8), 'zug_kommt.wav': (zug_kommt, 0.95), 'zug_tueren.wav': (zug_tueren, 0.8)}
 
 
+# ---------- Teil 4: im fahrenden Zug ----------
+def zug_innen(d=60):
+    # Fahrgeräusch innen: Rollen, Schienenstöße im Takt, klappernde Fenster, Motorsurren
+    tt = t_(d); ch = []
+    clack = np.zeros(len(tt)); s_ = 0.2
+    while s_ < d - 0.3:
+        for off, v in ((0, 1.0), (0.12, 0.8)):
+            n = int(0.08 * SR); c = bp(noise(0.08), 300, 2000, 2) * env_ad(n, 0.001, 0.015) * v; i = int((s_ + off) * SR); clack[i:i + n] += c
+        s_ += 1.05 + R.uniform(-0.03, 0.03)
+    for k in range(2):
+        roll = lp(brown(d), 180, 4) * 1.4 + bp(noise(d), 300, 1500, 2) * 0.35
+        rattle = grains(d, 40, 1500, 4000, (0.002, 0.008), (0.05, 0.25))
+        whine = np.sin(2 * np.pi * 620 * tt) * 0.03 + np.sin(2 * np.pi * 1240 * tt) * 0.015
+        ch.append(roll + clack * 0.8 + rattle + whine)
+    return loopable(stereo(*ch))
+
+def zug_anfahrt(d=9.0):
+    tt = t_(d); k = np.clip(tt / 8, 0, 1); f = 150 + 500 * k ** 1.3; ph = 2 * np.pi * np.cumsum(f) / SR
+    whine = (np.sin(ph) + 0.4 * np.sin(2 * ph)) * 0.12 * (0.3 + 0.7 * k)
+    roll = (lp(brown(d), 160, 4) * 1.2 + bp(noise(d), 300, 1800, 2) * 0.3) * (0.15 + 0.85 * k)
+    clunk = np.zeros(len(tt)); n = int(0.3 * SR); clunk[:n] = np.sin(2 * np.pi * 60 * t_(0.3)) * env_ad(n, 0.002, 0.06) * 0.8 + bp(noise(0.3), 200, 1500, 2) * env_ad(n, 0.001, 0.04) * 0.6
+    return fade(pan(reverb(whine + roll + clunk, 1.0, 0.2), 0.0), 0.05, 1.5)
+
+def notbremse(d=4.0):
+    tt = t_(d); stop = 2.4
+    f = 2300 + 600 * np.sin(2 * np.pi * 7 * tt) - 500 * np.clip(tt / stop, 0, 1)
+    sq = lp(np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.25 + bp(noise(d), 1800, 4500, 2) * 0.35, 4000) * (tt < stop) * np.clip(tt / 0.1, 0, 1)
+    rum = lp(brown(d), 150, 4) * 1.6 * np.clip(1 - tt / stop, 0, 1)
+    jolt = np.zeros(len(tt)); i = int(stop * SR); n = int(0.6 * SR); jolt[i:i + n] = (np.sin(2 * np.pi * 50 * t_(0.6)) * env_ad(n, 0.002, 0.1) * 1.2 + grains(0.6, 120, 800, 3000, (0.003, 0.012), (0.2, 0.6)))[:len(jolt) - i]
+    hiss = hp(noise(d), 2500) * np.exp(-np.maximum(0, tt - stop - 0.2) / 0.4) * (tt > stop + 0.2) * 0.4
+    return pan(reverb(sq + rum + jolt + hiss, 1.4, 0.3), 0.0)
+
+def dach_schlag():
+    d = 2.0; n = int(1.2 * SR); tt = t_(1.2); x = np.zeros(int(d * SR))
+    boom = sum(np.sin(2 * np.pi * f * tt) * np.exp(-tt / dk) * a for f, a, dk in ((58, 1.2, 0.18), (131, 0.6, 0.15), (287, 0.35, 0.12), (512, 0.2, 0.08)))
+    boom += bp(noise(1.2), 80, 1200, 2) * np.exp(-tt / 0.03) * 1.0
+    x[:n] += boom
+    return pan(reverb(x, 0.8, 0.25), 0.0)
+
+def schaben(d=3.6):
+    # Metall kratzt über das Dach, bewegt sich nach vorne
+    tt = t_(d); rate = 70 + 50 * smooth_rand(d, 3, 0, 1)
+    ph = np.cumsum(rate) / SR; idx = np.nonzero(np.diff(np.floor(ph)) > 0)[0]
+    imp = np.zeros(len(tt)); imp[idx] = R.uniform(0.3, 1.0, len(idx))
+    L = int(0.03 * SR); k = np.arange(L) / SR
+    ir = sum(np.sin(2 * np.pi * f * k) * np.exp(-k / dk) * a for f, a, dk in ((820, 1.0, 0.01), (1630, 0.7, 0.008), (2950, 0.5, 0.006)))
+    x = signal.fftconvolve(imp, ir)[:len(tt)] + bp(noise(d), 1500, 6000, 2) * 0.25
+    x *= np.minimum(1, np.minimum(tt / 0.3, (d - tt) / 0.4)).clip(0, 1)
+    for st in (0.4, 1.6, 2.7):  # schwere Schritte auf dem Dach
+        n = int(0.4 * SR); i = int(st * SR); x[i:i + n] += np.sin(2 * np.pi * 70 * t_(0.4)) * np.exp(-t_(0.4) / 0.08) * 1.2
+    return pan(reverb(x, 0.9, 0.3), np.linspace(0.3, -0.3, len(x)))
+
+TEIL4 = {'atmo_zug_innen.wav': (lambda: zug_innen(), 0.7), 'zug_anfahrt.wav': (zug_anfahrt, 0.85), 'notbremse.wav': (notbremse, 0.95), 'dach_schlag.wav': (dach_schlag, 0.95), 'schaben.wav': (schaben, 0.8)}
+
+
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        ALL = {**TEIL2, **TEIL3}
-        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else {k: ALL[k] for k in sys.argv[1:]}):
+        ALL = {**TEIL2, **TEIL3, **TEIL4}
+        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else {k: ALL[k] for k in sys.argv[1:]}):
             f_, pk = ALL[n_]; save(n_, f_(), pk); print(' ', n_)
         sys.exit()
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)

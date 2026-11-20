@@ -178,7 +178,7 @@ window.render = (f) => {
     c.root.position.set(P.p[0], 0, P.p[1]);
     const fv = at(tracks.face[n], t).v;
     let facing;
-    if (P.dir !== null && P.speed > 0.05 && !c.spec.faehrt) facing = P.dir;
+    if (P.dir !== null && P.speed > 0.05 && !c.spec.faehrt) facing = P.dir + (c.spec.gegenlauf ? Math.PI : 0);
     else if (fv === 'ich' || !fv) facing = Math.atan2(eye.x - P.p[0], eye.z - P.p[1]);
     else if (cast[fv]) { const Q = posAt(fv, t).p; facing = Math.atan2(Q[0] - P.p[0], Q[1] - P.p[1]); }
     else { const s = Array.isArray(fv) ? fv : spots[fv] || [0, 0]; facing = s[0] * D2R + Math.PI; }
