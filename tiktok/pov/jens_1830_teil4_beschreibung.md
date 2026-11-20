@@ -20,4 +20,5 @@ Team Vater 👨 oder Team Krause 🕴️? Die Mehrheit entscheidet Teil 5.
 
 ## Cover
 
-`jens_1830_teil4_thumbnail.jpg` (1080×1920), erzeugt mit `tools/thumbnail.js` (Befehl siehe README).
+`jens_1830_teil4_thumbnail.jpg` (1080×1920). Erzeugt mit:
+`node tools/thumbnail.js jens_1830_teil4 --bei 25.6 --titel "Hinter dem|Stromausfall|steckt *mein Vater?*" --unter "TEIL 4" --oben "18:44"`
