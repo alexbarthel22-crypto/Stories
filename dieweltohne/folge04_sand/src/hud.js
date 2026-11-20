@@ -117,4 +117,7 @@ export function drawHUD(g, T, shot) {
     lines.forEach((l, i) => shadowText(g, l, W / 2, 1390 + i * 64 - (lines.length - 1) * 32 + (1 - al) * 10, 22));
     g.restore();
   }
+  // Abblende zum Schluss
+  const fo = smooth(88.9, 89.9, T);
+  if (fo > 0) { g.save(); g.globalAlpha = fo; g.fillStyle = '#000'; g.fillRect(0, 0, W, 99999); g.restore(); }
 }

@@ -184,21 +184,36 @@ add('fsd_church_bell', 53.0, 2.4, db=-10, off=0.4, fout=1.2)
 add('fsd_rubble', 55.3, 3.0, db=-2, fout=1.0)
 
 # ---------------- Stufe 7: Sand zurück ----------------
-add('fsd_sand_pour2', RETURN - 0.5, 4.0, db=0, off=5.5, fin=0.1, fout=0.6)
-amb('fsd_sand_pour', RETURN, 68.05, -6)
-add('fsd_whoosh_boom', RETURN - 0.02, 3.0, db=-2, speed=0.8, fout=1.5)
-amb('fsd_dust_wind', RETURN, 90.0, -14)
-add('fsd_building_collapse', CRUMBLE - 0.9, 9.0, db=0, fout=2.0)
-add('fsd_sand_rush', CRUMBLE, 8.0, db=-4, fin=0.1, fout=2.0, pan=-0.3)
+# Kein durchgehendes Rieseln mehr: kurze, wechselnde Ereignisse statt eines Dauergeräuschs
+add('fsd_whoosh_boom', RETURN - 0.02, 3.0, db=-2, speed=0.8, fout=1.5)                # Sand schlägt ein
+add('fsd_sand_pour2', RETURN - 0.4, 1.6, db=-4, off=5.5, fin=0.1, fout=0.6)
+add('fsd_crowd_murmur', RETURN + 0.3, 2.4, db=-16, fin=0.4, fout=0.8)                 # Leute auf der Straße
+amb('fsd_dust_wind', RETURN, 68.05, -18)
+add('fsd_building_collapse', CRUMBLE - 0.9, 7.0, db=0, fout=2.0)                      # erste Häuser sacken weg
+add('fsd_rubble', CRUMBLE + 0.4, 3.0, db=-6, fout=1.0, pan=-0.3)
 add('fsd_crowd_gasp', CRUMBLE + 0.6, 2.4, db=-12, fout=0.6)
-add('fsd_building_collapse', 61.5 - 0.9, 5.0, db=-8, fout=1.5, pan=0.4)
-add('fsd_screams', 62.0, 3.0, db=-20, off=1.0, fin=0.4, fout=1.2)
-amb('fsd_sub_rumble', 68, 80.05, -16)
-amb('fsd_sand_pour', 68, 80.05, -16)
-add('fsd_helicopter', 70.0, 9.0, db=-22, fin=2.0, fout=2.0, pan=0.5)
-add('fsd_sand_pour2', 80.6, 4.0, db=-4, off=5.5, fin=0.3, fout=0.8)                  # Handy zerrinnt
-add('fsd_sand_pour', 81.0, 6.5, db=-6, fin=0.5, fout=1.5)
-add('fsd_sub_rumble', 84.0, 5.9, db=-10, off=1.0, fin=2.0, fout=2.0)
+add('fsd_metal_crash2', 60.3, 1.2, db=-12, off=0.1, fout=0.5, pan=0.4)                # Stahlträger kippen
+add('fsd_car_horn', 60.9, 1.6, db=-18, fout=0.4, pan=0.6)
+add('fsd_building_collapse', 61.5 - 0.9, 4.0, db=-8, fout=1.5, pan=0.4)
+add('fsd_screams', 62.0, 2.5, db=-20, off=1.0, fin=0.4, fout=1.0)
+add('fsd_debris', 63.4, 1.5, db=-16, fout=0.5, pan=-0.5)                              # letzte Glasreste
+add('fsd_rubble', 64.6, 2.5, db=-10, fout=1.0, pan=0.5)
+add('fsd_dog_howl', 66.0, 3.0, db=-20, fin=0.3, fout=1.0, pan=-0.6)
+# Luftbild: Wind über der Wüste, fernes Grollen
+amb('fsd_canyon_wind', 68, 80.05, -14)
+add('fsd_birds_flap', 68.3, 2.0, db=-14, fout=0.6, pan=0.3)
+add('fsd_thunder_far', 70.5, 5.0, db=-12, fin=0.2, fout=2.0)                          # ferne Einstürze
+add('fsd_helicopter', 71.0, 8.0, db=-22, fin=2.0, fout=2.0, pan=0.5)
+add('fsd_thunder_far2', 75.5, 4.0, db=-14, fin=0.2, fout=1.5, pan=-0.3)
+add('fsd_sub_rumble', 77.0, 3.0, db=-14, off=1.0, fin=1.0, fout=1.0)
+# Handy: Display stirbt, dann nur noch Wind
+amb('fsd_wind', 80, 90.0, -16)
+add('fsd_static', 81.0, 0.5, db=-14, fout=0.2)
+add('fsd_power_down', 81.3, 2.2, db=-8, fin=0.02, fout=0.8)                           # Handy geht aus
+add('fsd_electric_arc', 82.8, 0.35, db=-18, fout=0.15)
+add('fsd_sub_rumble', 84.0, 5.0, db=-12, off=1.0, fin=2.0, fout=1.5)
+add('fsd_dog_howl', 85.5, 2.5, db=-24, fin=0.4, fout=1.0, pan=0.6)
+add('fsd_impact_boom2', 88.9, 1.1, db=-6, fout=0.8)                                   # Schlussschlag in die Abblende
 # ---------------- Ausgabe ----------------
 peak = np.abs(mix).max()
 if peak > 0.98: mix *= 0.98 / peak

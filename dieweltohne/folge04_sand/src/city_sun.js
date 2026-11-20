@@ -257,6 +257,13 @@ export async function build(renderer) {
   const sandify = sys => { Object.assign(sys.material, {blending: THREE.NormalBlending, vertexColors: false, depthWrite: true, alphaTest: 0.4}); sys.material.color.set('#cfb07a'); sys.material.needsUpdate = true; return sys; };
   const desert = mesh(new THREE.PlaneGeometry(1600, 1600), new THREE.MeshStandardMaterial({map: sandT, roughness: 1, color: '#d9c091'}), 0, -0.03, -100, scene); desert.rotation.x = -Math.PI / 2; desert.receiveShadow = true;
   sandT.repeat.set(3, 3);
+  // Düne über der Straße (nur Schlusseinstellung): Die Straße endet im Sand
+  const driftGeo = new THREE.PlaneGeometry(90, 260, 90, 130); driftGeo.rotateX(-Math.PI / 2);
+  { const pa = driftGeo.attributes.position; for (let i = 0; i < pa.count; i++) { const x = pa.getX(i), z = pa.getZ(i) - 130;
+      const rise = THREE.MathUtils.smoothstep(-z, 0, 20); const edge = 1 - THREE.MathUtils.smoothstep(Math.abs(x), 30, 45);
+      const h = rise * (5.5 + 1.8 * Math.sin(z * 0.11 + x * 0.07) + 0.8 * Math.sin(x * 0.23 - z * 0.05)) * edge;
+      pa.setXYZ(i, x, h - 0.2 * (1 - rise), z); } driftGeo.computeVertexNormals(); }
+  const drift = new THREE.Mesh(driftGeo, new THREE.MeshStandardMaterial({map: sandT, roughness: 1, color: '#c8a46c'})); drift.position.set(0, 0, -24); drift.receiveShadow = true; drift.castShadow = true; scene.add(drift);
   const ledBox = scene.children.find(o => o.isMesh && Math.abs(o.position.x + 10.72) < 0.01 && Math.abs(o.position.y - 7.5) < 0.01);
   const pour = sandify(sparkSystem(2600, 0.16)); scene.add(pour); // Sandströme aus den Fensterlöchern
   const haze = particles(500, 'smoke'); scene.add(haze);
@@ -278,7 +285,7 @@ export async function build(renderer) {
     bldgs.forEach(b => { const k = smooth(CRUMBLE + b.delay, CRUMBLE + b.delay + 2.2, T);
       b.bm.scale.y = Math.max(0.001, 1 - k); b.bm.visible = k < 0.999; b.deco.forEach(o => o.visible = k < 0.15);
       const hh = b.h * 0.42 * Math.pow(k, 0.8); b.heap.scale.set(b.d * 0.55 + b.d * 0.3 * k, Math.max(0.01, hh), b.w * 0.62); b.rebar.visible = k > 0.5; });
-    desert.visible = id === 'aerial'; if (ledBox) ledBox.visible = false;
+    desert.visible = id === 'aerial'; drift.visible = id === 'hand'; if (ledBox) ledBox.visible = false;
     blocks.visible = id !== 'aerial'; blockHeaps.visible = id === 'aerial' || dustK > 0.9;
     hosp.visible = false;
     // Sand rieselt aus den Fensterlöchern (Häuser in Kameranähe)
@@ -307,8 +314,8 @@ export async function build(renderer) {
       camera.position.set(lerp(18, 30, u), lerp(38, 110, u), lerp(70, 140, u)); camera.lookAt(lerp(0, -10, u), 0, lerp(-10, -180, u));
     } else { // hand: Handy zerrinnt in der Hand
       rig.visible = true; grainsS.visible = false; camera.fov = 52;
-      const lift = smooth(5, 9.5, t);
-      camera.position.set(6.5, 1.62, 10 - t * 0.1); camera.lookAt(lerp(4, 0, lift), lerp(0.6, 3.5, lift), lerp(4, -30, lift));
+      const lift = smooth(5, 9.0, t);
+      camera.position.set(6.5, 1.62, 10 - t * 0.1); camera.lookAt(lerp(4, 2, lift), lerp(0.6, 2.2, lift), lerp(4, -40, lift));
       const k = smooth(1.0, 6.5, t);
       rig.scale.setScalar(0.8);
       updateScreen(phone, [], {t: T, noDrops: true, custom: (g, st, SW, SH) => { // Display ist Sand und rinnt nach unten weg
@@ -319,6 +326,7 @@ export async function build(renderer) {
       updateSparks(grainsS, [{pos: V3(0, -0.11 - lift * 0.06, -0.27), dir: V3(0, -0.2, 0), t0: 0.6, t1: 5.5}], t, 0.6);
     }
     camera.updateProjectionMatrix();
-    city.furniture.forEach(f => { f.visible = Math.hypot(f.position.x - camera.position.x, f.position.z - camera.position.z) > 6 || f.position.z > camera.position.z + 1; });
+    if (id === 'hand') city.furniture.forEach(f => { f.visible = f.position.z < -24 ? false : (Math.hypot(f.position.x - 6.5, f.position.z - 10) > 15 || f.position.z > 11); }); // fest, kein Flackern
+    else city.furniture.forEach(f => { f.visible = Math.hypot(f.position.x - camera.position.x, f.position.z - camera.position.z) > 6 || f.position.z > camera.position.z + 1; });
   }};
 }
