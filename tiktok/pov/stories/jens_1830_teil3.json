@@ -1,0 +1,666 @@
+{
+ "titel": "Jens – 18:30 · Teil 3",
+ "set": "ubahn",
+ "himmel": "nacht",
+ "fov": 140,
+ "blick": "vater",
+ "max_pause": 0.45,
+ "handy_fov": 96,
+ "seed": 21,
+ "hall": 0.8,
+ "atmo_spuren": [
+  {
+   "datei": "atmo_tunnel.wav",
+   "lautstaerke": 0.45
+  },
+  {
+   "datei": "atmo_tropfen_hall.wav",
+   "lautstaerke": 0.35
+  },
+  {
+   "datei": "neon_summen.wav",
+   "lautstaerke": 0.12
+  }
+ ],
+ "cast": {
+  "ich": {
+   "pos": [
+    -2.6,
+    29.6
+   ],
+   "pose": "runter",
+   "oberteil": "#5a6b3a",
+   "hose": "#2c3c5e",
+   "haut": "#ecd6bd",
+   "stimme": "gemini:Puck",
+   "regie": "junger Mann, Anfang zwanzig",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "vater": {
+   "pos": [
+    -2.3,
+    26.8
+   ],
+   "pose": "leuchten",
+   "frisur": "kurz",
+   "haare": "#5e5248",
+   "oberteil": "#4a3a2e",
+   "hose": "#2a2622",
+   "schuhe": "#1a1410",
+   "brille": true,
+   "augen": "#6a8a5a",
+   "haut": "#e6cdb2",
+   "details": "none",
+   "blickhoehe": 1.45,
+   "stimme": "gemini:Iapetus",
+   "regie": "Mann um die fünfzig, warme, raue, tiefe Stimme",
+   "modell": "gemini-3.8-flash-tts",
+   "taschenlampe": true,
+   "licht": true
+  },
+  "fremder": {
+   "pos": [
+    2.75,
+    -145.5
+   ],
+   "pose": "handy",
+   "mantel": true,
+   "oberteil": "#5d6168",
+   "hose": "#26262a",
+   "schuhe": "#141414",
+   "frisur": "kurz",
+   "haare": "#a9a9a9",
+   "haut": "#e3cdb6",
+   "augen": "#8fa3ad",
+   "details": "none",
+   "stimme": "gemini:Algenib",
+   "regie": "älterer Mann, ruhige tiefe raue Stimme",
+   "handy_bild": {
+    "typ": "nachricht",
+    "name": "Jens",
+    "text": [
+     ">Sie sind im Schacht.",
+     ">Lauft zum Tunnel."
+    ]
+   },
+   "faehrt": true,
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "agent1": {
+   "pos": [
+    -60,
+    80
+   ],
+   "taschenlampe": true,
+   "oberteil": "#16181c",
+   "hose": "#111215",
+   "schuhe": "#0a0a0a",
+   "frisur": "kurz",
+   "haare": "#151515",
+   "brille": true,
+   "details": "none",
+   "stimme": "gemini:Orus",
+   "regie": "Mann, kalt, sachlich",
+   "modell": "gemini-3.8-flash-tts",
+   "licht": true
+  },
+  "agent2": {
+   "pos": [
+    -61,
+    81
+   ],
+   "taschenlampe": true,
+   "oberteil": "#16181c",
+   "hose": "#111215",
+   "schuhe": "#0a0a0a",
+   "frisur": "none",
+   "haut": "#c99d7b",
+   "details": "none",
+   "stimme": "gemini:Alnilam",
+   "regie": "Mann, hart",
+   "modell": "gemini-3.8-flash-tts",
+   "licht": true
+  }
+ },
+ "beats": [
+  {
+   "schwarz": true,
+   "text": "TEIL 3",
+   "text_farbe": "#ffd400",
+   "dauer": 2.2,
+   "blick": "vater",
+   "schnitt": true,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.55,
+     "ab": 0
+    },
+    {
+     "datei": "klopfen.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.2
+    },
+    {
+     "datei": "tuer_aufbrechen.wav",
+     "lautstaerke": 0.9,
+     "ab": 1.6
+    }
+   ],
+   "musik": {
+    "datei": "gen/musik_8_tunnel.mp3",
+    "lautstaerke": 0.15,
+    "einblenden": 2.5
+   }
+  },
+  {
+   "schwarz": true,
+   "wer": "vater",
+   "sagt": "Die Falltür! Runter, schnell!",
+   "wie": "gepresst, eindringlich, laut flüsternd",
+   "hall": 0.5,
+   "pause": 0.2,
+   "sfx": [
+    {
+     "datei": "leiter.wav",
+     "lautstaerke": 0.7,
+     "ab": 1.2
+    },
+    {
+     "datei": "falltuer.wav",
+     "lautstaerke": 0.9,
+     "ab": 3.2
+    }
+   ],
+   "dauer": 3.8,
+   "hintergrund": [
+    {
+     "wer": "agent1",
+     "sagt": "Tür ist auf! Rein!",
+     "wie": "brüllt, hart",
+     "ab": 0.4,
+     "lautstaerke": 0.7,
+     "gedaempft": true
+    }
+   ]
+  },
+  {
+   "ort": [
+    "U-BAHNHOF FÄRBERPLATZ",
+    "stillgelegt seit 1981 · 18:37"
+   ],
+   "blick": "vater",
+   "schnitt": true,
+   "wer": "vater",
+   "sagt": "Hier unten sucht uns keiner. Noch nicht.",
+   "wie": "leise, außer Atem, zügig",
+   "pause_vor": 1.0,
+   "sfx": [
+    {
+     "datei": "atem_schwer.wav",
+     "lautstaerke": 0.35,
+     "ab": 0,
+     "dauer": 4
+    }
+   ]
+  },
+  {
+   "laufen": {
+    "vater": {
+     "nach": [
+      -2.3,
+      12.0
+     ],
+     "zeit": 13
+    },
+    "ich": {
+     "nach": [
+      -2.6,
+      14.5
+     ],
+     "zeit": 13,
+     "ab": 0.5
+    }
+   },
+   "blick": "vater",
+   "drehung": 0.6,
+   "wer": "ich",
+   "sagt": "Ein Jahr, Papa. Ein ganzes Jahr dachte ich, du bist tot!",
+   "wie": "verletzt, wütend, Stimme bricht",
+   "sfx": [
+    {
+     "datei": "schritte_hall.wav",
+     "lautstaerke": 0.66,
+     "ab": 0.3,
+     "dauer": 13
+    }
+   ]
+  },
+  {
+   "wer": "vater",
+   "sagt": "Ich musste verschwinden. Ich habe im Umspannwerk gesehen, was sie vorhaben.",
+   "wie": "ernst, leise, schuldbewusst",
+   "ort": null
+  },
+  {
+   "effekt": {
+    "ratten": 0.1
+   },
+   "blick": [
+    25,
+    -38
+   ],
+   "drehung": 0.3,
+   "schuetteln": 0.6,
+   "schuetteln_ab": 0.2,
+   "sfx": [
+    {
+     "datei": "ratten.wav",
+     "lautstaerke": 0.55,
+     "ab": 0.0
+    }
+   ],
+   "dauer": 2.0
+  },
+  {
+   "blick": "vater",
+   "drehung": 0.6,
+   "wer": "vater",
+   "sagt": "Der Stromausfall ist nur ein Test. Um Mitternacht übernehmen sie das ganze Netz.",
+   "wie": "zügig, eindringlich, düster, ohne lange Pausen"
+  },
+  {
+   "wer": "ich",
+   "sagt": "Wer ist „sie“?",
+   "wie": "angespannt, flüsternd"
+  },
+  {
+   "wer": "vater",
+   "sagt": "Die Leute, denen Tobi gerade alles erzählt.",
+   "wie": "bitter, leise",
+   "pause": 0.4
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "18:39",
+    "netz": "Kein Netz",
+    "text": [
+     "Sie sind im Schacht.",
+     "Lauft zum Tunnel."
+    ],
+    "nach_und_nach": 1.3
+   },
+   "dauer": 3.4,
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.3
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 1.6
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.5,
+     "ab": 1.6
+    }
+   ]
+  },
+  {
+   "wer": "ich",
+   "sagt": "Er schreibt schon wieder. Obwohl hier unten gar kein Netz ist.",
+   "wie": "verwirrt, leise, beunruhigt",
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": "vater",
+   "drehung": 0.5
+  },
+  {
+   "wer": "vater",
+   "sagt": "Wer schreibt dir?",
+   "wie": "plötzlich alarmiert, scharf"
+  },
+  {
+   "wer": "ich",
+   "sagt": "Na, du! Du schreibst mir doch die ganze Zeit!",
+   "wie": "verunsichert, fast lachend, dann zweifelnd"
+  },
+  {
+   "wer": "vater",
+   "sagt": "Jens… ich habe kein Handy.",
+   "wie": "langsam, leise, erschrocken",
+   "pause_vor": 0.9,
+   "pause": 0.8,
+   "zoom": 62,
+   "zoom_dauer": 2.2,
+   "sfx": [
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 1.0
+    },
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 1.2
+    }
+   ],
+   "musik": null,
+   "lautstaerke": 1.35
+  },
+  {
+   "effekt": {
+    "luke": 0.2
+   },
+   "blick": "leiter",
+   "drehung": 0.5,
+   "zoom": 0,
+   "zoom_dauer": 0.4,
+   "pose": {
+    "agent1": "leuchten",
+    "agent2": "leuchten"
+   },
+   "laufen": {
+    "agent1": {
+     "nach": [
+      -3.0,
+      31.2
+     ],
+     "zeit": 0.01,
+     "ab": 1.4
+    },
+    "agent2": {
+     "nach": [
+      -2.4,
+      31.0
+     ],
+     "zeit": 0.01,
+     "ab": 2.0
+    }
+   },
+   "sfx": [
+    {
+     "datei": "falltuer.wav",
+     "lautstaerke": 0.95,
+     "ab": 0.2
+    },
+    {
+     "datei": "leiter.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.8
+    }
+   ],
+   "wer": "agent1",
+   "sagt": "Da unten! Licht!",
+   "wie": "brüllt, hallend, triumphierend",
+   "pause_vor": 1.0,
+   "musik": {
+    "datei": "gen/musik_4_flucht.mp3",
+    "lautstaerke": 0.195,
+    "einblenden": 0.3
+   }
+  },
+  {
+   "blick": "tunnel",
+   "drehung": 0.5,
+   "wer": "vater",
+   "sagt": "Lauf!",
+   "wie": "schreit",
+   "pose": {
+    "ich": "rennen",
+    "vater": "leuchten"
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      -1.6,
+      -12.8
+     ],
+     "zeit": 6.2,
+     "ab": 0.3
+    },
+    "vater": {
+     "nach": [
+      -1.85,
+      -14.7
+     ],
+     "zeit": 6.0,
+     "ab": 0.2
+    },
+    "agent1": {
+     "nach": [
+      -2.6,
+      16
+     ],
+     "zeit": 9,
+     "ab": 0.5
+    },
+    "agent2": {
+     "nach": [
+      -1.9,
+      18
+     ],
+     "zeit": 9.5,
+     "ab": 0.7
+    }
+   },
+   "sfx": [
+    {
+     "datei": "rennen_hall.wav",
+     "lautstaerke": 0.9,
+     "ab": 0.3,
+     "dauer": 6.4
+    },
+    {
+     "datei": "stiefel_nass.wav",
+     "lautstaerke": 0.35,
+     "ab": 0.8
+    }
+   ],
+   "dauer": 6.6,
+   "hintergrund": [
+    {
+     "wer": "agent2",
+     "sagt": "Stehen bleiben!",
+     "wie": "brüllt, hallend",
+     "ab": 2.0,
+     "lautstaerke": 0.4
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "effekt": {
+    "flackern": 4.0
+   },
+   "sfx": [
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.45,
+     "ab": 0,
+     "dauer": 12
+    }
+   ],
+   "wer": "ich",
+   "sagt": "Was ist das?",
+   "wie": "keuchend, panisch",
+   "pause_vor": 1.0,
+   "blick": "tunnel",
+   "musik": null
+  },
+  {
+   "wer": "vater",
+   "sagt": "Ein Zug? Hier fährt seit vierzig Jahren nichts mehr!",
+   "wie": "fassungslos, gehetzt"
+  },
+  {
+   "wer": "vater",
+   "sagt": "Hinter die Säule!",
+   "wie": "zischt, dringend",
+   "laufen": {
+    "ich": {
+     "nach": [
+      -1.65,
+      -12.9
+     ],
+     "zeit": 0.4
+    },
+    "fremder": {
+     "nach": [
+      2.75,
+      -12.9
+     ],
+     "zeit": 9.0,
+     "ab": 0.0
+    }
+   },
+   "effekt": {
+    "zug": {
+     "ab": 0.0,
+     "dauer": 9.0,
+     "von": -150,
+     "nach": -17.4
+    }
+   },
+   "musik": {
+    "datei": "gen/musik_9_zug.mp3",
+    "lautstaerke": 0.21,
+    "einblenden": 0.5
+   },
+   "sfx": [
+    {
+     "datei": "zug_kommt.wav",
+     "lautstaerke": 0.75,
+     "ab": -4.5
+    }
+   ]
+  },
+  {
+   "dauer": 6.0,
+   "blick": [
+    -12,
+    -2
+   ],
+   "drehung": 1.5,
+   "zoom": 80,
+   "zoom_dauer": 2.5
+  },
+  {
+   "blick": "fremder",
+   "drehung": 1.0,
+   "zoom": 48,
+   "zoom_ab": 0.5,
+   "zoom_dauer": 1.8,
+   "dauer": 3.0,
+   "schaut": {
+    "fremder": "ich"
+   },
+   "sfx": [
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.75,
+     "ab": 0.9
+    }
+   ]
+  },
+  {
+   "effekt": {
+    "zug_tueren": 0.2
+   },
+   "sfx": [
+    {
+     "datei": "zug_tueren.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.2
+    }
+   ],
+   "wer": "fremder",
+   "sagt": "Steig ein, Jens.",
+   "wie": "ruhig, tief, fast freundlich",
+   "pause_vor": 1.6
+  },
+  {
+   "wer": "fremder",
+   "sagt": "Oder willst du nicht wissen, was dein Vater dir verschweigt?",
+   "wie": "ruhig, vielsagend, leise",
+   "pause": 0.4
+  },
+  {
+   "blick": "vater",
+   "drehung": 0.6,
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "wer": "vater",
+   "sagt": "Jens. Tu das nicht.",
+   "wie": "flehend, leise, zitternd",
+   "laufen": {
+    "agent1": {
+     "nach": [
+      -2.4,
+      -4
+     ],
+     "zeit": 4
+    },
+    "agent2": {
+     "nach": [
+      -1.6,
+      -3
+     ],
+     "zeit": 4
+    }
+   },
+   "sfx": [
+    {
+     "datei": "stiefel_nass.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.0
+    }
+   ]
+  },
+  {
+   "blick": "fremder",
+   "drehung": 0.45,
+   "dauer": 1.6,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.6
+    }
+   ],
+   "musik": null
+  },
+  {
+   "schwarz": true,
+   "ende": "FORTSETZUNG FOLGT",
+   "ende_unter": "TEIL 4 · STEIGT JENS EIN?",
+   "ende_ab": 0.4,
+   "dauer": 3.8,
+   "ort": null,
+   "sfx": [
+    {
+     "datei": "zug_tueren.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.2
+    }
+   ]
+  }
+ ],
+ "ducking": 0.75
+}

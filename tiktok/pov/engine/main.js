@@ -178,12 +178,12 @@ window.render = (f) => {
     c.root.position.set(P.p[0], 0, P.p[1]);
     const fv = at(tracks.face[n], t).v;
     let facing;
-    if (P.dir !== null && P.speed > 0.05) facing = P.dir;
+    if (P.dir !== null && P.speed > 0.05 && !c.spec.faehrt) facing = P.dir;
     else if (fv === 'ich' || !fv) facing = Math.atan2(eye.x - P.p[0], eye.z - P.p[1]);
     else if (cast[fv]) { const Q = posAt(fv, t).p; facing = Math.atan2(Q[0] - P.p[0], Q[1] - P.p[1]); }
     else { const s = Array.isArray(fv) ? fv : spots[fv] || [0, 0]; facing = s[0] * D2R + Math.PI; }
     const cp = at(tracks.pose[n], t);
-    c.update({ t, talk: talkAt(n, t), pose: cp.v, prevPose: cp.prev, poseK: (t - cp.t) / 0.4, facing, walk: P.speed, mood: at(tracks.mood[n], t).v, blinkOff: n.length * 0.37, funk: lines.some((l) => l.funk && t >= l.t0 && t < l.t1) });
+    c.update({ t, talk: talkAt(n, t), pose: cp.v, prevPose: cp.prev, poseK: (t - cp.t) / 0.4, facing, walk: c.spec.faehrt ? 0 : P.speed, mood: at(tracks.mood[n], t).v, blinkOff: n.length * 0.37, funk: lines.some((l) => l.funk && t >= l.t0 && t < l.t1) });
     if (c.phone.visible) drawPhone(c.phone, c.spec.handy_bild || { typ: 'nachricht', name: 'Jens', text: ['18:30.', 'Schau hin, Jens.'] }, t);
   }
   // Sonne folgt dem Spieler (Schattenbereich)

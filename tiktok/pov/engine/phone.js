@@ -59,7 +59,7 @@ export function drawPhone(g, spec, t, dt = 99) {
   } else if (spec.typ === 'nachricht') {
     c.fillStyle = '#f2efe8'; c.fillRect(0, 0, W, H);
     c.fillStyle = '#26323a'; c.fillRect(0, 0, W, 78);
-    c.fillStyle = '#9fb0bb'; c.font = F(600, 13); c.textAlign = 'left'; c.fillText(spec.uhr || '18:26', 14, 13); c.textAlign = 'right'; c.fillText('▂▄▆ 41%', W - 12, 13); c.textAlign = 'center';
+    c.fillStyle = '#9fb0bb'; c.font = F(600, 13); c.textAlign = 'left'; c.fillText(spec.uhr || '18:26', 14, 13); c.textAlign = 'right'; c.fillText(spec.netz || '▂▄▆ 41%', W - 12, 13); c.textAlign = 'center';
     c.fillStyle = spec.name === 'Unbekannt' ? '#7a2a2a' : '#4f7d9c'; c.beginPath(); c.arc(38, 48, 17, 0, 7); c.fill();
     c.fillStyle = '#fff'; c.font = F(800, 17); c.fillText(spec.name === 'Unbekannt' ? '?' : (spec.name || '?')[0], 38, 49);
     c.textAlign = 'left'; c.font = F(800, 23); c.fillText(spec.name || 'Chat', 66, 44);

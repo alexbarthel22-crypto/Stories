@@ -550,11 +550,134 @@ TEIL2 = {'atmo_regen.wav': (lambda: regen(), 0.7), 'atmo_tropfen.wav': (lambda: 
          'ticken.wav': (ticken, 0.5), 'atmo_drinnen.wav': (lambda: drinnen(), 0.6), 'heli_nah.wav': (heli_nah, 0.85), 'autoalarm_fern.wav': (autoalarm_fern, 0.6)}
 
 
+# ---------- Teil 3: U-Bahnhof ----------
+def big_hall(x, rt=2.8, wet=0.5): return reverb(x, rt, wet, 0.04)
+
+def tuer_aufbrechen(d=3.0):
+    # Holz bricht: Wumms + viele kurze, harte Knackser (Splitter) + herabfallende Teile
+    x = np.zeros(int(d * SR)); n = int(0.8 * SR); tt = t_(0.8)
+    x[:n] += np.sin(2 * np.pi * 55 * tt) * env_ad(n, 0.001, 0.1) * 1.3 + bp(noise(0.8), 200, 2500, 2) * env_ad(n, 0.001, 0.06) * 1.2
+    for k in range(40):
+        L = int(0.015 * SR); tk = np.arange(L) / SR; f = R.uniform(900, 3200)
+        c = (np.sin(2 * np.pi * f * tk) * 0.6 + R.standard_normal(L) * 0.8) * np.exp(-tk / 0.003)
+        i = int((0.005 + R.exponential(0.06)) * SR); x[i:i + L] += c * R.uniform(0.3, 1.0)
+    deb = grains(1.6, 18, 300, 1200, (0.008, 0.03), (0.2, 0.6)); i = int(0.6 * SR); x[i:i + len(deb)] += deb * 0.5
+    return pan(lp(reverb(x, 1.0, 0.35), 3500), -0.2)
+
+def leiter(d=2.6):
+    # Schuhe auf Eisensprossen: dumpfer, kurzer Metallschlag + Schaben, kein Klingeln
+    x = np.zeros(int(d * SR))
+    for st in np.arange(0.05, d - 0.3, 0.42):
+        n = int(0.25 * SR); tt = t_(0.25)
+        hit = np.sin(2 * np.pi * 140 * tt) * np.exp(-tt / 0.03) * 0.8 + bp(noise(0.25), 300, 1800, 2) * np.exp(-tt / 0.02) * 1.0
+        hit += sum(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.018) * a for f, a in ((410, 0.25), (930, 0.15)))
+        scuff = bp(noise(0.25), 1500, 5000, 2) * np.exp(-np.maximum(0, tt - 0.03) / 0.04) * (tt > 0.03) * 0.25
+        i = int((st + R.uniform(-0.03, 0.03)) * SR); x[i:i + n] += (hit + scuff) * R.uniform(0.6, 1.0)
+    return pan(big_hall(x, 1.6, 0.4), -0.3)
+
+def falltuer():
+    d = 3.5; n = int(1.5 * SR); tt = t_(1.5); x = np.zeros(int(d * SR))
+    slam = np.sin(2 * np.pi * 50 * tt) * env_ad(n, 0.002, 0.15) * 1.2 + bp(noise(1.5), 100, 2000, 2) * env_ad(n, 0.001, 0.05)
+    ring = sum(np.sin(2 * np.pi * f * tt) * np.exp(-tt / dk) * a for f, a, dk in ((180, 0.5, 0.5), (433, 0.35, 0.4), (967, 0.2, 0.3), (1733, 0.12, 0.2)))
+    x[:n] += slam + ring
+    return pan(big_hall(x, 3.0, 0.55), -0.4)
+
+def tunnel(d=60):
+    ch = []
+    for k in range(2):
+        rum = lp(brown(d), 90, 4) * 1.2 * (0.7 + 0.3 * smooth_rand(d, 0.08, 0, 1))
+        air = bp(pink(d), 150, 900, 2) * 0.35 * (0.6 + 0.4 * smooth_rand(d, 0.12, 0, 1))
+        hum = np.sin(2 * np.pi * 50 * t_(d)) * 0.04 + np.sin(2 * np.pi * 100 * t_(d)) * 0.02
+        ch.append(rum + air + hum)
+    return loopable(stereo(*ch))
+
+def tropfen_hall(d=60):
+    ch = []
+    for k in range(2):
+        x = np.zeros(int(d * SR)); s_ = R.uniform(0, 1)
+        while s_ < d - 0.5:
+            L = int(0.08 * SR); tt = t_(0.08); f = R.uniform(500, 1100)
+            pl = (np.sin(2 * np.pi * f * tt * (1 + 1.5 * tt / 0.08)) * np.exp(-tt / 0.012) + bp(noise(0.08), 800, 4000, 2) * np.exp(-tt / 0.003) * 0.6) * R.uniform(0.3, 1.0)
+            i = int(s_ * SR); x[i:i + L] += pl[:len(x) - i]; s_ += R.exponential(0.9)
+        ch.append(reverb(x, 3.5, 0.8, 0.05))
+    return loopable(stereo(*ch))
+
+def neon_summen(d=30):
+    tt = t_(d)
+    x = sum(np.sin(2 * np.pi * 100 * k * tt) / k for k in range(1, 12)) * 0.15
+    x = bp(x, 90, 3000, 2) * (0.8 + 0.2 * smooth_rand(d, 1.0, 0, 1))
+    clicks = (R.random(len(tt)) < 0.00008).astype(float); x += hp(signal.fftconvolve(clicks, np.exp(-np.arange(400) / 60))[:len(tt)], 1500) * 0.6
+    return loopable(stereo(x, x * 0.9))
+
+def schritte_hall(d=13.0):
+    x = np.zeros(int(d * SR)); s_ = 0.1
+    while s_ < d - 0.4:
+        for off, v in ((0, 1.0), (0.27, 0.7)):
+            st = schritt(0.9) * R.uniform(0.7, 1.0) * v; i = int((s_ + off) * SR); x[i:i + len(st)] += st[:len(x) - i]
+        s_ += 0.58
+    return pan(big_hall(lp(x, 5000), 2.4, 0.5), 0.0)
+
+def rennen_hall(d=6.5):
+    x = rennen(d, 3.5); x = x[:, 0] if x.ndim == 2 else x
+    return pan(reverb(x, 1.8, 0.32, 0.03), 0.0)
+
+def ratten(d=3.2):
+    # Krallen auf Beton, Rascheln von Papier, wenige kurze, raue Quiekser
+    tt = t_(d); env = np.clip(1.3 - tt / d, 0, 1)
+    claws = grains(d, 220, 1800, 6000, (0.0006, 0.002), (0.1, 0.6)) * env
+    rustle = bp(noise(d), 1500, 7000, 2) * (0.3 + 0.7 * smooth_rand(d, 12, 0, 1)) * 0.25 * env
+    x = claws + rustle
+    for k in range(3):
+        L = int(0.07 * SR); tk = np.arange(L) / SR; f = R.uniform(2600, 3600)
+        sq = (signal.sawtooth(2 * np.pi * f * tk) * 0.5 + noise(0.07)[:L] * 0.5) * np.sin(np.pi * tk / tk[-1]) ** 0.7
+        sq = bp(sq, 2000, 6000, 2) * 0.5; i = int(R.uniform(0.1, d - 0.5) * SR); x[i:i + L] += sq
+    return pan(big_hall(x, 1.2, 0.25), np.linspace(-0.6, 0.5, len(x)))
+
+def hund_hall(d=5.0):
+    x = hund_fern(d)
+    return pan(big_hall(x[:, 0] if x.ndim == 2 else x, 2.8, 0.55), 0.3)
+
+def zug_kommt(d=16.0):
+    # U-Bahn: anschwellendes Rollgeräusch, Motor-Heulen, Schienenstöße, Bremsquietschen, Stillstand, Zischen
+    tt = t_(d); stop = 13.5
+    near = np.clip(tt / stop, 0, 1) ** 2.0 * (tt < stop) + (tt >= stop) * 1.0
+    speed = np.where(tt < stop, 1 - (tt / stop) ** 2.5 * 0.92, 0.0)
+    roar = (bp(noise(d), 200, 2500, 2) * 0.9 + lp(brown(d), 160, 4) * 1.6) * (0.1 + 0.9 * near) * (0.25 + 0.75 * speed + (tt >= stop) * 0.08)
+    f_m = 180 + 520 * speed; ph = 2 * np.pi * np.cumsum(f_m) / SR
+    whine = (np.sin(ph) + 0.5 * np.sin(2 * ph) + 0.25 * np.sin(3 * ph)) * 0.12 * near * (tt < stop)
+    clack = np.zeros(len(tt)); s_ = 0.5
+    while s_ < stop:
+        v = 0.1 + 0.9 * np.clip(s_ / stop, 0, 1) ** 2; per = 1.0 / max(0.25, speed[int(s_ * SR)] * 1.8)
+        for off in (0, 0.09):
+            n = int(0.06 * SR); c = bp(noise(0.06), 400, 2500, 2) * env_ad(n, 0.001, 0.012) * v; i = int((s_ + off) * SR); clack[i:i + n] += c
+        s_ += per
+    sq = np.zeros(len(tt)); a0 = int(9.8 * SR); a1 = int(stop * SR); kk = np.linspace(0, 1, a1 - a0)
+    f = 2600 + 400 * np.sin(2 * np.pi * 6 * kk) - 300 * kk
+    sq[a0:a1] = lp(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * kk) ** 0.5 * 0.16 + bp(noise((a1 - a0) / SR), 2200, 5000, 2)[:a1 - a0] * np.sin(np.pi * kk) * 0.15, 3500)
+    hiss = hp(noise(d), 2500) * np.exp(-np.maximum(0, tt - stop - 0.3) / 0.5) * (tt > stop + 0.3) * 0.45
+    x = roar + whine + clack * 0.6 + sq + hiss
+    return fade(pan(reverb(x, 2.4, 0.4, 0.04), np.clip(-0.7 + tt / stop * 1.1, -0.7, 0.4)), 2.0, 1.5)
+
+def zug_tueren():
+    d = 3.0; tt = t_(d); x = np.zeros(len(tt))
+    hiss = hp(noise(0.6), 1800) * np.exp(-t_(0.6) / 0.18) * 0.7; x[:len(hiss)] += hiss
+    slide = bp(noise(0.9), 300, 1500, 2) * np.sin(np.pi * t_(0.9) / 0.9) * 0.5; i = int(0.15 * SR); x[i:i + len(slide)] += slide
+    thunk = np.sin(2 * np.pi * 90 * t_(0.2)) * env_ad(int(0.2 * SR), 0.002, 0.04) * 0.6; i = int(1.0 * SR); x[i:i + len(thunk)] += thunk
+    for st, f in ((1.4, 880), (1.75, 698)):
+        n = int(0.6 * SR); tk = t_(0.6); ch = (np.sin(2 * np.pi * f * tk) + 0.3 * np.sin(2 * np.pi * f * 2.01 * tk)) * np.exp(-tk / 0.25) * 0.4; i = int(st * SR); x[i:i + n] += ch
+    return pan(big_hall(x, 2.0, 0.4), 0.5)
+
+TEIL3 = {'tuer_aufbrechen.wav': (tuer_aufbrechen, 0.95), 'leiter.wav': (leiter, 0.8), 'falltuer.wav': (falltuer, 0.95), 'atmo_tunnel.wav': (lambda: tunnel(), 0.7),
+         'atmo_tropfen_hall.wav': (lambda: tropfen_hall(), 0.6), 'neon_summen.wav': (lambda: neon_summen(), 0.5), 'schritte_hall.wav': (schritte_hall, 0.8),
+         'rennen_hall.wav': (rennen_hall, 0.9), 'ratten.wav': (ratten, 0.8), 'hund_hall.wav': (hund_hall, 0.8), 'zug_kommt.wav': (zug_kommt, 0.95), 'zug_tueren.wav': (zug_tueren, 0.8)}
+
+
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else {k: TEIL2[k] for k in sys.argv[1:]}):
-            f_, pk = TEIL2[n_]; save(n_, f_(), pk); print(' ', n_)
+        ALL = {**TEIL2, **TEIL3}
+        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else {k: ALL[k] for k in sys.argv[1:]}):
+            f_, pk = ALL[n_]; save(n_, f_(), pk); print(' ', n_)
         sys.exit()
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)
     save('atmo_wind.wav', wind(), 0.8); save('atmo_stadt.wav', stadt(), 0.8); save('voegel.wav', voegel(), 0.7)

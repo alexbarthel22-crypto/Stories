@@ -187,6 +187,9 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/jens_1830_teil2.json`: **„Jens – 18:30 · Teil 2“** (ca. 77 s, Set `gasse`). Flucht im Gewitterregen in die Färbergasse.
   Tobi trägt ein Funkgerät und verrät Jens. Agenten mit Taschenlampen kommen, ein Hubschrauber kreist, ein Transporter versperrt die Einfahrt,
   eine Katze erschreckt ihn. Eine grüne Tür knarrt auf. Im Hinterzimmer mit Kerzen und Pinnwand steht sein totgeglaubter Vater. Dann hämmert es an der Tür.
+- `stories/jens_1830_teil3.json`: **„Jens – 18:30 · Teil 3“** (ca. 91 s, Set `ubahn`). Flucht durch eine Falltür in den stillgelegten U-Bahnhof Färberplatz.
+  Der Vater erzählt vom Umspannwerk. Ratten huschen vorbei, und trotz „Kein Netz“ kommt eine Nachricht. Doch der Vater hat gar kein Handy.
+  Die Verfolger kommen die Leiter herunter, ein Geisterzug fährt ein. In der Tür steht der Fremde aus Teil 1 mit dem Handy: „Steig ein, Jens.“
 
 ## Neu: Felder für mehr Spannung und Details
 
@@ -244,3 +247,33 @@ Neue Geräusche:
 
 Musik: `gen/musik_6_regen.mp3` (kalt, pulsierend) und `gen/musik_7_enthuellung.mp3` (Spieluhr, Streicher).
 Thumbnail: `node tools/thumbnail.js <name> --bei <s> --titel "Zeile|*gelb*|Zeile" --unter "TEIL 2"`.
+
+## Set `ubahn` (Teil 3): stillgelegter U-Bahnhof, nur Notbeleuchtung
+
+Der Bahnsteig liegt bei x −4.5 … 1.6, das Gleis bei x ≈ 3.75 (eine Stufe tiefer). Der Bahnsteig reicht von z = +32 (Wartungsleiter und Schacht) bis z = −45 (Tunnel). Die Säulen stehen bei x = −1.
+Blickpunkte: `bahnsteig, tunnel, leiter, schacht, gleis, wand, schild, uhr, boden, zug, decke`.
+
+Automatisch zu sehen:
+- Fliesen mit Schmutzspuren, Stahlsäulen mit Nieten, rote Notlampen (echtes Licht), eine Neonröhre, die immer wieder aufzuckt
+- Notausgang-Schild, Bahnhofsuhr (steht auf 18:30), Bahnhofsschilder, Plakate von 1978–81, Liniennetz, Kiosk, Fahrkartenautomat, Bänke
+- Zeitungen am Boden, Spinnweben, lose Kabel
+- Tropfen von der Decke mit Ringen in Pfützen, Staub in der Luft, Ratten an der Wand
+- Signal am Tunnel (springt auf Grün, wenn der Zug kommt)
+
+| Feld | Wirkung |
+|---|---|
+| `effekt: {zug: {ab, dauer, von, nach}}` | Zug (2 Wagen, beleuchtet, Scheinwerfer) fährt ein; `von`/`nach` = z der Zugmitte. Mitfahrende Figur: `faehrt: true` und `laufen` mit gleicher Zeit (z + 4.5 = Tür) |
+| `effekt: {zug_tueren: s}` | Türen gleiten auf (`zug_tueren.wav`) |
+| `effekt: {ratten: s}` | Rattenrudel huscht über den Bahnsteig (`ratten.wav`) |
+| `effekt: {flackern: s}` | Notlicht, Neonröhre und Zuglicht flackern |
+| `effekt: {luke: s}` | Luke oben im Schacht geht auf, Licht fällt herein (`falltuer.wav`) |
+| `handy: {…, netz: "Kein Netz"}` | Text oben rechts in der Statusleiste |
+
+Cast: `licht: true` (Taschenlampe ist eine echte Lichtquelle), `faehrt: true` (Figur fährt mit, ohne Laufanimation).
+
+Neue Geräusche:
+- Atmo: `atmo_tunnel, atmo_tropfen_hall, neon_summen`
+- Effekte: `tuer_aufbrechen, leiter, falltuer, schritte_hall, rennen_hall, ratten, hund_hall, zug_kommt, zug_tueren`
+- erzeugen: `python3 tools/sfx_synth.py teil3`
+
+Musik: `gen/musik_8_tunnel.mp3`, `gen/musik_9_zug.mp3`.

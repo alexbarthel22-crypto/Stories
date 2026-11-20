@@ -116,6 +116,10 @@ export class Character {
       const lens = new THREE.Mesh(new THREE.CircleGeometry(0.045, 12), new THREE.MeshBasicMaterial({ color: '#fffbe8' })); lens.rotation.x = Math.PI / 2; lens.position.y = -0.087; fl.add(lens);
       const beam = new THREE.Mesh(new THREE.ConeGeometry(1.4, 9, 20, 1, true), new THREE.MeshBasicMaterial({ color: '#fff4cc', transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
       beam.position.y = -4.6; fl.add(beam); fl.visible = false;
+      if (spec.licht) { // echte Lichtquelle: beleuchtet Wände und Boden im Dunkeln
+        this.flashLight = new THREE.SpotLight('#fff1d0', 0, 22, 0.42, 0.55, 1.3); this.flashLight.position.set(0, -0.09, 0); fl.add(this.flashLight);
+        this.flashLight.target.position.set(0, -5, 0); fl.add(this.flashLight.target);
+      }
     }
     if (spec.funkgeraet) { // Funkgerät an der Brust, rote LED blinkt
       const fg = (this.radio = new THREE.Group()); fg.position.set(-0.075, 1.21, 0.112); fg.rotation.x = -0.12; body.add(fg);
@@ -213,7 +217,7 @@ export class Character {
       arm.el.rotation.set(ex, 0, 0);
     });
     this.phone.visible = s.pose === 'handy' && k > 0.5;
-    if (this.flash) this.flash.visible = s.pose === 'leuchten' && k > 0.4;
+    if (this.flash) { this.flash.visible = s.pose === 'leuchten' && k > 0.4; if (this.flashLight) this.flashLight.intensity = this.flash.visible ? 30 : 0; }
     if (this.led) this.led.visible = s.funk ? Math.floor(t * 8) % 2 === 0 : (t + (s.blinkOff || 0)) % 1.3 < 0.16;
     if (this.candle) { const on = s.pose === 'kerze' && k > 0.35; this.candle.visible = on; const fl = 0.8 + 0.12 * Math.sin(t * 9.3) + 0.08 * Math.sin(t * 21.1);
       this.flame.scale.set(1, 0.8 + fl * 0.4, 1); this.flame.rotation.z = Math.sin(t * 4.7) * 0.1; this.candleLight.intensity = on ? 1.6 * fl * Math.min(1, (k - 0.35) * 3) : 0; }
