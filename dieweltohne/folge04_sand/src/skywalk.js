@@ -33,8 +33,8 @@ export async function build(renderer) {
   const P = tg.attributes.position, col = new Float32Array(P.count * 3), r = rng(4);
   const bands = ['#b4512b', '#c86a3a', '#9a3f24', '#d39a62', '#a8492a', '#c47a48', '#8e3a22'].map(c => new THREE.Color(c));
   for (let i = 0; i < P.count; i++) { const x = P.getX(i), z = P.getZ(i); const h = terrainH(x, z); P.setY(i, h);
-    let c; if (h > -1.5) c = new THREE.Color('#b98a5c').lerp(new THREE.Color('#8f7a52'), (Math.sin(x * 0.3) * Math.sin(z * 0.27) + 1) * 0.25);
-    else { const b = bands[Math.abs(Math.floor(h / 9 + Math.sin(x * 0.02) * 0.4)) % bands.length]; c = b.clone().multiplyScalar(0.85 + r() * 0.25); if (h < -DEPTH + 6) c = new THREE.Color('#8a6a4a'); }
+    let c; if (h > -1.5) c = new THREE.Color('#9c6a48').lerp(new THREE.Color('#7d6448'), (Math.sin(x * 0.3) * Math.sin(z * 0.27) + 1) * 0.25);
+    else { const b = bands[Math.abs(Math.floor(h / 9 + Math.sin(x * 0.02) * 0.4)) % bands.length]; c = b.clone().multiplyScalar(0.85 + r() * 0.25); if (h < -DEPTH + 6) c = new THREE.Color('#5e4634').multiplyScalar(0.8 + r() * 0.4); }
     col.set([c.r, c.g, c.b], i * 3); }
   tg.setAttribute('color', new THREE.BufferAttribute(col, 3)); tg.computeVertexNormals();
   const terrain = new THREE.Mesh(tg, new THREE.MeshStandardMaterial({vertexColors: true, roughness: 1, flatShading: true})); terrain.receiveShadow = true; scene.add(terrain);
@@ -124,8 +124,8 @@ export async function build(renderer) {
     // Kamera: hinter der Gruppe am Felsrand, nach dem Absacken Ruck und Blick in die Tiefe
     const t = T - shot.t0, push = smooth(0, 2, t), sh = d > 0 ? 0.06 * Math.exp(-d * 2.5) : 0, tilt = easeOut(clamp((d - 0.4) / 2.2));
     camera.fov = 55 + 5 * tilt;
-    camera.position.set(lerp(1.0, 2.0, push) + 1.5 * tilt + noise1(T * 15, 1) * sh, lerp(3.4, 3.1, push) - 0.6 * tilt + noise1(T * 15, 2) * sh, lerp(9.0, 8.2, push) - 1.2 * tilt + noise1(T * 15, 3) * sh);
-    const look = V3(lerp(8.0, 8.5, tilt), lerp(-0.6, -5 - 7 * smooth(1.2, 4.5, d), tilt), lerp(-0.6, -0.8, tilt)); camera.lookAt(look);
+    camera.position.set(lerp(1.0, 2.0, push) + 1.5 * tilt + noise1(T * 15, 1) * sh, lerp(3.4, 3.1, push) + 0.4 * tilt + noise1(T * 15, 2) * sh, lerp(9.0, 8.2, push) - 1.2 * tilt + noise1(T * 15, 3) * sh);
+    const look = V3(lerp(8.0, 8.5, tilt), lerp(-0.6, -3.5 - 5 * smooth(1.2, 4.5, d), tilt), lerp(-0.6, -0.8, tilt)); camera.lookAt(look);
     camera.updateProjectionMatrix();
   }};
 }
