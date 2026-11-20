@@ -7,5 +7,5 @@ for a in 0 450 900 1350 1800 2250; do
   [ -s $f.ok ] && continue
   flock /tmp/dieweltohne_render.lock node src/render.js $f $a $b && echo ok > $f.ok
 done
-ls teile/*.mp4 | sort -t t -k2 -n | sed "s/^/file '/; s/$/'/" > teile/liste.txt
+for a in 0 450 900 1350 1800 2250; do echo "file 't$a.mp4'"; done > teile/liste.txt
 ffmpeg -y -v error -f concat -safe 0 -i teile/liste.txt -c copy video_stumm.mp4
