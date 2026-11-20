@@ -19,7 +19,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
   fs.mkdirSync(out, {recursive: true});
   for (const f of frames) {
     await p.evaluate(f => { window.render(f); document.querySelectorAll('canvas')[1].style.visibility = 'hidden'; }, +f);
-    fs.writeFileSync(`${out}/clean_${f}.png`, await p.screenshot({type: 'png'}));
+    fs.writeFileSync(`${out}/clean_${f}.png`, await p.screenshot({type: 'png', timeout: 0}));
   }
   await b.close(); srv.close();
 })();
