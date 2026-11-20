@@ -59,7 +59,7 @@ export async function build(renderer) {
   // Mikrofonständer, Mikrofon, Lichtkreis
   const stand = new THREE.Group(); stand.position.set(0, DECK, -0.8); scene.add(stand);
   mesh(new THREE.CylinderGeometry(0.012, 0.012, 1.5, 8), mat('#888', {metalness: 0.9, roughness: 0.3}), 0, 0.75, 0, stand); mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.03, 20), mat('#222', {metalness: 0.7}), 0, 0.015, 0, stand);
-  const mic = new THREE.Group(); scene.add(mic);
+  const mic = new THREE.Group(); scene.add(mic); mic.scale.setScalar(1.8);
   mesh(new THREE.CylinderGeometry(0.022, 0.016, 0.18, 12), mat('#d7c27a', {metalness: 0.9, roughness: 0.25}), 0, 0, 0, mic);
   mesh(new THREE.SphereGeometry(0.032, 12, 10), mat('#bbb', {metalness: 0.8, roughness: 0.5}), 0, 0.1, 0, mic);
   const poolT = canvasTex(128, 128, (g, w) => { const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,255,255,0.95)'); gr.addColorStop(0.7, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, w); });
@@ -88,7 +88,7 @@ export async function build(renderer) {
   const N = 9000, bodyI = new THREE.InstancedMesh(new THREE.CapsuleGeometry(0.21, 0.75, 3, 8), new THREE.MeshStandardMaterial({roughness: 0.8}), N);
   const headI = new THREE.InstancedMesh(new THREE.SphereGeometry(0.12, 10, 8), new THREE.MeshStandardMaterial({roughness: 0.7}), N);
   const fans = []; const skin = ['#f1c7a5', '#d9a47e', '#a8714f', '#7a4d33'].map(c => new THREE.Color(c)), hairC = ['#2a1d15', '#5a3b22', '#c9a35b', '#111'].map(c => new THREE.Color(c));
-  while (fans.length < N) { const x = (r() - 0.5) * 66, z = 2.2 + r() * 70; if (Math.abs(x) < 3.2 && z < 28) continue; if (Math.hypot(x, z - 25) < 5.6) continue; if (z > 62 && Math.abs(x) > 26) continue; if (x > -1.6 && x < 3.8 && z > 10.4 && z < 16.5) continue;
+  while (fans.length < N) { const x = (r() - 0.5) * 66, z = 2.2 + r() * 70; if (Math.abs(x) < 3.2 && z < 28) continue; if (Math.hypot(x, z - 25) < 5.6) continue; if (z > 62 && Math.abs(x) > 26) continue; if (x > 2.6 && x < 8.0 && z > 10.4 && z < 16.5) continue;
     fans.push({x, z, ph: r() * 6, h: 0.9 + r() * 0.2, phone: r() < 0.35, lag: r()}); }
   const tc = new THREE.Color(); fans.forEach((f, i) => { bodyI.setColorAt(i, tc.copy(fanCols[i % fanCols.length]).multiplyScalar(0.8)); headI.setColorAt(i, r() < 0.6 ? hairC[i % 4] : skin[i % 4]); });
   bodyI.frustumCulled = headI.frustumCulled = false; scene.add(bodyI, headI);
@@ -100,7 +100,7 @@ export async function build(renderer) {
   // Absperrgitter vor der Bühne
   const barrier = []; for (let i = 0; i < 16; i++) { const g = new THREE.Group(); g.position.set(-15 + i * 2, 0, 1.3); scene.add(g); mesh(new THREE.BoxGeometry(1.95, 1.15, 0.08), mat('#9aa0a8', {metalness: 0.8, roughness: 0.35}), 0, 0.58, 0, g); barrier.push({g, k: r()}); }
   // Fans im Vordergrund (detailliert)
-  const front = []; for (let i = 0; i < 14; i++) { const p = makePerson(600 + i, {longHair: i % 2 === 0}); const x = -1.0 + (i % 5) * 0.95 + (r() - 0.5) * 0.3, z = 10.9 + Math.floor(i / 5) * 0.8 + (r() - 0.5) * 0.3; p.position.set(x, 0, z); p.rotation.y = Math.PI + (r() - 0.5) * 0.4; scene.add(p); front.push({p, x, z, ph: r() * 6, up: i % 3 !== 0}); }
+  const front = []; for (let i = 0; i < 14; i++) { const p = makePerson(600 + i, {longHair: i % 2 === 0}); const x = 3.0 + (i % 5) * 0.95 + (r() - 0.5) * 0.3, z = 10.9 + Math.floor(i / 5) * 0.8 + (r() - 0.5) * 0.3; p.position.set(x, 0, z); p.rotation.y = Math.PI + (r() - 0.5) * 0.4; scene.add(p); front.push({p, x, z, ph: r() * 6, up: i % 3 !== 0}); }
 
   // Pyro, Feuerwerk, Konfetti
   const fire = particles(1600, 'fire'); scene.add(fire); const smoke = particles(500, 'smoke'); scene.add(smoke);
@@ -119,7 +119,7 @@ export async function build(renderer) {
     if (mode === 'show') { const gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, '#ff5fb8'); gr.addColorStop(0.5, '#7b3fe0'); gr.addColorStop(1, '#3fc8ff'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
       const rr = rng(3); for (let i = 0; i < 160; i++) { g.fillStyle = `rgba(255,255,255,${Math.abs(Math.sin(T * 3 + i))})`; g.beginPath(); g.arc(rr() * w, rr() * h, 1 + rr() * 4, 0, 7); g.fill(); } }
     else if (mode === 'empty') { g.fillStyle = '#05050a'; g.fillRect(0, 0, w, h); const rr = rng(Math.floor(T * 15)); for (let i = 0; i < 1500; i++) { const v = rr() * 60; g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(rr() * w, rr() * h, 3, 3); }
-      g.fillStyle = Math.sin(T * 5) > 0 ? '#ff4d6a' : '#ff8fa0'; g.font = '500 70px Plex'; g.textAlign = 'center'; g.fillText('SIGNAL VERLOREN', w / 2, h / 2 + 24); }
+      g.fillStyle = Math.sin(T * 5) > 0 ? '#ff4d6a' : '#ff8fa0'; g.font = '500 44px Plex'; g.textAlign = 'center'; g.fillText('KEIN SIGNAL', w / 2, h / 2 + 16); }
     else { const k = (T * 0.8) % 1; const gr = g.createRadialGradient(w / 2, h / 2, 10, w / 2, h / 2, w * 0.7); gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.3, '#ffd1ec'); gr.addColorStop(1, '#ff5fb8'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
       g.fillStyle = '#7b2a6a'; g.font = '500 120px Garamond'; g.textAlign = 'center'; g.fillText('WELCOME BACK', w / 2, h / 2 + 40); }
     ledT.needsUpdate = true;
@@ -185,7 +185,7 @@ export async function build(renderer) {
     confI.instanceMatrix.needsUpdate = true; q.identity();
     // Kamera
     camera.fov = 50;
-    if (id === 'concert') { const u = smooth(0, 8, t); camera.position.set(lerp(1.6, 1.0, u), lerp(2.65, 2.55, u), lerp(15.5, 13.2, u)); camera.lookAt(lerp(0.3, 0.1, u), lerp(4.2, 3.4, u), -1); }
+    if (id === 'concert') { const u = smooth(0, 8, t); camera.position.set(lerp(5.6, 4.8, u), lerp(2.7, 2.6, u), lerp(15.5, 13.6, u)); camera.lookAt(lerp(0.6, 0.0, u), lerp(4.0, 3.2, u), -1); }
     else if (id === 'stadium') { const u = smooth(0, 8, t), sh = noise1(T * 9, 2) * 0.15 * surge; camera.fov = 55; camera.position.set(lerp(38, 30, u) + sh, lerp(46, 38, u), lerp(92, 80, u)); camera.lookAt(lerp(2, 0, u), 0, lerp(26, 18, u)); }
     else { const u = smooth(0, 9, t), sh = (noise1(T * 14, 5) * 0.06 + noise1(T * 23, 7) * 0.04) * jump; camera.fov = 52; camera.position.set(lerp(5.5, 2.5, u) + sh, lerp(2.4, 11, u) + sh, lerp(26, 52, u)); camera.lookAt(0, lerp(6.5, 7, u), 0); }
     camera.updateProjectionMatrix();

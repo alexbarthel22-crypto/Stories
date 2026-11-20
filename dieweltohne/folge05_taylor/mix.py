@@ -1,7 +1,7 @@
 """Mischt die echten Aufnahmen (sfx_raw/*.wav) bildgenau zur Zeitleiste und legt sie unter das Video.
 
 python3 mix.py            -> mix.wav
-python3 mix.py --mux      -> zusätzlich fertiges Video folge04_sand.mp4
+python3 mix.py --mux      -> zusätzlich fertiges Video folge05_taylor.mp4
 """
 import json
 import os
@@ -81,8 +81,9 @@ def add(name, at, dur=None, db=0.0, off=0.0, fin=0.02, fout=0.05, speed=1.0, pan
 
 # ---------------- Zeitleiste (identisch zu src/timeline.js) ----------------
 VANISH, RETURN = 10.0, 57.0
-WK = [[10, 10], [17, 9.3], [24, 8.4], [31, 7.4], [39, 6.0], [47, 4.0], [57, 0]]
-SKY_DROP, STAND_FALL, TOWER_FALL, DUNE_BREAK, CRUMBLE = 26.0, 33.5, 42.5, 48.5, 59.0
+WK = [[10, 10], [17, 9.3], [24, 8.5], [32, 7.4], [40, 6.0], [48, 4.0], [57, 0]]
+PARTY_STOP, MIC_DROP, SURGE, BARRIER, OVERLOAD, SPARK, NEEDLE, JUMP, SNAP = 18.2, 24.6, 34.5, 36.8, 43.5, 45.2, 50.0, 59.0, 69.0
+BLACKOUT = 46.4
 
 
 def world_left(T):
@@ -109,21 +110,21 @@ def tick(T, db):
     add('fsd_clock_tick', T - 0.005, 0.16, db=db, off=0.0, fout=0.05)
 
 
-# ---------------- Strand ----------------
-amb('fsd_beach_crowd', 0, 10.4, -16)
-amb('fsd_beach_waves', 0, 17.05, -12)
-amb('fsd_seagulls', 0, 10.4, -18)
-for k in range(1, 8): add('fsd_volleyball', k * 1.3 - 0.02, 0.3, db=-4, off=1.6, fout=0.1, pan=0.3 * (-1) ** k)   # Ballwechsel
-add('fsd_teens_laugh', 5.0, 2.5, db=-18, off=0.7, fin=0.2, fout=0.5)
-for s_ in range(1, 10): tick(s_, -6 if s_ < 7 else 0)
-add('fsd_sub_rumble', 7.0, 3.05, db=-10, off=1.0, fin=2.5, fout=0.05)
-add('fsd_whoosh_boom', 9.99, 3.0, db=2, fout=1.5)
-add('fsd_sand_pour2', 9.95, 1.0, db=-2, off=5.5, fin=0.02, fout=0.3)                  # Sand rieselt weg
-for k, tt in enumerate([10.42, 10.46, 10.5, 10.55]): add('fsd_body_fall', tt, 0.6, db=-2 - k, off=0.45 if k % 2 else 4.55, fout=0.2, pan=(k - 1.5) * 0.4)
-add('fsd_crowd_gasp', 10.5, 2.4, db=-8, fout=0.6)
-add('fsd_screams', 10.6, 1.6, db=-16, off=1.0, fin=0.1, fout=0.8)
-amb('fsd_flood_rush2', 10.5, 17.05, -16)                                            # Meer läuft nach
-add('fsd_teens_laugh', 12.8, 4.0, db=-10, fin=0.3, fout=1.0)
+# ---------------- Zimmer: sie singt mit ----------------
+amb('fsd_party_music2', 0, 10.02, -24)                                             # Musik leise aus den Kopfhörern
+add('fsd_girl_sing', 3.6, 6.4, db=-12, fin=0.4, fout=0.05)                          # singt mit
+for s_ in range(1, 10): tick(s_, -8 if s_ < 7 else -2)
+add('fsd_sub_rumble', 7.0, 3.05, db=-12, off=1.0, fin=2.5, fout=0.05)
+add('fsd_whoosh_boom', 9.99, 3.0, db=0, fout=1.5)
+add('fsd_static', 10.0, 0.25, db=-10, fout=0.1)                                     # Kopfhörer: Musik weg
+# ---------------- Stufe 1: Sie singt allein weiter ----------------
+add('fsd_girl_sing', 10.05, 1.5, db=-4, off=6.4, fin=0.02, fout=0.3)                # jetzt ohne Musik, allein
+add('fsd_switch', 12.05, 0.4, db=-14, fout=0.1)                                      # tippt an den Kopfhörer
+add('fsd_door', 12.0, 1.6, db=-10, fin=0.05, fout=0.4)                               # Tür geht auf
+add('fsd_camera_click', 13.35, 0.6, db=-12, fout=0.1)                                # Aufnahme startet
+add('fsd_gasp_f', 14.65, 1.0, db=-6, fout=0.3)
+add('fsd_kid_laugh', 14.4, 2.6, db=-6, fin=0.05, fout=0.6)
+add('fsd_footsteps_run', 16.2, 0.9, db=-10, fout=0.3)
 
 # ---------------- Countdown der 10 Sekunden ----------------
 ticks = []; last = 10
@@ -131,89 +132,89 @@ for f in range(int(VANISH * 30), int(RETURN * 30) + 1):
     v = world_left(f / 30)
     if int(v * 10) < int(last * 10): ticks.append(f / 30)
     last = v
-for T in ticks: tick(T, -15 + (4 if T > 52 else 0))
+for T in ticks: tick(T, -16 + (4 if T > 52 else 0))
 
-# ---------------- Stufe 2: Gaming ----------------
-add('fsd_mouse_clicks', 17.0, 0.9, db=-8, off=7.0, fout=0.1)
-add('fsd_static', 17.05, 0.8, db=-8, fout=0.3)                                       # Bildschirm stirbt
-add('fsd_pc_fan', 17.3, 2.2, db=-6, off=23.9, fin=0.02, fout=0.5)                    # Lüfter laufen aus
-add('fsd_dust_wind', 17.4, 6.6, db=-12, off=4.0, fin=0.2, fout=0.6)                   # Fenster weg, Vorhang fliegt
-amb('fsd_city_day', 17.4, 24.05, -22)
-add('fsd_keyboard', 19.5, 0.5, db=-4, off=13.3, fout=0.2)                             # Faust auf die Tastatur
-add('fsd_screams', 19.6, 1.4, db=-14, off=1.0, fout=0.6)
+# ---------------- Stufe 2: Schulparty ----------------
+add('fsd_party_music', 17.0, PARTY_STOP - 17.0 + 0.02, db=-2, fin=0.05, fout=0.02)
+add('fsd_kids_cheer', 17.0, 1.3, db=-14, fout=0.3)
+add('fsd_scratch', PARTY_STOP - 0.02, 0.55, db=-6, off=0.1, fout=0.1)               # Plattenkratzer, dann Stille
+amb('fsd_crowd_murmur', PARTY_STOP + 0.9, 24.05, -14)
+add('fsd_teens_laugh', 20.0, 1.8, db=-16, fin=0.1, fout=0.6)
+add('fsd_switch', PARTY_STOP + 3.6, 0.4, db=-8, fout=0.1)                            # Hallenlicht an
+add('fsd_electric_hum', PARTY_STOP + 3.65, 24.05 - PARTY_STOP - 3.65, db=-20, fin=0.3)
 
-# ---------------- Stufe 3: Glasboden ----------------
-amb('fsd_canyon_wind', 24, 31.05, -10)
-add('fsd_teens_laugh', 24.3, 1.6, db=-16, off=0.7, fout=0.4)
-add('fsd_whoosh_boom', SKY_DROP - 0.01, 3.0, db=0, fout=1.5)
-add('fsd_screams', SKY_DROP + 0.1, 2.5, db=-4, fin=0.02, fout=1.0)
-add('fsd_metal_crash2', SKY_DROP + 0.3, 1.5, db=-10, off=0.1, fout=0.6)               # Griff ans Geländer
-add('fsd_wind_rush', SKY_DROP, 5.0, db=-12, fin=0.3, fout=1.0)
-add('fsd_crowd_gasp', SKY_DROP + 0.2, 2.0, db=-12, fout=0.6)
+# ---------------- Stufe 3: Stadionkonzert, Bühne leer ----------------
+amb('fsd_stadium_roar', 24, 32.05, -9)
+amb('fsd_rock_drums', 24, 32.05, -12)                                                # Band spielt weiter
+for tt in [24.1, 26.7, 29.3]: add('fsd_guitar', tt, 2.6, db=-15, fout=0.6, pan=0.3)
+add('fsd_book_thud', MIC_DROP - 0.03, 0.5, db=-2, peak_win=0.1, fout=0.2)          # Mikro schlägt auf
+add('fsd_static', MIC_DROP, 0.5, db=-8, fout=0.2)                                    # Knacken in der Anlage
+add('fsd_crowd_gasp', 24.9, 2.4, db=-6, fout=0.6)
+add('fsd_screams', 26.0, 4.0, db=-16, off=1.0, fin=0.5, fout=1.0)
 
-# ---------------- Stufe 4: Stadion ----------------
-amb('fsd_football_crowd', 31, STAND_FALL + 0.4, -6, off=3.0)
-add('fsd_football_crowd2', 31.4, 2.0, db=-10, off=0.5, fout=0.4)
-add('fsd_referee_whistle', 32.4, 0.4, db=-8)
-add('fsd_building_collapse', STAND_FALL - 0.9, 9.0, db=2, fin=0.02, fout=2.0)
-add('fsd_rubble', STAND_FALL, 3.0, db=-2, fout=1.0)
-add('fsd_screams', STAND_FALL + 0.4, 3.5, db=-4, fin=0.1, fout=1.5)
-add('fsd_sub_rumble', STAND_FALL, 5.5, db=-6, off=1.0, fin=0.1, fout=1.5)
-add('fsd_metal_crash', 36.5, 2.5, db=-2, peak_win=0.2, fout=1.0)                     # Mast schlägt auf
-add('fsd_impact_boom2', 36.55, 2.4, db=-6, fout=1.2)
+# ---------------- Stufe 4: 70.000 drängen nach vorn ----------------
+amb('fsd_stadium_roar', 32, 40.05, -6)
+add('fsd_sub_rumble', 32.5, 7.5, db=-8, off=1.0, fin=1.5, fout=0.5)
+add('fsd_screams', SURGE, 5.5, db=-6, fin=0.3, fout=1.0)
+for k, tt in enumerate([SURGE + 0.2, SURGE + 1.4, SURGE + 2.6]): add('fsd_footsteps_run', tt, 2.0, db=-8, off=k * 3.0, fout=0.5, pan=(k - 1) * 0.5)
+add('fsd_metal_crash', BARRIER, 2.5, db=-2, peak_win=0.2, fout=1.0)                 # Absperrung bricht
+add('fsd_metal_crash2', BARRIER + 0.35, 1.5, db=-8, off=0.1, fout=0.6, pan=-0.4)
+add('fsd_crowd_gasp', BARRIER + 0.2, 2.4, db=-6, fout=0.6)
 
-# ---------------- Stufe 5: Dubai ----------------
-amb('fsd_helicopter', 39, 47.0, -14)
-for k, tt in enumerate([39.7, 40.4, 41.1, 41.9, 43.3, 44.2]): add('fsd_splash_big', tt, 2.0, db=-8 - (k % 2) * 3, off=0.7, fout=0.8, pan=((k % 3) - 1) * 0.5)
-add('fsd_wave_crash', 40.0, 6.0, db=-10, off=2.0, fin=0.5, fout=1.0)
-add('fsd_building_collapse', TOWER_FALL - 0.9, 5.0, db=0, fout=1.5)
-add('fsd_rubble', TOWER_FALL + 0.1, 3.0, db=-4, fout=1.0)
-add('fsd_building_collapse', 44.4 - 0.9, 3.6, db=0, fout=0.5, pan=0.3)                # Nadelturm
-add('fsd_sub_rumble', TOWER_FALL, 4.55, db=-6, off=1.0, fin=0.3, fout=0.05)
+# ---------------- Stufe 5: Rechenzentrum ----------------
+add('fsd_pc_fan', 40.0, BLACKOUT - 40.0, db=-10, off=2.0, fin=0.3, fout=0.05)
+add('fsd_pc_fan', 42.0, BLACKOUT - 42.0, db=-8, off=12.0, fin=1.0, fout=0.05, speed=1.15)   # Lüfter drehen hoch
+add('fsd_electric_hum', 40.0, BLACKOUT - 40.0, db=-14, fout=0.05)
+add('fsd_alarm_beep', OVERLOAD, BLACKOUT - OVERLOAD + 1.6, db=-8, fout=0.6)
+add('fsd_electric_arc', SPARK, 2.6, db=-2, fout=0.5)
+add('fsd_fire_crackle', SPARK + 0.4, 48.05 - SPARK - 0.4, db=-10, fin=0.3)
+add('fsd_power_down', BLACKOUT - 0.05, 1.7, db=-4, fout=0.5)
+add('fsd_wind_rush', BLACKOUT + 0.2, 48.05 - BLACKOUT - 0.2, db=-16, fin=0.4)         # Löschgas strömt
 
-# ---------------- Stufe 6: Flut ----------------
-amb('fsd_wave_crash', 47, DUNE_BREAK + 0.3, -8)
-amb('fsd_dust_wind', 47, 57.05, -18)
-add('fsd_sand_rush', DUNE_BREAK - 0.4, 6.0, db=-2, fin=0.02, fout=1.5)
-add('fsd_whoosh_boom', DUNE_BREAK - 0.01, 3.0, db=-2, fout=1.5)
-add('fsd_flood_rush', 48.9, 7.0, db=-2, off=0.5, fin=0.6, fout=0.5)
-amb('fsd_flood_rush2', 49.5, 57.05, -6)
-add('fsd_cows', 49.6, 2.5, db=-12, off=10.4, fout=0.6, pan=0.4)
-add('fsd_building_collapse', 51.8 - 0.9, 5.0, db=-6, fout=1.5)
-add('fsd_church_bell', 53.0, 2.4, db=-10, off=0.4, fout=1.2)
-add('fsd_rubble', 55.3, 3.0, db=-2, fout=1.0)
+# ---------------- Stufe 6: Erdbebenwarte ----------------
+add('fsd_electric_hum', 48.0, 8.4, db=-22, fout=0.3)
+add('fsd_phone_ring', 48.8, 3.0, db=-16, fout=0.5)
+add('fsd_alarm_beep', 51.8, 4.6, db=-14, fout=0.4)
+add('fsd_sub_rumble', 49.5, 6.9, db=-6, off=1.0, fin=2.0, fout=0.4)
+add('fsd_glass_rattle', 51.0, 5.4, db=-14, fin=1.0, fout=0.4)
+add('fsd_siren', 52.5, 3.9, db=-22, fin=1.0, fout=0.4)
+add('fsd_stadium_roar', 50.5, 5.9, db=-22, off=6.0, fin=1.5, fout=0.4)              # Fans draußen auf der Straße
+# 56,4 bis 57: Stille
 
-# ---------------- Stufe 7: Sand zurück ----------------
-# Kein durchgehendes Rieseln mehr: kurze, wechselnde Ereignisse statt eines Dauergeräuschs
-add('fsd_whoosh_boom', RETURN - 0.02, 3.0, db=-2, speed=0.8, fout=1.5)                # Sand schlägt ein
-add('fsd_sand_pour2', RETURN - 0.4, 1.6, db=-4, off=5.5, fin=0.1, fout=0.6)
-add('fsd_crowd_murmur', RETURN + 0.3, 2.4, db=-16, fin=0.4, fout=0.8)                 # Leute auf der Straße
-amb('fsd_dust_wind', RETURN, 68.05, -18)
-add('fsd_building_collapse', CRUMBLE - 0.9, 7.0, db=0, fout=2.0)                      # erste Häuser sacken weg
-add('fsd_rubble', CRUMBLE + 0.4, 3.0, db=-6, fout=1.0, pan=-0.3)
-add('fsd_crowd_gasp', CRUMBLE + 0.6, 2.4, db=-12, fout=0.6)
-add('fsd_metal_crash2', 60.3, 1.2, db=-12, off=0.1, fout=0.5, pan=0.4)                # Stahlträger kippen
-add('fsd_car_horn', 60.9, 1.6, db=-18, fout=0.4, pan=0.6)
-add('fsd_building_collapse', 61.5 - 0.9, 4.0, db=-8, fout=1.5, pan=0.4)
-add('fsd_screams', 62.0, 2.5, db=-20, off=1.0, fin=0.4, fout=1.0)
-add('fsd_debris', 63.4, 1.5, db=-16, fout=0.5, pan=-0.5)                              # letzte Glasreste
-add('fsd_rubble', 64.6, 2.5, db=-10, fout=1.0, pan=0.5)
-add('fsd_dog_howl', 66.0, 3.0, db=-20, fin=0.3, fout=1.0, pan=-0.6)
-# Luftbild: Wind über der Wüste, fernes Grollen
-amb('fsd_canyon_wind', 68, 80.05, -14)
-add('fsd_birds_flap', 68.3, 2.0, db=-14, fout=0.6, pan=0.3)
-add('fsd_thunder_far', 70.5, 5.0, db=-12, fin=0.2, fout=2.0)                          # ferne Einstürze
-add('fsd_helicopter', 71.0, 8.0, db=-22, fin=2.0, fout=2.0, pan=0.5)
-add('fsd_thunder_far2', 75.5, 4.0, db=-14, fin=0.2, fout=1.5, pan=-0.3)
-add('fsd_sub_rumble', 77.0, 3.0, db=-14, off=1.0, fin=1.0, fout=1.0)
-# Handy: Display stirbt, dann nur noch Wind
-amb('fsd_wind', 80, 90.0, -16)
-add('fsd_static', 81.0, 0.5, db=-14, fout=0.2)
-add('fsd_power_down', 81.3, 2.2, db=-8, fin=0.02, fout=0.8)                           # Handy geht aus
-add('fsd_electric_arc', 82.8, 0.35, db=-18, fout=0.15)
-add('fsd_sub_rumble', 84.0, 5.0, db=-12, off=1.0, fin=2.0, fout=1.5)
-add('fsd_dog_howl', 85.5, 2.5, db=-24, fin=0.4, fout=1.0, pan=0.6)
-add('fsd_impact_boom2', 88.9, 1.1, db=-6, fout=0.8)                                   # Schlussschlag in die Abblende
+# ---------------- Stufe 7: Sie ist zurück ----------------
+add('fsd_whoosh_boom', RETURN - 0.02, 3.0, db=2, fout=1.5)
+add('fsd_concert_scream', RETURN + 0.1, 5.7, db=0, fout=1.0)
+add('fsd_cheer_big', RETURN + 0.3, 5.0, db=-4, fout=1.0)
+amb('fsd_stadium_roar', RETURN + 1.0, 66.05, -5)
+add('fsd_cheer2', 60.0, 6.05, db=-8, fin=0.5)
+add('fsd_wind_rush', RETURN + 0.25, 1.4, db=-8, fout=0.6)                            # Pyro
+add('fsd_wind_rush', JUMP + 1.95, 1.0, db=-10, fout=0.5)
+add('fsd_fireworks', 57.6, 4.5, db=-6, fout=1.0)
+add('fsd_fireworks2', 59.6, 4.0, db=-8, fout=1.0, pan=0.4)
+add('fsd_fireworks3', 61.5, 4.5, db=-8, fout=1.0, pan=-0.4)
+add('fsd_sub_rumble', JUMP - 0.3, 66.05 - JUMP + 0.3, db=-2, off=1.0, fin=0.6)
+for k in range(int((66 - JUMP) * 2.1)): add('fsd_impact_boom2', JUMP + k / 2.1, 0.4, db=-16, fout=0.25)   # Sprünge im Takt
+
+# ---------------- Stufe 7: das Fan-Beben ----------------
+add('fsd_sub_rumble', 66.0, 9.05, db=-2, off=3.0, fin=0.3, fout=0.8)
+amb('fsd_glass_rattle', 66.0, 74.5, -6)
+add('fsd_alarm_beep', 66.2, 8.6, db=-16, fout=0.5)
+for k, tt in enumerate([67.3, 67.9, 68.6, 69.5, 70.4, 71.6, 72.9]): add('fsd_book_thud', tt, 0.5, db=-6 - (k % 3) * 2, peak_win=0.1, fout=0.2, pan=-0.5)
+add('fsd_metal_crash2', SNAP - 0.03, 1.0, db=-8, peak_win=0.1, fout=0.4)           # Feder bricht ab
+add('fsd_debris', SNAP + 0.5, 1.5, db=-14, fout=0.5)
+add('fsd_thunder_far', 70.2, 4.8, db=-10, fin=0.3, fout=1.5)
+add('fsd_siren', 70.5, 4.3, db=-20, fin=0.5, fout=1.0)
+
+# ---------------- Stufe 7: das Video geht viral ----------------
+add('fsd_electric_hum', 75.0, 15.0, db=-28)
+pings = []; t_ = 76.6
+while t_ < 88.4: pings.append(t_); t_ += max(0.18, 1.1 * 0.85 ** len(pings))
+for k, tt in enumerate(pings): add('fsd_notif' if k % 2 == 0 else 'fsd_notif2', tt, 0.6, db=-10 - (k % 3) * 2, fout=0.2, pan=((k * 7) % 5 - 2) * 0.15)
+add('fsd_sigh', 79.3, 2.4, db=-4, fout=0.4)
+add('fsd_kid_laugh', 81.2, 3.0, db=-12, off=4.0, fin=0.1, fout=0.8)
+add('fsd_phone_buzz', 84.0, 1.2, db=-16, fout=0.3)
+add('fsd_sigh', 86.6, 2.2, db=-8, fout=0.6, speed=0.92)
+
 # ---------------- Ausgabe ----------------
 peak = np.abs(mix).max()
 if peak > 0.98: mix *= 0.98 / peak
@@ -226,7 +227,7 @@ os.remove(tmp)
 print('mix.wav fertig, Ticks:', len(ticks))
 
 if '--mux' in sys.argv:
-    vid = os.path.join(HERE, 'video_stumm.mp4'); fin = os.path.join(HERE, 'folge04_sand.mp4')
+    vid = os.path.join(HERE, 'video_stumm.mp4'); fin = os.path.join(HERE, 'folge05_taylor.mp4')
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', vid, '-i', out, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', '90', '-movflags', '+faststart', fin], check=True)
     print('fertig:', fin)
 

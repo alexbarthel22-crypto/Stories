@@ -146,7 +146,7 @@ export async function build(renderer) {
     bulbs.forEach((m, i) => m.emissiveIntensity = 2.4 + 0.6 * Math.sin(T * 2 + i));
     updateScreen(bedPhone, [], {t: T, noDrops: true, gone, custom: player});
     // Mädchen (im Intro ist das Handy ihr POV)
-    girl.visible = id !== 'intro';
+    girl.visible = id !== 'intro'; brush.visible = id !== 'viral';
     girl.position.set(0.25, 0, -0.1); girl.rotation.set(0, 0.25, 0);
     if (id !== 'viral') {
       const sing = T < STOP_SING ? 1 : 1 - smooth(STOP_SING, STOP_SING + 0.5, T);
@@ -196,7 +196,7 @@ export async function build(renderer) {
       // Video zeigt sie beim Singen (Pose kurz umstellen)
       const sv = {pos: girl.position.clone(), rot: girl.rotation.y}; girl.position.set(0.25, 0, -0.1); girl.rotation.set(0, 0.25, 0); singPose(girl, 6 + t, 1);
       bro.visible = false; rig.visible = false; girl.rotation.set(0, Math.PI - 0.6, 0); vidCam.position.set(1.62, 1.0, ZB + 0.45); vidCam.lookAt(0.25, 1.05, -0.1); vidCam.updateProjectionMatrix();
-      renderer.setRenderTarget(RT); renderer.render(scene, vidCam); renderer.setRenderTarget(null); rig.visible = true;
+      brush.visible = true; renderer.setRenderTarget(RT); renderer.render(scene, vidCam); renderer.setRenderTarget(null); rig.visible = true; brush.visible = false;
       girl.position.copy(sv.pos); girl.rotation.set(0, sv.rot, 0);
       // zurück in die Sitzpose
       posePerson(girl, {}); gu.hips.position.y = 0.5; for (const lg of [gu.legL, gu.legR]) { lg.rotation.x = -1.5; lg.userData.knee.rotation.x = 1.5; }

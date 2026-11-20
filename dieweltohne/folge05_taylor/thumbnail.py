@@ -10,7 +10,7 @@ img = ImageEnhance.Contrast(ImageEnhance.Color(img).enhance(1.25)).enhance(1.12)
 ov = Image.new('L', (W, H), 0); d = ImageDraw.Draw(ov)
 for y in range(H):
     a = 0
-    if y < 900: a = int(215 * (1 - y / 900) ** 1.4)
+    if y < 1050: a = int(215 * (1 - y / 1050) ** 1.2)
     if y > 1250: a = max(a, int(200 * ((y - 1250) / 670) ** 1.3))
     d.line([(0, y), (W, y)], fill=a)
 img = Image.composite(Image.new('RGB', (W, H), (0, 0, 0)), img, ov)
@@ -36,13 +36,14 @@ draw.rounded_rectangle([(W - kw) / 2 - 34, 300, (W + kw) / 2 + 34, 386], 43, fil
 draw.text(((W - kw) / 2, 312), ks, font=k, fill='white')
 # Hauptzeilen
 text(W / 2, 420, '10 SEKUNDEN', fit('10 SEKUNDEN', F + 'InterDisplay-Black.otf', 900, 160), 'white', 6)
-text(W / 2, 580, 'OHNE SAND', fit('OHNE SAND', F + 'InterDisplay-Black.otf', 980, 220), (255, 196, 0), 8)
+text(W / 2, 590, 'OHNE TAYLOR', fit('OHNE TAYLOR', F + 'InterDisplay-Black.otf', 980, 200), (255, 196, 0), 8)
+text(W / 2, 780, 'SWIFT', fit('SWIFT', F + 'InterDisplay-Black.otf', 980, 200), (255, 196, 0), 8)
 # Stufenbalken unten (im 3:4-Ausschnitt des Profilrasters)
 cols = ['#4cc76a', '#a5d34a', '#e8d13a', '#f3a531', '#f07a2a', '#e5482b', '#c4161c']
 bw, gap, y0 = 112, 12, 1470
 x0 = (W - (7 * bw + 6 * gap)) / 2
 for i, c in enumerate(cols):
     draw.rounded_rectangle([x0 + i * (bw + gap), y0, x0 + i * (bw + gap) + bw, y0 + 26], 8, fill=c)
-text(W / 2, 1516, 'UND DAS IST ERST STUFE 4', fit('UND DAS IST ERST STUFE 4', F + 'InterDisplay-Black.otf', 860, 64), 'white', 3)
+text(W / 2, 1516, '70.000 FANS. LEERE BÜHNE.', fit('70.000 FANS. LEERE BÜHNE.', F + 'InterDisplay-Black.otf', 860, 64), 'white', 3)
 img.save('thumbnail.jpg', quality=92)
 img.crop((0, 240, W, 1680)).resize((540, 720)).save(sys.argv[2] if len(sys.argv) > 2 else '/dev/null', 'JPEG') if len(sys.argv) > 2 else None
