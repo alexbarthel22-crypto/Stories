@@ -1,48 +1,50 @@
-# Geräuschquellen Folge 8 (alle CC0, FSD50K / Freesound)
+# Geräusche (echte Aufnahmen)
 
-| Datei | Quelle | Lizenz |
-|---|---|---|
-| fsd_air_burst.wav | https://freesound.org/s/170824/ | CC0 |
-| fsd_air_raid.wav | https://freesound.org/s/262278/ | CC0 |
-| fsd_alarm_beep.wav | https://freesound.org/s/15813/ | CC0 |
-| fsd_birdsong.wav | https://freesound.org/s/148155/ | CC0 |
-| fsd_car_horn.wav | https://freesound.org/s/125520/ | CC0 |
-| fsd_cash_drawer.wav | https://freesound.org/s/108278/ | CC0 |
-| fsd_city_day.wav | https://freesound.org/s/3183/ | CC0 |
-| fsd_city_hum.wav | https://freesound.org/s/212186/ | CC0 |
-| fsd_clock_tick.wav | https://freesound.org/s/257456/ | CC0 |
-| fsd_coins.wav | https://freesound.org/s/125141/ | CC0 |
-| fsd_crowd_gasp.wav | https://freesound.org/s/333412/ | CC0 |
-| fsd_crowd_murmur2.wav | https://freesound.org/s/340934/ | CC0 |
-| fsd_crowd_outdoor.wav | https://freesound.org/s/340969/ | CC0 |
-| fsd_explosion.wav | https://freesound.org/s/151402/ | CC0 |
-| fsd_fire.wav | https://freesound.org/s/249418/ | CC0 |
-| fsd_fire_crackle.wav | https://freesound.org/s/376838/ | CC0 |
-| fsd_fire_roar.wav | https://freesound.org/s/45650/ | CC0 |
-| fsd_footsteps_run.wav | https://freesound.org/s/170505/ | CC0 |
-| fsd_gasp.wav | https://freesound.org/s/333412/ | CC0 |
-| fsd_gasp_f.wav | https://freesound.org/s/207779/ | CC0 |
-| fsd_glass_break.wav | https://freesound.org/s/356312/ | CC0 |
-| fsd_heartbeat.wav | https://freesound.org/s/133851/ | CC0 |
-| fsd_helicopter.wav | https://freesound.org/s/181071/ | CC0 |
-| fsd_impact_boom2.wav | https://freesound.org/s/132861/ | CC0 |
-| fsd_kid_laugh.wav | https://freesound.org/s/171707/ | CC0 |
-| fsd_klaxon.wav | https://freesound.org/s/323238/ | CC0 |
-| fsd_metal_crash.wav | https://freesound.org/s/222763/ | CC0 |
-| fsd_monitor_alarm.wav | https://freesound.org/s/179301/ | CC0 |
-| fsd_plastic_clatter.wav | https://freesound.org/s/396428/ | CC0 |
-| fsd_screams.wav | https://freesound.org/s/264376/ | CC0 |
-| fsd_shout_hey.wav | https://freesound.org/s/187762/ | CC0 |
-| fsd_siren_eu.wav | https://freesound.org/s/353265/ | CC0 |
-| fsd_siren_pass.wav | https://freesound.org/s/184623/ | CC0 |
-| fsd_sizzle.wav | https://freesound.org/s/341937/ | CC0 |
-| fsd_skate_roll.wav | https://freesound.org/s/188204/ | CC0 |
-| fsd_smoke_alarm.wav | https://freesound.org/s/117793/ | CC0 |
-| fsd_sub_rumble.wav | https://freesound.org/s/434155/ | CC0 |
-| fsd_teens_laugh.wav | https://freesound.org/s/333400/ | CC0 |
-| fsd_thunder_far.wav | https://freesound.org/s/189794/ | CC0 |
-| fsd_thunder_far2.wav | https://freesound.org/s/234736/ | CC0 |
-| fsd_whoosh_boom.wav | https://freesound.org/s/434430/ | CC0 |
-| fsd_whoosh_fast.wav | https://freesound.org/s/395019/ | CC0 |
-| fsd_wind.wav | https://freesound.org/s/420312/ | CC0 |
-| fsd_wind_winter.wav | https://freesound.org/s/350578/ | CC0 |
+Alle Geräusche sind echte Aufnahmen unter CC0 (frei nutzbar, keine Namensnennung nötig).
+
+- FSD50K 170824 (freesound.org/s/170824) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 262278 (freesound.org/s/262278) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 15813 (freesound.org/s/15813) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 148155 (freesound.org/s/148155) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 125520 (freesound.org/s/125520) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 108278 (freesound.org/s/108278) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 3183 (freesound.org/s/3183) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 212186 (freesound.org/s/212186) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 257456 (freesound.org/s/257456) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 125141 (freesound.org/s/125141) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 333412 (freesound.org/s/333412) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 340934 (freesound.org/s/340934) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 340969 (freesound.org/s/340969) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 151402 (freesound.org/s/151402) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 249418 (freesound.org/s/249418) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 376838 (freesound.org/s/376838) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 45650 (freesound.org/s/45650) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 170505 (freesound.org/s/170505) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 333412 (freesound.org/s/333412) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 207779 (freesound.org/s/207779) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 356312 (freesound.org/s/356312) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 133851 (freesound.org/s/133851) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 181071 (freesound.org/s/181071) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 132861 (freesound.org/s/132861) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 171707 (freesound.org/s/171707) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 323238 (freesound.org/s/323238) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 222763 (freesound.org/s/222763) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 179301 (freesound.org/s/179301) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 396428 (freesound.org/s/396428) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 264376 (freesound.org/s/264376) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 187762 (freesound.org/s/187762) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 353265 (freesound.org/s/353265) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 184623 (freesound.org/s/184623) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 341937 (freesound.org/s/341937) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 188204 (freesound.org/s/188204) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 117793 (freesound.org/s/117793) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 434155 (freesound.org/s/434155) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 333400 (freesound.org/s/333400) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 189794 (freesound.org/s/189794) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 234736 (freesound.org/s/234736) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 434430 (freesound.org/s/434430) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 395019 (freesound.org/s/395019) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 420312 (freesound.org/s/420312) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 350578 (freesound.org/s/350578) – CC0 (Freesound, über den Datensatz FSD50K)
+
+Bilder: NASA Black Marble (Erde bei Nacht) und NASA Blue Marble (Erde bei Tag), gemeinfrei, über Wikimedia Commons
