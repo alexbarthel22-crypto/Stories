@@ -10,7 +10,7 @@ Teil 6 ist DAS FINALE. Was hat Jens wirklich getan? Eure Theorien 👇
 
 ## Alternative Hooks
 
-- „Um 23:59 hatten wir noch neun Sekunden.“
+- „Um 23:59 hatten wir noch vier Sekunden.“
 - „Ich habe die Stadt gerettet. Dachte ich.“
 - „Zwei Schlüssel. Einer davon war meiner.“
 
@@ -20,4 +20,5 @@ Hat Jens die Stadt gerettet – oder Krause geholfen? 🔑 Die beste Theorie kom
 
 ## Cover
 
-`jens_1830_teil5_thumbnail.jpg` (1080×1920), erzeugt mit `tools/thumbnail.js` (Befehl unten).
+`jens_1830_teil5_thumbnail.jpg` (1080×1920). Erzeugt mit:
+`node tools/thumbnail.js jens_1830_teil5 --bei 52.3 --titel "Noch *4 Sekunden*|bis|Mitternacht" --unter "TEIL 5" --oben "23:59"`
