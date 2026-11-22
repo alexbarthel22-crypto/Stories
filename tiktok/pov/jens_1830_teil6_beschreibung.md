@@ -20,4 +20,5 @@ Soll es eine Staffel 2 geben? Krause sagte: „Das ist noch nicht vorbei.“ �
 
 ## Cover
 
-`jens_1830_teil6_thumbnail.jpg` (1080×1920), erzeugt mit `tools/thumbnail.js` (Befehl unten).
+`jens_1830_teil6_thumbnail.jpg` (1080×1920). Erzeugt mit:
+`node tools/thumbnail.js jens_1830_teil6 --bei 37.35 --titel "Ich hatte|genau *eine*|Chance" --unter "FINALE" --oben "00:01"`
