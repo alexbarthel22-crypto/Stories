@@ -196,6 +196,9 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/jens_1830_teil5.json`: **„Jens – 18:30 · Teil 5“** (ca. 82 s, Set `umspannwerk`). Jens geht mit dem Vater ins Umspannwerk Nord.
   Der Vater sagt, Krause wolle um Mitternacht das ganze Netz übernehmen. Zwei Schlüssel müssen gleichzeitig gedreht werden.
   Krause kommt mit seinen Leuten, es folgen Countdown, Knall und das Licht der Stadt. Dann sagt Krause: „Danke, Jens. Genau das wollte ich.“
+- `stories/jens_1830_teil6.json`: **„Jens – 18:30 · Teil 6 (Finale)“** (ca. 91 s, Set `leitwarte`). Die Schlüssel haben Krauses Programm freigeschaltet.
+  Jens schleicht in die Leitwarte. Tobi lenkt Krause am Fenster ab, Jens schlägt den NOT-AUS ein, und alles fährt herunter.
+  Die Polizei kommt, Krause wird abgeführt. Am Morgen versöhnen sich Jens, Tobi und der Vater. Mama schreibt: Frühstück ist fertig. ENDE.
 
 ## Neu: Felder für mehr Spannung und Details
 
@@ -327,3 +330,23 @@ Automatisch zu sehen:
 | `effekt: {licht_an: s}` | die Stadt leuchtet wellenartig wieder auf (`stadt_an.wav`) |
 
 Neue Geräusche: `atmo_brummen, schritte_kies, funken, tor, flutlicht, schluessel, knall, stadt_an` (`python3 tools/sfx_synth.py teil5`). Musik: `gen/musik_12_werk.mp3`, `gen/musik_13_finale.mp3`.
+
+## Set `leitwarte` (Finale): Leitwarte des Umspannwerks
+
+Der Raum reicht von x −8 … 8 und z −6 … 6. Vorne (−Z) liegt das Panoramafenster zum Hof, links die Netz-Schalttafel, rechts die Tür (z = 3.5) und die Serverschränke, hinten der NOT-AUS (x = −4).
+Blickpunkte: `fenster, pult, tafel, tuer, notaus, server, decke, boden, stadt`.
+
+Automatisch zu sehen:
+- Schalttafel mit dem Stadtnetz (Linien werden mit der Übernahme rot), Hauptpult mit Fortschrittsbalken und Code
+- Röhrenmonitore, Bürostühle, Tassen, rotes Telefon, Wanduhr mit laufendem Sekundenzeiger
+- Serverschränke mit blinkenden LEDs, Feuerlöscher, Notausgang-Schild
+- draußen der Hof mit Flutlicht, Trafos und Zaun, dahinter die beleuchtete Stadt
+
+| Feld | Wirkung |
+|---|---|
+| `effekt: {uebernahme: {ab, von, bis, dauer}}` | Übernahme-Fortschritt (%) auf Pult und Schalttafel |
+| `effekt: {notaus: s}` | Glas splittert, alles fährt herunter, rotes Notlicht (`glas_splitter.wav`, `notaus_aus.wav`) |
+| `effekt: {polizei: s}` | Streifenwagen im Hof, Blaulicht flackert durch das Fenster (`sirenen_nah.wav`) |
+| `effekt: {morgen: {ab, dauer}}` | Sonnenaufgang: Himmel und Raum werden hell, Tafel zeigt „NETZ STABIL“ |
+
+Neue Geräusche: `tastatur, atmo_luefter, fenster_klopfen, glas_splitter, notaus_aus, sirenen_nah` (`python3 tools/sfx_synth.py teil6`). Musik: `gen/musik_14_warte.mp3`, `gen/musik_15_morgen.mp3`.

@@ -805,11 +805,73 @@ TEIL5 = {'atmo_brummen.wav': (lambda: brummen(), 0.6), 'schritte_kies.wav': (sch
          'flutlicht.wav': (flutlicht, 0.85), 'schluessel.wav': (schluessel, 0.7), 'knall.wav': (knall, 0.98), 'stadt_an.wav': (stadt_an, 0.8)}
 
 
+# ---------- Teil 6: Leitwarte ----------
+def tastatur(d=10.0):
+    x = np.zeros(int(d * SR)); s_ = 0.1
+    while s_ < d - 0.2:
+        n = int(0.04 * SR); tt = t_(0.04); f = R.uniform(1800, 3200)
+        k = (bp(noise(0.04), 1500, 6000, 2) * np.exp(-tt / 0.004) + np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.003) * 0.3) * R.uniform(0.4, 1.0)
+        i = int(s_ * SR); x[i:i + n] += k[:len(x) - i]; s_ += R.exponential(0.11) + 0.04 if R.random() > 0.08 else 0.6
+    return pan(reverb(x, 0.5, 0.15), -0.2)
+
+def luefter(d=60):
+    tt = t_(d); ch = []
+    for k in range(2):
+        fan = bp(pink(d), 200, 3000, 2) * 0.5 + np.sin(2 * np.pi * (118 + k * 3) * tt) * 0.06 + np.sin(2 * np.pi * 236 * tt) * 0.03
+        beeps = np.zeros(len(tt))
+        for st in np.arange(5 + k * 7, d - 1, 17.3):
+            n = int(0.08 * SR); i = int(st * SR); beeps[i:i + n] += np.sin(2 * np.pi * 1600 * t_(0.08)) * 0.08
+        ch.append(fan + beeps)
+    return loopable(stereo(*ch))
+
+def fenster_klopfen(d=2.0):
+    x = np.zeros(int(d * SR))
+    for st in (0.0, 0.22, 0.44, 0.9, 1.1):
+        n = int(0.25 * SR); tt = t_(0.25)
+        hit = sum(np.sin(2 * np.pi * f * tt) * np.exp(-tt / dk) * a for f, a, dk in ((240, 0.8, 0.05), (780, 0.5, 0.03), (1900, 0.3, 0.02))) + bp(noise(0.25), 500, 3000, 2) * np.exp(-tt / 0.006) * 0.8
+        i = int(st * SR); x[i:i + n] += hit
+    return pan(reverb(x, 0.9, 0.3), 0.0)
+
+def glas_splitter(d=2.0):
+    tt = t_(d); x = hp(noise(d), 2000, 2) * np.exp(-tt / 0.09) * 1.6 + bp(noise(d), 300, 2500, 2) * np.exp(-tt / 0.03) * 1.2 + np.sin(2 * np.pi * 90 * tt) * np.exp(-tt / 0.05) * 0.8
+    x += grains(d, 500, 3000, 9000, (0.002, 0.012), (0.2, 0.8)) * np.exp(-tt / 0.35)
+    for k in range(60):
+        L = int(0.05 * SR); tk = np.arange(L) / SR; f = R.uniform(2500, 9000)
+        c = np.sin(2 * np.pi * f * tk) * np.exp(-tk / R.uniform(0.005, 0.03)) * R.uniform(0.2, 0.8)
+        i = int((R.exponential(0.12) + (0.25 if k > 40 else 0)) * SR); x[i:i + L] += c[:len(x) - i]
+    return pan(reverb(x, 0.7, 0.25), 0.0)
+
+def notaus_aus(d=6.0):
+    # schwerer Schalter, dann fahren Lüfter und Netzbrummen herunter (Tonhöhe fällt), Relais klacken
+    tt = t_(d); x = np.zeros(len(tt))
+    n = int(0.6 * SR); x[:n] += np.sin(2 * np.pi * 55 * t_(0.6)) * np.exp(-t_(0.6) / 0.12) * 1.4 + hp(noise(0.6), 1500) * np.exp(-t_(0.6) / 0.01) * 0.8
+    f = 600 * np.exp(-tt / 1.2) + 30; ph = 2 * np.pi * np.cumsum(f) / SR
+    whine = (np.sin(ph) + 0.4 * np.sin(2 * ph)) * 0.25 * np.exp(-tt / 2.0)
+    fans = bp(pink(d), 200, 3000, 2) * 0.5 * np.exp(-tt / 1.2)
+    for st in (0.3, 0.45, 0.7, 1.1, 1.6):
+        m = int(0.05 * SR); i = int(st * SR); x[i:i + m] += hp(noise(0.05), 2000) * np.exp(-t_(0.05) / 0.004) * 0.7
+    return pan(reverb(x + whine + fans, 1.2, 0.3), 0.0)
+
+def sirenen_nah(d=12.0):
+    tt = t_(d); out = []
+    for k, (f0, f1, rate, p) in enumerate(((650, 950, 0.55, -0.4), (700, 1000, 0.48, 0.4))):
+        f = f0 + (f1 - f0) * (0.5 + 0.5 * signal.square(2 * np.pi * rate * tt + k))
+        x = signal.sawtooth(2 * np.pi * np.cumsum(f) / SR) * 0.3; x = lp(bp(x, 400, 3500, 2), 2600)
+        near = np.clip(tt / 5, 0, 1) ** 1.5; out.append(pan(x * (0.2 + 0.8 * near), p))
+    x = out[0] + out[1]
+    car = (lp(brown(d), 200, 4) * 0.5 + bp(noise(d), 300, 1500, 2) * 0.15) * np.clip(tt / 5, 0, 1) * np.clip((8 - tt) / 2, 0.2, 1)
+    y = x + stereo(car, car)
+    return fade(stereo(reverb(y[:, 0], 1.8, 0.4), reverb(y[:, 1], 1.8, 0.4)), 0.5, 2.0)
+
+TEIL6 = {'tastatur.wav': (tastatur, 0.7), 'atmo_luefter.wav': (lambda: luefter(), 0.55), 'fenster_klopfen.wav': (fenster_klopfen, 0.9), 'glas_splitter.wav': (glas_splitter, 0.9),
+         'notaus_aus.wav': (notaus_aus, 0.95), 'sirenen_nah.wav': (sirenen_nah, 0.85)}
+
+
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5}
-        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else {k: ALL[k] for k in sys.argv[1:]}):
+        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5, **TEIL6}
+        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else TEIL6 if sys.argv[1] == 'teil6' else {k: ALL[k] for k in sys.argv[1:]}):
             f_, pk = ALL[n_]; save(n_, f_(), pk); print(' ', n_)
         sys.exit()
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)

@@ -46,7 +46,7 @@ const me = ST.cast?.ich || {};
 const pov = new PovBody(me); scene.add(pov.root);
 for (const [name, spec] of Object.entries(ST.cast || {})) {
   if (name === 'ich') continue;
-  const c = new Character(name, spec); scene.add(c.root); cast[name] = c;
+  const c = new Character(name, spec); c.root.name = 'cast_' + name; scene.add(c.root); cast[name] = c;
 }
 const overlay = new Overlay(document.getElementById('ui'), ST);
 

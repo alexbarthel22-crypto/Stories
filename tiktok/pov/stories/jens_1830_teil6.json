@@ -1,0 +1,695 @@
+{
+ "titel": "Jens – 18:30 · Teil 6 (Finale)",
+ "set": "leitwarte",
+ "himmel": "nacht",
+ "fov": 140,
+ "blick": "pult",
+ "max_pause": 0.45,
+ "handy_fov": 96,
+ "seed": 51,
+ "hall": 0.4,
+ "ducking": 0.75,
+ "atmo_spuren": [
+  {
+   "datei": "atmo_brummen.wav",
+   "lautstaerke": 0.3
+  },
+  {
+   "datei": "atmo_luefter.wav",
+   "lautstaerke": 0.35
+  },
+  {
+   "datei": "voegel.wav",
+   "lautstaerke": 0.0
+  }
+ ],
+ "cast": {
+  "ich": {
+   "pos": [
+    7.0,
+    3.5
+   ],
+   "pose": "runter",
+   "oberteil": "#5a6b3a",
+   "hose": "#2c3c5e",
+   "haut": "#ecd6bd",
+   "stimme": "gemini:Puck",
+   "regie": "junger Mann, Anfang zwanzig",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "krause": {
+   "pos": [
+    0.0,
+    -2.7
+   ],
+   "pose": "aufstuetzen",
+   "mantel": true,
+   "oberteil": "#5d6168",
+   "hose": "#26262a",
+   "schuhe": "#141414",
+   "frisur": "kurz",
+   "haare": "#a9a9a9",
+   "haut": "#e3cdb6",
+   "augen": "#8fa3ad",
+   "details": "none",
+   "stimme": "gemini:Algenib",
+   "regie": "älterer Mann, ruhige tiefe raue Stimme",
+   "modell": "gemini-3.8-flash-tts",
+   "schaut": [
+    0,
+    0
+   ]
+  },
+  "vater": {
+   "pos": [
+    60,
+    60
+   ],
+   "pose": "idle",
+   "frisur": "kurz",
+   "haare": "#5e5248",
+   "oberteil": "#4a3a2e",
+   "hose": "#2a2622",
+   "schuhe": "#1a1410",
+   "brille": true,
+   "augen": "#6a8a5a",
+   "haut": "#e6cdb2",
+   "details": "none",
+   "blickhoehe": 1.45,
+   "stimme": "gemini:Iapetus",
+   "regie": "Mann um die fünfzig, warme, raue, tiefe Stimme",
+   "modell": "gemini-3.8-flash-tts",
+   "taschenlampe": true,
+   "licht": true
+  },
+  "tobi": {
+   "pos": [
+    62,
+    62
+   ],
+   "pose": "idle",
+   "frisur": "kurz",
+   "haare": "#3b2a1d",
+   "oberteil": "#2a2f3a",
+   "hose": "#1e2433",
+   "augen": "#7a9a6a",
+   "details": "none",
+   "stimme": "gemini:Fenrir",
+   "regie": "junger Mann",
+   "modell": "gemini-3.8-flash-tts",
+   "taschenlampe": true,
+   "licht": true
+  },
+  "polizei": {
+   "pos": [
+    70,
+    70
+   ],
+   "stimme": "gemini:Orus",
+   "regie": "Polizist, Megafon, bestimmt",
+   "modell": "gemini-3.8-flash-tts"
+  }
+ },
+ "beats": [
+  {
+   "schwarz": true,
+   "text": "TEIL 6 · FINALE",
+   "text_farbe": "#ffd400",
+   "dauer": 2.4,
+   "blick": "pult",
+   "schnitt": true,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.55,
+     "ab": 0
+    }
+   ],
+   "musik": {
+    "datei": "gen/musik_14_warte.mp3",
+    "lautstaerke": 0.14,
+    "einblenden": 3
+   }
+  },
+  {
+   "schwarz": true,
+   "text": "Die Schlüssel haben Krauses Programm nicht gelöscht. Sie haben es freigeschaltet.",
+   "dauer": 3.6
+  },
+  {
+   "ort": [
+    "LEITWARTE",
+    "Umspannwerk Nord · 00:01"
+   ],
+   "blick": "krause",
+   "schnitt": true,
+   "effekt": {
+    "uebernahme": {
+     "ab": 0,
+     "von": 18,
+     "bis": 100,
+     "dauer": 62
+    }
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      4.4,
+      1.0
+     ],
+     "zeit": 3.0,
+     "ab": 0.4
+    }
+   },
+   "sfx": [
+    {
+     "datei": "schritte_hall.wav",
+     "lautstaerke": 0.25,
+     "ab": 0.4,
+     "dauer": 3
+    },
+    {
+     "datei": "tastatur.wav",
+     "lautstaerke": 0.25,
+     "ab": 0.2,
+     "dauer": 10
+    }
+   ],
+   "wer": "krause",
+   "sagt": "Bringt den Vater rein. Er soll zusehen, wie seine Stadt mir gehört.",
+   "wie": "kalt, zufrieden, ins Handy, halblaut",
+   "pause_vor": 1.6,
+   "pose": {
+    "krause": "handy"
+   }
+  },
+  {
+   "pose": {
+    "krause": "aufstuetzen"
+   },
+   "wer": "ich",
+   "sagt": "Er hat die Schlüssel gebraucht. Papas und meinen.",
+   "wie": "flüsternd, entsetzt, zu sich selbst",
+   "lautstaerke": 1.45
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "Tobi",
+    "uhr": "00:02",
+    "text": [
+     "Jens, es tut mir leid.",
+     "Er hat mich gezwungen.",
+     "ER = dein Vater."
+    ],
+    "tippen": "Tobi, wo bist du?",
+    "tipp_tempo": 12
+   },
+   "dauer": 2.4,
+   "sfx": [
+    {
+     "datei": "tippen.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.3,
+     "dauer": 1.6
+    }
+   ]
+  },
+  {
+   "handy": {
+    "typ": "nachricht",
+    "name": "Tobi",
+    "uhr": "00:02",
+    "text": [
+     "Er hat mich gezwungen.",
+     "ER = dein Vater.",
+     ">Tobi, wo bist du?",
+     "Vor dem Fenster.",
+     "Meine Schwester ist frei. Polizei kommt.",
+     "Ich lenke ihn ab. Lauf zum NOT-AUS."
+    ],
+    "nach_und_nach": 1.2,
+    "neu_ab": 3
+   },
+   "dauer": 4.4,
+   "sfx": [
+    {
+     "datei": "gesendet.wav",
+     "lautstaerke": 0.4,
+     "ab": 0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.3
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 1.5
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 2.7
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.5,
+     "ab": 2.7
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": "tafel",
+   "drehung": 0.8,
+   "zoom": 70,
+   "zoom_dauer": 1.5,
+   "wer": "krause",
+   "sagt": "Noch zwei Minuten. Dann gehört mir jedes Licht in dieser Stadt.",
+   "wie": "leise, genießerisch, zügig",
+   "sfx": [
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.4,
+     "ab": 0,
+     "dauer": 20
+    }
+   ]
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "blick": "tobi",
+   "drehung": 0.5,
+   "laufen": {
+    "tobi": {
+     "nach": [
+      2.6,
+      -7.3
+     ],
+     "zeit": 0.01
+    }
+   },
+   "pose": {
+    "tobi": "leuchten"
+   },
+   "sfx": [
+    {
+     "datei": "fenster_klopfen.wav",
+     "lautstaerke": 0.9,
+     "ab": 0.1
+    }
+   ],
+   "wer": "tobi",
+   "sagt": "Krause! Hier draußen! Suchen Sie mich?",
+   "wie": "laut rufend, gedämpft durch Glas, provozierend",
+   "gedaempft": true,
+   "pause_vor": 0.9,
+   "musik": {
+    "datei": "gen/musik_4_flucht.mp3",
+    "lautstaerke": 0.2,
+    "einblenden": 0.3
+   }
+  },
+  {
+   "pose": {
+    "krause": "idle"
+   },
+   "laufen": {
+    "krause": {
+     "nach": [
+      1.2,
+      -5.2
+     ],
+     "zeit": 2.0
+    }
+   },
+   "schaut": {
+    "krause": [
+     0,
+     0
+    ]
+   },
+   "blick": "notaus",
+   "drehung": 0.5,
+   "dauer": 3.4
+  },
+  {
+   "pose": {
+    "ich": "rennen"
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      -3.9,
+      5.15
+     ],
+     "zeit": 2.6
+    }
+   },
+   "sfx": [
+    {
+     "datei": "rennen_hall.wav",
+     "lautstaerke": 0.6,
+     "ab": 0,
+     "dauer": 2.8
+    }
+   ],
+   "dauer": 2.7,
+   "hintergrund": [
+    {
+     "wer": "krause",
+     "sagt": "Nein! Nicht!",
+     "wie": "schreit, wütend",
+     "ab": 1.4,
+     "lautstaerke": 0.9
+    }
+   ],
+   "schaut": {
+    "krause": "ich"
+   }
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": [
+    175,
+    -14
+   ],
+   "drehung": 0.2,
+   "effekt": {
+    "notaus": 0.5
+   },
+   "schuetteln": 1.6,
+   "schuetteln_ab": 0.5,
+   "sfx": [
+    {
+     "datei": "glas_splitter.wav",
+     "lautstaerke": 0.9,
+     "ab": 0.35
+    },
+    {
+     "datei": "notaus_aus.wav",
+     "lautstaerke": 1.0,
+     "ab": 0.5
+    }
+   ],
+   "atmo": {
+    "atmo_luefter.wav": 0.0
+   },
+   "atmo_ab": 0.6,
+   "musik": null,
+   "dauer": 3.4
+  },
+  {
+   "blick": "krause",
+   "drehung": 0.6,
+   "wer": "krause",
+   "sagt": "Was hast du getan?!",
+   "wie": "fassungslos, wütend",
+   "pause_vor": 0.3,
+   "laufen": {
+    "krause": {
+     "nach": [
+      -1.4,
+      1.8
+     ],
+     "zeit": 2.6
+    }
+   },
+   "zoom": 70,
+   "zoom_dauer": 2.0
+  },
+  {
+   "wer": "ich",
+   "sagt": "Das Licht ausgemacht. Genau wie mein Vater.",
+   "wie": "ruhig, fest, zügig, ohne lange Pause",
+   "pause": 0.5,
+   "zoom": 60,
+   "zoom_dauer": 1.0
+  },
+  {
+   "effekt": {
+    "polizei": 0.0
+   },
+   "sfx": [
+    {
+     "datei": "sirenen_nah.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.0
+    }
+   ],
+   "blick": "fenster",
+   "drehung": 0.7,
+   "wer": "polizei",
+   "sagt": "Polizei! Kommen Sie mit erhobenen Händen raus!",
+   "wie": "durch ein Megafon, laut, bestimmt",
+   "funk": true,
+   "lautstaerke": 0.75,
+   "pause_vor": 0.8,
+   "musik": {
+    "datei": "gen/musik_13_finale.mp3",
+    "lautstaerke": 0.12,
+    "einblenden": 2
+   },
+   "zoom": 0,
+   "zoom_dauer": 0.5
+  },
+  {
+   "pose": {
+    "krause": "haende_hoch"
+   },
+   "laufen": {
+    "krause": {
+     "nach": [
+      7.4,
+      3.5
+     ],
+     "zeit": 4.5
+    }
+   },
+   "blick": "krause",
+   "drehung": 0.5,
+   "dauer": 2.6,
+   "wer": "krause",
+   "sagt": "Das ist noch nicht vorbei, Jens.",
+   "wie": "kalt, leise, im Vorbeigehen",
+   "pause_vor": 1.0
+  },
+  {
+   "laufen": {
+    "krause": {
+     "nach": [
+      70,
+      72
+     ],
+     "zeit": 0.01,
+     "ab": 1.3
+    },
+    "vater": {
+     "nach": [
+      3.6,
+      3.0
+     ],
+     "zeit": 2.5,
+     "ab": 1.4
+    },
+    "tobi": {
+     "nach": [
+      4.2,
+      1.6
+     ],
+     "zeit": 2.5,
+     "ab": 1.8
+    }
+   },
+   "pose": {
+    "tobi": "idle"
+   },
+   "blick": "tuer",
+   "drehung": 0.6,
+   "sfx": [
+    {
+     "datei": "tueren.wav",
+     "lautstaerke": 0.5,
+     "ab": 1.2
+    }
+   ],
+   "dauer": 1.6
+  },
+  {
+   "laufen": {
+    "tobi": {
+     "nach": [
+      4.2,
+      1.6
+     ],
+     "zeit": 0.01
+    }
+   },
+   "blick": "vater",
+   "drehung": 0.5,
+   "wer": "vater",
+   "sagt": "Jens! Du hast es geschafft.",
+   "wie": "erleichtert, bewegt, außer Atem",
+   "pause_vor": 1.4,
+   "pause": 0.6
+  },
+  {
+   "blende": 1.0,
+   "ort": [
+    "LEITWARTE",
+    "06:12"
+   ],
+   "effekt": {
+    "morgen": {
+     "ab": 0.0,
+     "dauer": 0.2
+    }
+   },
+   "blick": "stadt",
+   "schnitt": true,
+   "laufen": {
+    "ich": {
+     "nach": [
+      0.4,
+      -4.6
+     ],
+     "zeit": 0.01
+    },
+    "vater": {
+     "nach": [
+      -0.9,
+      -4.7
+     ],
+     "zeit": 0.01
+    },
+    "tobi": {
+     "nach": [
+      1.8,
+      -4.5
+     ],
+     "zeit": 0.01
+    }
+   },
+   "schaut": {
+    "vater": [
+     0,
+     0
+    ],
+    "tobi": [
+     0,
+     0
+    ]
+   },
+   "atmo": {
+    "atmo_brummen.wav": 0.15,
+    "voegel.wav": 0.35
+   },
+   "atmo_ab": 0.5,
+   "musik": {
+    "datei": "gen/musik_15_morgen.mp3",
+    "lautstaerke": 0.15,
+    "einblenden": 1.5
+   },
+   "dauer": 4.0
+  },
+  {
+   "blick": "tobi",
+   "drehung": 0.8,
+   "schaut": {
+    "tobi": "ich"
+   },
+   "wer": "tobi",
+   "sagt": "Es tut mir so leid, Jens.",
+   "wie": "leise, ehrlich, beschämt",
+   "lautstaerke": 1.25
+  },
+  {
+   "wer": "ich",
+   "sagt": "Ich weiß. Du hattest keine Wahl.",
+   "wie": "warm, müde, versöhnlich",
+   "lautstaerke": 1.25
+  },
+  {
+   "blick": "vater",
+   "drehung": 0.8,
+   "schaut": {
+    "vater": "ich"
+   },
+   "wer": "vater",
+   "sagt": "Ich hätte dir alles sagen sollen. Von Anfang an.",
+   "wie": "leise, reumütig",
+   "lautstaerke": 1.25
+  },
+  {
+   "wer": "ich",
+   "sagt": "Ja. Hättest du.",
+   "wie": "trocken, dann leicht lächelnd",
+   "pause": 0.6,
+   "lautstaerke": 1.25
+  },
+  {
+   "wer": "vater",
+   "sagt": "Komm. Lass uns nach Hause gehen.",
+   "wie": "warm, lächelnd",
+   "lautstaerke": 1.25
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "Mama",
+    "uhr": "06:14",
+    "text": [
+     "Jens?? Wo bist du?",
+     "Frühstück ist fertig."
+    ],
+    "nach_und_nach": 1.1
+   },
+   "dauer": 3.0,
+   "sfx": [
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.25
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.45,
+     "ab": 1.35
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": "stadt",
+   "drehung": 1.0,
+   "wer": "ich",
+   "sagt": "Okay… das wird ein langes Frühstück.",
+   "wie": "lachend, erleichtert, zügig",
+   "pause": 1.2,
+   "lautstaerke": 1.25
+  },
+  {
+   "schwarz": true,
+   "ende": "ENDE",
+   "ende_unter": "DANKE FÜRS MITFIEBERN",
+   "ende_ab": 0.4,
+   "dauer": 4.2,
+   "ort": null
+  }
+ ]
+}
