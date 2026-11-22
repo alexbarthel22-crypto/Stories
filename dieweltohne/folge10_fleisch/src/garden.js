@@ -233,7 +233,7 @@ export async function build(renderer) {
     }
     if (aerial) { // drei Löwen laufen die Straße hinter den Gärten entlang auf unser Grundstück zu
       const k = smooth(RETURN + 3.5, 58, T);
-      runners.forEach((l, i) => { const x = lerp(-150 - i * 9, -30 - i * 6, k); l.position.set(x, 0, 12.5 + (i - 1) * 1.6); l.rotation.set(0, Math.PI / 2, 0); poseLion(l, {gait: T * 11 + i, walk: T > RETURN + 3.4 ? 1 : 0, run: 1, t: T}); l.visible = T > RETURN + 3.4; });
+      runners.forEach((l, i) => { const x = lerp(-150 - i * 9, -30 - i * 6, k); l.position.set(x, 0, 19 + (i - 1) * 1.5); l.rotation.set(0, Math.PI / 2, 0); poseLion(l, {gait: T * 11 + i, walk: T > RETURN + 3.4 ? 1 : 0, run: 1, t: T}); l.visible = T > RETURN + 3.4; });
       lionG.visible = false;
     }
     // Familie flüchtet (lion) und steht hinter der Glastür (final)
@@ -274,7 +274,7 @@ export async function build(renderer) {
       camera.fov = lerp(42, 46, k);
     } else if (id === 'suburb') {
       const k = smooth(48, 58, T);
-      camera.position.set(lerp(-70, -22, k), lerp(70, 5, k), lerp(70, 24, k)); camera.lookAt(lerp(-50, -36, k), lerp(0, 0.8, k), lerp(0, 12, k)); camera.fov = 50;
+      camera.position.set(lerp(-70, -20, k), lerp(70, 4.5, k), lerp(70, 21, k)); camera.lookAt(lerp(-50, -38, k), lerp(0, 0.8, k), lerp(0, 18.5, k)); camera.fov = 50;
     } else if (id === 'back') { // über Papas Schulter Richtung Zaun
       const k = smooth(62.6, 64.2, T);
       camera.position.set(lerp(4.4, 4.0, k) + noise1(T, 4) * 0.01, 1.6, lerp(-4.6, -4.2, k)); camera.lookAt(lerp(GP.x - 0.1, 3.3, k), lerp(1.1, 1.0, k), lerp(GP.z, 8.5, k)); camera.fov = lerp(46, 30, k);
