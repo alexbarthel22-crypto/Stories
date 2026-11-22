@@ -279,8 +279,8 @@ export async function build(renderer) {
       const k = smooth(62.6, 64.2, T);
       camera.position.set(lerp(4.4, 4.0, k) + noise1(T, 4) * 0.01, 1.6, lerp(-4.6, -4.2, k)); camera.lookAt(lerp(GP.x - 0.1, 3.3, k), lerp(1.1, 1.0, k), lerp(GP.z, 8.5, k)); camera.fov = lerp(46, 30, k);
     } else if (id === 'lion') { // seitliche Totale: Sprung über den Zaun, Flucht ins Haus
-      const k = smooth(74, 79, T);
-      camera.position.set(lerp(-6.5, -4.5, k), lerp(2.3, 1.6, k), lerp(4.5, 1.8, k)); camera.lookAt(lerp(1.6, GP.x + 0.6, k), lerp(1.0, 0.9, k), lerp(0.5, GP.z + 0.8, k)); camera.fov = 50;
+      const k = smooth(72.0, 76.5, T);
+      camera.position.set(lerp(-4.5, -3.2, k), lerp(1.9, 1.7, k), lerp(-0.5, -1.5, k)); camera.lookAt(lerp(2.8, GP.x + 0.6, k), lerp(1.0, 0.8, k), lerp(5.6, GP.z + 1.2, k)); camera.fov = 52;
       if (T > LION_JUMP + 0.65 && T < LION_JUMP + 1.2) shake = 0.02 * (1 - (T - LION_JUMP - 0.65) / 0.55);
     } else { // final: aus dem Haus durch die Glastür
       const k = smooth(80, 90, T);
