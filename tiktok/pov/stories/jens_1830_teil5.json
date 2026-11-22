@@ -1,0 +1,521 @@
+{
+ "titel": "Jens – 18:30 · Teil 5",
+ "set": "umspannwerk",
+ "himmel": "nacht",
+ "fov": 140,
+ "blick": "weg",
+ "max_pause": 0.45,
+ "handy_fov": 96,
+ "seed": 41,
+ "hall": 0.3,
+ "ducking": 0.75,
+ "atmo_spuren": [
+  {
+   "datei": "atmo_brummen.wav",
+   "lautstaerke": 0.6
+  },
+  {
+   "datei": "atmo_wind.wav",
+   "lautstaerke": 0.2
+  },
+  {
+   "datei": "sirene_fern.wav",
+   "lautstaerke": 0.06
+  }
+ ],
+ "cast": {
+  "ich": {
+   "pos": [
+    0.3,
+    16.5
+   ],
+   "pose": "runter",
+   "oberteil": "#5a6b3a",
+   "hose": "#2c3c5e",
+   "haut": "#ecd6bd",
+   "stimme": "gemini:Puck",
+   "regie": "junger Mann, Anfang zwanzig",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "vater": {
+   "pos": [
+    -0.7,
+    15.0
+   ],
+   "pose": "idle",
+   "frisur": "kurz",
+   "haare": "#5e5248",
+   "oberteil": "#4a3a2e",
+   "hose": "#2a2622",
+   "schuhe": "#1a1410",
+   "brille": true,
+   "augen": "#6a8a5a",
+   "haut": "#e6cdb2",
+   "details": "none",
+   "blickhoehe": 1.45,
+   "stimme": "gemini:Iapetus",
+   "regie": "Mann um die fünfzig, warme, raue, tiefe Stimme",
+   "modell": "gemini-3.8-flash-tts",
+   "taschenlampe": true,
+   "licht": true
+  },
+  "krause": {
+   "pos": [
+    0.0,
+    26.0
+   ],
+   "pose": "idle",
+   "mantel": true,
+   "oberteil": "#5d6168",
+   "hose": "#26262a",
+   "schuhe": "#141414",
+   "frisur": "kurz",
+   "haare": "#a9a9a9",
+   "haut": "#e3cdb6",
+   "augen": "#8fa3ad",
+   "details": "none",
+   "stimme": "gemini:Algenib",
+   "regie": "älterer Mann, ruhige tiefe raue Stimme",
+   "modell": "gemini-3.8-flash-tts",
+   "handy_bild": {
+    "typ": "nachricht",
+    "name": "Jens",
+    "text": [
+     ">Danke, Jens.",
+     ">Genau das wollte ich."
+    ]
+   }
+  },
+  "agent1": {
+   "pos": [
+    -1.2,
+    27.5
+   ],
+   "taschenlampe": true,
+   "oberteil": "#16181c",
+   "hose": "#111215",
+   "schuhe": "#0a0a0a",
+   "frisur": "kurz",
+   "haare": "#151515",
+   "brille": true,
+   "details": "none",
+   "stimme": "gemini:Orus",
+   "regie": "Mann, kalt, sachlich",
+   "modell": "gemini-3.8-flash-tts",
+   "licht": true
+  },
+  "agent2": {
+   "pos": [
+    1.3,
+    27.8
+   ],
+   "taschenlampe": true,
+   "oberteil": "#16181c",
+   "hose": "#111215",
+   "schuhe": "#0a0a0a",
+   "frisur": "none",
+   "haut": "#c99d7b",
+   "details": "none",
+   "stimme": "gemini:Alnilam",
+   "regie": "Mann, hart",
+   "modell": "gemini-3.8-flash-tts",
+   "licht": true
+  }
+ },
+ "beats": [
+  {
+   "schwarz": true,
+   "text": "TEIL 5",
+   "text_farbe": "#ffd400",
+   "dauer": 2.0,
+   "blick": "weg",
+   "schnitt": true,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    }
+   ],
+   "musik": {
+    "datei": "gen/musik_12_werk.mp3",
+    "lautstaerke": 0.12,
+    "einblenden": 3
+   }
+  },
+  {
+   "schwarz": true,
+   "text": "Ihr habt entschieden: Jens geht mit seinem Vater.",
+   "dauer": 2.8
+  },
+  {
+   "ort": [
+    "UMSPANNWERK NORD",
+    "23:51"
+   ],
+   "blick": "weg",
+   "schnitt": true,
+   "effekt": {
+    "countdown": 540
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      0.3,
+      3.5
+     ],
+     "zeit": 13,
+     "ab": 0.3
+    },
+    "vater": {
+     "nach": [
+      -0.6,
+      1.6
+     ],
+     "zeit": 13
+    }
+   },
+   "pose": {
+    "vater": "leuchten"
+   },
+   "sfx": [
+    {
+     "datei": "schritte_kies.wav",
+     "lautstaerke": 0.3,
+     "ab": 0.3,
+     "dauer": 13
+    }
+   ],
+   "wer": "vater",
+   "sagt": "Was Krause dir gezeigt hat, ist echt. Ich habe den Hebel umgelegt.",
+   "wie": "ruhig, ernst, ehrlich",
+   "pause_vor": 1.4
+  },
+  {
+   "wer": "ich",
+   "sagt": "Also hat er recht?!",
+   "wie": "enttäuscht, wütend",
+   "blick": "vater",
+   "drehung": 0.6
+  },
+  {
+   "wer": "vater",
+   "sagt": "Nein. Ich habe die Stadt abgeschaltet, um sie zu schützen.",
+   "wie": "eindringlich, ruhig"
+  },
+  {
+   "wer": "vater",
+   "sagt": "Krause hat ein Programm ins Netz geschleust. Um Mitternacht gehört ihm jede Leitung. Strom, Wasser, Kliniken.",
+   "wie": "schnell, ernst, gedämpft",
+   "pose": {
+    "vater": "erklaeren"
+   }
+  },
+  {
+   "wer": "ich",
+   "sagt": "Und Tobi?",
+   "wie": "leise, verletzt",
+   "effekt": {
+    "funken": 1.0
+   },
+   "sfx": [
+    {
+     "datei": "funken.wav",
+     "lautstaerke": 0.8,
+     "ab": 1.0
+    }
+   ],
+   "schuetteln": 0.5,
+   "schuetteln_ab": 1.0
+  },
+  {
+   "wer": "vater",
+   "sagt": "Krause hat seine Schwester. Nicht ich.",
+   "wie": "bitter, leise",
+   "pause": 0.4
+  },
+  {
+   "ort": [
+    "UMSPANNWERK NORD",
+    "23:59"
+   ],
+   "effekt": {
+    "countdown": 55
+   },
+   "blick": "schrank",
+   "drehung": 0.8,
+   "pose": {
+    "vater": "idle"
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      0.6,
+      -5.8
+     ],
+     "zeit": 3.2
+    },
+    "vater": {
+     "nach": [
+      0.5,
+      -9.6
+     ],
+     "zeit": 3.4
+    }
+   },
+   "sfx": [
+    {
+     "datei": "schritte_kies.wav",
+     "lautstaerke": 0.3,
+     "ab": 0,
+     "dauer": 3.2
+    }
+   ],
+   "wer": "vater",
+   "sagt": "Zwei Schlüssel. Wir müssen sie gleichzeitig drehen. Dann ist sein Programm gelöscht.",
+   "wie": "konzentriert, schnell",
+   "pause_vor": 2.0,
+   "musik": {
+    "datei": "gen/musik_13_finale.mp3",
+    "lautstaerke": 0.16,
+    "einblenden": 1.0
+   }
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 1.0,
+   "dauer": 1.8,
+   "sfx": [
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.45,
+     "ab": 0,
+     "dauer": 30
+    }
+   ]
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.4,
+   "blick": "tor",
+   "drehung": 0.6,
+   "effekt": {
+    "flutlicht": 0.4
+   },
+   "pose": {
+    "agent1": "leuchten",
+    "agent2": "leuchten",
+    "krause": "idle"
+   },
+   "laufen": {
+    "krause": {
+     "nach": [
+      0.2,
+      6.0
+     ],
+     "zeit": 9
+    },
+    "agent1": {
+     "nach": [
+      -1.2,
+      8
+     ],
+     "zeit": 9
+    },
+    "agent2": {
+     "nach": [
+      1.4,
+      8.2
+     ],
+     "zeit": 9
+    }
+   },
+   "sfx": [
+    {
+     "datei": "tor.wav",
+     "lautstaerke": 1.0,
+     "ab": 0.0
+    },
+    {
+     "datei": "flutlicht.wav",
+     "lautstaerke": 1.0,
+     "ab": 0.4
+    },
+    {
+     "datei": "stiefel_nass.wav",
+     "lautstaerke": 0.35,
+     "ab": 1.0
+    }
+   ],
+   "wer": "krause",
+   "sagt": "Gut gemacht, Jens. Du hast ihn direkt zu mir geführt.",
+   "wie": "ruhig, zufrieden, laut über Distanz",
+   "pause_vor": 1.3,
+   "hall": 0.6
+  },
+  {
+   "wer": "ich",
+   "sagt": "Sie haben mir die ganze Zeit geschrieben…",
+   "wie": "geschockt, leise"
+  },
+  {
+   "wer": "krause",
+   "sagt": "Wenn du den Schlüssel drehst, geht in dieser Stadt für immer das Licht aus.",
+   "wie": "ruhig, drohend",
+   "hall": 0.5
+  },
+  {
+   "blick": "vater",
+   "drehung": 0.5,
+   "wer": "vater",
+   "sagt": "Er lügt! Jens, vertrau mir. Auf drei!",
+   "wie": "eindringlich, laut",
+   "effekt": {
+    "countdown": 9
+   }
+  },
+  {
+   "blick": "schrank",
+   "drehung": 0.4,
+   "zoom": 75,
+   "zoom_dauer": 1.5,
+   "wer": "vater",
+   "sagt": "Eins… zwei…",
+   "wie": "langsam, angespannt, zählend",
+   "pause": 0.2
+  },
+  {
+   "wer": "vater",
+   "sagt": "Drei!",
+   "wie": "schreit",
+   "effekt": {
+    "schluessel": 0.3,
+    "knall": 0.75
+   },
+   "schuetteln": 2.0,
+   "schuetteln_ab": 0.75,
+   "sfx": [
+    {
+     "datei": "schluessel.wav",
+     "lautstaerke": 1.0,
+     "ab": 0.3
+    },
+    {
+     "datei": "knall.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.75
+    }
+   ],
+   "musik": null,
+   "pause": 1.6
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "blick": "stadt",
+   "drehung": 1.2,
+   "effekt": {
+    "licht_an": 1.0
+   },
+   "dauer": 4.2,
+   "sfx": [
+    {
+     "datei": "stadt_an.wav",
+     "lautstaerke": 0.7,
+     "ab": 1.0
+    }
+   ],
+   "ort": [
+    "UMSPANNWERK NORD",
+    "00:00"
+   ]
+  },
+  {
+   "wer": "ich",
+   "sagt": "Es… es hat funktioniert.",
+   "wie": "erleichtert, ungläubig, atemlos",
+   "pause_vor": 0.3
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "Unbekannt",
+    "uhr": "00:00",
+    "text": [
+     "Danke, Jens.",
+     "Genau das wollte ich."
+    ],
+    "nach_und_nach": 1.3
+   },
+   "dauer": 3.6,
+   "sfx": [
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.3
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.5,
+     "ab": 1.6
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.7,
+     "ab": 1.6
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter",
+    "krause": "handy"
+   },
+   "blick": "krause",
+   "drehung": 0.5,
+   "zoom": 65,
+   "zoom_dauer": 1.5,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.4
+    }
+   ],
+   "wer": "krause",
+   "sagt": "Danke, Jens. Genau das wollte ich.",
+   "wie": "leise, lächelnd, triumphierend, über Distanz",
+   "pause_vor": 0.8,
+   "pause": 0.5,
+   "hall": 0.5
+  },
+  {
+   "wer": "vater",
+   "sagt": "Nein… was haben wir getan?",
+   "wie": "erschüttert, flüsternd",
+   "blick": "vater",
+   "drehung": 0.5,
+   "zoom": 0,
+   "zoom_dauer": 0.4,
+   "pause": 0.6
+  },
+  {
+   "schwarz": true,
+   "ende": "FORTSETZUNG FOLGT",
+   "ende_unter": "TEIL 6 · DAS FINALE",
+   "ende_ab": 0.4,
+   "dauer": 3.8,
+   "ort": null,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.0
+    }
+   ]
+  }
+ ]
+}

@@ -727,11 +727,89 @@ def schaben(d=3.6):
 TEIL4 = {'atmo_zug_innen.wav': (lambda: zug_innen(), 0.7), 'zug_anfahrt.wav': (zug_anfahrt, 0.85), 'notbremse.wav': (notbremse, 0.95), 'dach_schlag.wav': (dach_schlag, 0.95), 'schaben.wav': (schaben, 0.8)}
 
 
+# ---------- Teil 5: Umspannwerk ----------
+def brummen(d=60):
+    # Trafo-Brummen 100 Hz mit Obertönen, leichtes Knistern (Korona), schwankend
+    tt = t_(d); ch = []
+    for k in range(2):
+        hum = sum(np.sin(2 * np.pi * 100 * n * tt + k * n) / n ** 1.2 for n in range(1, 9)) * (0.85 + 0.15 * smooth_rand(d, 0.3, 0, 1))
+        corona = hp(noise(d), 3000) * (smooth_rand(d, 2.0, 0, 1) ** 4) * 0.25 + grains(d, 15, 3000, 8000, (0.0005, 0.002), (0.05, 0.3))
+        ch.append(bp(hum, 80, 2500, 2) * 0.4 + corona + lp(brown(d), 80) * 0.3)
+    return loopable(stereo(*ch))
+
+def schritte_kies(d=13.0):
+    # Kies: langes, körniges Knirschen (Steinchen reiben), weicher Anfang, kein Klatschen
+    x = np.zeros(int(d * SR)); s_ = 0.1
+    while s_ < d - 0.5:
+        for off, v in ((0, 1.0), (0.3, 0.8)):
+            n = int(0.35 * SR); tt = t_(0.35); env = np.clip(tt / 0.03, 0, 1) * np.exp(-tt / 0.11)
+            stones = grains(0.35, 2200, 700, 4000, (0.0004, 0.0015), (0.05, 0.5)) * env
+            rub = bp(noise(0.35), 500, 2500, 2) * env * 0.35
+            i = int((s_ + off) * SR); x[i:i + n] += ((stones + rub) * v * R.uniform(0.7, 1.0))[:len(x) - i]
+        s_ += 0.62
+    return pan(lp(reverb(x, 0.5, 0.12), 6000), 0.0)
+
+def funken(d=1.8):
+    # Lichtbogen: harter Knall, dann raues 50-Hz-Brummen mit Verzerrung und Knistern
+    tt = t_(d)
+    crack = hp(noise(d), 600, 2) * np.exp(-tt / 0.02) * 2.0 + np.sin(2 * np.pi * 60 * tt) * np.exp(-tt / 0.08) * 1.0
+    buzz = np.tanh(6 * (signal.square(2 * np.pi * 100 * tt) * 0.5 + signal.sawtooth(2 * np.pi * 50 * tt) * 0.5 + noise(d) * 0.3)) * 0.5
+    buzz = bp(buzz, 80, 5000, 2) * np.clip(tt / 0.02, 0, 1) * np.exp(-tt / 0.5) * (0.6 + 0.4 * (R.random(len(tt)) < 0.3))
+    crk = grains(d, 200, 1500, 6000, (0.0005, 0.002), (0.2, 1.0)) * np.exp(-tt / 0.5)
+    return pan(reverb(crack + buzz + crk, 0.9, 0.3), 0.4)
+
+def tor(d=2.5):
+    # Maschendrahttor rasselt auf, Kette fällt
+    tt = t_(d); x = grains(d, 260, 1500, 6000, (0.002, 0.008), (0.1, 0.6)) * np.clip(1.4 - tt, 0, 1)
+    for st in (0.0, 0.5, 1.1):
+        n = int(0.4 * SR); hit = sum(np.sin(2 * np.pi * f * t_(0.4)) * np.exp(-t_(0.4) / 0.08) * a for f, a in ((540, 0.4), (1270, 0.3), (2210, 0.2))); i = int(st * SR); x[i:i + n] += hit
+    return pan(reverb(x, 1.4, 0.4), 0.0)
+
+def flutlicht(d=3.0):
+    # Schütz klackt, Lampen zünden mit dumpfem Wumm, dann Summen
+    tt = t_(d); x = np.zeros(len(tt))
+    for k, st in enumerate((0.0, 0.12, 0.25, 0.37)):
+        n = int(0.5 * SR); i = int(st * SR)
+        x[i:i + n] += (np.sin(2 * np.pi * 70 * t_(0.5)) * np.exp(-t_(0.5) / 0.1) * 0.9 + hp(noise(0.5), 2500) * np.exp(-t_(0.5) / 0.004) * 0.8)
+    x += sum(np.sin(2 * np.pi * 100 * n * tt) / n for n in range(1, 6)) * 0.08 * np.clip((tt - 0.4) * 2, 0, 1)
+    return pan(reverb(x, 2.0, 0.45), 0.0)
+
+def schluessel():
+    d = 1.2; x = np.zeros(int(d * SR))
+    for st, f in ((0.0, 3200), (0.25, 2600), (0.3, 2900)):
+        n = int(0.06 * SR); c = (np.sin(2 * np.pi * f * t_(0.06)) * 0.6 + noise(0.06) * 0.5) * np.exp(-t_(0.06) / 0.006); i = int(st * SR); x[i:i + n] += c
+    n = int(0.3 * SR); i = int(0.3 * SR); x[i:i + n] += np.sin(2 * np.pi * 120 * t_(0.3)) * np.exp(-t_(0.3) / 0.05) * 0.6
+    return pan(reverb(x, 0.4, 0.15), 0.2)
+
+def knall(d=7.0):
+    # riesiger Überschlag: Explosion, Zischen, tiefes Grollen, abklingendes Knistern, dann Stille
+    tt = t_(d); x = np.zeros(len(tt))
+    boom = lp(noise(d), 300, 2) * np.exp(-tt / 0.6) * 2.4 + np.sin(2 * np.pi * 38 * tt) * np.exp(-tt / 0.9) * 1.6
+    crack = hp(noise(d), 1000, 2) * np.exp(-tt / 0.08) * 2.2
+    crk = grains(d, 260, 1500, 8000, (0.0005, 0.004), (0.2, 1.0)) * np.exp(-tt / 1.8)
+    hum = sum(np.sin(2 * np.pi * 100 * n * tt) / n for n in range(1, 6)) * 0.25 * np.exp(-tt / 0.8) * np.linspace(1, 0.2, len(tt))
+    return pan(reverb(boom + crack + crk + hum, 3.5, 0.5, 0.03), 0.0)
+
+def stadt_an(d=8.0):
+    # die Stadt erwacht: anschwellender Verkehr, ferne Hupen, Hunde, Jubel in der Ferne, Netzbrummen
+    tt = t_(d); env = np.clip(tt / 3, 0, 1)
+    city = lp(brown(d), 400, 4) * 0.8 * env + bp(pink(d), 200, 2000, 2) * 0.25 * env
+    cheer = bp(noise(d), 300, 3000, 2) * (0.4 + 0.6 * smooth_rand(d, 1.5, 0, 1)) * np.clip((tt - 1.5) / 2, 0, 1) * 0.6
+    horns = np.zeros(len(tt))
+    for st, f in ((2.2, 392), (3.4, 466), (4.8, 349)):
+        n = int(0.5 * SR); h = signal.square(2 * np.pi * f * t_(0.5)) * 0.4 * np.sin(np.pi * t_(0.5) / 0.5); i = int(st * SR); horns[i:i + n] += lp(h, 1500)
+    hum = np.sin(2 * np.pi * 100 * tt) * 0.06 * np.clip(tt * 2, 0, 1)
+    return fade(pan(reverb(city + cheer + horns + hum, 2.5, 0.6), -0.4), 0.5, 1.5)
+
+TEIL5 = {'atmo_brummen.wav': (lambda: brummen(), 0.6), 'schritte_kies.wav': (schritte_kies, 0.8), 'funken.wav': (funken, 0.95), 'tor.wav': (tor, 0.8),
+         'flutlicht.wav': (flutlicht, 0.85), 'schluessel.wav': (schluessel, 0.7), 'knall.wav': (knall, 0.98), 'stadt_an.wav': (stadt_an, 0.8)}
+
+
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        ALL = {**TEIL2, **TEIL3, **TEIL4}
-        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else {k: ALL[k] for k in sys.argv[1:]}):
+        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5}
+        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else {k: ALL[k] for k in sys.argv[1:]}):
             f_, pk = ALL[n_]; save(n_, f_(), pk); print(' ', n_)
         sys.exit()
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)

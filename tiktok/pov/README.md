@@ -193,6 +193,9 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/jens_1830_teil4.json`: **„Jens – 18:30 · Teil 4“** (ca. 80 s, Set `zug`). Jens fährt mit, der Vater rennt schreiend am Bahnsteig mit.
   Der Fremde heißt Martin Krause und sagt: Hinter dem Stromausfall steckt der Vater. Er zeigt ein Überwachungsvideo aus dem Umspannwerk.
   Dann kommen die Notbremse, Schläge aufs Dach und eine Nachricht von Tobi („ER = dein Vater“), und der Vater steht im nächsten Wagen.
+- `stories/jens_1830_teil5.json`: **„Jens – 18:30 · Teil 5“** (ca. 82 s, Set `umspannwerk`). Jens geht mit dem Vater ins Umspannwerk Nord.
+  Der Vater sagt, Krause wolle um Mitternacht das ganze Netz übernehmen. Zwei Schlüssel müssen gleichzeitig gedreht werden.
+  Krause kommt mit seinen Leuten, es folgen Countdown, Knall und das Licht der Stadt. Dann sagt Krause: „Danke, Jens. Genau das wollte ich.“
 
 ## Neu: Felder für mehr Spannung und Details
 
@@ -303,3 +306,24 @@ Automatisch zu sehen:
 
 Cast: Pose `sitzen`, `gegenlauf: true` (die Figur schaut entgegen ihrer Bewegung, z. B. wenn sie neben dem Zug herrennt).
 Neue Geräusche: `atmo_zug_innen, zug_anfahrt, notbremse, dach_schlag, schaben` (`python3 tools/sfx_synth.py teil4`). Musik: `gen/musik_10_fahrt.mp3`, `gen/musik_11_dach.mp3`.
+
+## Set `umspannwerk` (Teil 5): Umspannwerk Nord bei Nacht
+
+Der Weg verläuft entlang Z: das Tor bei z = +20, die Leitwarte bei z = −25. Der Schaltschrank mit Schlüssel A/B steht bei x = 2.2, z = −8. Die Stadt liegt links (−X) hinter dem Zaun.
+Blickpunkte: `weg, warte, tor, stadt, schrank, trafo, himmel, links, rechts, boden`.
+
+Automatisch zu sehen:
+- Transformatoren mit Kühlrippen, Isolatoren und Typenschild, Stahlportale mit durchhängenden Leitungen, ferne Strommasten
+- Zaun mit Stacheldraht und Warnschildern, Flutlichtmasten mit Motten, Bodennebel, Pfützen
+- Leitwarte mit Bildschirmen (Netz Nord/Süd/Wasser/Kliniken), ab und zu ein Funkenüberschlag
+
+| Feld | Wirkung |
+|---|---|
+| `effekt: {countdown: s}` | Countdown im Schaltschrank und in der Leitwarte springt auf s und zählt herunter |
+| `effekt: {funken: s}` | Überschlag an einem Isolator (`funken.wav`) |
+| `effekt: {flutlicht: s}` | alle Flutlichter an, das Tor schwingt auf (`flutlicht.wav`, `tor.wav`) |
+| `effekt: {schluessel: s}` | beide Schlüssel drehen sich, Anzeige: GELÖSCHT (`schluessel.wav`) |
+| `effekt: {knall: s}` | riesiger Überschlag: Blitz, Funkenregen, alles dunkel (`knall.wav`) |
+| `effekt: {licht_an: s}` | die Stadt leuchtet wellenartig wieder auf (`stadt_an.wav`) |
+
+Neue Geräusche: `atmo_brummen, schritte_kies, funken, tor, flutlicht, schluessel, knall, stadt_an` (`python3 tools/sfx_synth.py teil5`). Musik: `gen/musik_12_werk.mp3`, `gen/musik_13_finale.mp3`.
