@@ -143,7 +143,7 @@ add('fsd_sigh', CLOCHE + 2.7, 1.6, db=-12, fout=0.4, pan=-0.3)
 # ---------------- Stufe 3: Frachtjet ----------------
 add('fsd_jet_roar', 24.0, 7.05, db=-4, fin=0.3, fout=0.8)
 add('fsd_jet_flyby', 26.0, 5.0, db=-8, fin=0.5, fout=1.0)
-add('metal_scratch', TAILSTRIKE - 0.02, 1.0, db=-4, fout=0.3)  # Heck schleift über die Piste
+add('fsd_metal_grind', TAILSTRIKE - 0.02, 1.0, db=-4, off=0.8, fout=0.3)  # Heck schleift über die Piste
 add('fsd_scrape', TAILSTRIKE + 0.05, 0.8, db=-8, fout=0.3)
 add('fsd_crash_thud', TAILSTRIKE - 0.02, 0.8, db=-6, fout=0.4)
 add('fsd_cockpit_alarm', STALL - 0.1, 2.4, db=-10, fout=0.4)        # Überziehwarnung (aus der Ferne)

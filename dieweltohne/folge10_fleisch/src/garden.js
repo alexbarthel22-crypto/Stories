@@ -225,7 +225,7 @@ export async function build(renderer) {
       } else if (T < 80) { // läuft zum Grill, stellt sich auf die Hinterbeine an die Ablage
         const k = smooth(LION_JUMP + 0.9, 76.0, T); lp = V3(lerp(3.4, GP.x + 0.9, k), 0, lerp(5.6, GP.z + 1.4, k)); ly = Math.PI + lerp(0, 0.35, k);
         poseLion(lionG, {gait: T * 9, walk: 1 - smooth(75.6, 76.0, T), run: 0.6, roar: smooth(73.0, 73.3, T) * (1 - smooth(74.2, 74.6, T)), t: T, tailWag: 0.8});
-        const up = smooth(76.2, 77.0, T); L.body.rotation.x = -0.7 * up; L.body.position.y += 0.35 * up; L.legs[0].rotation.x = L.legs[1].rotation.x = -1.3 * up;
+        if (T > 76.0) { L.neck.rotation.x = 0.5 * smooth(76.0, 76.6, T); L.head.rotation.x = -0.3 * smooth(76.0, 76.6, T) + 0.1 * Math.sin(T * 6); } // schnuppert am Grill
       } else { // final: liegt vor dem Grill und frisst
         lp = V3(-1.0, 0, -1.7); ly = Math.PI / 2 - 0.15; poseLion(lionG, {lie: 1, eat: 1, t: T, tailWag: 0.6});
       }

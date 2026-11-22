@@ -5,6 +5,12 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 F = '/usr/share/fonts/opentype/inter/'
 W, H = 1080, 1920
 img = Image.open(sys.argv[1]).convert('RGB').resize((W, H))
+SHIFT = 420  # Motiv nach unten schieben, damit der Löwenkopf unter dem Titel liegt; oben mit gestrecktem Himmel auffüllen
+if SHIFT:
+    src = img; top = src.getpixel((40, 10)); img = Image.new('RGB', (W, H), top)
+    m = Image.new('L', (W, H - SHIFT), 255); dm = ImageDraw.Draw(m)
+    for y in range(220): dm.line([(0, y), (W, y)], fill=int(255 * y / 220))
+    img.paste(src.crop((0, 0, W, H - SHIFT)), (0, SHIFT), m)
 img = ImageEnhance.Contrast(ImageEnhance.Color(img).enhance(1.25)).enhance(1.12)
 # Verläufe oben/unten für Lesbarkeit
 ov = Image.new('L', (W, H), 0); d = ImageDraw.Draw(ov)
@@ -36,13 +42,13 @@ draw.rounded_rectangle([(W - kw) / 2 - 34, 300, (W + kw) / 2 + 34, 386], 43, fil
 draw.text(((W - kw) / 2, 312), ks, font=k, fill='white')
 # Hauptzeilen
 text(W / 2, 420, '10 SEKUNDEN', fit('10 SEKUNDEN', F + 'InterDisplay-Black.otf', 900, 160), 'white', 6)
-text(W / 2, 580, 'OHNE GOLD', fit('OHNE GOLD', F + 'InterDisplay-Black.otf', 980, 240), (255, 196, 0), 8)
+text(W / 2, 580, 'OHNE FLEISCH', fit('OHNE FLEISCH', F + 'InterDisplay-Black.otf', 980, 240), (255, 120, 80), 8)
 # Stufenbalken unten (im 3:4-Ausschnitt des Profilrasters)
 cols = ['#4cc76a', '#a5d34a', '#e8d13a', '#f3a531', '#f07a2a', '#e5482b', '#c4161c']
 bw, gap, y0 = 112, 12, 1470
 x0 = (W - (7 * bw + 6 * gap)) / 2
 for i, c in enumerate(cols):
     draw.rounded_rectangle([x0 + i * (bw + gap), y0, x0 + i * (bw + gap) + bw, y0 + 26], 8, fill=c)
-text(W / 2, 1516, 'AM ENDE WILL JEDER DIESEN WÜRFEL', fit('AM ENDE WILL JEDER DIESEN WÜRFEL', F + 'InterDisplay-Black.otf', 860, 64), 'white', 3)
+text(W / 2, 1516, 'UND DIE LÖWEN HABEN HUNGER', fit('UND DIE LÖWEN HABEN HUNGER', F + 'InterDisplay-Black.otf', 860, 64), 'white', 3)
 img.save('thumbnail.jpg', quality=92)
 img.crop((0, 240, W, 1680)).resize((540, 720)).save(sys.argv[2] if len(sys.argv) > 2 else '/dev/null', 'JPEG') if len(sys.argv) > 2 else None

@@ -32,6 +32,7 @@ Alle Geräusche sind echte Aufnahmen unter CC0 (frei nutzbar, keine Namensnennun
 - FSD50K 233155 (freesound.org/s/233155) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 222763 (freesound.org/s/222763) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 233292 (freesound.org/s/233292) – CC0 (Freesound, über den Datensatz FSD50K)
+- FSD50K 182902 (freesound.org/s/182902) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 429512 (freesound.org/s/429512) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 272543 (freesound.org/s/272543) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 104103 (freesound.org/s/104103) – CC0 (Freesound, über den Datensatz FSD50K)
@@ -47,6 +48,5 @@ Alle Geräusche sind echte Aufnahmen unter CC0 (frei nutzbar, keine Namensnennun
 - FSD50K 417657 (freesound.org/s/417657) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 395019 (freesound.org/s/395019) – CC0 (Freesound, über den Datensatz FSD50K)
 - FSD50K 420312 (freesound.org/s/420312) – CC0 (Freesound, über den Datensatz FSD50K)
-- Scratching metal door (Gravity Sound).wav – CC BY 4.0 (Wikimedia Commons)
 
 Bilder: NASA Black Marble (Erde bei Nacht) und NASA Blue Marble (Erde bei Tag), gemeinfrei, über Wikimedia Commons
