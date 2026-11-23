@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 F = '/usr/share/fonts/opentype/inter/'
 W, H = 1080, 1920
 img = Image.open(sys.argv[1]).convert('RGB').resize((W, H))
-SHIFT = 0
+SHIFT = 400
 if SHIFT:
     src = img; top = src.getpixel((40, 10)); img = Image.new('RGB', (W, H), top)
     m = Image.new('L', (W, H - SHIFT), 255); dm = ImageDraw.Draw(m)

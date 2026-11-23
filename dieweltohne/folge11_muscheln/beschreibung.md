@@ -13,8 +13,8 @@ Fun Fact: In Florida steht eine Festung, die aus Muschelgestein gebaut ist – d
 ## Thumbnail
 
 - Datei: `thumbnail.jpg` (1080 × 1920). Beim Hochladen auf „Cover bearbeiten“ tippen, dann „Aus Galerie hinzufügen“.
-- Motiv: Das Fenster im Streamer-Zimmer birst, eine Flut aus Muscheln schießt herein. Oben „10 SEKUNDEN OHNE MUSCHELN“, unten „ER WOLLTE NUR EINE AUSTER“.
-- Neu erzeugen: `ONLY=studio node src/still.js <ordner> 1905`, danach `python3 thumbnail.py <ordner>/clean_1905.png`.
+- Motiv: Der Streamer steckt bis zur Brust in Muscheln und schreit, durch das geborstene Fenster schießen immer mehr herein. Oben „10 SEKUNDEN OHNE MUSCHELN“, unten „ER WOLLTE NUR EINE AUSTER“.
+- Neu erzeugen: `ONLY=studio node src/still.js <ordner> 2135`, danach `python3 thumbnail.py <ordner>/clean_2135.png`.
 
 ## Die 7 Stufen
 
