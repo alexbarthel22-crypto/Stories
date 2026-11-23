@@ -1,7 +1,7 @@
 """Mischt die echten Aufnahmen (sfx_raw/*.wav) bildgenau zur Zeitleiste und legt sie unter das Video.
 
 python3 mix.py            -> mix.wav
-python3 mix.py --mux      -> zusätzlich fertiges Video folge10_fleisch.mp4
+python3 mix.py --mux      -> zusätzlich fertiges Video folge11_muscheln.mp4
 """
 import json
 import os
@@ -82,7 +82,8 @@ def add(name, at, dur=None, db=0.0, off=0.0, fin=0.02, fout=0.05, speed=1.0, pan
 # ---------------- Zeitleiste (identisch zu src/timeline.js) ----------------
 VANISH, RETURN = 10.0, 48.0
 WK = [[10, 10], [17, 9.0], [24, 7.8], [31, 6.4], [39, 4.6], [48, 0]]
-CLOCHE, ROTATE, TAILSTRIKE, STALL, BUCKET, FENCE_HIT, FENCE_BREAK, LION_JUMP, DOOR_SLAM = 19.2, 25.6, 26.3, 28.0, 32.2, 35.4, 37.4, 70.2, 73.8
+LEMON, POP, FLASH, TRAY, SINK, HOLES, TILT, TOWER_HIT, WINDOW, BURIED, HAND_UP, HEAD_UP, GULP = 12.4, 17.5, 19.8, 24.9, 32.0, 40.0, 43.4, 45.2, 62.6, 75.6, 84.7, 85.7, 88.0
+POT_HITS = [25.75, 26.0, 26.25, 26.55, 26.8, 27.35]
 
 
 def world_left(T):
@@ -118,91 +119,122 @@ while T_ < RETURN:
     T_ += 0.01
 for tt in ticks: tick(tt, -8 if tt < 7 or (VANISH < tt < 46) else -2)
 
-# ---------------- Garten: Grillfest ----------------
-amb('fsd_birdsong', 0, 10.05, -20)
-amb('fsd_sizzle', 0, 10.0, -17)
-add('fsd_kid_laugh', 5.2, 1.6, db=-22, fout=0.5, pan=-0.4)
-add('fsd_dog_yip', 8.6, 0.6, db=-18, fout=0.2, pan=0.2)
-# Stufe 1: Fleisch weg
-add('fsd_whoosh_fast', VANISH - 0.08, 0.8, db=-8, fout=0.3)
-add('fsd_air_burst', VANISH - 0.02, 0.6, db=-12, fout=0.3)
-add('fsd_sizzle', VANISH, 1.2, db=-22, fin=0.0, fout=1.0)     # Brutzeln bricht ab
-add('fsd_gas_hiss', VANISH + 0.2, 4.0, db=-24, fin=0.3, fout=1.0)
-add('fsd_spoon_clink', VANISH + 0.35, 0.4, db=-14, fout=0.1)    # Zange greift ins Leere
-add('fsd_dog_yap', VANISH + 1.0, 1.2, db=-14, fout=0.3, pan=0.2)
-add('fsd_teens_laugh', VANISH + 1.5, 4.0, db=-12, fin=0.2, fout=1.0, pan=-0.3)
-amb('fsd_birdsong', 10, 17.05, -24)
-# ---------------- Stufe 2: Date ----------------
-amb('fsd_restaurant', 17, 24.05, -16)
-add('fsd_footsteps_run', 17.0, 1.4, db=-26, speed=0.6, fout=0.4)
-add('fsd_spoon_clink', 18.6, 0.5, db=-10, fout=0.1)                # Teller wird abgestellt
-add('fsd_thump_clank', CLOCHE - 0.02, 0.6, db=-14, fout=0.2)       # Glocke wird angehoben
-add('fsd_gasp', CLOCHE + 0.5, 1.2, db=-14, fout=0.3)
-add('fsd_giggle', CLOCHE + 1.0, 2.6, db=-10, fout=0.6, pan=0.3)
-add('fsd_sigh', CLOCHE + 2.7, 1.6, db=-12, fout=0.4, pan=-0.3)
-# ---------------- Stufe 3: Frachtjet ----------------
-add('fsd_jet_roar', 24.0, 7.05, db=-4, fin=0.3, fout=0.8)
-add('fsd_jet_flyby', 26.0, 5.0, db=-8, fin=0.5, fout=1.0)
-add('fsd_metal_grind', TAILSTRIKE - 0.02, 1.0, db=-4, off=0.8, fout=0.3)  # Heck schleift über die Piste
-add('fsd_scrape', TAILSTRIKE + 0.05, 0.8, db=-8, fout=0.3)
-add('fsd_crash_thud', TAILSTRIKE - 0.02, 0.8, db=-6, fout=0.4)
-add('fsd_cockpit_alarm', STALL - 0.1, 2.4, db=-10, fout=0.4)        # Überziehwarnung (aus der Ferne)
-add('fsd_sub_rumble', STALL + 0.4, 2.6, db=-10, fin=0.3, fout=0.8)
-# ---------------- Stufe 4: Zoo ----------------
-amb('fsd_crowd_murmur', 31, FENCE_BREAK + 0.2, -22)
-add('fsd_soft_thud', BUCKET + 1.3, 0.5, db=-14)                       # Eimer umgedreht: nichts
-add('fsd_growl', BUCKET + 1.2, 2.5, db=-8, fin=0.3, fout=0.8)
-add('fsd_lion_roar2', 34.2, 2.6, db=-6, peak_win=0.3, fin=0.05, fout=0.8)
-add('fsd_chain_clank', FENCE_HIT - 0.03, 1.4, db=-2, peak_win=0.2, fout=0.5)
-add('fsd_crowd_gasp', FENCE_HIT + 0.2, 1.6, db=-12, fout=0.5)
-add('fsd_lion_roar', FENCE_BREAK - 1.0, 3.0, db=-2, peak_win=0.3, fin=0.05, fout=1.0)
-add('fsd_chain_clank', FENCE_BREAK - 0.03, 1.6, db=0, off=0.3, fout=0.6)
-add('fsd_metal_crash2', FENCE_BREAK + 0.45, 1.2, db=-4, fout=0.6)     # Gitter schlägt auf
-add('fsd_screams', FENCE_BREAK + 0.3, 1.5, db=-8, fin=0.1, fout=0.4)
-# ---------------- Stufe 5: Löwen in der Stadt ----------------
-amb('fsd_city_day', 39, 48.05, -18)
-add('fsd_scream_girl', 40.6, 1.6, db=-12, fout=0.5, pan=-0.4)
-add('fsd_footsteps_run', 40.8, 3.0, db=-14, fout=0.6)
-add('fsd_screams', 41.2, 3.0, db=-14, fin=0.2, fout=0.8, pan=0.3)
-add('fsd_car_horn', 41.6, 0.9, db=-14, fout=0.2, pan=0.5)
-add('fsd_bell', 42.0, 1.2, db=-12, fout=0.4)                         # Straßenbahnglocke
-add('fsd_train_brake', 42.2, 2.2, db=-4, fin=0.05, fout=0.6)
-add('fsd_growl', 44.0, 1.6, db=-12, fout=0.5, pan=-0.3)
-add('fsd_crash_thud', 45.95, 0.6, db=-4, fout=0.3)                   # Löwe landet auf dem Autodach
-add('fsd_glass_rattle', 45.97, 0.8, db=-12, fout=0.3)
-add('fsd_lion_roar', 46.3, 2.0, db=0, peak_win=0.3, fin=0.03, fout=0.7)
-# ---------------- Stufe 6: Rückkehr, Siedlung ----------------
-add('fsd_whoosh_fast', RETURN - 0.4, 0.8, db=-8, speed=0.8, fout=0.3)
-add('fsd_lighter_whoosh', RETURN + 0.1, 1.0, db=-10, fout=0.4)
-amb('fsd_wind', 48, 58.05, -15)
-amb('fsd_birdsong', 48, 58.05, -26)
-for k, tt in enumerate([48.3, 48.8, 49.5, 50.4]): add('fsd_sizzle', tt, 2.5, db=-18 - 2 * k, fin=0.3, fout=1.0, pan=(k % 3 - 1) * 0.5)
-add('fsd_dog', 52.0, 1.5, db=-13, fout=0.4, pan=-0.5)
-add('fsd_dog_yap', 53.2, 1.0, db=-16, fout=0.3, pan=0.5)
-add('fsd_run', 54.2, 3.8, db=-14, fin=0.4, fout=0.5)                  # Pfoten auf Asphalt
-add('fsd_growl', 56.0, 1.8, db=-14, fout=0.5)
-# ---------------- Stufe 7: Garten ----------------
-amb('fsd_sizzle', 58, 70.5, -21)
-amb('fsd_birdsong', 58, 68.05, -22)
-add('fsd_growl', 62.4, 2.0, db=-12, fout=0.6, pan=0.4)
-add('fsd_gasp', 63.1, 1.0, db=-12, fout=0.3)
-add('fsd_lion_roar2', 66.0, 2.0, db=-2, peak_win=0.3, fin=0.03, fout=0.7)
-add('fsd_dog_yap', 66.4, 1.0, db=-14, fout=0.3, pan=-0.3)
-add('fsd_chain_clank', LION_JUMP - 0.2, 0.6, db=-12, fout=0.3)
-add('fsd_body_fall', LION_JUMP + 0.65, 0.6, db=-6, peak_win=0.2, fout=0.3)   # Landung im Gras
-add('fsd_scream_girl', LION_JUMP + 0.2, 1.6, db=-8, fout=0.5, pan=-0.3)
-add('fsd_screams', LION_JUMP + 0.5, 1.6, db=-12, fout=0.5)
-add('fsd_footsteps_run', LION_JUMP + 0.3, 2.8, db=-12, fout=0.6)
-add('fsd_door_slam', DOOR_SLAM, 1.0, db=-4, peak_win=0.2, fout=0.4)
-add('fsd_lion_roar', 73.0, 1.6, db=-4, peak_win=0.3, fin=0.03, fout=0.6)
-add('fsd_metal_crash', 76.6, 1.0, db=-10, fout=0.4)                    # Platte fällt von der Ablage
-add('fsd_growl', 77.4, 2.2, db=-12, fout=0.6)
-# Schluss: hinter der Glastür, gedämpft
-add('fsd_growl', 81.0, 3.0, db=-20, fin=0.4, fout=0.8)
-add('fsd_sigh', 83.6, 1.8, db=-10, fout=0.5)
-amb('fsd_birdsong', 80, 89.0, -28)
-add('fsd_sizzle', 80, 9.0, db=-24, fin=0.5, fout=1.5)
-add('fsd_lion_roar2', 87.3, 2.4, db=-10, peak_win=0.3, fin=0.05, fout=1.5)
+# ---------------- Livestream: Austern ----------------
+amb('fsd_party_music', 0, 10.0, -31)                                                       # leise Stream-Musik
+for tt in [1.0, 4.6, 8.2]: add('fsd_notify', tt, 0.45, db=-26, fout=0.15, pan=0.4)          # Chat-Ping
+add('fsd_slurp', 9.75, 1.5, db=-3, peak_win=0.4, fout=0.3)                                # er schlürft – Luft
+add('fsd_chime', VANISH - 0.05, 1.3, db=-15, fout=0.6)                                     # Verschwinden
+add('fsd_scratch', VANISH, 1.0, db=-5, fout=0.3)                                           # Plattenkratzer: Musik bricht ab
+add('fsd_laugh', 11.2, 2.0, db=-15, fin=0.1, fout=0.6)                                     # Lacher
+add('fsd_squeak', LEMON - 0.02, 0.5, db=-9, fout=0.1)                                       # Zitrone quietscht
+add('fsd_scream_girl', LEMON + 0.15, 1.4, db=-11, speed=0.72, fout=0.4)                    # Aua, das Auge
+add('fsd_laugh', 13.6, 3.2, db=-12, off=1.5, fin=0.2, fout=1.0)
+for tt in [14.4, 15.4, 16.2]: add('fsd_notify', tt, 0.4, db=-28, fout=0.1, pan=0.4)
+add('fsd_whoosh_fast', 16.75, 0.6, db=-12, fout=0.2)
+
+# ---------------- Stufe 2: Abiball-Foto ----------------
+amb('fsd_crowd_murmur', 17.0, FLASH + 0.1, -21)
+amb('fsd_party_music', 17.0, FLASH + 0.1, -33)
+add('fsd_chime', POP - 0.05, 0.9, db=-17, fout=0.4)
+for k in range(5): add('fsd_squeak', POP + 0.04 + k * 0.07, 0.25, db=-15 - k, fout=0.05, pan=(k - 2) * 0.3)  # Hemden springen auf
+add('fsd_crowd_gasp', POP + 0.35, 2.0, db=-10, fout=0.6)
+add('fsd_giggle', POP + 0.8, 2.2, db=-11, fout=0.6, pan=-0.3)
+add('fsd_teens_laugh', POP + 1.2, 2.3, db=-10, fout=0.6)
+add('fsd_camera_click', FLASH - 0.02, 0.6, db=-2, fout=0.1)                                 # Klick – Foto
+add('fsd_laugh', FLASH + 0.4, 3.4, db=-14, fin=0.3, fout=1.0)                              # eingefrorenes Foto
+add('fsd_whoosh_fast', 23.75, 0.6, db=-12, fout=0.2)
+
+# ---------------- Stufe 3: Muscheltöpfe ----------------
+amb('fsd_restaurant', 24.0, 31.05, -17)
+amb('fsd_city_day', 24.0, 31.05, -25)
+add('fsd_chime', TRAY - 0.05, 0.9, db=-16, fout=0.4)
+add('fsd_whoosh_fast', TRAY, 0.7, db=-6, fout=0.2)                                         # Tablett schießt hoch
+add('fsd_crowd_gasp', TRAY + 0.35, 2.0, db=-10, fout=0.6)
+for k, th in enumerate(POT_HITS):                                                          # Töpfe landen auf Köpfen
+    add('fsd_clang', th - 0.01, 1.2, db=-4 - (k % 3) * 2 + (3 if k == 5 else 0), peak_win=0.1, fout=0.6, pan=[-0.5, -0.2, 0.1, 0.4, 0.0, 0.25][k], speed=[1.0, 1.12, 0.9, 1.2, 1.05, 0.85][k])
+add('fsd_soft_thud', 28.3, 0.5, db=-10)                                                    # Tablett fällt
+add('fsd_laugh', 27.7, 3.2, db=-13, off=0.5, fin=0.2, fout=1.0)
+add('fsd_whoosh_fast', 30.75, 0.6, db=-12, fout=0.2)
+
+# ---------------- Stufe 4: Watt ----------------
+amb('fsd_wind', 31.0, 39.05, -15)
+amb('fsd_seagulls', 31.0, 34.5, -22)
+add('fsd_chime', SINK - 0.05, 0.9, db=-16, fout=0.4)
+add('fsd_splash_big', SINK + 0.05, 2.0, db=-4, speed=0.55, peak_win=0.3, fout=0.8)        # Plumps in den Schlick
+add('fsd_body_fall', SINK + 0.1, 0.6, db=-9, off=0.45, fout=0.2)
+add('fsd_screams', SINK + 0.35, 2.2, db=-14, off=1.0, fin=0.05, fout=0.8)
+add('fsd_splash_big', 33.6, 1.2, db=-14, speed=0.5, off=1.5, fout=0.5, pan=-0.3)          # Schmatzen
+add('fsd_squeak', 34.1, 0.4, db=-15, speed=0.8, pan=0.3)                                    # Gummistiefel
+add('fsd_seagulls', 34.6, 1.6, db=-9, peak_win=0.6, fout=0.4, pan=-0.4)                    # Möwe landet auf dem Kopf
+add('fsd_laugh', 35.6, 2.4, db=-15, fin=0.2, fout=0.8)
+add('fsd_wave_crash', 35.8, 3.4, db=-15, fin=1.2, fout=0.4)                                # Flut
+add('fsd_helicopter', 35.6, 3.5, db=-21, fin=1.5, fout=0.3)
+add('fsd_whoosh_fast', 38.75, 0.6, db=-12, fout=0.2)
+
+# ---------------- Stufe 5: Kirchturm ----------------
+amb('fsd_city_day', 39.0, 48.05, -20)
+amb('fsd_crowd_murmur', 39.0, 43.2, -22)
+add('fsd_chime', HOLES - 0.05, 0.9, db=-17, fout=0.4)
+add('fsd_stone_clatter', HOLES + 0.2, 3.2, db=-10, fin=0.3, fout=0.8)                      # Gestein bröselt
+add('fsd_debris', 41.5, 1.6, db=-16, fout=0.6, pan=-0.3)
+add('fsd_sub_rumble', 41.0, 4.6, db=-10, off=1.0, fin=1.0, fout=0.3)
+add('fsd_church_bell', 42.7, 2.6, db=-8, off=0.4, fout=0.6)                                # Glocke schlägt beim Kippen
+add('fsd_crowd_gasp', 43.0, 2.0, db=-9, fout=0.6)
+add('fsd_screams', 43.5, 2.5, db=-13, off=1.0, fin=0.1, fout=0.8)
+add('fsd_footsteps_run', 43.6, 3.0, db=-15, fin=0.2, fout=0.8)
+add('fsd_building_collapse', TOWER_HIT - 0.9, 3.4, db=0, fout=1.2)
+add('fsd_impact_boom2', TOWER_HIT, 2.0, db=-4, fout=1.0)
+add('fsd_rubble', TOWER_HIT + 0.1, 2.6, db=-5, fout=1.0)
+add('fsd_debris', TOWER_HIT + 0.3, 1.6, db=-10, fout=0.6, pan=-0.4)
+add('fsd_whoosh_fast', 47.6, 0.5, db=-14, fout=0.2)
+
+# ---------------- Stufe 6: Muschelregen ----------------
+add('fsd_whoosh_boom', RETURN - 0.05, 2.4, db=-6, speed=0.85, fout=1.0)
+add('fsd_chime', RETURN - 0.5, 1.2, db=-14, fout=0.6)
+amb('fsd_plastic_clatter', RETURN + 0.4, 58.05, -9)                                         # Muscheln prasseln
+amb('fsd_gravel', RETURN + 0.6, 58.05, -15)
+for tt, pn in [(49.1, -0.5), (50.4, 0.4), (51.9, -0.2), (53.3, 0.5), (55.0, -0.4), (56.6, 0.2)]: add('fsd_coins', tt, 0.8, db=-17, fout=0.3, pan=pn)
+add('fsd_screams', 48.8, 2.4, db=-15, off=2.0, fin=0.2, fout=0.8)
+add('fsd_car_horn', 50.6, 1.6, db=-16, fout=0.4, pan=0.5)                                  # Auto wird getroffen
+add('fsd_glass_break', 51.3, 1.4, db=-13, peak_win=0.2, fout=0.5, pan=0.4)
+add('fsd_crowd_gasp', 52.2, 2.0, db=-14, fout=0.6)
+add('fsd_stone_clatter', 54.0, 3.6, db=-15, off=4.0, fin=0.3, fout=0.8)
+add('fsd_whoosh_fast', 57.7, 0.5, db=-14, fout=0.2)
+
+# ---------------- Stufe 7: Zurück im Stream ----------------
+add('fsd_sigh', 58.6, 2.0, db=-7, fout=0.6)
+for tt in [58.6, 59.6, 60.6, 61.4, 62.0]: add('fsd_notify', tt, 0.4, db=-27, fout=0.1, pan=0.4)
+add('fsd_sub_rumble', 60.2, 2.6, db=-9, off=1.0, fin=2.0, fout=0.1)
+add('fsd_glass_rattle', 60.6, 2.0, db=-15, fin=0.8, fout=0.2)                              # Regal klirrt
+add('fsd_glass_break', WINDOW - 0.02, 1.6, db=0, peak_win=0.2, fout=0.6)                  # Fenster birst
+add('fsd_whoosh_boom', WINDOW, 2.2, db=-6, fout=1.0)
+amb('fsd_plastic_clatter', WINDOW + 0.05, 77.7, -5, off=0.5)                               # Muschelflut
+amb('fsd_gravel', WINDOW + 0.2, 77.7, -10)
+amb('fsd_stone_clatter', WINDOW + 0.3, 77.7, -13, off=2.0)
+add('fsd_scream_girl', 63.0, 1.4, db=-9, speed=0.72, fout=0.4)
+add('fsd_body_fall', 63.9, 0.6, db=-9, off=4.55, fout=0.2)
+add('fsd_metal_crash', 64.0, 1.4, db=-13, peak_win=0.3, fout=0.6)                          # Stuhl kippt
+for tt in [64.8, 65.6, 66.6, 67.4, 68.4, 69.3, 70.4, 71.6, 72.6, 73.6]: add('fsd_notify', tt, 0.35, db=-25, fout=0.1, pan=0.4)
+add('fsd_scream_girl', 69.1, 1.2, db=-12, speed=0.75, fout=0.4)
+add('fsd_metal_crash', 70.5, 1.6, db=-12, peak_win=0.3, fout=0.6, pan=0.4)                # Ringlicht kippt
+add('fsd_scream_girl', 73.3, 1.6, db=-13, speed=0.7, fout=0.8)
+add('fsd_sub_rumble', 75.0, 3.0, db=-12, off=1.0, fin=0.5, fout=0.3)
+add('fsd_soft_thud', BURIED, 0.5, db=-12)
+add('fsd_whoosh_fast', 77.7, 0.5, db=-14, fout=0.2)
+
+# ---------------- Stufe 7: Luftbild ----------------
+amb('fsd_wind', 78.0, 84.05, -13)
+add('fsd_sub_rumble', 78.0, 6.0, db=-15, off=1.0, fin=0.4, fout=1.0)
+add('fsd_helicopter', 78.5, 5.5, db=-22, fin=1.0, fout=1.0, pan=-0.4)
+add('fsd_seagulls', 80.0, 3.0, db=-21, fout=0.8, pan=0.4)
+
+# ---------------- Finale: Auster ----------------
+amb('fsd_wind', 84.0, 90.0, -17)
+add('fsd_plastic_clatter', HAND_UP - 0.05, 0.9, db=-11, fout=0.4)                          # Hand bricht durch
+add('fsd_plastic_clatter', HEAD_UP - 0.05, 1.0, db=-9, off=1.5, fout=0.4)                 # Kopf taucht auf
+add('fsd_gasp', HEAD_UP + 0.25, 1.4, db=-7, fout=0.4)                                      # tief Luft holen
+add('fsd_slurp', 87.65, 1.4, db=-1, peak_win=0.4, fout=0.4)                                # endlich: Auster
+add('fsd_applause', 88.35, 1.55, db=-14, fin=0.2, fout=0.8)
 # ---------------- Ausgabe ----------------
 peak = np.abs(mix).max()
 if peak > 0.98: mix *= 0.98 / peak
@@ -215,7 +247,7 @@ os.remove(tmp)
 print('mix.wav fertig, Ticks:', len(ticks))
 
 if '--mux' in sys.argv:
-    vid = os.path.join(HERE, 'video_stumm.mp4'); fin = os.path.join(HERE, 'folge10_fleisch.mp4')
+    vid = os.path.join(HERE, 'video_stumm.mp4'); fin = os.path.join(HERE, 'folge11_muscheln.mp4')
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', vid, '-i', out, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', '90', '-movflags', '+faststart', fin], check=True)
     print('fertig:', fin)
 

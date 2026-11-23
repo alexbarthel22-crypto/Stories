@@ -93,7 +93,7 @@ export async function build(renderer) {
     scene.userData.far = far; }
   // Marktstände
   const awnM = [mat('#c4232f'), mat('#2f6fb3'), mat('#2f8f5b')];
-  for (let i = 0; i < 4; i++) { const s = new THREE.Group(); s.position.set(-19 + i * 6, 0, 9 + (i % 2) * 4); scene.add(s);
+  for (let i = 0; i < 3; i++) { const s = new THREE.Group(); s.position.set(-19 + i * 6, 0, 9 + (i % 2) * 4); scene.add(s);
     mesh(new THREE.BoxGeometry(3, 0.9, 1.4), mat('#8a6a48'), 0, 0.45, 0, s); for (const x of [-1.4, 1.4]) mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.4, 6), mat('#666'), x, 1.2, 0.6, s);
     const a = mesh(new THREE.BoxGeometry(3.3, 0.06, 1.9), awnM[i % 3], 0, 2.45, 0.1, s); a.rotation.x = 0.15; }
   // Autos am Rand
