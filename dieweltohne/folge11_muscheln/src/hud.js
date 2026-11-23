@@ -1,6 +1,7 @@
 // 2D-Einblendungen: Titel, Emblem, Countdowns, Messwerte, Gefahrenstufe, Untertitel
-import {CAPTIONS, STAGES, STAGE_OF, VANISH, RETURN, LEMON, FLASH, TRAY, SINK, HOLES, TOWER_HIT, WINDOW, BURIED, worldLeft} from './timeline.js';
+import {CAPTIONS, STAGES, STAGE_OF, VANISH, RETURN, FLASH, TRAY, SINK, HOLES, TOWER_HIT, WINDOW, BURIED, worldLeft} from './timeline.js';
 import {clamp, smooth, rng, lerp} from './lib.js';
+import {balance} from './klasse.js';
 // Partikelwolke: beim Verschwinden stiebt sie auseinander, bei der Rückkehr zieht sie sich zur Bildmitte zusammen
 function shellBurst(g, d, out) { const r = rng(91); for (let i = 0; i < 380; i++) { const x0 = r() * W, y0 = r() * H, s = 2 + r() * 6;
   let x, y, a;
@@ -50,21 +51,16 @@ function emblem(g, T, a, cx = W / 2, cy = 215, r = 105) {
 }
 
 const CHAT = [
-  [1.0, 'nico_04', 'endlich austern 🦪'], [2.2, 'leaa.mp4', 'wie schmeckt das überhaupt'], [3.4, 'xXjanXx', 'schlürf schlürf'], [4.6, 'mira', 'ich könnte das nie 😭'],
-  [5.8, 'kev1n', 'hau rein bro'], [7.0, 'luca.fx', 'der ganze teller??'], [8.2, 'aylin', 'ICH SCHAU SEIT 2 STUNDEN'], [9.2, 'tobi_', 'jetzt jetzt jetzt'],
-  [10.3, 'nico_04', 'WO IST DIE AUSTER'], [10.7, 'leaa.mp4', '😂😂😂😂'], [11.1, 'kev1n', 'er schlürft LUFT'], [11.5, 'mira', 'ICH KANN NICHT MEHR'],
-  [12.0, 'luca.fx', 'zitrone??'], [12.6, 'aylin', 'DAS AUGE 💀💀'], [13.0, 'tobi_', 'clip it clip it'], [13.5, 'xXjanXx', '😂😂😂'], [14.2, 'nico_04', 'bester stream ever'],
-  [15.0, 'leaa.mp4', 'L + zitrone'], [15.8, 'kev1n', 'F im chat'], [16.4, 'mira', '😭😭😭'],
-  [58.6, 'tobi_', 'warum so traurig'], [59.6, 'aylin', 'immer noch keine auster?'], [60.6, 'kev1n', 'was wackelt da'], [61.4, 'luca.fx', 'BRO DREH DICH UM'],
-  [62.0, 'mira', 'DAS FENSTER'], [62.7, 'nico_04', 'AAAAAAAAA'], [63.0, 'leaa.mp4', '🦪🦪🦪🦪🦪🦪'], [63.4, 'xXjanXx', 'WAS IST DAS'], [63.8, 'kev1n', 'er wollte doch eine 💀'],
-  [64.3, 'aylin', 'ICH SCHREIE'], [64.8, 'tobi_', 'ruf wer die feuerwehr'], [65.4, 'luca.fx', 'das sind ALLE muscheln'], [66.0, 'mira', '🦪🦪🦪🦪'], [66.6, 'nico_04', 'bruh'],
-  [67.2, 'leaa.mp4', 'guten appetit 😂'], [68.0, 'kev1n', 'er schwimmt'], [68.6, 'xXjanXx', 'SCHWIMM BRO'], [69.2, 'aylin', '🦪🦪🦪🦪🦪🦪🦪'], [69.9, 'tobi_', 'trending #1'],
+  [58.6, 'tobi_', 'bro wo sind deine muscheln'], [59.6, 'aylin', '0 muscheln 💀'], [60.6, 'kev1n', 'was wackelt da'], [61.4, 'luca.fx', 'BRO DREH DICH UM'],
+  [62.0, 'mira', 'DAS FENSTER'], [62.7, 'nico_04', 'AAAAAAAAA'], [63.0, 'leaa.mp4', '🐚🐚🐚🐚🐚🐚'], [63.4, 'xXjanXx', 'WAS IST DAS'], [63.8, 'kev1n', 'du wolltest doch muscheln 💀'],
+  [64.3, 'aylin', 'ICH SCHREIE'], [64.8, 'tobi_', 'ruf wer die feuerwehr'], [65.4, 'luca.fx', 'das sind ALLE muscheln'], [66.0, 'mira', '🐚🐚🐚🐚'], [66.6, 'nico_04', 'bruh'],
+  [67.2, 'leaa.mp4', 'reichster mensch der welt 😂'], [68.0, 'kev1n', 'er schwimmt'], [68.6, 'xXjanXx', 'SCHWIMM BRO'], [69.2, 'aylin', '🐚🐚🐚🐚🐚🐚🐚'], [69.9, 'tobi_', 'trending #1'],
   [70.5, 'luca.fx', 'das ringlicht 💀'], [71.2, 'mira', 'live dabei gewesen'], [71.9, 'nico_04', '1 MIO ZUSCHAUER'], [72.6, 'leaa.mp4', 'hilfe'], [73.3, 'kev1n', 'er sinkt'],
-  [74.0, 'xXjanXx', 'NEIIIN'], [74.6, 'aylin', 'F'], [75.2, 'tobi_', 'F'], [75.8, 'luca.fx', 'F'], [76.4, 'mira', 'F 🦪'], [77.0, 'nico_04', 'F']];
+  [74.0, 'xXjanXx', 'NEIIIN'], [74.6, 'aylin', 'F'], [75.2, 'tobi_', 'F'], [75.8, 'luca.fx', 'F'], [76.4, 'mira', 'F 🐚'], [77.0, 'nico_04', 'F']];
 const NAMEC = {nico_04: '#7fd6ff', 'leaa.mp4': '#ff8ad0', xXjanXx: '#ffd23a', mira: '#9dff8a', kev1n: '#ff9a5a', 'luca.fx': '#c9a2ff', aylin: '#ff6b6b', tobi_: '#5affd6'};
 function chat(g, T, id) {
   const x0 = 640, w = 400, y1 = 1250;
-  const viewers = T < 58 ? 40312 + Math.floor(T * 37) : T < WINDOW ? 52880 + Math.floor((T - 58) * 210) : Math.floor(54000 + 9.8e6 * Math.pow(smooth(WINDOW, 77, T), 1.7));
+  const viewers = T < WINDOW ? 312 + Math.floor((T - 58) * 210) : Math.floor(1200 + 9.8e6 * Math.pow(smooth(WINDOW, 77, T), 1.7));
   g.save();
   // LIVE-Marke und Zuschauer
   g.fillStyle = '#e5263b'; g.beginPath(); g.roundRect(x0 + 168, 600, 86, 40, 8); g.fill();
@@ -113,15 +109,15 @@ export function drawHUD(g, T, shot) {
   else if (T < RETURN) { label = 'MUSCHELN ZURÜCK IN'; value = fmt(wl); prog = 1 - wl / 10; accent = ORANGE; }
   else { label = 'MUSCHELN'; value = 'ZURÜCK'; prog = 1; }
   const ws = 'MUSCHELN ZURÜCK IN ' + fmt(wl), t = T - shot.t0;
-  if (shot.id === 'slurp') { label = 'AUSTERN AUF DEM TELLER'; value = T < VANISH ? '12' : '0'; sub = ws; alarm = 0; }
+  if (shot.id === 'klasse') { label = 'MUSCHELN AUF SEINEM KONTO'; value = de(balance(T)); sub = ws; alarm = T > VANISH + 0.4 ? 1 : 0; }
   if (shot.id === 'prom') { label = 'KNÖPFE AN DEN HEMDEN'; value = '0'; sub = ws; alarm = T > FLASH ? 1 : 0; }
   if (shot.id === 'terrace') { label = 'GEWICHT AUF DEM TABLETT'; value = T < TRAY ? '9,6 kg' : '1,8 kg'; sub = ws; alarm = T > TRAY ? 1 : 0; }
   if (shot.id === 'watt') { label = 'EINGESUNKEN'; value = Math.round(85 * smooth(SINK, SINK + 1.6, T)) + ' cm'; sub = ws; alarm = T > SINK ? 1 : 0; }
   if (shot.id === 'church') { label = 'LÖCHER IM KIRCHTURM'; value = de(Math.floor(48000 * Math.pow(smooth(HOLES, 43.6, T), 1.4))); sub = ws; alarm = T > HOLES ? 1 : 0; }
   if (shot.id === 'rain') { label = 'MUSCHELN VOM HIMMEL'; value = de(Math.floor(1e6 * Math.pow(smooth(48.2, 57.5, T), 2) * 1800)); alarm = 1; accent = ORANGE; }
   if (shot.id === 'intro' || shot.id === 'wait') { /* Standard-Countdown */ }
-  if (shot.id === 'back' || shot.id === 'fill') { label = 'AUSTERN FÜR IHN'; value = T < WINDOW ? '0' : de(Math.floor(3e5 * Math.pow(smooth(WINDOW, 77.5, T), 1.6) * 3e4)); alarm = T > WINDOW ? 1 : 0; prog = 1; accent = '#e5482b'; }
-  if (shot.id === 'aerial' || shot.id === 'final') { label = 'AUSTERN FÜR IHN'; value = 'ALLE'; alarm = 1; prog = 1; accent = '#e5482b'; }
+  if (shot.id === 'back' || shot.id === 'fill') { label = 'MUSCHELN FÜR IHN'; value = T < WINDOW ? '0' : de(Math.floor(3e5 * Math.pow(smooth(WINDOW, 77.5, T), 1.6) * 3e4)); alarm = T > WINDOW ? 1 : 0; prog = 1; accent = '#e5482b'; }
+  if (shot.id === 'aerial' || shot.id === 'final') { label = 'MUSCHELN FÜR IHN'; value = 'ALLE'; alarm = 1; prog = 1; accent = '#e5482b'; }
   if (shot.id === 'rain' && value.length > 12) value = value.slice(0, 13);
   const x = 64, y = 1000;
   g.save(); g.fillStyle = '#fff';
@@ -149,7 +145,7 @@ export function drawHUD(g, T, shot) {
     g.restore();
   }
   // Livestream-Overlay: LIVE, Zuschauerzahl, Chat
-  if (['intro', 'wait', 'slurp', 'back', 'fill'].includes(shot.id)) chat(g, T, shot.id);
+  if (['back', 'fill'].includes(shot.id)) chat(g, T, shot.id);
 
   // Untertitel
   for (const [a, b, txt] of CAPTIONS) {

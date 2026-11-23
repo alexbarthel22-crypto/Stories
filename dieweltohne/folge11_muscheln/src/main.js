@@ -9,8 +9,8 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 const hud = document.getElementById('hud').getContext('2d');
 
-const files = {studio: './studio.js', prom: './prom.js', terrace: './terrace.js', watt: './watt.js', town: './town.js'};
-const SET_OF = {intro: 'studio', wait: 'studio', slurp: 'studio', prom: 'prom', terrace: 'terrace', watt: 'watt', church: 'town', rain: 'town',
+const files = {klasse: './klasse.js', studio: './studio.js', prom: './prom.js', terrace: './terrace.js', watt: './watt.js', town: './town.js'};
+const SET_OF = {intro: 'klasse', wait: 'klasse', klasse: 'klasse', prom: 'prom', terrace: 'terrace', watt: 'watt', church: 'town', rain: 'town',
   back: 'studio', fill: 'studio', aerial: 'town', final: 'town'};
 // Nur die Sets laden, die gebraucht werden (zum schnellen Testen: ?only=studio)
 const only = new URLSearchParams(location.search).get('only');

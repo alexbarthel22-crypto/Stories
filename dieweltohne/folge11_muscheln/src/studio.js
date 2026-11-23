@@ -1,10 +1,11 @@
-// Streamer-Zimmer: Livestream "Austern essen". Stufe 1: Die Auster verschwindet vor seinem Mund – er schlürft Luft, die Zitrone spritzt ins Auge.
+// Sein Zimmer (Gaming-Ecke). Abends streamt er mit 0 Muscheln auf dem Konto. (Teller/Austern aus einer früheren Fassung sind ausgeblendet.)
 // back / fill: Alle Muscheln der Welt kommen zu ihm – das Fenster birst, das Zimmer läuft voll, er versinkt.
 import {THREE, RoundedBoxGeometry, mat, mesh, rng, clamp, smooth, lerp, noise1, canvasTex, easeIn, easeOut, makePerson, posePerson, envMap} from './lib.js';
 import {particles, updateParticles} from './fx.js';
 import {seat, unseat, addMouth, mouthOpen, brows} from './people.js';
 import {shellSwarm, oysterHalf, heapTex, shellMats} from './shells.js';
-import {VANISH, LEMON, WINDOW, BURIED} from './timeline.js';
+import {VANISH, WINDOW, BURIED} from './timeline.js';
+const LEMON = 12.4; // (alte Austern-Szene, wird nicht mehr gezeigt)
 const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
 
 // Füllhöhe der Muscheln im Zimmer (m)
@@ -91,6 +92,11 @@ export async function build(renderer) {
   const lemon = new THREE.Group(); scene.add(lemon);
   mesh(new THREE.SphereGeometry(0.035, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2), lemonM, 0, 0, 0, lemon).scale.y = 0.9;
   mesh(new THREE.CircleGeometry(0.034, 14), lemonIn, 0, 0.001, 0, lemon).rotation.x = -Math.PI / 2;
+  plate.visible = false; lemon.visible = false; held.visible = false;
+  // Kleiner runder Sticker an der Wand neben ihm
+  const stickT = canvasTex(256, 256, (g, w, h) => { g.fillStyle = '#2a1b12'; g.beginPath(); g.arc(128, 128, 124, 0, 7); g.fill(); g.fillStyle = '#ffd23f'; g.beginPath(); g.arc(128, 128, 114, 0, 7); g.fill();
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '92px sans-serif'; g.fillText('🐚', 128, 104); g.fillStyle = '#2a1b12'; g.font = '900 30px sans-serif'; g.fillText('@muscheltal', 128, 190); });
+  const sticker = mesh(new THREE.CircleGeometry(0.075, 32), new THREE.MeshStandardMaterial({map: stickT, roughness: 0.5}), -0.62, 1.12, WIN.z + 0.012, scene); sticker.rotation.z = 0.12; sticker.castShadow = false;
   // Streamer (Hoodie, Headset)
   const guy = makePerson(1101, {skin: '#e2b28c', top: '#ff7a3d', pants: '#22262e', hair: '#2a1d15', height: 1.0});
   scene.add(guy); addMouth(guy);
@@ -125,7 +131,7 @@ export async function build(renderer) {
     guy.position.set(0, 0, -0.42); guy.rotation.set(0, 0, 0); seat(guy, 0.52); guy.visible = true;
     mouthOpen(guy, 0); brows(guy, 0, 0); gu.head.rotation.set(0, 0, 0); gu.torso.rotation.set(0, 0, 0);
     gu.armL.rotation.set(-0.55, 0, -0.12); gu.armL.userData.fore.rotation.x = -1.0; gu.armR.rotation.set(-0.55, 0, 0.12); gu.armR.userData.fore.rotation.x = -1.0;
-    held.visible = false; lemon.position.set(0.26, 0.775, 0.28); lemon.rotation.set(0, 0, 0);
+    held.visible = false; plate.visible = false; lemon.visible = false; lemon.position.set(0.26, 0.775, 0.28); lemon.rotation.set(0, 0, 0);
     oysters.forEach(o => { o.visible = T < VANISH; });
     const handR = () => { guy.updateMatrixWorld(true); return gu.armR.userData.fore.localToWorld(V3(0, -0.3, 0.02)); };
     const handL = () => { guy.updateMatrixWorld(true); return gu.armL.userData.fore.localToWorld(V3(0, -0.3, 0.02)); };
