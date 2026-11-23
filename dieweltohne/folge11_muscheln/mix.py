@@ -82,7 +82,7 @@ def add(name, at, dur=None, db=0.0, off=0.0, fin=0.02, fout=0.05, speed=1.0, pan
 # ---------------- Zeitleiste (identisch zu src/timeline.js) ----------------
 VANISH, RETURN = 10.0, 48.0
 WK = [[10, 10], [17, 9.0], [24, 7.8], [31, 6.4], [39, 4.6], [48, 0]]
-LEMON, POP, FLASH, TRAY, SINK, HOLES, TILT, TOWER_HIT, WINDOW, BURIED, HAND_UP, HEAD_UP, GULP = 12.4, 17.5, 19.8, 24.9, 32.0, 40.0, 43.4, 45.2, 62.6, 75.6, 84.7, 85.7, 88.0
+SCREAM, TURN, TAKE, POP, FLASH, TRAY, SINK, HOLES, TILT, TOWER_HIT, WINDOW, BURIED, HAND_UP, HEAD_UP, GULP = 11.05, 12.3, 15.7, 17.5, 19.8, 24.9, 32.0, 40.0, 43.4, 45.2, 62.6, 75.6, 84.7, 85.7, 88.0
 POT_HITS = [25.75, 26.0, 26.25, 26.55, 26.8, 27.35]
 
 
@@ -119,17 +119,17 @@ while T_ < RETURN:
     T_ += 0.01
 for tt in ticks: tick(tt, -8 if tt < 7 or (VANISH < tt < 46) else -2)
 
-# ---------------- Livestream: Austern ----------------
-amb('fsd_party_music', 0, 10.0, -31)                                                       # leise Stream-Musik
-for tt in [1.0, 4.6, 8.2]: add('fsd_notify', tt, 0.45, db=-26, fout=0.15, pan=0.4)          # Chat-Ping
-add('fsd_slurp', 9.75, 1.5, db=-3, peak_win=0.4, fout=0.3)                                # er schlürft – Luft
+# ---------------- Stufe 1: Mathearbeit (Totenstille – nur Uhr und leise Spieltöne) ----------------
+for tt in [4.6, 5.9, 7.1, 8.2, 9.2]: add('fsd_coins', tt, 0.35, db=-27, fout=0.15, pan=0.2)      # +1 Muschel (leise, er will ja nicht auffallen)
 add('fsd_chime', VANISH - 0.05, 1.3, db=-15, fout=0.6)                                     # Verschwinden
-add('fsd_scratch', VANISH, 1.0, db=-5, fout=0.3)                                           # Plattenkratzer: Musik bricht ab
-add('fsd_laugh', 11.2, 2.0, db=-15, fin=0.1, fout=0.6)                                     # Lacher
-add('fsd_squeak', LEMON - 0.02, 0.5, db=-9, fout=0.1)                                       # Zitrone quietscht
-add('fsd_scream_girl', LEMON + 0.15, 1.4, db=-11, speed=0.72, fout=0.4)                    # Aua, das Auge
-add('fsd_laugh', 13.6, 3.2, db=-12, off=1.5, fin=0.2, fout=1.0)
-for tt in [14.4, 15.4, 16.2]: add('fsd_notify', tt, 0.4, db=-28, fout=0.1, pan=0.4)
+add('fsd_notify', VANISH + 0.35, 0.9, db=-14, speed=0.55, fout=0.3)                        # Konto auf 0 (tiefer, trauriger Ton)
+add('fsd_chair_scrape', SCREAM - 0.05, 0.7, db=-10, peak_win=0.4, fout=0.25)               # Stuhl kratzt beim Aufspringen
+add('fsd_scream_man', SCREAM, 1.3, db=-2, peak_win=1.0, fin=0.02, fout=0.35)               # „NEEEEIN!“
+add('fsd_crowd_gasp', TURN + 0.05, 1.8, db=-11, fout=0.6)                                  # alle drehen sich um
+add('fsd_giggle', TURN + 0.6, 1.4, db=-19, fout=0.5, pan=-0.3)
+add('fsd_steps_slow', 13.2, 1.7, db=-11, fin=0.05, fout=0.3)                              # Lehrerin kommt
+add('fsd_teens_laugh', TAKE + 0.2, 1.9, db=-13, fin=0.1, fout=0.6)                         # Klasse lacht
+add('fsd_sigh', TAKE + 0.4, 1.3, db=-9, fout=0.4)
 add('fsd_whoosh_fast', 16.75, 0.6, db=-12, fout=0.2)
 
 # ---------------- Stufe 2: Abiball-Foto ----------------
@@ -201,7 +201,7 @@ add('fsd_crowd_gasp', 52.2, 2.0, db=-14, fout=0.6)
 add('fsd_stone_clatter', 54.0, 3.6, db=-15, off=4.0, fin=0.3, fout=0.8)
 add('fsd_whoosh_fast', 57.7, 0.5, db=-14, fout=0.2)
 
-# ---------------- Stufe 7: Zurück im Stream ----------------
+# ---------------- Stufe 7: Abends im Stream ----------------
 add('fsd_sigh', 58.6, 2.0, db=-7, fout=0.6)
 for tt in [58.6, 59.6, 60.6, 61.4, 62.0]: add('fsd_notify', tt, 0.4, db=-27, fout=0.1, pan=0.4)
 add('fsd_sub_rumble', 60.2, 2.6, db=-9, off=1.0, fin=2.0, fout=0.1)
@@ -228,12 +228,13 @@ add('fsd_sub_rumble', 78.0, 6.0, db=-15, off=1.0, fin=0.4, fout=1.0)
 add('fsd_helicopter', 78.5, 5.5, db=-22, fin=1.0, fout=1.0, pan=-0.4)
 add('fsd_seagulls', 80.0, 3.0, db=-21, fout=0.8, pan=0.4)
 
-# ---------------- Finale: Auster ----------------
+# ---------------- Finale: Handy hoch, Kontostand explodiert ----------------
 amb('fsd_wind', 84.0, 90.0, -17)
 add('fsd_plastic_clatter', HAND_UP - 0.05, 0.9, db=-11, fout=0.4)                          # Hand bricht durch
 add('fsd_plastic_clatter', HEAD_UP - 0.05, 1.0, db=-9, off=1.5, fout=0.4)                 # Kopf taucht auf
 add('fsd_gasp', HEAD_UP + 0.25, 1.4, db=-7, fout=0.4)                                      # tief Luft holen
-add('fsd_slurp', 87.65, 1.4, db=-1, peak_win=0.4, fout=0.4)                                # endlich: Auster
+for k, tt in enumerate([86.3, 86.6, 86.9, 87.2, 87.5]): add('fsd_coins', tt, 0.5, db=-14 + k, fout=0.2, pan=0.3)   # Kontostand rattert hoch
+add('fsd_cheer_big', GULP - 0.15, 1.8, db=-7, fin=0.05, fout=0.7)                          # er jubelt
 add('fsd_applause', 88.35, 1.55, db=-14, fin=0.2, fout=0.8)
 # ---------------- Ausgabe ----------------
 peak = np.abs(mix).max()

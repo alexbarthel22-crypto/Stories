@@ -141,7 +141,7 @@ export async function build(renderer) {
     const k = smooth(85.9, 87.8, st.T), n = Math.floor(Math.pow(k, 3) * 999999999999);
     g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '260px sans-serif'; g.fillText('🐚', SW / 2, 470);
     g.fillStyle = '#2a1b12'; g.beginPath(); g.roundRect(34, 716, SW - 60, 190, 60); g.fill(); g.fillStyle = '#fff8e7'; g.beginPath(); g.roundRect(30, 706, SW - 60, 190, 60); g.fill(); g.strokeStyle = '#2a1b12'; g.lineWidth = 8; g.stroke();
-    g.fillStyle = '#e8467c'; g.font = '900 ' + (n > 1e8 ? 62 : 90) + 'px sans-serif'; g.fillText(n.toLocaleString('de-DE'), SW / 2, 803); };
+    const txt = n >= 1e9 ? Math.floor(n / 1e9) + ' Mrd.' : n >= 1e6 ? Math.floor(n / 1e6) + ' Mio.' : n.toLocaleString('de-DE'); g.fillStyle = '#e8467c'; g.font = '900 120px sans-serif'; g.fillText(txt, SW / 2, 806); };
 
   const camera = new THREE.PerspectiveCamera(50, 1080 / 1920, 0.05, 3000); scene.add(camera);
   const o3 = new THREE.Object3D();
@@ -190,14 +190,15 @@ export async function build(renderer) {
       guy.position.set(top.x, top.y - 1.78 + 0.1 * hand + 0.4 * head, top.z + 0.3); guy.rotation.set(0, 0.25, 0); posePerson(guy, {}); brows(guy, 1, 0);
       u.armR.rotation.x = -2.9; u.armR.rotation.z = 0.15 * Math.sin(T * 9) * (1 - head); u.armR.userData.fore.rotation.x = -0.1; u.armL.rotation.x = -0.2; mouthOpen(guy, 0.2);
       // Er hält das Handy in die Kamera (der Kontostand explodiert) und jubelt
-      const look = smooth(86.4, 87.0, T), cheer = smooth(GULP - 0.2, GULP + 0.3, T);
-      u.armR.rotation.x = lerp(-2.9, -1.6, look) - 1.2 * cheer; u.armR.userData.fore.rotation.x = lerp(-0.1, -1.1, look) + 0.9 * cheer; u.armR.rotation.z = 0.15 * Math.sin(T * 9) * (1 - head) + 0.8 * cheer;
-      u.head.rotation.x = 0.2 * look * (1 - cheer) - 0.25 * cheer; mouthOpen(guy, T > 87.2 ? 0.55 + 0.4 * cheer + 0.1 * Math.sin(T * 20) * cheer : 0.25); brows(guy, 1, 0);
-      if (cheer > 0) { u.armL.rotation.x = -0.4; u.armL.rotation.z = -2.3 * cheer; u.armL.userData.fore.rotation.x = -0.4; }
-      guy.position.y += 0.06 * cheer * Math.abs(Math.sin(T * 9));
-      guy.updateMatrixWorld(true); const hr = u.armR.userData.fore.localToWorld(V3(0, -0.33, 0.03));
-      ph.position.copy(hr); ph.scale.setScalar(1.6); ph.rotation.set(0.1, 0.35 - 0.1 * look, 0);
-      if (cheer > 0) ph.rotation.set(0, 0.25, 0.3 * Math.sin(T * 9));
+      const look = smooth(86.2, 86.9, T), cheer = smooth(GULP - 0.2, GULP + 0.3, T);
+      u.armR.rotation.x = lerp(-2.9, -1.45, look); u.armR.userData.fore.rotation.x = lerp(-0.1, -0.9, look); u.armR.rotation.z = 0.15 * Math.sin(T * 9) * (1 - head) + 0.35 * look;
+      u.head.rotation.x = -0.15 * cheer; mouthOpen(guy, T > 86.9 ? 0.55 + 0.4 * cheer + 0.1 * Math.sin(T * 20) * cheer : 0.25); brows(guy, 1, 0);
+      if (cheer > 0) { u.armL.rotation.x = -0.4; u.armL.rotation.z = -2.4 * cheer + 0.2 * Math.sin(T * 12) * cheer; u.armL.userData.fore.rotation.x = -0.4; }
+      guy.position.y += 0.05 * cheer * Math.abs(Math.sin(T * 9));
+      guy.updateMatrixWorld(true); const hr = u.armR.userData.fore.localToWorld(V3(0, -0.33, 0.03)); const hd = u.head.localToWorld(V3(0.0, -0.05, 0.0));
+      // zum Zeigen hält er das Handy vor sich in die Kamera
+      const show = V3(hd.x + 0.22, hd.y - 0.05, hd.z + 0.42);
+      ph.scale.setScalar(lerp(1.6, 2.2, look)); ph.position.copy(hr).add(V3(0, 0.1 + 0.07 * look, 0.06)); ph.rotation.set(0.05, 0.3, 0.06 * Math.sin(T * 9) * cheer);
       updateScreen(ph, [], {t: T, T, custom: rich, noDrops: true});
     }
     // ---- Kamera ----
