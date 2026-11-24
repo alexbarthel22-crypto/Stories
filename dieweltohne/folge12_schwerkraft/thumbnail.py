@@ -42,13 +42,13 @@ draw.rounded_rectangle([(W - kw) / 2 - 34, 300, (W + kw) / 2 + 34, 386], 43, fil
 draw.text(((W - kw) / 2, 312), ks, font=k, fill='white')
 # Hauptzeilen
 text(W / 2, 420, '10 SEKUNDEN', fit('10 SEKUNDEN', F + 'InterDisplay-Black.otf', 900, 160), 'white', 6)
-text(W / 2, 580, 'OHNE MUSCHELN', fit('OHNE MUSCHELN', F + 'InterDisplay-Black.otf', 980, 240), (127, 214, 255), 8)
+text(W / 2, 580, 'OHNE SCHWERKRAFT', fit('OHNE SCHWERKRAFT', F + 'InterDisplay-Black.otf', 990, 240), (190, 170, 255), 8)
 # Stufenbalken unten (im 3:4-Ausschnitt des Profilrasters)
 cols = ['#4cc76a', '#a5d34a', '#e8d13a', '#f3a531', '#f07a2a', '#e5482b', '#c4161c']
 bw, gap, y0 = 112, 12, 1470
 x0 = (W - (7 * bw + 6 * gap)) / 2
 for i, c in enumerate(cols):
     draw.rounded_rectangle([x0 + i * (bw + gap), y0, x0 + i * (bw + gap) + bw, y0 + 26], 8, fill=c)
-text(W / 2, 1516, 'ER HATTE 4.812 MUSCHELN', fit('ER HATTE 4.812 MUSCHELN', F + 'InterDisplay-Black.otf', 860, 64), 'white', 3)
+text(W / 2, 1516, 'STUFE 7 IST DIE GANZE ERDE', fit('STUFE 7 IST DIE GANZE ERDE', F + 'InterDisplay-Black.otf', 860, 64), 'white', 3)
 img.save('thumbnail.jpg', quality=92)
 img.crop((0, 240, W, 1680)).resize((540, 720)).save(sys.argv[2] if len(sys.argv) > 2 else '/dev/null', 'JPEG') if len(sys.argv) > 2 else None

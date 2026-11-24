@@ -253,8 +253,8 @@ export async function build(renderer) {
       const k = smooth(15, 17, T); pos = V3(lerp(4.6, 4.2, k), lerp(2.9, 3.0, k), lerp(5.2, 4.8, k)); tgt = V3(0, 1.4, 0); camera.fov = 50; }
     else { // Finale
       if (T < 83.6) { const k = smooth(80, 83.6, T); pos = V3(lerp(-2.6, -1.4, k), lerp(1.8, 1.25, k), lerp(-1.6, -0.9, k)).add(shake(0.006, 1)); tgt = V3(0.6, 0.55, 0.3); camera.fov = 46; }
-      else if (T < PUD - 0.2) { const k = smooth(83.6, 85.2, T); pos = V3(-0.5, 1.0, -0.4); tgt = V3().lerpVectors(V3(0.75, 0.6, 0.35), pudding.position, k); camera.fov = lerp(46, 38, k); }
-      else { const k = smooth(PUD - 0.2, PUD + 0.6, T); pos = V3(lerp(-0.5, -0.2, k), lerp(1.0, 0.95, k), lerp(-0.4, -0.15, k)); tgt = V3().lerpVectors(pudding.position, guy.userData.head.localToWorld(V3(0, -0.05, 0)), smooth(PUD, PUD + 0.8, T)); camera.fov = lerp(38, 40, k);
+      else if (T < PUD - 0.2) { const k = smooth(83.6, 85.2, T); pos = V3(-0.5, 1.0, -0.4); tgt = V3().lerpVectors(V3(0.75, 0.6, 0.35), pudding.position, k); camera.fov = lerp(46, 16, k); }
+      else { const k = smooth(PUD - 0.2, PUD + 0.6, T); pos = V3(lerp(-0.5, -0.2, k), lerp(1.0, 0.95, k), lerp(-0.4, -0.15, k)); tgt = V3().lerpVectors(pudding.position, guy.userData.head.localToWorld(V3(0, -0.05, 0)), smooth(PUD, PUD + 0.8, T)); camera.fov = lerp(16, 40, smooth(PUD - 0.2, PUD + 0.6, T));
         if (T > PUD && T < PUD + 0.4) pos.add(shake(0.01, 5)); }
     }
     camera.position.copy(pos); camera.lookAt(tgt); camera.updateProjectionMatrix();
