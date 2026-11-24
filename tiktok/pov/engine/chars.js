@@ -13,6 +13,7 @@ function eyeTex(iris, glasses) {
   return canvasTex(128, 128, (c, w) => {
     const m = w / 2;
     c.fillStyle = '#fbfaf5'; c.beginPath(); c.arc(m, m, 44, 0, 7); c.fill();
+    if (iris === 'leer') { c.fillStyle = '#050507'; c.beginPath(); c.arc(m, m, 40, 0, 7); c.fill(); c.lineWidth = 7; c.strokeStyle = '#151515'; c.stroke(); c.fillStyle = 'rgba(255,255,255,0.8)'; c.beginPath(); c.arc(m - 10, m - 10, 4, 0, 7); c.fill(); return; }
     c.lineWidth = 7; c.strokeStyle = '#151515'; c.stroke();
     c.fillStyle = iris; c.beginPath(); c.arc(m, m + 2, 24, 0, 7); c.fill();
     c.lineWidth = 3; c.strokeStyle = 'rgba(20,30,40,0.7)'; c.stroke();

@@ -1,0 +1,731 @@
+{
+ "titel": "Die Mutprobe · Teil 1",
+ "set": "schule",
+ "himmel": "nacht",
+ "fov": 140,
+ "blick": "ben",
+ "max_pause": 0.45,
+ "handy_fov": 96,
+ "seed": 61,
+ "hall": 0.45,
+ "ducking": 0.75,
+ "atmo_spuren": [
+  {
+   "datei": "atmo_schule.wav",
+   "lautstaerke": 0.4
+  },
+  {
+   "datei": "atmo_wind.wav",
+   "lautstaerke": 0.12
+  }
+ ],
+ "cast": {
+  "ich": {
+   "pos": [
+    0.0,
+    8.5
+   ],
+   "pose": "runter",
+   "oberteil": "#c84a7a",
+   "hose": "#2a2e44",
+   "haut": "#f0d8c0",
+   "stimme": "gemini:Leda",
+   "regie": "Mädchen, 15 Jahre",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "ben": {
+   "pos": [
+    0.7,
+    7.0
+   ],
+   "pose": "handy",
+   "frisur": "kurz",
+   "haare": "#2a1a10",
+   "oberteil": "#2a6a4a",
+   "hose": "#2a3a5a",
+   "schuhe": "#f0f0f0",
+   "augen": "#6a8a5a",
+   "haut": "#ecd2b8",
+   "details": "none",
+   "stimme": "gemini:Puck",
+   "regie": "Junge, 15 Jahre, Jugendsprache",
+   "modell": "gemini-3.8-flash-tts",
+   "handy_bild": {
+    "typ": "live",
+    "name": "ben.rx",
+    "zuschauer": [
+     312,
+     900
+    ],
+    "kommentare": [
+     [
+      "lena.k",
+      "OMG ihr seid echt drin"
+     ],
+     [
+      "mila",
+      "Skelett-Selfie!!"
+     ]
+    ],
+    "tempo": 1.5
+   }
+  },
+  "ben2": {
+   "pos": [
+    60,
+    60
+   ],
+   "pose": "handy",
+   "frisur": "kurz",
+   "haare": "#2a1a10",
+   "oberteil": "#2a6a4a",
+   "hose": "#2a3a5a",
+   "schuhe": "#f0f0f0",
+   "augen": "leer",
+   "haut": "#ecd2b8",
+   "details": "none",
+   "stimme": "gemini:Puck",
+   "regie": "Junge, 15 Jahre, aber ruhig und unheimlich",
+   "modell": "gemini-3.8-flash-tts",
+   "handy_bild": {
+    "typ": "live",
+    "name": "schulgeist",
+    "zuschauer": [
+     4812,
+     4900
+    ],
+    "figur": 2,
+    "szene": "raum",
+    "kommentare": [
+     [
+      "???",
+      "dreh dich um, Mia"
+     ]
+    ]
+   }
+  },
+  "lautsprecher": {
+   "pos": [
+    70,
+    70
+   ],
+   "stimme": "gemini:Enceladus",
+   "regie": "flüsternde, unheimliche Stimme aus einem Schullautsprecher",
+   "modell": "gemini-3.8-flash-tts"
+  }
+ },
+ "beats": [
+  {
+   "schwarz": true,
+   "text": "DIE MUTPROBE",
+   "text_farbe": "#ffd400",
+   "dauer": 2.4,
+   "blick": "ben",
+   "schnitt": true,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.55,
+     "ab": 0
+    },
+    {
+     "datei": "schulglocke.wav",
+     "lautstaerke": 0.25,
+     "ab": 0.3,
+     "dauer": 1.2
+    }
+   ],
+   "musik": {
+    "datei": "gen/musik_16_schule.mp3",
+    "lautstaerke": 0.15,
+    "einblenden": 2.5
+   }
+  },
+  {
+   "ort": [
+    "GESAMTSCHULE NORD",
+    "Freitag · 23:57"
+   ],
+   "blick": "ben",
+   "schnitt": true,
+   "wer": "ben",
+   "sagt": "Wir sind live. Über dreihundert Leute schauen zu.",
+   "wie": "flüsternd, aufgeregt, grinsend",
+   "pause_vor": 0.8
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "live",
+    "name": "ben.rx",
+    "zuschauer": [
+     312,
+     640
+    ],
+    "zuschauer_dauer": 5,
+    "kommentare": [
+     [
+      "lena.k",
+      "OMG ihr seid echt drin"
+     ],
+     [
+      "jonas_07",
+      "ihr traut euch eh nicht lol"
+     ],
+     [
+      "mila",
+      "Bio-Raum!! Skelett-Selfie!"
+     ],
+     [
+      "kev.dj",
+      "wenn der Hausmeister kommt xD"
+     ],
+     [
+      "ayla",
+      "ich hab jetzt schon Gänsehaut"
+     ]
+    ],
+    "tempo": 0.85
+   },
+   "dauer": 4.6,
+   "sfx": [
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.25,
+     "ab": 0.3
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.25,
+     "ab": 1.15
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.25,
+     "ab": 2.0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.25,
+     "ab": 2.85
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.25,
+     "ab": 3.7
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "wer": "ich",
+   "sagt": "Okay. Bio-Raum, Skelett-Selfie, und dann sofort raus.",
+   "wie": "flüsternd, nervös, entschlossen"
+  },
+  {
+   "blick": "gang",
+   "drehung": 0.6,
+   "effekt": {
+    "lichter": {
+     "ab": 0.6,
+     "von": 9,
+     "nach": -2,
+     "tempo": 0.55
+    }
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      0.0,
+      -1.4
+     ],
+     "zeit": 9
+    },
+    "ben": {
+     "nach": [
+      0.7,
+      -2.4
+     ],
+     "zeit": 9
+    }
+   },
+   "sfx": [
+    {
+     "datei": "schritte_hall.wav",
+     "lautstaerke": 0.3,
+     "ab": 0.2,
+     "dauer": 9
+    },
+    {
+     "datei": "bewegungsmelder.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.6
+    }
+   ],
+   "wer": "ben",
+   "sagt": "Siehst du? Nur Bewegungsmelder. Total harmlos.",
+   "wie": "lässig, flüsternd",
+   "pause_vor": 2.2,
+   "dauer": 6.0
+  },
+  {
+   "effekt": {
+    "lichter": {
+     "ab": 0.3,
+     "von": -21,
+     "nach": -8,
+     "tempo": 0.8
+    }
+   },
+   "sfx": [
+    {
+     "datei": "bewegungsmelder.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.3
+    },
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.5,
+     "dauer": 14
+    }
+   ],
+   "wer": "ich",
+   "sagt": "Ben… da hinten geht das Licht an. Da ist doch keiner.",
+   "wie": "flüsternd, ängstlich",
+   "pause_vor": 1.6
+  },
+  {
+   "effekt": {
+    "kamera": 0.2
+   },
+   "blick": "kamera",
+   "drehung": 0.7,
+   "blick_verzoegerung": 0.3,
+   "zoom": 70,
+   "zoom_ab": 0.6,
+   "zoom_dauer": 1.0,
+   "sfx": [
+    {
+     "datei": "kamera_servo.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.2
+    }
+   ],
+   "wer": "ben",
+   "sagt": "Die Kameras sind nachts aus. Oder?",
+   "wie": "unsicher, leise",
+   "pause_vor": 1.4
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.4,
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "live",
+    "name": "ben.rx",
+    "zuschauer": [
+     1180,
+     2400
+    ],
+    "zuschauer_dauer": 4,
+    "kommentare": [
+     [
+      "lena.k",
+      "OMG ihr seid echt drin"
+     ],
+     [
+      "jonas_07",
+      "ihr traut euch eh nicht lol"
+     ],
+     [
+      "mila",
+      "Bio-Raum!! Skelett-Selfie!"
+     ],
+     [
+      "kev.dj",
+      "wenn der Hausmeister kommt xD"
+     ],
+     [
+      "ayla",
+      "ich hab jetzt schon Gänsehaut"
+     ],
+     [
+      "ayla",
+      "wer steht da am Ende vom Gang?"
+     ],
+     [
+      "mila",
+      "HINTER EUCH!!!"
+     ],
+     [
+      "jonas_07",
+      "ok das ist nicht mehr lustig"
+     ],
+     [
+      "lena.k",
+      "Mia geh da raus!!"
+     ]
+    ],
+    "schon": 5,
+    "tempo": 0.9
+   },
+   "dauer": 4.0,
+   "sfx": [
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.35,
+     "ab": 0.3
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.35,
+     "ab": 1.2
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.55,
+     "ab": 1.2
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.35,
+     "ab": 2.1
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.35,
+     "ab": 3.0
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": "zurueck",
+   "drehung": 0.45,
+   "effekt": {
+    "spind": 0.9
+   },
+   "sfx": [
+    {
+     "datei": "spind_knarren.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.9
+    }
+   ],
+   "dauer": 3.4
+  },
+  {
+   "blick": "spinde",
+   "drehung": 0.6,
+   "zoom": 48,
+   "zoom_ab": 0.4,
+   "zoom_dauer": 1.2,
+   "wer": "ich",
+   "sagt": "Siebenundvierzig. Das ist mein Spind. Und das… ist ein Foto von mir.",
+   "wie": "flüsternd, geschockt",
+   "pause_vor": 0.8,
+   "sfx": [
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 2.6
+    },
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.5,
+     "ab": 2.8
+    }
+   ],
+   "pause": 0.4,
+   "musik": null
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.25,
+   "blick": "gang",
+   "drehung": 0.3,
+   "effekt": {
+    "klingel": 0.2,
+    "dunkel": 0.3
+   },
+   "schuetteln": 1.6,
+   "schuetteln_ab": 0.2,
+   "laufen": {
+    "ben": {
+     "nach": [
+      0.2,
+      -21.5
+     ],
+     "zeit": 2.2,
+     "ab": 0.4
+    }
+   },
+   "pose": {
+    "ben": "rennen"
+   },
+   "sfx": [
+    {
+     "datei": "schulglocke.wav",
+     "lautstaerke": 0.95,
+     "ab": 0.2
+    }
+   ],
+   "dauer": 3.0
+  },
+  {
+   "laufen": {
+    "ben": {
+     "nach": [
+      62,
+      62
+     ],
+     "zeit": 0.01
+    }
+   },
+   "wer": "lautsprecher",
+   "sagt": "Mia. Du bist zu spät zum Unterricht.",
+   "wie": "langsam, flüsternd, unheimlich, durch einen alten Lautsprecher",
+   "funk": true,
+   "lautstaerke": 1.1,
+   "hall": 1.0,
+   "sfx": [
+    {
+     "datei": "lautsprecher_knacken.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.0
+    }
+   ],
+   "blick": "decke",
+   "drehung": 0.6,
+   "pause_vor": 1.3
+  },
+  {
+   "blick": "gang",
+   "drehung": 0.5,
+   "wer": "ich",
+   "sagt": "Ben?! BEN! Wo bist du?!",
+   "wie": "panisch, laut",
+   "musik": {
+    "datei": "gen/musik_17_flucht.mp3",
+    "lautstaerke": 0.22,
+    "einblenden": 0.3
+   }
+  },
+  {
+   "pose": {
+    "ich": "rennen"
+   },
+   "laufen": {
+    "ich": {
+     "nach": [
+      1.2,
+      -15.9
+     ],
+     "zeit": 3.2
+    }
+   },
+   "blick": "gang",
+   "sfx": [
+    {
+     "datei": "rennen_hall.wav",
+     "lautstaerke": 0.6,
+     "ab": 0,
+     "dauer": 4.6
+    }
+   ],
+   "dauer": 3.2
+  },
+  {
+   "laufen": {
+    "ich": {
+     "nach": [
+      4.3,
+      -16.3
+     ],
+     "zeit": 1.2
+    }
+   },
+   "blick": "tafel",
+   "drehung": 0.7,
+   "dauer": 1.4
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "effekt": {
+    "kreide": {
+     "ab": 0.3,
+     "dauer": 3.0,
+     "text": "MIA, DU BIST DRAN."
+    }
+   },
+   "sfx": [
+    {
+     "datei": "kreide.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.3
+    },
+    {
+     "datei": "atem_schwer.wav",
+     "lautstaerke": 0.35,
+     "ab": 0,
+     "dauer": 4
+    }
+   ],
+   "dauer": 4.0,
+   "musik": null,
+   "zoom": 75,
+   "zoom_dauer": 2.5
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.4,
+   "effekt": {
+    "skelett": 0.2
+   },
+   "blick": "skelett",
+   "drehung": 0.4,
+   "sfx": [
+    {
+     "datei": "knochen.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.2
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.3
+    }
+   ],
+   "schuetteln": 0.8,
+   "schuetteln_ab": 0.3,
+   "wer": "ich",
+   "sagt": "Nein, nein, nein…",
+   "wie": "panisch flüsternd",
+   "pause_vor": 1.4
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "Ben",
+    "uhr": "00:01",
+    "text": [
+     "Mia wo bist du??",
+     "Ich steh draußen am Tor.",
+     "Ich warte seit zwanzig Minuten auf dich!"
+    ],
+    "nach_und_nach": 1.2
+   },
+   "dauer": 4.2,
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.65,
+     "ab": 0.25
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.65,
+     "ab": 1.45
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.65,
+     "ab": 2.65
+    },
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 2.7
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "wer": "ich",
+   "sagt": "Aber… du warst doch die ganze Zeit bei mir.",
+   "wie": "flüsternd, fassungslos, zitternd"
+  },
+  {
+   "laufen": {
+    "ben2": {
+     "nach": [
+      2.7,
+      -15.9
+     ],
+     "zeit": 0.01
+    }
+   },
+   "schaut": {
+    "ben2": "ich"
+   },
+   "blick": "ben2",
+   "drehung": 1.8,
+   "zoom": 52,
+   "zoom_ab": 1.6,
+   "zoom_dauer": 1.0,
+   "dauer": 3.4,
+   "sfx": [
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.5,
+     "ab": 0,
+     "dauer": 5
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.8,
+     "ab": 1.7
+    }
+   ]
+  },
+  {
+   "wer": "ben2",
+   "sagt": "Kommst du, Mia? Der Unterricht fängt an.",
+   "wie": "ruhig, leise, unheimlich freundlich",
+   "hall": 0.6,
+   "pause": 0.6
+  },
+  {
+   "schwarz": true,
+   "ende": "FORTSETZUNG FOLGT",
+   "ende_unter": "DIE MUTPROBE · TEIL 2",
+   "ende_ab": 0.4,
+   "dauer": 3.8,
+   "ort": null,
+   "sfx": [
+    {
+     "datei": "schulglocke.wav",
+     "lautstaerke": 0.35,
+     "ab": 0.3,
+     "dauer": 1.5
+    },
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.0
+    }
+   ]
+  }
+ ]
+}

@@ -867,11 +867,88 @@ TEIL6 = {'tastatur.wav': (tastatur, 0.7), 'atmo_luefter.wav': (lambda: luefter()
          'notaus_aus.wav': (notaus_aus, 0.95), 'sirenen_nah.wav': (sirenen_nah, 0.85)}
 
 
+# ---------- Die Mutprobe: Schule bei Nacht ----------
+def schule_nacht(d=60):
+    # leeres Schulgebäude: Lüftungsbrummen, Heizungsrohre knacken, ferner Wind, Uhr tickt leise
+    tt = t_(d); ch = []
+    for k in range(2):
+        hum = bp(pink(d), 60, 400, 2) * 0.35 + np.sin(2 * np.pi * 50 * tt) * 0.02
+        pipes = np.zeros(len(tt))
+        for st in R.uniform(0, d - 1, 7):
+            n = int(0.3 * SR); i = int(st * SR); pipes[i:i + n] += sum(np.sin(2 * np.pi * f * t_(0.3)) * np.exp(-t_(0.3) / 0.05) * a for f, a in ((310, 0.3), (720, 0.2))) * R.uniform(0.2, 0.6)
+        tick = np.zeros(len(tt))
+        for s_ in np.arange(0.2, d - 0.1, 1.0):
+            n = int(0.03 * SR); i = int(s_ * SR); tick[i:i + n] += np.sin(2 * np.pi * 2400 * t_(0.03)) * np.exp(-t_(0.03) / 0.004) * 0.025
+        ch.append(hum + reverb(pipes, 1.6, 0.5) + tick)
+    return loopable(stereo(*ch))
+
+def bewegungsmelder(d=3.0):
+    # Relais klackt, Leuchtstoffröhren flackern an (Ping + Summen)
+    tt = t_(d); x = np.zeros(len(tt))
+    for k, st in enumerate((0.0, 0.5, 1.0, 1.5)):
+        n = int(0.6 * SR); i = int(st * SR); tk = t_(0.6)
+        click = hp(noise(0.6), 2000) * np.exp(-tk / 0.003) * 0.8
+        ping = np.sin(2 * np.pi * (5200 - 1500 * tk) * tk) * np.exp(-tk / 0.08) * 0.15 * (k % 2 == 0)
+        buzz = (signal.square(2 * np.pi * 100 * tk) * 0.06 + np.sin(2 * np.pi * 50 * tk) * 0.05) * np.clip(tk / 0.1, 0, 1) * (R.random(len(tk)) > 0.2)
+        x[i:i + n] += (click + ping + buzz)[:len(x) - i] * (1 - k * 0.15)
+    return pan(reverb(x, 1.2, 0.35), 0.0)
+
+def kamera_servo(d=2.2):
+    tt = t_(d); env = np.clip(tt / 0.05, 0, 1) * np.clip((1.6 - tt) / 0.05, 0, 1)
+    f = 900 + 300 * np.sin(2 * np.pi * 0.7 * tt); x = signal.sawtooth(2 * np.pi * np.cumsum(f) / SR) * 0.15 * env + bp(noise(d), 1500, 5000, 2) * 0.1 * env
+    stop = np.zeros(len(tt)); i = int(1.6 * SR); n = int(0.05 * SR); stop[i:i + n] = hp(noise(0.05), 2000) * np.exp(-t_(0.05) / 0.005) * 0.5
+    return pan(reverb(x + stop, 0.8, 0.3), 0.3)
+
+def spind_knarren(d=3.4):
+    # Blechtür eines Spinds schwingt langsam auf: metallisches Quietschen + Scharnier
+    tt = t_(d); f = 700 + 500 * np.sin(np.pi * np.clip(tt / 3.0, 0, 1)) + smooth_rand(d, 6, -60, 60)
+    sq = (signal.sawtooth(2 * np.pi * np.cumsum(f) / SR) * 0.5 + np.sin(2 * np.pi * np.cumsum(f * 2.01) / SR) * 0.3) * (0.4 + 0.6 * smooth_rand(d, 9, 0, 1))
+    sq = bp(sq, 600, 4000, 2) * np.clip(tt / 0.2, 0, 1) * np.clip((3.0 - tt) / 0.3, 0, 1)
+    clang = np.zeros(len(tt)); i = int(3.0 * SR); n = int(0.4 * SR); clang[i:i + n] = sum(np.sin(2 * np.pi * fr * t_(0.4)) * np.exp(-t_(0.4) / 0.1) * a for fr, a in ((420, 0.5), (1130, 0.3), (2210, 0.2)))[:len(clang) - i]
+    return pan(reverb(sq * 0.7 + clang, 1.4, 0.4), -0.5)
+
+def schulglocke(d=3.0):
+    # elektrische Schulklingel: Klöppel schlägt ~25x/s auf eine Glockenschale
+    tt = t_(d); x = np.zeros(len(tt)); s_ = 0.0
+    while s_ < 2.6:
+        n = int(0.12 * SR); tk = t_(0.12); hit = sum(np.sin(2 * np.pi * f * tk) * np.exp(-tk / dk) * a for f, a, dk in ((1180, 0.6, 0.05), (2950, 0.4, 0.03), (4400, 0.2, 0.02)))
+        i = int(s_ * SR); x[i:i + n] += hit[:len(x) - i]; s_ += 1 / 26
+    x = np.tanh(x * 1.5) * 0.8
+    return pan(reverb(x, 1.5, 0.35), -0.3)
+
+def lautsprecher_knacken(d=2.0):
+    tt = t_(d); x = hp(noise(d), 300) * np.exp(-tt / 0.03) * 0.8 + bp(noise(d), 400, 3000, 2) * 0.12 * (tt < 1.6) + np.sin(2 * np.pi * 50 * tt) * 0.15 * (tt < 1.7)
+    x += grains(d, 25, 1000, 4000, (0.001, 0.004), (0.2, 0.8)); x[int(1.7 * SR):int(1.72 * SR)] += 0.8
+    return pan(reverb(x, 1.6, 0.4), 0.0)
+
+def kreide(d=3.4):
+    # Kreide auf Tafel: kratzige Striche mit Quietschen, Klopfen bei Punkten
+    tt = t_(d); x = np.zeros(len(tt)); s_ = 0.0
+    while s_ < d - 0.3:
+        L = R.uniform(0.08, 0.25); n = int(L * SR); tk = np.arange(n) / SR
+        scr = bp(noise(L), 1500, 7000, 2) * (0.5 + 0.5 * np.sin(np.pi * tk / L)) * 0.6
+        if R.random() < 0.25: scr += np.sin(2 * np.pi * R.uniform(2500, 3500) * tk) * 0.15 * np.sin(np.pi * tk / L)
+        i = int(s_ * SR); x[i:i + n] += scr[:len(x) - i]; s_ += L + R.uniform(0.02, 0.1)
+    return pan(reverb(x, 0.9, 0.3), 0.3)
+
+def knochen(d=1.6):
+    # Skelett klappert: viele kurze, hohle Holzklicks
+    x = np.zeros(int(d * SR))
+    for k in range(26):
+        n = int(0.05 * SR); tk = t_(0.05); f = R.uniform(700, 1600)
+        c = (np.sin(2 * np.pi * f * tk) * 0.6 + bp(noise(0.05), 800, 3000, 2) * 0.5) * np.exp(-tk / 0.008)
+        i = int((R.exponential(0.25) if k > 4 else k * 0.05) * SR); x[i:i + n] += c[:len(x) - i] * R.uniform(0.4, 1.0)
+    return pan(reverb(x, 1.0, 0.35), 0.4)
+
+MUTPROBE = {'atmo_schule.wav': (lambda: schule_nacht(), 0.55), 'bewegungsmelder.wav': (bewegungsmelder, 0.8), 'kamera_servo.wav': (kamera_servo, 0.7), 'spind_knarren.wav': (spind_knarren, 0.85),
+            'schulglocke.wav': (schulglocke, 0.95), 'lautsprecher_knacken.wav': (lautsprecher_knacken, 0.8), 'kreide.wav': (kreide, 0.8), 'knochen.wav': (knochen, 0.85)}
+
+
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5, **TEIL6}
-        for n_ in (TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else TEIL6 if sys.argv[1] == 'teil6' else {k: ALL[k] for k in sys.argv[1:]}):
+        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5, **TEIL6, **MUTPROBE}
+        for n_ in (MUTPROBE if sys.argv[1] == 'mutprobe' else TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else TEIL6 if sys.argv[1] == 'teil6' else {k: ALL[k] for k in sys.argv[1:]}):
             f_, pk = ALL[n_]; save(n_, f_(), pk); print(' ', n_)
         sys.exit()
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)

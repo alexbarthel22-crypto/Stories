@@ -199,6 +199,9 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/jens_1830_teil6.json`: **„Jens – 18:30 · Teil 6 (Finale)“** (ca. 91 s, Set `leitwarte`). Die Schlüssel haben Krauses Programm freigeschaltet.
   Jens schleicht in die Leitwarte. Tobi lenkt Krause am Fenster ab, Jens schlägt den NOT-AUS ein, und alles fährt herunter.
   Die Polizei kommt, Krause wird abgeführt. Am Morgen versöhnen sich Jens, Tobi und der Vater. Mama schreibt: Frühstück ist fertig. ENDE.
+- `stories/mutprobe_1.json`: **„Die Mutprobe · Teil 1“** (ca. 90 s, Set `schule`, neue Serie für Jugendliche). Mia und Ben machen nachts einen Livestream in der Schule.
+  Die Bewegungsmelder gehen von allein an, die Kamera folgt ihnen, Spind 47 mit Mias durchgestrichenem Foto öffnet sich. Um Mitternacht schrillt die Schulglocke, Ben verschwindet, der Lautsprecher flüstert.
+  Im Bio-Raum schreibt sich die Kreide von selbst, das Skelett dreht den Kopf. Ben schreibt, er stehe draußen am Tor. Doch „Ben“ steht in der Tür, mit schwarzen Augen.
 
 ## Neu: Felder für mehr Spannung und Details
 
@@ -350,3 +353,27 @@ Automatisch zu sehen:
 | `effekt: {morgen: {ab, dauer}}` | Sonnenaufgang: Himmel und Raum werden hell, Tafel zeigt „NETZ STABIL“ |
 
 Neue Geräusche: `tastatur, atmo_luefter, fenster_klopfen, glas_splitter, notaus_aus, sirenen_nah` (`python3 tools/sfx_synth.py teil6`). Musik: `gen/musik_14_warte.mp3`, `gen/musik_15_morgen.mp3`.
+
+## Set `schule` (Die Mutprobe): Schulflur bei Nacht + Bio-Raum
+
+Der Flur reicht von x −2.2 … 2.2 und z +10 … −22. Links stehen die Spinde (Spind 47 bei z ≈ −2.25), rechts die Fenster (Mondlicht), die Tür 10b (z = 5) und der Bio-Raum (Tür z = −16, Raum x 2.2 … 9).
+Blickpunkte: `gang, zurueck, spinde, fenster, kamera, decke, boden, biotuer, tafel, skelett, aquarium, uhr`.
+
+Automatisch zu sehen:
+- Spinde mit Aufklebern, Schwarzes Brett mit Flyern, Pokalvitrine, Kinderbilder, Trinkbrunnen, Feuerlöscher
+- Wanduhr (23:57 →), Notausgang, Banner, Schulhof mit Bäumen und Turnhalle vor den Fenstern
+- im Bio-Raum: Tafel mit Mitose-Notizen, Poster, Mikroskope, Skelett, Aquarium mit Fischen und Blasen
+
+| Feld | Wirkung |
+|---|---|
+| `effekt: {lichter: {ab, von, nach, tempo}}` | Bewegungsmelder: Deckenlampen gehen von z `von` bis `nach` nacheinander an (`bewegungsmelder.wav`) |
+| `effekt: {dunkel: s}` | alle Lichter aus |
+| `effekt: {kamera: s}` | Überwachungskamera folgt dem Spieler, rote LED (`kamera_servo.wav`) |
+| `effekt: {spind: s}` | Spind 47 schwingt auf, darin ein Foto (`spind_knarren.wav`) |
+| `effekt: {klingel: s}` | Schulglocke (`schulglocke.wav`) |
+| `effekt: {kreide: {ab, dauer, text}}` | Text schreibt sich an die Tafel (`kreide.wav`) |
+| `effekt: {skelett: s}` | Skelett dreht den Kopf, hebt den Arm (`knochen.wav`) |
+| `handy: {typ: "live", name, zuschauer: [von, bis], kommentare: [[user, text], …], tempo, schon, figur, szene}` | Livestream mit Zuschauerzahl, Kommentaren und Herzen |
+
+Cast: `augen: "leer"` (komplett schwarze Augen). Neue Geräusche: `atmo_schule, bewegungsmelder, kamera_servo, spind_knarren, schulglocke, lautsprecher_knacken, kreide, knochen`
+(`python3 tools/sfx_synth.py mutprobe`). Musik: `gen/musik_16_schule.mp3`, `gen/musik_17_flucht.mp3`.

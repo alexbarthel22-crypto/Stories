@@ -28,7 +28,7 @@ export function drawPhone(g, spec, t, dt = 99) {
   const neu0 = spec.neu_ab ?? 0, shown = iv ? Math.min(msgs0.length, neu0 + 1 + Math.floor(Math.max(0, dt - 0.2) / iv)) : msgs0.length;
   const typing = iv && shown < msgs0.length && (dt - 0.2) % iv > iv - 0.9 && !msgs0[shown].startsWith('>');
   const nt = spec.tippen ? Math.max(0, Math.min(spec.tippen.length, Math.floor((dt - (spec.tipp_ab ?? 0.3)) * (spec.tipp_tempo || 14)))) : 0;
-  const key = JSON.stringify(spec) + '|' + (spec.typ === 'anruf' || spec.typ === 'eingehend' ? Math.floor(t * 2) : 0) + '|' + shown + '|' + typing + '|' + nt + '|' + (spec.tippen ? Math.floor(t * 2.5) % 2 : 0) + '|' + (spec.typ === 'video' ? Math.floor(dt * 8) : 0);
+  const key = JSON.stringify(spec) + '|' + (spec.typ === 'anruf' || spec.typ === 'eingehend' ? Math.floor(t * 2) : 0) + '|' + shown + '|' + typing + '|' + nt + '|' + (spec.tippen ? Math.floor(t * 2.5) % 2 : 0) + '|' + (spec.typ === 'video' || spec.typ === 'live' ? Math.floor(dt * 8) : 0);
   if (key === S.key) return; S.key = key;
   const c = S.canvas.getContext('2d'); c.setTransform(2, 0, 0, 2, 0, 0);
   c.textAlign = 'center'; c.textBaseline = 'middle';
@@ -67,6 +67,29 @@ export function drawPhone(g, spec, t, dt = 99) {
     if (Math.floor(dt * 2) % 2 === 0) { c.fillStyle = '#ff3a2a'; c.beginPath(); c.arc(vx + vw - 40, vy + 14, 5, 0, 7); c.fill(); c.fillStyle = '#ff3a2a'; c.fillText('REC', vx + vw - 32, vy + 18); }
     c.fillStyle = '#333'; c.fillRect(vx, vy + vh + 10, vw, 5); c.fillStyle = '#e8e8e8'; c.fillRect(vx, vy + vh + 10, vw * p, 5);
     c.textAlign = 'center'; c.fillStyle = '#e8e8e8'; c.font = F(700, 22); if (spec.text) wrap(c, spec.text, W / 2, vy + vh + 60, W - 40, 28);
+  } else if (spec.typ === 'live') { // Livestream: Bild, LIVE-Badge, Zuschauer, Kommentare, Herzen
+    const sz = spec.szene || 'gang';
+    const g1 = c.createLinearGradient(0, 0, 0, H); g1.addColorStop(0, '#0a0c14'); g1.addColorStop(1, '#1a1e2a'); c.fillStyle = g1; c.fillRect(0, 0, W, H);
+    // stilisiertes Kamerabild
+    c.strokeStyle = 'rgba(140,160,200,0.35)'; c.lineWidth = 2;
+    if (sz === 'gang') { for (const [x0, x1] of [[0, 120], [W, 180]]) { c.beginPath(); c.moveTo(x0, 80); c.lineTo(x1, 250); c.lineTo(x1, 330); c.lineTo(x0, H); c.stroke(); } c.strokeRect(120, 250, 60, 80); for (let i = 0; i < 6; i++) { c.beginPath(); c.moveTo(0 + i * 8, 120 + i * 40); c.lineTo(110, 270 + i * 9); c.stroke(); } }
+    else { c.strokeRect(40, 140, 220, 120); c.fillStyle = 'rgba(60,120,90,0.25)'; c.fillRect(40, 140, 220, 120); c.fillStyle = 'rgba(230,230,230,0.6)'; c.font = F(700, 16); c.fillText('MIA, DU BIST DRAN', W / 2, 200); }
+    if (spec.figur) { c.fillStyle = '#05060a'; c.beginPath(); c.arc(W / 2 + 40, 300, 22, 0, 7); c.fill(); c.fillRect(W / 2 + 14, 322, 52, 120); c.fillStyle = '#f0f0f0'; c.fillRect(W / 2 + 30, 296, 5, 4); c.fillRect(W / 2 + 46, 296, 5, 4);
+      if (spec.figur === 2) { c.fillStyle = '#2a2018'; c.beginPath(); c.arc(W / 2 - 60, 360, 26, 0, 7); c.fill(); c.fillStyle = '#c84a7a'; c.fillRect(W / 2 - 92, 386, 64, 140); } }
+    // Kopfzeile
+    c.fillStyle = '#e8304a'; roundRect(c, 12, 22, 52, 24, 5); c.fill(); c.fillStyle = '#fff'; c.font = F(900, 14); c.fillText('LIVE', 38, 35);
+    const zv = spec.zuschauer || [100, 100], zk = Math.min(1, dt / (spec.zuschauer_dauer || 6)), zn = Math.round(zv[0] + (zv[1] - zv[0]) * zk);
+    c.fillStyle = 'rgba(0,0,0,0.5)'; roundRect(c, 70, 22, 86, 24, 5); c.fill(); c.fillStyle = '#fff'; c.font = F(800, 14); c.fillText('◉ ' + zn.toLocaleString('de-DE'), 113, 35);
+    c.textAlign = 'right'; c.font = F(800, 15); c.fillText('@' + (spec.name || 'live'), W - 14, 35); c.textAlign = 'center';
+    // Kommentare (von unten)
+    const ks = spec.kommentare || [], tp = spec.tempo || 0.9, nk = Math.min(ks.length, (spec.schon || 0) + Math.floor(Math.max(0, dt - 0.2) / tp) + 1);
+    const vis = ks.slice(Math.max(0, nk - 6), nk); c.textAlign = 'left';
+    vis.forEach(([u, txt], i) => { const y = H - 70 - (vis.length - 1 - i) * 54; const alarm = /!|hinter|wer/i.test(txt);
+      c.fillStyle = alarm ? 'rgba(200,30,50,0.55)' : 'rgba(0,0,0,0.45)'; c.font = F(800, 16); const w2 = Math.min(W - 24, Math.max(c.measureText(txt).width, c.measureText(u).width) + 20); roundRect(c, 12, y - 18, w2, 46, 10); c.fill();
+      c.fillStyle = '#ffd34a'; c.font = F(800, 13); c.fillText(u, 22, y - 2); c.fillStyle = '#fff'; c.font = F(700, 16); c.fillText(txt.length > 30 ? txt.slice(0, 29) + '…' : txt, 22, y + 17); });
+    c.textAlign = 'center';
+    for (let i = 0; i < 6; i++) { const ph = (dt * 0.6 + i / 6) % 1; c.fillStyle = `rgba(255,70,110,${1 - ph})`; c.font = F(900, 22); c.fillText('♥', W - 34 + Math.sin(ph * 8 + i) * 10, H - 60 - ph * 260); }
+    c.fillStyle = 'rgba(255,255,255,0.15)'; roundRect(c, 12, H - 34, W - 24, 24, 12); c.fill(); c.fillStyle = 'rgba(255,255,255,0.6)'; c.font = F(600, 12); c.fillText('Kommentieren …', 70, H - 22);
   } else if (spec.typ === 'alarm') {
     c.fillStyle = '#2a0c0c'; c.fillRect(0, 0, W, H);
     c.fillStyle = '#e1251b'; roundRect(c, 14, 90, W - 28, H - 170, 22); c.fill();
