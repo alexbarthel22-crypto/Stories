@@ -24,4 +24,5 @@ Gruselig ohne Gewalt oder Blut, Jugendsprache, Livestream-Kommentare, Schule als
 
 ## Cover
 
-`mutprobe_1_thumbnail.jpg` (1080×1920), erzeugt mit `tools/thumbnail.js`.
+`mutprobe_1_thumbnail.jpg` (1080×1920). Erzeugt mit:
+`node tools/thumbnail.js mutprobe_1 --bei 83.1 --titel "Ben war|draußen.|Wer war *dann bei mir?*" --unter "DIE MUTPROBE" --oben "00:01"`
