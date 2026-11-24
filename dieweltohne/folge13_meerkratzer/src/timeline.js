@@ -53,7 +53,7 @@ export const CAPTIONS = [
   [2.45, 4.85, 'Nur geht es nicht hoch. Sondern runter.'],
   [5.15, 7.1, '3.640 Etagen. Den untersten Knopf hat noch nie jemand gedrückt.'],
   [7.25, 8.85, 'Bis heute.'],
-  [9.3, 11.1, 'Etage −3. Fischschwarm vorm Fenster.'],
+  [9.3, 11.1, 'Gleich unter der Oberfläche: Fische vorm Fenster.'],
   [11.5, 13.0, 'Und kein Netz mehr. Funk kommt durch Meerwasser kaum durch.'],
   [13.35, 14.85, 'Moment. Was war das für ein Schatten?'],
   [15.3, 17.6, 'Ein Pottwal. Er taucht bis über 2.000 Meter tief.'],

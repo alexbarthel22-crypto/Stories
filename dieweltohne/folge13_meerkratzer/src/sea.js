@@ -300,9 +300,9 @@ export async function build(renderer) {
       show(school, true); const scare = smooth(SHADOW - 0.1, SHADOW + 0.6, T);
       updateSchool(school, T, new THREE.Vector3(2.2, 1.6 + (d - 6) * 0.4, -6.5), scare);
       // Schatten: der Pottwal zieht hoch oben vorbei
-      if (T > SHADOW - 0.5) { show(whale, true); whale.position.set(lerp(16, -10, (T - SHADOW + 0.5) / 2.3), 11 - (d - 20) * 0, -15); whale.rotation.set(0, 0.1, 0.05); swimWhale(whale, T, 0.18); }
+      if (T > SHADOW - 0.5) { show(whale, true); whale.position.set(lerp(13, -12, (T - SHADOW + 0.5) / 2.3), 4.6, -12); whale.rotation.set(0, 0.1, 0.05); swimWhale(whale, T, 0.18); }
       const dim = smooth(SHADOW, SHADOW + 0.5, T) * (1 - smooth(SHADOW + 1.2, SHADOW + 1.9, T)); hemi.intensity *= 1 - 0.45 * dim; sun.intensity *= 1 - 0.7 * dim;
-      if (id === 'shallow') { lk.set(0.6 + 0.4 * smooth(SHADOW, SHADOW + 0.8, T), 1.4 + 1.6 * smooth(SHADOW, SHADOW + 0.9, T), -5); }
+      if (id === 'shallow') { lk.set(0.6 + 0.4 * smooth(SHADOW, SHADOW + 0.8, T), 1.4 + 0.9 * smooth(SHADOW - 0.3, SHADOW + 0.7, T), -5); }
       snowM.opacity = 0.3;
     }
     if (id === 'whale') {
@@ -355,7 +355,7 @@ export async function build(renderer) {
       const k = smooth(46.6, 50.8, T); snail.position.set(lerp(-0.6, 1.1, k), 1.3 + 0.05 * Math.sin(T * 1.3), lerp(-2.0, -1.9, k));
       snail.rotation.set(0, Math.PI + 0.15 * Math.sin(T * 1.1), 0.05 * Math.sin(T * 1.7));
       snail.userData.finL.rotation.x = 0.35 * Math.sin(T * 4.5); snail.userData.finR.rotation.x = -0.35 * Math.sin(T * 4.5);
-      lk.copy(snail.position).add(new THREE.Vector3(0.1, 0.02, 0)); fov = 32; cp.set(0.1, 1.5, 0.5);
+      lk.copy(snail.position).add(new THREE.Vector3(-0.15, 0.01, 0)); fov = 30; cp.set(0.1, 1.5, 0.5);
     }
     if (id === 'bottom') {
       outside = 1; show(floor, true); show(wallB, true); cukes.forEach(c => { show(c, true); });

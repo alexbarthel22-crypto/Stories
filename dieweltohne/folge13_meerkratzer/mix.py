@@ -171,7 +171,7 @@ tmp = os.path.join(HERE, 'mix_roh.wav')
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', tmp], input=mix.tobytes(), check=True)
 out = os.path.join(HERE, 'mix.wav')
 # TikTok-Lautheit: ca. -14 LUFS, Spitzen begrenzt
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'acompressor=threshold=-32dB:ratio=3.5:attack=10:release=350:makeup=7,loudnorm=I=-10.6:TP=-1.5:LRA=8,alimiter=limit=0.8:attack=1:release=60:level=false', '-ar', str(SR), '-c:a', 'pcm_s16le', out], check=True)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'acompressor=threshold=-32dB:ratio=3.5:attack=10:release=350:makeup=7,loudnorm=I=-10.4:TP=-2.5:LRA=8,alimiter=limit=0.7:attack=1:release=60:level=false', '-ar', str(SR), '-c:a', 'pcm_s16le', out], check=True)
 os.remove(tmp)
 print('mix.wav fertig')
 
