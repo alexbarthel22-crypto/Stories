@@ -2,8 +2,9 @@
 import {THREE, mat, mesh, rng, clamp, lerp, canvasTex} from './lib.js';
 
 // Arme und Beine rudern (k = Stärke 0..1)
-export function flail(p, T, seed = 0, k = 1) {
-  const u = p.userData; const s = seed * 1.7;
+export function flail(p, T0, seed = 0, k0 = 1) {
+  // langsamer und ruhiger als echtes Strampeln: Schwerelos rudern Menschen eher träge
+  const u = p.userData; const s = seed * 1.7, T = T0 * 0.55, k = k0 * 0.8;
   u.armL.rotation.x = lerp(u.armL.rotation.x, -1.2 + 0.9 * Math.sin(T * 6.1 + s), k);
   u.armR.rotation.x = lerp(u.armR.rotation.x, -1.0 + 0.9 * Math.sin(T * 5.3 + s + 1.3), k);
   u.armL.rotation.z = lerp(u.armL.rotation.z, -1.1 - 0.5 * Math.sin(T * 4.2 + s), k);

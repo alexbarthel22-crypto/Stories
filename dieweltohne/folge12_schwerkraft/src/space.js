@@ -38,14 +38,25 @@ export async function build(renderer) {
   const cloudT = canvasTex(W, H, (g) => { const img = g.createImageData(W, H); const nc = makeNoise(77);
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = nc(x / W * 12, y / H * 6); const a = clamp((v - 0.52) * 4) * 255; const i = (y * W + x) * 4; img.data[i] = img.data[i + 1] = img.data[i + 2] = 255; img.data[i + 3] = a; }
     g.putImageData(img, 0, 0); });
-  const crackT = canvasTex(2048, 1024, (g, w, h) => { g.fillStyle = '#000'; g.fillRect(0, 0, w, h); const r = rng(41);
-    const line = (x, y, a, n, wd) => { g.lineWidth = wd; g.beginPath(); g.moveTo(x, y); for (let k = 0; k < n; k++) { a += (r() - 0.5) * 0.9; x += Math.cos(a) * 26; y += Math.sin(a) * 14; g.lineTo(x, y); if (r() < 0.06 && wd > 2) { g.stroke(); line(x, y, a + (r() - 0.5) * 2, n / 2, wd * 0.6); g.beginPath(); g.moveTo(x, y); } } g.stroke(); };
-    g.strokeStyle = '#ff6a1a'; for (let i = 0; i < 46; i++) line(r() * w, h * 0.12 + r() * h * 0.76, r() * 7, 30 + r() * 50, 4 + r() * 6);
-    g.strokeStyle = '#ffd27a'; g.globalAlpha = 0.6; for (let i = 0; i < 30; i++) line(r() * w, h * 0.15 + r() * h * 0.7, r() * 7, 20 + r() * 30, 2); });
+  // Bruchzonen: einmal erzeugte Pfade, gezeichnet als (a) dunkle Spalten mit Staubsaum (Oberfläche) und (b) sehr feine Glut tief im Spalt
+  const paths = []; { const r = rng(41); const gen = (x, y, a, n, wd, depth) => { const pts = [[x, y]]; for (let k = 0; k < n; k++) { a += (r() - 0.5) * 0.7; x += Math.cos(a) * 18; y += Math.sin(a) * 9; pts.push([x, y]);
+      if (r() < 0.07 && depth < 2) gen(x, y, a + (r() < 0.5 ? 1 : -1) * (0.6 + r()), Math.floor(n / 2), wd * 0.55, depth + 1); } paths.push({pts, wd}); };
+    for (let i = 0; i < 26; i++) gen(r() * 2048, 1024 * (0.15 + r() * 0.7), r() * 7, 30 + Math.floor(r() * 40), 3 + r() * 5, 0); }
+  const drawPaths = (g, wMul, style, blur = 0) => { g.lineJoin = 'round'; g.lineCap = 'round'; g.shadowBlur = blur; g.shadowColor = style; g.strokeStyle = style;
+    for (const p of paths) for (const off of [-2048, 0, 2048]) { g.lineWidth = p.wd * wMul; g.beginPath(); p.pts.forEach(([x, y], i) => i ? g.lineTo(x + off, y) : g.moveTo(x + off, y)); g.stroke(); } g.shadowBlur = 0; };
+  const crackT = canvasTex(2048, 1024, (g, w, h) => { g.fillStyle = '#000'; g.fillRect(0, 0, w, h); drawPaths(g, 0.22, '#ff7a2a'); });
+  const riftT = canvasTex(2048, 1024, (g, w, h) => { g.clearRect(0, 0, w, h);
+    drawPaths(g, 5.5, 'rgba(176,150,118,0.22)', 18);   // Staubsaum
+    drawPaths(g, 2.4, 'rgba(120,96,72,0.55)', 6);      // aufgeworfene Ränder
+    drawPaths(g, 1.0, 'rgba(28,18,12,0.95)');          // Spalte
+  });
   const earthM = new THREE.MeshStandardMaterial({map: colT, roughness: 0.85, metalness: 0, emissive: '#ffffff', emissiveMap: crackT, emissiveIntensity: 0});
   const earth = new THREE.Group(); scene.add(earth);
   const ball = mesh(new THREE.SphereGeometry(1, 96, 64), earthM, 0, 0, 0, earth); ball.castShadow = ball.receiveShadow = false;
   const cut = mesh(new THREE.SphereGeometry(1, 96, 64, 0, Math.PI * 1.5), new THREE.MeshStandardMaterial({map: colT, roughness: 0.85, emissive: '#ffffff', emissiveMap: crackT, emissiveIntensity: 0, side: THREE.DoubleSide}), 0, 0, 0, earth);
+  const riftM = new THREE.MeshStandardMaterial({map: riftT, transparent: true, depthWrite: false, roughness: 1, opacity: 0});
+  const rift = mesh(new THREE.SphereGeometry(1.004, 96, 64), riftM, 0, 0, 0, earth); rift.castShadow = false;
+  const riftCut = mesh(new THREE.SphereGeometry(1.004, 96, 64, 0, Math.PI * 1.5), riftM, 0, 0, 0, earth); riftCut.castShadow = false;
   const clouds = mesh(new THREE.SphereGeometry(1.012, 64, 48), new THREE.MeshStandardMaterial({map: cloudT, transparent: true, depthWrite: false, roughness: 1}), 0, 0, 0, earth);
   // Atmosphäre: Leuchtsaum (Fresnel)
   const atmoM = new THREE.ShaderMaterial({uniforms: {c: {value: new THREE.Color('#6fb4ff')}, a: {value: 1}, p: {value: 3.2}}, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.BackSide,
@@ -81,16 +92,16 @@ export async function build(renderer) {
   const tagNew = new THREE.Sprite(new THREE.SpriteMaterial({map: tagT('GERADEAUS', '#ffb35a'), transparent: true, depthWrite: false})); tagNew.scale.set(1.5, 0.28, 1); scene.add(tagNew);
 
   const camera = new THREE.PerspectiveCamera(40, 1080 / 1920, 0.01, 1000); scene.add(camera);
-  const vSites = [[0.3, 0.8], [1.4, 0.2], [2.5, -0.5], [3.6, 0.4], [4.4, -0.2], [5.3, 0.6], [0.9, -0.7], [2.0, 0.5]].map(([lon, lat]) => V3(Math.cos(lat) * Math.cos(lon), Math.sin(lat), Math.cos(lat) * Math.sin(lon)));
+  const vSites = (() => { const r = rng(61); return Array.from({length: 26}, () => [r() * 6.28, (r() - 0.5) * 1.5]); })().map(([lon, lat]) => V3(Math.cos(lat) * Math.cos(lon), Math.sin(lat), Math.cos(lat) * Math.sin(lon)));
 
   return {scene, camera, update(shot, T) {
     const orbit = shot.id === 'orbit', core = shot.id === 'core', quake = shot.id === 'quake';
     earth.rotation.y = core ? 0.03 * (T - 47) : T * 0.03; clouds.rotation.y = T * 0.008;
     // Bahn: Die Erde fährt die Gerade, die alte Bahn krümmt sich weg (überzeichnet)
     const d = orbit ? (T - 39) * 0.32 : 0; earth.position.set(0, 0, d);
-    arc.visible = straight.visible = tagOld.visible = tagNew.visible = orbit;
+    arc.visible = straight.visible = orbit; tagOld.visible = tagNew.visible = false;
     if (orbit) { const a = smooth(39.4, 40.4, T); dotM.opacity = 0.7 * a; strM.opacity = 0.9 * smooth(41.5, 42.5, T); tagOld.material.opacity = a; tagNew.material.opacity = strM.opacity;
-      tagOld.position.set(-1.15, 0.2, 3.4); tagNew.position.set(1.3, 0.2, 3.2); }
+      tagOld.position.set(-1.15, 0.15, 5.3); tagNew.position.set(0.6, 0.15, 5.3); }
     moon.visible = orbit; moon.position.set(2.6 + 0.02 * (T - 39), 0.25, -1.2 + d * 1.1); moon.rotation.y = T * 0.02;
     // Atmosphäre löst sich (ab Mitte der Stufe 5), im Kern-Shot schon dünn
     const leak = orbit ? smooth(43, 47, T) : core ? 1 : quake ? 0.35 : 0;
@@ -104,17 +115,18 @@ export async function build(renderer) {
     const swell = core ? 1 + 0.05 * smooth(50.5, 54.8, T) : quake ? 1 + 0.05 * (1 - smooth(CRASH - 0.25, CRASH + 0.05, T)) : 1;
     cut.scale.setScalar(swell); clouds.scale.setScalar(swell); caps.scale.setScalar(1);
     capM.emissiveIntensity = core ? 0.55 + 0.35 * smooth(49, 54, T) * (0.8 + 0.2 * Math.sin(T * 9)) : 0.55;
-    const glowK = core ? 1.2 * smooth(51, 54.8, T) : quake ? (T < CRASH ? 0.5 : 0.5 + 2.0 * smooth(CRASH, CRASH + 1.2, T)) * (0.85 + 0.15 * flicker(T, 3)) : 0;
+    const glowK = core ? 0.35 * smooth(51, 54.8, T) : quake ? (T < CRASH ? 0.2 : 0.2 + 0.5 * smooth(CRASH, CRASH + 1.2, T)) * (0.85 + 0.15 * flicker(T, 3)) : 0;
+    riftM.opacity = core ? 0.8 * smooth(50.5, 54.5, T) : quake ? (T < CRASH ? 0.7 : 0.7 + 0.3 * smooth(CRASH, CRASH + 1, T)) : 0; rift.visible = !core && riftM.opacity > 0; riftCut.visible = core && riftM.opacity > 0; rift.scale.setScalar(swell); riftCut.scale.setScalar(swell);
     earthM.emissiveIntensity = cut.material.emissiveIntensity = glowK; ball.scale.setScalar(swell);
     // Aufprall: Druckwelle und Vulkane
     shock.visible = quake && T > CRASH && T < CRASH + 2.5; if (shock.visible) { const k = (T - CRASH) / 2.5; shock.scale.setScalar(1 + k * 2.6); ringM.opacity = 0.8 * (1 - k); shock.lookAt(camera.position); }
     plumes.visible = lava.visible = quake && T > CRASH;
     if (quake) { earth.updateMatrixWorld(true); const src = vSites.map((v, i) => earth.localToWorld(v.clone().multiplyScalar(1.0)));
-      updateParticles(plumes, src.map((p, i) => ({pos: p, r: 0.03, t0: CRASH + i * 0.15, type: 'smoke', size: 0.25, rise: 0, alpha: 0.6, col: [0.25, 0.2, 0.18]})), T, V3(0, 0, 0));
+      updateParticles(plumes, src.map((p, i) => ({pos: p, r: 0.05, t0: CRASH + (i % 9) * 0.12, type: 'smoke', size: 0.26, rise: 0.001, alpha: 0.5, col: i % 3 ? [0.55, 0.48, 0.4] : [0.3, 0.26, 0.24]})), T, V3(0, 0, 0));
       // Rauch steigt radial nach außen: Positionen von der Mitte weg schieben
       const P = plumes.geometry.attributes.position.array; for (let i = 0; i < P.length; i += 3) { if (P[i + 1] < -900) continue; const v = V3(P[i], P[i + 1], P[i + 2]); const L = v.length(); if (L > 0.5) { v.multiplyScalar(1 + (L - 0.98) * 0.4 + 0.02); P[i] = v.x; P[i + 1] = v.y; P[i + 2] = v.z; } }
       plumes.geometry.attributes.position.needsUpdate = true;
-      updateParticles(lava, src.map((p, i) => ({pos: p.clone().multiplyScalar(1.01), r: 0.02, t0: CRASH + i * 0.15, type: 'flame', size: 0.12, power: 1.4, rise: 0.05})), T, V3(0, 0, 0)); }
+      updateParticles(lava, src.filter((p, i) => i % 4 === 0).map((p, i) => ({pos: p.clone().multiplyScalar(1.005), r: 0.01, t0: CRASH + i * 0.15, type: 'flame', size: 0.05, power: 0.6, rise: 0.02})), T, V3(0, 0, 0)); }
 
     // ---------- Kamera ----------
     let pos, lk; camera.fov = 40; camera.up.set(0, 1, 0);

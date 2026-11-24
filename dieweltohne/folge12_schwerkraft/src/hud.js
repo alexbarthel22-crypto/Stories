@@ -78,7 +78,7 @@ export function drawHUD(g, T, shot) {
   const m1 = v => dec(Math.max(0, v), 1) + ' m';
   if (shot.id === 'mensa') { label = 'SCHWEBENDE SPAGHETTI'; value = de(Math.floor(2400 * smooth(VANISH, 16.5, T))); sub = ws; alarm = T > SAUCE_HIT ? 1 : 0; }
   if (shot.id === 'gym') { label = 'HÖHE ÜBER DEM KORB'; value = m1(Math.min(3.6, Math.max(0, 2.17 * (T - JUMP) - 1.2))); sub = ws; alarm = T > BONK ? 1 : 0; }
-  if (shot.id === 'pool') { label = 'ENTFERNUNG ZUM WASSER'; { const d = Math.max(0, T - BOMB), h = 10.1 + 0.5 * d, z = Math.max(0, -5.4 + 3 * d - 6); value = m1(Math.hypot(h, z)); } sub = ws; alarm = T > BOMB + 1 ? 1 : 0; }
+  if (shot.id === 'pool') { label = 'HÖHE ÜBER DEN FLIESEN'; { const d = Math.max(0, T - BOMB); value = m1(14.6 + 0.5 * d); } sub = ws; alarm = T > BOMB + 1 ? 1 : 0; }
   if (shot.id === 'bus') { label = 'BUS ÜBER DER STRASSE'; value = m1(T < BUMP ? 0 : (T - BUMP) * 1.25); sub = ws; alarm = T > BUMP ? 1 : 0; }
   if (shot.id === 'orbit') { label = 'ABWEICHUNG VON DER BAHN'; value = de(Math.min(300, 300 * (10 - wl) / 10)) + ' km'; sub = ws; alarm = 1; }
   if (shot.id === 'core') { label = 'DRUCK IM ERDKERN'; value = '3,5 Mio. bar'; sub = ws; alarm = 1; }
@@ -111,6 +111,10 @@ export function drawHUD(g, T, shot) {
     g.restore();
   }
 
+  // Legende im Weltall-Shot (statt Beschriftung im Bild)
+  if (shot.id === 'orbit') { const a = smooth(40.0, 40.8, T); g.save(); g.globalAlpha = a; g.font = '500 26px Plex'; g.textAlign = 'left'; g.textBaseline = 'middle';
+    for (let i = 0; i < 5; i++) { g.fillStyle = 'rgba(255,255,255,0.85)'; g.beginPath(); g.arc(700 + i * 14, 170, 3.5, 0, 7); g.fill(); } spaced(g, 'ALTE BAHN', 790, 171, 3);
+    g.globalAlpha = a * smooth(41.5, 42.5, T); g.strokeStyle = '#ffb35a'; g.lineWidth = 5; g.beginPath(); g.moveTo(696, 222); g.lineTo(770, 222); g.stroke(); g.fillStyle = '#ffb35a'; spaced(g, 'GERADEAUS', 790, 223, 3); g.restore(); }
   // Untertitel
   for (const [a, b, txt] of CAPTIONS) {
     if (T < a - 0.1 || T > b + 0.1) continue;

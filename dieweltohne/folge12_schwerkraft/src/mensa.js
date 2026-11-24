@@ -60,7 +60,8 @@ export async function build(renderer) {
     const nest = mesh(new THREE.SphereGeometry(0.085, 16, 10), noodleM, -0.05, 0.05, 0, g); nest.scale.set(1, 0.42, 1);
     if (!big) for (let k = 0; k < 2; k++) mesh(new THREE.SphereGeometry(0.02, 10, 8), mat('#6b3a22', {roughness: 0.7}), -0.07 + k * 0.04, 0.075, 0.02, g);
     const cup = mesh(new THREE.CylinderGeometry(0.035, 0.03, 0.1, 16), mat(r() < 0.5 ? '#e5edf3' : '#d8432f', {roughness: 0.4}), 0.15, 0.06, -0.08, g);
-    return {g, cup, nest};
+    const drink = blob(r() < 0.5 ? '#3a1d10' : '#f2a33a', 0.03); drink.material.transparent = true; drink.material.opacity = 0.85; g.add(drink); drink.position.set(0.15, 0.1, -0.08); drink.visible = false;
+    return {g, cup, nest, drink, s: r() * 9, vy: 0.04 + r() * 0.05};
   }
   for (const tx of [-3.2, 0, 3.2]) {
     const t = new THREE.Group(); t.position.set(tx, 0, 0); scene.add(t); tables.push(t);
@@ -113,6 +114,25 @@ export async function build(renderer) {
   for (let i = 0; i < 10; i++) { const s = strand(300 + i, 0.25); s.position.set(0.1 + r() * 0.4, 0.86, -0.25 + r() * 0.5); scene.add(s);
     extras.push({o: s, d: new Drift(s, V3((r() - 0.5) * 0.08, 0.12 + r() * 0.12, (r() - 0.5) * 0.08), V3(r(), r(), r()), VANISH), kind: 's'}); }
 
+  // Krümel (Brot, Croutons) und lose Stühle, die driften
+  const crumbG = new THREE.BufferGeometry(); const crumbN = 600, crumbP0 = new Float32Array(crumbN * 3), crumbV = new Float32Array(crumbN * 3);
+  for (let i = 0; i < crumbN; i++) { crumbP0.set([lerp(-3.8, 3.8, r()), 0.79 + r() * 0.05, lerp(-2.9, 2.9, r())], i * 3); crumbV.set([(r() - 0.5) * 0.05, 0.02 + r() * 0.12, (r() - 0.5) * 0.05], i * 3); }
+  crumbG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(crumbN * 3), 3));
+  const crumbs = new THREE.Points(crumbG, new THREE.PointsMaterial({color: '#c9a46a', size: 0.012, sizeAttenuation: true})); crumbs.frustumCulled = false; scene.add(crumbs);
+  const chairs = []; for (let i = 0; i < 7; i++) { const c = new THREE.Group(); const x = [-4.6, -1.6, 1.6, 4.6, -4.6, 4.6, 1.6][i], z = [-3.6, 3.5, -3.6, 3.4, 1.2, -1.0, 3.6][i]; c.position.set(x, 0, z); scene.add(c);
+    const cm = mat(['#e86f2c', '#2f8f6b', '#3f6fb5'][i % 3], {roughness: 0.5}); mesh(new THREE.BoxGeometry(0.42, 0.04, 0.42), cm, 0, 0.45, 0, c); mesh(new THREE.BoxGeometry(0.42, 0.4, 0.04), cm, 0, 0.68, -0.2, c);
+    for (const [a, b] of [[-0.18, -0.18], [0.18, -0.18], [-0.18, 0.18], [0.18, 0.18]]) mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.45, 6), legM, a, 0.225, b, c);
+    chairs.push({c, v: V3((r() - 0.5) * 0.12, 0.04 + r() * 0.1, (r() - 0.5) * 0.12), w: V3((r() - 0.5) * 0.4, (r() - 0.5) * 0.6, (r() - 0.5) * 0.4), p0: c.position.clone(), r0: r() * 6}); }
+  // Decke über dem Pudding: Soßenflecken, klebende Spaghetti, ein Tablett, Lampe
+  const ceilMess = new THREE.Group(); scene.add(ceilMess);
+  const splatT = canvasTex(256, 256, (g, w, h) => { const R = rng(13); g.clearRect(0, 0, w, h); g.fillStyle = 'rgba(140,32,20,0.92)'; g.beginPath(); g.arc(128, 128, 46, 0, 7); g.fill();
+    for (let i = 0; i < 9; i++) { const a = R() * 7, d = 34 + R() * 30, rr = 6 + R() * 12; g.beginPath(); g.arc(128 + Math.cos(a) * d, 128 + Math.sin(a) * d, rr, 0, 7); g.fill(); g.lineWidth = rr * 0.8; g.strokeStyle = 'rgba(140,32,20,0.92)'; g.beginPath(); g.moveTo(128, 128); g.lineTo(128 + Math.cos(a) * d, 128 + Math.sin(a) * d); g.stroke(); }
+    g.fillStyle = 'rgba(255,190,170,0.25)'; g.beginPath(); g.arc(112, 112, 16, 0, 7); g.fill(); });
+  for (let i = 0; i < 6; i++) { const sp = mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshStandardMaterial({map: splatT, transparent: true, depthWrite: false, roughness: 0.3}), (r() - 0.5) * 1.3, -0.003 - i * 0.0005, (r() - 0.5) * 1.3, ceilMess); sp.rotation.set(Math.PI / 2, 0, r() * 6); sp.scale.setScalar(0.14 + r() * 0.16); sp.castShadow = false; }
+  for (let i = 0; i < 14; i++) { const st = strand(700 + i, 0.25 + r() * 0.2); st.position.set((r() - 0.5) * 1.2, -0.02 - r() * 0.12, (r() - 0.5) * 1.2); st.rotation.set(Math.PI / 2 * (0.6 + r() * 0.5), r() * 3, 0); ceilMess.add(st); }
+  { const tr = mesh(new RoundedBoxGeometry(0.46, 0.02, 0.34, 2, 0.008), mat('#d8432f', {roughness: 0.4}), 0.55, -0.012, -0.35, ceilMess); tr.rotation.y = 0.5;
+    for (let k = 0; k < 3; k++) mesh(new THREE.SphereGeometry(0.022, 10, 8), mat('#6b3a22', {roughness: 0.7}), -0.4 + k * 0.08, -0.025, 0.3 + k * 0.05, ceilMess); }
+  const mlamp = mesh(new THREE.BoxGeometry(1.2, 0.05, 0.3), lampM, -0.5, -0.03, 0.45, ceilMess); mlamp.castShadow = false;
   // ---------- Finale: Chaos (nach dem Beben) ----------
   const mess = new THREE.Group(); scene.add(mess); mess.visible = false;
   const plaster = mat('#d9d6cf', {roughness: 1});
@@ -173,6 +193,10 @@ export async function build(renderer) {
         flail(p, T, q.seed, smooth(VANISH + 0.3, VANISH + 1.3, T)); brows(p, k, 0); mouthOpen(p, 0.5 + 0.3 * Math.sin(T * 8 + q.seed) * k); }
     });
     drifts.forEach(d => { if (!fin) d.at(T); });
+    people.forEach(q => { const d = q.tr.drink; d.visible = !fin && T > VANISH; if (d.visible) { d.position.set(0.15, 0.1 + q.tr.vy * dT, -0.08); wobble(d, T, q.tr.s); d.scale.multiplyScalar(smooth(VANISH, VANISH + 0.8, T)); } });
+    { const P = crumbG.attributes.position.array; for (let i = 0; i < crumbN * 3; i++) P[i] = crumbP0[i] + crumbV[i] * dT; crumbG.attributes.position.needsUpdate = true; crumbs.visible = !fin; }
+    chairs.forEach(ch => { if (fin) { ch.c.position.set(ch.p0.x, 0.0, ch.p0.z); ch.c.rotation.set(Math.PI / 2 * (ch.r0 > 3 ? 1 : 0), ch.r0, 0); if (ch.r0 > 3) ch.c.position.y = 0.21; return; }
+      ch.c.position.copy(ch.p0).addScaledVector(ch.v, dT); ch.c.rotation.set(ch.w.x * dT, ch.r0 + ch.w.y * dT, ch.w.z * dT); });
     extras.forEach(e => { e.o.visible = !fin && T > VANISH; if (!fin) { e.d.at(T); if (e.kind === 'b') wobble(e.o, T, e.seed); } });
     // ---- Springer (jubelt bei 9,6 s, fliegt mit 1,1 m/s weiter nach oben) ----
     { const p = jumper; unseat(p); posePerson(p, {armsUp: 1}); p.rotation.set(0, 0.6, 0); const t0 = 9.6;
@@ -231,6 +255,7 @@ export async function build(renderer) {
       // Pudding: klebt kopfüber an der Decke, fällt bei PUD genau in die Hand
       guy.updateMatrixWorld(true); const hp = handPos(guy);
       const top = V3(hp.x, CEIL - 0.04, hp.z), fall = clamp((T - (PUD - 0.75)) / 0.75);
+      ceilMess.visible = true; ceilMess.position.set(top.x, CEIL, top.z);
       if (T < PUD - 0.75) { pudding.position.copy(top); pudding.rotation.set(Math.PI, 0, 0.1 * Math.sin(T * 3) * smooth(83, 85, T)); }
       else if (T < PUD) { pudding.position.lerpVectors(top, hp.clone().add(V3(0, 0.05, 0)), easeIn(fall)); pudding.rotation.set(Math.PI * (1 - easeOut(fall)) + 0.2 * Math.sin(fall * 9), 0, 0); }
       else { pudding.position.copy(hp).add(V3(0, 0.05 - 0.02 * Math.exp(-(T - PUD) * 8) * Math.sin((T - PUD) * 40), 0)); pudding.rotation.set(0, 0, 0); }
@@ -238,7 +263,7 @@ export async function build(renderer) {
       dust.visible = true;
       updateParticles(dust, [{pos: V3(0, 1.8, 0), r: 9, t0: 70, type: 'smoke', size: 2.8, rise: 0.05, alpha: 0.12, col: [0.85, 0.75, 0.62]}], T, V3(0.05, 0, 0.02));
     }
-    if (!fin) mine.g.visible = true;
+    if (!fin) { mine.g.visible = true; ceilMess.visible = false; }
 
     // ---------- Kamera ----------
     camera.fov = 50; let pos, tgt; camera.up.set(0, 1, 0);
@@ -250,7 +275,7 @@ export async function build(renderer) {
       const k = smooth(12.6, 15.0, T); const fh = headPos(fr, V3(0, 0, 0)); pos = V3(lerp(0.05, -0.1, k), fh.y + 0.12, lerp(1.25, 1.05, k)); tgt = fh.clone().add(V3(0.12, -0.08, -0.05)); camera.fov = lerp(44, 38, k);
       if (T > SAUCE_HIT) pos.add(shake(0.012 * (1 - smooth(SAUCE_HIT, SAUCE_HIT + 0.5, T)), 3)); }
     else if (!fin) { // weit oben: alle schweben aus den Bänken
-      const k = smooth(15, 17, T); pos = V3(lerp(4.6, 4.2, k), lerp(2.9, 3.0, k), lerp(5.2, 4.8, k)); tgt = V3(0, 1.4, 0); camera.fov = 50; }
+      const k = smooth(15, 17, T); pos = V3(lerp(5.9, 5.5, k), lerp(2.2, 2.4, k), lerp(2.4, 2.0, k)); tgt = V3(1.2, 1.45, -0.6); camera.fov = 52; }
     else { // Finale
       if (T < 83.6) { const k = smooth(80, 83.6, T); pos = V3(lerp(-2.6, -1.4, k), lerp(1.8, 1.25, k), lerp(-1.6, -0.9, k)).add(shake(0.006, 1)); tgt = V3(0.6, 0.55, 0.3); camera.fov = 46; }
       else if (T < PUD - 0.2) { const k = smooth(83.6, 85.2, T); pos = V3(-0.5, 1.0, -0.4); tgt = V3().lerpVectors(V3(0.75, 0.6, 0.35), pudding.position, k); camera.fov = lerp(46, 16, k); }

@@ -48,7 +48,8 @@ export async function build(renderer) {
   const rimM = mat('#e2541f', {metalness: 0.4, roughness: 0.4});
   const rim = mesh(new THREE.TorusGeometry(0.23, 0.012, 8, 32), rimM, 0, RIM, BZ, hoop); rim.rotation.x = Math.PI / 2;
   const netM = new THREE.MeshStandardMaterial({color: '#ffffff', wireframe: true, transparent: true, opacity: 0.8});
-  mesh(new THREE.CylinderGeometry(0.23, 0.15, 0.42, 12, 3, true), netM, 0, RIM - 0.21, BZ, hoop);
+  const net = mesh(new THREE.CylinderGeometry(0.23, 0.15, 0.42, 12, 3, true), netM, 0, RIM + 0.21, BZ, hoop); net.rotation.x = Math.PI; // schwebt ohne Schwerkraft nach oben
+  const sweat = []; for (let i = 0; i < 14; i++) { const b = mesh(new THREE.SphereGeometry(0.012 + (i % 4) * 0.004, 10, 8), new THREE.MeshPhysicalMaterial({color: '#dff2ff', roughness: 0.05, clearcoat: 1, transparent: true, opacity: 0.7}), 0, -50, 0, scene); b.castShadow = false; sweat.push({b, d: new THREE.Vector3(Math.sin(i * 2.4), 0.6 + (i % 3) * 0.3, Math.cos(i * 2.4)).normalize(), v: 0.25 + (i % 5) * 0.08}); }
   mesh(new THREE.BoxGeometry(0.15, 0.15, 3.2), steel, 0, RIM + 0.6, BZ - 2.1, hoop); mesh(new THREE.BoxGeometry(0.15, 2.2, 0.15), steel, 0, CEIL - 1.1, BZ - 3.6, hoop);
   // Weichboden (für die Landung)
   const matG = new THREE.Group(); scene.add(matG);
@@ -113,6 +114,9 @@ export async function build(renderer) {
       else { const d = T - JUMP; const s = guyState(JUMP).pos; ball.position.set(s.x + 0.3 * d, s.y + 1.1 + 2.5 * d, s.z - 0.5 * d); if (ball.position.y > CEIL - 0.6) ball.position.y = CEIL - 0.6 - 0.1 * (ball.position.y - CEIL + 0.6); }
       ball.rotation.set(T * 4, T * 2, 0); }
     else ball.position.set(-1.6, 0.12, -3.2);
+    net.visible = true; net.position.y = drop ? RIM - 0.21 : RIM + 0.21 + 0.02 * Math.sin(T * 1.3); net.rotation.x = drop ? 0 : Math.PI + 0.08 * Math.sin(T * 0.9); net.scale.set(1, drop ? 1 : 1.05, 1);
+    // Schweißtropfen lösen sich beim Aufprall an der Decke
+    sweat.forEach((s2, i) => { const t = T - BONK; s2.b.visible = !drop && t > 0; if (!s2.b.visible) return; guy.updateMatrixWorld(true); const h = u.head.localToWorld(V3(0, 0.05, 0)); s2.b.position.copy(h).addScaledVector(s2.d, 0.1 + s2.v * t * 0.6); });
     // Klasse
     const tgt = pivot.position;
     kids.forEach((q, i) => { const p = q.p; posePerson(p, {}); p.position.set(q.x, 0, q.z); look(p, V3(tgt.x, 0, tgt.z));
@@ -134,7 +138,7 @@ export async function build(renderer) {
       else if (T < 21.2) { // von unten: er steigt am Korb vorbei bis zur Decke
         const k = smooth(JUMP + 0.5, 21.2, T); pos = V3(1.7, 1.1, BZ + 3.6); lk = V3(pivot.position.x, Math.min(pivot.position.y + 0.5, CEIL - 0.6), pivot.position.z); camera.fov = lerp(60, 54, k);
         if (T > BONK && T < BONK + 0.5) pos.add(sh(0.05 * (1 - (T - BONK) / 0.5))); }
-      else { const k = smooth(21.2, 24, T); pos = V3(lerp(-1.4, -1.7, k), 1.5, lerp(BZ + 4.4, BZ + 4.9, k)); lk = V3(0, lerp(CEIL - 1.6, CEIL - 1.9, k), BZ - 0.2); camera.fov = lerp(48, 52, k); }
+      else { const k = smooth(21.2, 24, T); pos = pivot.position.clone().add(V3(lerp(1.3, 1.6, k), lerp(0.05, -0.25, k), lerp(-1.5, -1.9, k))); lk = pivot.position.clone().add(V3(0, 0.45, 0)); camera.fov = lerp(50, 58, k); }
     } else {
       const k = smooth(58, 61, T); pos = V3(lerp(3.4, 3.0, k), lerp(0.9, 0.8, k), lerp(-2.0, -2.4, k)); lk = V3(0, lerp(3.4, 0.9, smooth(FALL0 - 0.1, LAND + 0.1, T)), BZ + 0.6); camera.fov = 58;
       if (T > LAND && T < LAND + 0.4) pos.add(sh(0.04 * (1 - (T - LAND) / 0.4)));

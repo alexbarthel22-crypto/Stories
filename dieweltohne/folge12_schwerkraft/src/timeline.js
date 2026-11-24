@@ -48,7 +48,7 @@ export const CAPTIONS = [
   [17.4, 19.8, 'Sport. Sein erster Dunk überhaupt.'],
   [20.0, 23.8, 'Er hört nicht mehr auf zu steigen. Die ganze Klasse filmt.'],
   [24.4, 27.0, 'Freibad. Arschbombe vom Zehner.'],
-  [27.2, 30.8, 'Ohne Schwerkraft kommt er nie unten an.'],
+  [27.2, 30.8, 'Nur: Das Becken ist leer. Das Wasser schwebt längst in der Luft.'],
   [31.4, 34.6, 'Schulbus. Eine kleine Bodenwelle auf der Brücke.'],
   [34.8, 38.8, 'Das war kein Hüpfer. Das war ein Start.'],
   [39.4, 42.8, 'Die Erde rast mit rund 30 Kilometern pro Sekunde um die Sonne.'],

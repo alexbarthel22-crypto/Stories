@@ -157,11 +157,13 @@ add('fsd_kids_cheer', 22.3, 1.6, db=-15, fin=0.2, fout=0.6)
 add('fsd_whoosh_fast', 23.75, 0.6, db=-12, fout=0.2)
 
 # ---------------- Freibad (24–31) ----------------
-amb('fsd_beach_kids', 24.0, 31.05, -16)
+amb('fsd_beach_kids', 24.0, 31.05, -22)
+add('fsd_flood_rush', 24.0, 7.0, db=-24, speed=0.55, fin=0.8, fout=0.8)                     # schwebendes, glucksendes Wasser
+add('fsd_crowd_gasp', 24.6, 1.6, db=-15, fout=0.5, pan=-0.3)
 amb('fsd_crowd_outdoor', 24.0, 31.05, -26)
 add('fsd_shout_hey', BOMB - 0.45, 0.9, db=-8, fout=0.3)                                    # „ARSCHBOMBE!“
 add('fsd_whoosh_fast', BOMB, 0.9, db=-9, fout=0.3)
-add('fsd_splash2', 24.6, 0.6, db=-18, pan=0.4)
+add('fsd_gasp', 26.0, 1.0, db=-10, fout=0.3)                                             # er sieht die leeren Fliesen
 add('fsd_wind_rush', 26.2, 3.2, db=-19, fin=0.8, fout=0.8)
 add('fsd_crowd_gasp', 26.6, 2.0, db=-11, fout=0.6)
 add('fsd_referee_whistle', 27.3, 0.9, db=-11, peak_win=0.5, fout=0.3, pan=0.5)             # Bademeister pfeift
@@ -197,6 +199,7 @@ add('fsd_whoosh_boom', 54.5, 1.4, db=-10, speed=0.8, fout=0.4)
 add('fsd_impact_boom2', RETURN - 0.02, 1.8, db=-5, fout=0.8)
 add('fsd_screams', 55.2, 1.4, db=-9, off=2.0, fin=0.05, fout=0.4)
 add('fsd_wind_rush', 55.3, 1.0, db=-12, fout=0.2)
+add('fsd_rain_heavy', 55.3, 2.9, db=-8, fin=0.4, fout=0.3)                                    # Flusswasser prasselt zurück
 add('fsd_splash_big', BUS_SPLASH - 0.03, 1.8, db=0, peak_win=0.3, fout=0.8)               # Bus fällt in den Fluss
 add('fsd_wave_crash', BUS_SPLASH + 0.5, 1.4, db=-12, fout=0.6)
 add('fsd_scream_man', 58.4, 1.0, db=-9, peak_win=1.0, fout=0.2)                            # „AAAH“
@@ -205,6 +208,8 @@ add('fsd_soft_thud', GYM_LAND - 0.02, 0.6, db=-1)                               
 add('fsd_body_fall', GYM_LAND, 0.5, db=-10, off=0.45, fout=0.2)
 add('fsd_kids_cheer', GYM_LAND + 0.4, 1.6, db=-12, fin=0.1, fout=0.6)
 add('fsd_applause', 60.0, 1.0, db=-17, fin=0.2, fout=0.5)
+add('fsd_rain_heavy', 61.2, 2.9, db=-6, off=3.0, fin=0.3, fout=0.4)                          # Beckenwasser als Platzregen
+add('fsd_rain_street', 61.4, 2.6, db=-14, fin=0.4, fout=0.4)
 add('fsd_scream_man', 61.1, 1.2, db=-11, peak_win=1.0, speed=1.15, fout=0.3)
 add('fsd_whoosh_fast', 61.6, 1.0, db=-11, speed=0.8, fout=0.2)
 add('fsd_splash_big', POOL_LAND - 0.03, 1.4, db=-3, peak_win=0.3, speed=1.15, fout=0.6)  # Planschbecken
@@ -220,15 +225,18 @@ add('fsd_rubble', 66.0, 2.6, db=-12, fout=0.8)
 add('fsd_fire_roar', 67.5, 4.6, db=-15, fin=0.8, fout=0.6)
 add('fsd_building_collapse', 69.0, 3.0, db=-11, speed=0.85, fout=1.0)
 add('fsd_whoosh_fast', 71.75, 0.5, db=-13, fout=0.2)
-amb('fsd_fire_crackle', 72.0, 80.05, -18)
-amb('fsd_siren_eu', 72.3, 80.05, -22)
-add('fsd_sub_rumble', 72.0, 8.0, db=-11, off=1.0, fin=0.5, fout=0.6)
-add('fsd_building_collapse', CRACK - 0.4, 3.4, db=-4, fout=1.2)
-add('fsd_rubble', CRACK + 0.2, 2.6, db=-8, fout=1.0)
-add('fsd_glass_break', CRACK + 0.6, 1.4, db=-12, peak_win=0.2, fout=0.5, pan=0.4)
+amb('fsd_dust_wind', 72.0, 80.05, -20)
+amb('fsd_siren_eu', 72.3, 80.05, -24)
+add('fsd_sub_rumble', 72.0, 8.0, db=-9, off=1.0, fin=0.5, fout=0.6)
+for tt, pn in [(72.4, -0.3), (72.9, 0.3)]: add('fsd_stone_clatter', tt, 0.6, db=-17, fout=0.2, pan=pn)  # Knirschen vor dem Riss
+add('fsd_impact_boom2', CRACK - 0.05, 2.2, db=-5, speed=0.8, fout=1.0)                    # Riss geht auf
+add('fsd_rubble', CRACK + 0.05, 2.8, db=-4, fout=1.0)                                       # Brechen der Platten
+add('fsd_metal_crash2', CRACK + 0.3, 1.2, db=-14, peak_win=0.3, fout=0.5, pan=0.3)          # Rohr bricht
+add('fsd_stone_clatter', CRACK + 0.8, 2.4, db=-10, fin=0.1, fout=0.8)                       # Brocken fallen in den Spalt
+for tt, pn in [(75.2, -0.4), (76.1, 0.4), (77.3, -0.2), (78.6, 0.3)]: add('fsd_gravel', tt, 0.9, db=-15, fin=0.05, fout=0.4, pan=pn)   # Rieseln
 add('fsd_debris', 75.0, 1.6, db=-12, fout=0.6, pan=-0.3)
-add('fsd_car_horn', 75.8, 1.4, db=-16, fout=0.4, pan=0.5)
-add('fsd_screams', 76.4, 2.4, db=-17, off=1.0, fin=0.2, fout=0.8)
+add('fsd_car_horn', 76.4, 1.4, db=-18, fout=0.4, pan=0.5)
+add('fsd_screams', 76.8, 2.4, db=-18, off=1.0, fin=0.2, fout=0.8)
 add('fsd_kids_cheer', 77.8, 1.4, db=-21, fout=0.4, pan=-0.4)                             # Kinder auf dem Busdach
 add('fsd_thunder_far', 78.0, 2.0, db=-14, fout=0.8)
 add('fsd_whoosh_fast', 79.75, 0.5, db=-13, fout=0.2)
