@@ -198,14 +198,18 @@ def angler():
     o = coords(nb, 'Object'); n1 = noise_tex(nb, o, 140, 6)
     vor = nb.n('ShaderNodeTexVoronoi'); nb.l(o, vor.inputs['Vector']); vor.inputs['Scale'].default_value = 260
     h = nb.math('ADD', n1.outputs['Fac'], nb.math('MULTIPLY', vor.outputs['Distance'], -0.6))
-    col = nb.mix(noise_tex(nb, o, 40, 3).outputs['Fac'], (0.03, 0.02, 0.016, 1), (0.1, 0.065, 0.05, 1))
-    bsdf(nb, out, col, rough=0.55, normal=bump(nb, h, 0.6, 0.0015), Sheen_Weight=0.6, Sheen_Roughness=0.4, Coat_Weight=0.3, Coat_Roughness=0.3)
+    col = nb.mix(noise_tex(nb, o, 40, 3).outputs['Fac'], (0.012, 0.009, 0.008, 1), (0.045, 0.03, 0.024, 1))
+    bsdf(nb, out, col, rough=0.62, normal=bump(nb, h, 0.9, 0.002), Coat_Weight=0.12, Coat_Roughness=0.45, Specular_IOR_Level=0.35)
     bm = bmesh.new()
     def prof(u):
         if u < 0.35: k = u / 0.35; h, w = lerp(0.026, 0.06, k ** 0.6), lerp(0.034, 0.052, k ** 0.6)
         else: k = (u - 0.35) / 0.65; h, w = lerp(0.06, 0.014, k ** 1.2), lerp(0.052, 0.01, k ** 1.1)
         return (h, w, 2.0, 0.004)
-    hull_bm(0.15, prof, 40, 28, bm, lambda co, u: Vector((co.x - 0.075, co.y, co.z)))
+    def lumpy(co, u):
+        n = noise.noise(Vector((co.x * 38, co.y * 38, co.z * 38))) * 0.006 + noise.noise(Vector((co.x * 110, co.y * 110, co.z * 110))) * 0.0018
+        sc = 1 + n / max(0.01, (co.y * co.y + co.z * co.z) ** 0.5)
+        return Vector((co.x - 0.075, co.y * sc, co.z * sc))
+    hull_bm(0.15, prof, 56, 36, bm, lumpy)
     # Unterkiefer, vorgeschoben
     hull_bm(0.075, lambda u: (lerp(0.016, 0.028, u), lerp(0.03, 0.05, u ** 0.6), 2, 0), 16, 20, bm, lambda co, u: Vector((co.x - 0.092, co.y - 0.03 + 0.004 * u, co.z)))
     ob = mesh_obj('angler', bm, skin, subsurf=1)
@@ -220,8 +224,11 @@ def angler():
         base = Vector((-0.083 - 0.022 * math.cos(a) + (0.0 if up else -0.012), 0.004 if up else -0.024, 0.044 * math.sin(a)))
         d = Vector((r.random() * 0.3 - 0.15 - 0.25, -1 if up else 1, r.random() * 0.2 - 0.1)).normalized()
         q = d.to_track_quat('Z', 'X').to_matrix().to_4x4()
-        cyl_bm(0.0016, 0.0002, ln, 6, tb, Matrix.Translation(base + d * ln / 2) @ q)
-    mesh_obj('angler_teeth', tb, principled('tooth', (0.85, 0.82, 0.74), 0.15, Transmission_Weight=0.5, Coat_Weight=0.8)).parent = ob
+        ln *= 0.8 + r.random() * 0.5; d2 = (d + Vector((0.5, 0.15 if up else -0.15, 0))).normalized()
+        cyl_bm(0.0011, 0.0006, ln * 0.6, 6, tb, Matrix.Translation(base + d * ln * 0.3) @ q)
+        tip = base + d * ln * 0.6
+        cyl_bm(0.0006, 0.00008, ln * 0.45, 6, tb, Matrix.Translation(tip + d2 * ln * 0.22) @ d2.to_track_quat('Z', 'X').to_matrix().to_4x4())
+    mesh_obj('angler_teeth', tb, principled('tooth', (0.9, 0.9, 0.86), 0.08, Transmission_Weight=0.85, IOR=1.55, Coat_Weight=0.6)).parent = ob
     # Flossen
     fin = principled('afin', (0.03, 0.025, 0.022), 0.5, Transmission_Weight=0.3, Alpha=0.85)
     fb = bmesh.new(); sphere_bm(1, 16, 10, fb, Matrix.Translation((0.1, 0.004, 0)) @ Matrix.Diagonal((0.035, 0.03, 0.003, 1)))
@@ -248,20 +255,23 @@ def angler():
 
 # ======================= Scheibenbauch (30 cm, durchscheinend) =======================
 def snailfish():
-    m = principled('snail', (0.92, 0.36, 0.38), 0.2, Subsurface_Weight=0.6, Subsurface_Radius=(0.05, 0.02, 0.018), Subsurface_Scale=1.0, Transmission_Weight=0.1, Coat_Weight=0.8, Coat_Roughness=0.05, IOR=1.36)
+    m, nbs, outs = new_mat('snail'); os_ = coords(nbs, 'Object')
+    hs = nbs.math('ADD', noise_tex(nbs, os_, 220, 6).outputs['Fac'], nbs.math('MULTIPLY', noise_tex(nbs, os_, 35, 2).outputs['Fac'], 0.6))
+    cs = nbs.mix(noise_tex(nbs, os_, 18, 3).outputs['Fac'], (0.95, 0.62, 0.6, 1), (1.0, 0.74, 0.7, 1))
+    bsdf(nbs, outs, cs, rough=0.3, normal=bump(nbs, hs, 0.35, 0.0012), Subsurface_Weight=0.45, Subsurface_Radius=(0.06, 0.02, 0.015), Subsurface_Scale=1.0, Transmission_Weight=0.0, Coat_Weight=0.9, Coat_Roughness=0.08, IOR=1.36)
     bm = bmesh.new()
     def prof(u):
         if u < 0.2: k = u / 0.2; h, w = lerp(0.012, 0.064, k ** 0.35), lerp(0.014, 0.06, k ** 0.35)
         else: k = (u - 0.2) / 0.8; h, w = lerp(0.06, 0.004, k ** 0.6), lerp(0.058, 0.002, k ** 0.7)
         return (h, w, 2, -0.004 * u)
     hull_bm(0.3, prof, 48, 24, bm)
-    fm = principled('snailfin', (0.95, 0.8, 0.78), 0.15, Transmission_Weight=0.85, Alpha=0.55, Coat_Weight=0.6)
+    fm = principled('snailfin', (1.0, 0.78, 0.76), 0.25, Subsurface_Weight=0.3, Transmission_Weight=0.0, Alpha=0.5, Coat_Weight=0.4)
     fb2 = bmesh.new()
     # durchgehender Flossensaum oben und unten bis zur Schwanzspitze
     for sgn in (1, -1):
         prev = None
         for i in range(25):
-            u = 0.35 + 0.65 * i / 24; h = prof(u)[0]; fh = 0.022 * math.sin(math.pi * min(1, (i / 24) * 0.9 + 0.1))
+            u = 0.35 + 0.65 * i / 24; h = prof(u)[0]; fh = 0.032 * math.sin(math.pi * min(1, (i / 24) * 0.9 + 0.1))
             a = fb2.verts.new((u * 0.3, sgn * h * 0.9, 0)); b = fb2.verts.new((u * 0.3, sgn * (h + fh), 0))
             if prev: fb2.faces.new((prev[0], prev[1], b, a) if sgn > 0 else (prev[1], prev[0], a, b))
             prev = (a, b)
@@ -269,11 +279,11 @@ def snailfish():
     ob = mesh_obj('snail', bm, m, subsurf=1); fo.parent = ob
     fins = []
     for s in (1, -1):
-        fb = bmesh.new(); sphere_bm(1, 16, 8, fb, Matrix.Translation((0.07, -0.025, s * 0.05)) @ Matrix.Diagonal((0.05, 0.003, 0.045, 1)))
+        fb = bmesh.new(); sphere_bm(1, 16, 8, fb, Matrix.Translation((0.07, -0.025, s * 0.05)) @ Matrix.Diagonal((0.06, 0.004, 0.055, 1)))
         f = mesh_obj('snail_fin%d' % s, fb, fm); f.parent = ob; fins.append(f)
     eb = bmesh.new()
-    for s in (1, -1): sphere_bm(0.0075, 12, 8, eb, Matrix.Translation((0.03, 0.02, s * 0.05)))
-    mesh_obj('snail_eyes', eb, principled('seye', (0.02, 0.02, 0.025), 0.05, Coat_Weight=1)).parent = ob
+    for s in (1, -1): sphere_bm(0.0048, 12, 8, eb, Matrix.Translation((0.024, 0.012, s * 0.047)))
+    mesh_obj('snail_eyes', eb, principled('seye', (0.015, 0.014, 0.02), 0.05, Coat_Weight=1)).parent = ob
     return {'ob': ob, 'fins': fins}
 
 # ======================= Tauchboot =======================
