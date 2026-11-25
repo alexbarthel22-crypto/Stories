@@ -1,0 +1,29 @@
+# Shelly-Rätsel: Der Aufzug im Sunken Pearl
+
+## TikTok-Beschreibung
+
+Kannst du dieses Rätsel lösen? 🐚🧠
+Shelly wohnt im Sunken Pearl auf Etage −20, unter dem Meer. Bei Regen fährt sie mit dem Aufzug bis ganz nach oben zum Strand. Bei Sonne nur bis −10 – den Rest läuft sie. Warum? 🤔☔
+Schreib deine Antwort in die Kommentare, BEVOR du die Lösung hörst! 👇
+
+#rätsel #rätselzeit #denksport #logikrätsel #kannstdueslösen #shelly #sunkenpearl #strand #muscheln #animation #fyp #foryou
+
+## Credits
+
+Stimme: ElevenLabs. Musik und Geräusche (Freesound, CC0):
+- „SFX_UnderWater“ von Perel (freesound.org/s/173439, CC0)
+- „hint.wav“ von dland (freesound.org/s/320181, CC0)
+- „Elevator Ping 02“ von LilMati (freesound.org/s/514865, CC0)
+- „elevator doors opening“ von ccovi (freesound.org/s/679014, CC0)
+- „ship-interior-1.wav“ von markkuyp (freesound.org/s/344379, CC0)
+- „Seagull on beach“ von squashy555 (freesound.org/s/353416, CC0)
+- „steps in high heels.wav“ von anagar (freesound.org/s/267933, CC0)
+- „A Ukulele Tune“ von shaunhillyard (freesound.org/s/830500, CC0)
+- „Plop!“ von Breviceps (freesound.org/s/447910, CC0)
+- „Rain on roofs“ von xkeril (freesound.org/s/669487, CC0)
+- „Footsteps on concrete“ von florianreichelt (freesound.org/s/459964, CC0)
+- „whoosh.wav“ von LloydEvans09 (freesound.org/s/332003, CC0)
+- „Success Fanfare Trumpets.mp3“ von FunWithSound (freesound.org/s/456966, CC0)
+- „Train-1_Arrival_Outside_Screech_Steam.wav“ von LamaMakesMusic (freesound.org/s/420655, CC0)
+- „Ocean Noise - Surf“ von amholma (freesound.org/s/372181, CC0)
+- „Swoosh“ von Shinplaster (freesound.org/s/264777, CC0)
