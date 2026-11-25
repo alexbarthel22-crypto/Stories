@@ -100,7 +100,7 @@ def umbrella(ctx, hx, hy, ang, state='closed', length=118, k_open=0.0, col=None)
 
 
 def shelly(ctx, x, y, s=1.0, face=0.0, walk=None, arms=None, expr='smile', blink=0.0, look=(0, 0),
-           umb=None, tiptoe=0.0, step=0.0, mirror=False, arm_len=1.0):
+           umb=None, tiptoe=0.0, step=0.0, mirror=False, arm_len=1.0, shell=True, long_hair=False):
     """Shelly zeichnen. (x, y) = Fußpunkt.
     arms: dict mit 'L'/'R' -> Handziel relativ zum Fußpunkt (unskaliert) oder Schlüsselwort.
     umb: dict(state, ang, k_open, hand='R') -> Regenschirm in der Hand."""
@@ -123,31 +123,34 @@ def shelly(ctx, x, y, s=1.0, face=0.0, walk=None, arms=None, expr='smile', blink
     ellipse(ctx, 0, 1, 26, 5, alpha(C['shadow'], 0.18))
     ctx.restore()
 
+    if shell:
     # Muschel-Haarschmuck (hinter dem Kopf)
-    cx, cy, R = -face * 3, -156, 46
-    ctx.new_path()
-    nsc = 9
-    ctx.move_to(cx + math.cos(math.radians(195)) * R * 0.25, cy + 18)
-    for i in range(nsc + 1):
-        a = math.radians(195 + 150 * i / nsc)
-        ctx.line_to(cx + math.cos(a) * R, cy + 12 + math.sin(a) * R)
-        if i < nsc:
-            am = math.radians(195 + 150 * (i + 0.5) / nsc)
-            ctx.curve_to(cx + math.cos(am) * R * 1.12, cy + 12 + math.sin(am) * R * 1.12,
-                         cx + math.cos(am) * R * 1.12, cy + 12 + math.sin(am) * R * 1.12,
-                         cx + math.cos(a + math.radians(150 / nsc)) * R, cy + 12 + math.sin(a + math.radians(150 / nsc)) * R)
-    ctx.line_to(cx + math.cos(math.radians(345)) * R * 0.25, cy + 18)
-    ctx.close_path()
-    src(ctx, C['pink3'])
-    ctx.fill_preserve()
-    ctx.set_line_width(2.5)
-    src(ctx, C['pink2'])
-    ctx.stroke()
-    for i in range(1, nsc):
-        a = math.radians(195 + 150 * i / nsc)
-        line(ctx, cx, cy + 22, cx + math.cos(a) * R * 0.95, cy + 12 + math.sin(a) * R * 0.95, 2.2, alpha(C['pink2'], 0.8))
+        cx, cy, R = -face * 3, -156, 46
+        ctx.new_path()
+        nsc = 9
+        ctx.move_to(cx + math.cos(math.radians(195)) * R * 0.25, cy + 18)
+        for i in range(nsc + 1):
+            a = math.radians(195 + 150 * i / nsc)
+            ctx.line_to(cx + math.cos(a) * R, cy + 12 + math.sin(a) * R)
+            if i < nsc:
+                am = math.radians(195 + 150 * (i + 0.5) / nsc)
+                ctx.curve_to(cx + math.cos(am) * R * 1.12, cy + 12 + math.sin(am) * R * 1.12,
+                             cx + math.cos(am) * R * 1.12, cy + 12 + math.sin(am) * R * 1.12,
+                             cx + math.cos(a + math.radians(150 / nsc)) * R, cy + 12 + math.sin(a + math.radians(150 / nsc)) * R)
+        ctx.line_to(cx + math.cos(math.radians(345)) * R * 0.25, cy + 18)
+        ctx.close_path()
+        src(ctx, C['pink3'])
+        ctx.fill_preserve()
+        ctx.set_line_width(2.5)
+        src(ctx, C['pink2'])
+        ctx.stroke()
+        for i in range(1, nsc):
+            a = math.radians(195 + 150 * i / nsc)
+            line(ctx, cx, cy + 22, cx + math.cos(a) * R * 0.95, cy + 12 + math.sin(a) * R * 0.95, 2.2, alpha(C['pink2'], 0.8))
 
-    # Haare hinten (Bob)
+    # Haare hinten (Bob / lang)
+    if long_hair:
+        fill_rrect(ctx, -36 - face * 2, -166, 72, 100, 30, C['hair2'])
     fill_rrect(ctx, -33 - face * 2, -166, 66, 56, 24, C['hair2'])
 
     # Beine
@@ -296,8 +299,9 @@ def shelly(ctx, x, y, s=1.0, face=0.0, walk=None, arms=None, expr='smile', blink
         src(ctx, C['hair'])
         ctx.fill()
     # Perle im Haar
-    circle(ctx, hx0 + 18, hy0 - 22, 4.2, C['white'])
-    circle(ctx, hx0 + 19.2, hy0 - 23.3, 1.4, alpha(C['pink3'], 0.9))
+    if shell:
+        circle(ctx, hx0 + 18, hy0 - 22, 4.2, C['white'])
+        circle(ctx, hx0 + 19.2, hy0 - 23.3, 1.4, alpha(C['pink3'], 0.9))
 
     for side, key in late:
         hands[key] = arm(side, arms.get(key), 0)
@@ -446,3 +450,23 @@ def paul(ctx, x, y, s=1.0, t=0.0, wonder=0.0):
     poly(ctx, [(6, -110), (-2, -106), (6, -101)], hexc('#3C6FD8'))
     circle(ctx, -2, -106, 2.6, hexc('#2A50A8'))
     ctx.restore()
+
+
+NEIGHBOR_LOOK = {
+    'sophia': dict(hair='#2E2A33', hair2='#1E1B22', pink='#4FA3E8', pink2='#2F7FC4', skin='#E8B58F', skin2='#D49A72'),
+    'laura': dict(hair='#E7B65A', hair2='#C9953A', pink='#7BC67E', pink2='#4FA65A', skin='#F7D2B5', skin2='#E8B595'),
+}
+
+
+def person(ctx, who, x, y, s=1.45, wonder=0.0, t=0.0, **kw):
+    """Nachbarin (normal groß, ohne Muschel). Farben werden kurzfristig getauscht."""
+    look = NEIGHBOR_LOOK[who]
+    old = {k: C[k] for k in look}
+    for k, v in look.items():
+        C[k] = hexc(v)
+    try:
+        arms = {'R': (14, -116)} if wonder > 0.5 else None
+        shelly(ctx, x, y, s, shell=False, long_hair=True, expr='o' if wonder > 0.5 else 'smile',
+               arms=arms, look=(-5, 0), **kw)
+    finally:
+        C.update(old)

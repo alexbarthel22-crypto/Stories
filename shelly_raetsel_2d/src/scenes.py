@@ -3,22 +3,46 @@ import math
 import random
 import cairo
 from draw import *
-from chars import shelly, karla, paul, umbrella, SH_Y
+from chars import shelly, karla, paul, person, umbrella, SH_Y
 from world import *
 
-# Zeitachse: Alte Skript-Zeiten (Ankerwörter) -> neue Gemini-Stimme, plus eingefügte Pausen
-ANCH = [(0.0, 0.16), (2.08, 6.94), (3.88, 8.42), (4.26, 8.64), (6.26, 10.32), (7.04, 11.0), (8.5, 12.14),
-        (9.28, 12.84), (11.11, 14.18), (12.57, 15.64), (13.86, 16.84), (15.12, 18.42), (16.17, 19.38),
-        (18.46, 21.84), (18.81, 22.12), (19.33, 22.92), (21.26, 25.22), (22.93, 26.72), (24.02, 28.0),
-        (25.11, 29.2), (25.57, 29.54), (26.47, 30.8), (27.2, 31.58), (27.69, 32.32), (29.83, 34.48),
-        (30.81, 35.1), (33.41, 37.96), (34.32, 38.7), (35.23, 39.32), (35.93, 39.98), (37.87, 41.76),
-        (38.59, 43.02), (40.73, 45.2), (41.66, 46.18), (42.32, 46.82), (43.77, 48.28), (44.43, 48.9),
-        (46.15, 50.54), (46.49, 50.76), (47.35, 51.84), (48.05, 52.38), (49.52, 53.6), (51.93, 56.02),
-        (54.77, 59.1), (55.89, 60.42), (56.91, 62.06), (60.31, 65.04), (61.71, 66.58), (62.75, 67.86),
-        (64.23, 69.22), (65.1, 70.14), (66.87, 72.26), (67.91, 73.36), (68.97, 74.54), (69.79, 75.38),
-        (70.64, 76.38), (71.1, 76.98), (71.6, 77.7), (72.99, 78.9), (73.78, 79.9), (74.68, 82.3)]
-GAPS = [(52.9, 0.9), (58.6, 0.5)]   # in neuer Stimmzeit
-VO_END = 82.3
+# Zeitachse: Szenen sind in der alten Skript-Zeitbasis geschrieben (old_words.json).
+# Sie werden per Wortabgleich auf die aktuelle Stimme (vo_words.json) abgebildet, plus eingefügte Pausen.
+import json as _json, os as _os, re as _re, difflib as _dl
+_A = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'audio')
+_NUM = {'20': 'zwanzig', '10': 'zehn', '7': 'sieben'}
+
+
+def _norm(w):
+    w = _re.sub(r"[^\wäöüß']", '', w.lower())
+    w = _NUM.get(w, w)
+    if w.startswith(('shel', 'schel')):
+        w = 'shelly'
+    return w
+
+
+OLD = _json.load(open(f'{_A}/old_words.json'))
+NEW = _json.load(open(f'{_A}/vo_words.json'))
+_o = [_norm(w[0]) for w in OLD]
+_n = [_norm(w[0]) for w in NEW]
+ANCH = [(0.0, 0.0)]
+for blk in _dl.SequenceMatcher(None, _o, _n, autojunk=False).get_matching_blocks():
+    for k in range(blk.size):
+        a_, b_ = OLD[blk.a + k][1], NEW[blk.b + k][1]
+        if a_ > ANCH[-1][0] + 0.05 and b_ > ANCH[-1][1] + 0.05:
+            ANCH.append((a_, b_))
+VO_END = NEW[-1][2] + 0.3
+ANCH.append((74.68, VO_END))
+
+
+def nw(prefix, k=0, end=False):
+    """Zeit (Stimme, ohne Pausen) des k-ten Worts, das mit prefix beginnt."""
+    hits = [w for w in NEW if _norm(w[0]).startswith(prefix)]
+    return hits[k][2 if end else 1]
+
+
+GAPS = [([w for w in NEW if w[0].endswith('das?')][0][2] + 0.1, 0.9),
+        ([w for w in NEW if w[0].startswith('hörst')][0][2] + 0.1, 0.5)]
 
 
 def gn(tn):
@@ -32,6 +56,15 @@ def g(t):
     return gn(ANCH[-1][1] + t - ANCH[-1][0])
 
 
+T_TIEF = gn(nw('tiefsee'))
+T_SUNK = gn(nw('sunken'))
+T_ZOOM = gn(nw('ganz'))
+T_MINUS = gn(nw('minus'))
+T_APT = gn(nw('ist', 0)) - 0.1
+T_SOPH = gn(nw('sof') if any(_norm(w[0]).startswith('sof') for w in NEW) else nw('soph'))
+T_LAURA = gn(nw('laura'))
+T_WUND = gn(nw('wundern'))
+T_DANN = gn(nw('dann'))
 END = gn(VO_END) + 2.0
 
 # ---------------------------------------------------------------- Hilfen
@@ -113,7 +146,7 @@ def ext_row_y(n):
     return EXT_TOP + (-n - 1) * EXT_ROW_H + EXT_ROW_H
 
 
-def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None, hut=None):
+def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None, hut=None, sign=1.0):
     cam = Cam(540, cy, z)
     x0, y0, x1, y1 = cam.bounds()
     ctx.save()
@@ -214,6 +247,8 @@ def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None, hut=None):
     cy_ = EXT_TOP + (-cab_n) * EXT_ROW_H
     fill_rrect(ctx, sx0 + 14, cy_ - 98, sx1 - sx0 - 28, 92, 8, C['gold'])
     rect(ctx, sx0 + 22, cy_ - 90, sx1 - sx0 - 44, 78, hexc('#FDF6EC'))
+    # Name am Gebäude
+    sticker(ctx, 'SUNKEN PEARL', (tx0 + tx1) / 2, 130, 58, 'navy', sc=sign)
     # Etagenschilder links
     for n_ in (-1, -10, -20):
         plate(ctx, tx0 - 75, ext_row_y(n_) - EXT_ROW_H / 2, lab(n_), size=32)
@@ -265,19 +300,17 @@ def sc_intro(ctx, T, t0=0.0):
 
 def sc_overview(ctx, T):
     """Gesamtansicht: der Tiefseekratzer vom Strand bis zum Meeresboden."""
-    z = lerp(0.55, 0.575, ease(T, 0, 6.94))
-    cam = exterior(ctx, 1200, z, T, 'day')
-    sticker(ctx, 'TIEFSEEKRATZER', 540, 130, 80, 'yellow', rot=-3, sc=pop(T, 1.1))
-    sticker(ctx, 'EIN WOLKENKRATZER', 540, 1640, 52, 'cream', rot=2, sc=pop(T, 2.6))
-    sticker(ctx, 'TIEF INS MEER GEBAUT', 540, 1745, 52, 'cream', rot=-2, sc=pop(T, 4.9))
+    z = lerp(0.55, 0.575, ease(T, 0, T_ZOOM))
+    cam = exterior(ctx, 1200, z, T, 'day', sign=max(1.0, 1 + 0.35 * math.sin(math.pi * clamp((T - T_SUNK) / 0.5))))
+    sticker(ctx, 'TIEFSEEKRATZER', 540, 1700, 72, 'yellow', rot=-3, sc=pop(T, T_TIEF))
 
 
 def sc_exterior(ctx, T, t0):
-    k = ease(T, t0, t0 + 1.6)
+    k = ease(T, t0, T_MINUS)
     z = lerp(0.575, 1.05, k)
     cy = lerp(1200, ext_row_y(-20) - 360, k)
-    cam = exterior(ctx, cy, z, T, 'day', hl=ease(T, 8.42, 8.6))
-    sticker(ctx, 'ETAGE −20', 540, 1500, 84, 'yellow', rot=-3, sc=pop(T, 8.42))
+    cam = exterior(ctx, cy, z, T, 'day', hl=ease(T, T_MINUS, T_MINUS + 0.2))
+    sticker(ctx, 'ETAGE −20', 540, 1500, 84, 'yellow', rot=-3, sc=pop(T, T_MINUS))
 
 
 def walk_out_apartment(T, t_start, t_door, t_cab, t_in):
@@ -653,7 +686,7 @@ def beach_hut(ctx, x, y, k):
 def end_scene(ctx, T):
     t0 = g(70.64)
     t_du = g(72.99)
-    t_folg = gn(81.2)
+    t_folg = T_DANN
     wave = math.sin(T * 9) * 14
     khut = back_out(T, t_du + 0.9, t_du + 1.3) if T > t_du + 0.9 else 0.0
 
@@ -692,16 +725,16 @@ def end_scene(ctx, T):
 # ---------------------------------------------------------------- Hauptzeitleiste
 def frame(ctx, T):
     # 1 Gesamtansicht Tiefseekratzer
-    if T < 6.94:
+    if T < T_ZOOM:
         sc_overview(ctx, T)
         return
     # 2 Zoom auf Etage −20
-    if T < 9.0:
-        sc_exterior(ctx, T, 6.94)
+    if T < T_APT:
+        sc_exterior(ctx, T, T_ZOOM)
         return
     # 2b Shelly in ihrer Wohnung
     if T < g(6.26):
-        sc_intro(ctx, T, 9.0)
+        sc_intro(ctx, T, T_APT)
         return
     # 3 Morgen: Wohnung -> Aufzug (07:00)
     if T < g(10.95):
@@ -722,7 +755,7 @@ def frame(ctx, T):
         sc_beach(ctx, T, 'day', cam, train_door=ease(T, t0 + 0.3, t0 + 0.8))
         chips(ctx, T, clock=('07:00', 7.0, 'sun', -1))
         sx, sy = cam.scr(1120, -330)
-        sticker(ctx, 'ZUG ZUR ARBEIT', sx, sy, 50, 'yellow', rot=-3, sc=pop(T, g(12.57)))
+        sticker(ctx, 'BOOT ZUR ARBEIT', sx, sy, 50, 'yellow', rot=-3, sc=pop(T, g(12.57)))
         return
     # 5 Aber... etwas Seltsames: Kabine Nahaufnahme
     if T < g(16.17):
@@ -760,21 +793,21 @@ def frame(ctx, T):
     if T < g(26.47):
         t0 = g(22.93)
         camf = Cam(700, fy(-5) - 60, 0.86)
-        wonder = 1.0 if T > g(25.57) else 0.0
+        wonder = 1.0 if T > T_WUND else 0.0
         cam, f = sc_climb(ctx, T, t0, g(26.47), -6, 2.0, cam_fixed=camf,
                           who={})
         # Nachbarn zusätzlich zeichnen
         ctx.save()
         camf.apply(ctx)
-        karla(ctx, 1150, fy(-5) - 22, 1.15, T, wonder)
-        paul(ctx, 1150, fy(-4) - 22, 1.25, T, wonder)
+        person(ctx, 'sophia', 1150, fy(-5) - 22, 1.5, wonder, T, blink=blink_at(T, BL), mirror=True)
+        person(ctx, 'laura', 1150, fy(-4) - 22, 1.5, wonder, T, blink=blink_at(T - 0.4, BL), mirror=True)
         ctx.restore()
-        kx, ky = camf.scr(1150, fy(-5) - 200)
-        px, py = camf.scr(1150, fy(-4) - 220)
-        sticker(ctx, 'KARLA', kx, ky, 40, 'cream', rot=-3, sc=pop(T, g(24.02)))
-        sticker(ctx, 'PAUL', px, py, 40, 'cream', rot=3, sc=pop(T, g(25.11)))
-        qmark_bubble(ctx, kx + 120, ky - 40, 40, pop(T, g(25.57)))
-        qmark_bubble(ctx, px + 110, py - 40, 40, pop(T, g(25.75)))
+        kx, ky = camf.scr(1150, fy(-5) - 330)
+        px, py = camf.scr(1150, fy(-4) - 330)
+        sticker(ctx, 'SOPHIA', kx, ky, 40, 'cream', rot=-3, sc=pop(T, T_SOPH))
+        sticker(ctx, 'LAURA', px, py, 40, 'cream', rot=3, sc=pop(T, T_LAURA))
+        qmark_bubble(ctx, kx + 120, ky - 40, 40, pop(T, T_WUND))
+        qmark_bubble(ctx, px + 110, py - 40, 40, pop(T, T_WUND + 0.18))
         chips(ctx, T, floor=(flabel(math.floor(f + 0.25)), 1, -1, 0))
         return
     # 9 Oben angekommen: Checkliste

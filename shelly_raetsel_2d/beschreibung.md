@@ -1,13 +1,13 @@
-# Shelly-Rätsel: Der Aufzug im Tiefseekratzer
+# Shelly-Rätsel: Der Aufzug im Tiefseekratzer Sunken Pearl
 
 ## TikTok-Beschreibung
 
 Kannst du dieses Rätsel lösen? 🐚🧠
-Shelly wohnt im Tiefseekratzer – einem Wolkenkratzer, der tief ins Meer gebaut ist – auf Etage −20. Bei Regen fährt sie mit dem Aufzug bis ganz nach oben zum Strand. Bei Sonne nur bis −10 – den Rest läuft sie. Warum? 🤔☔
+Shelly wohnt ganz unten im Tiefseekratzer Sunken Pearl, auf Etage −20. Bei Regen fährt sie mit dem Aufzug bis ganz nach oben zum Strand, wo ihr Boot zur Arbeit fährt. Bei Sonne nur bis −10 – den Rest läuft sie. Warum? 🤔☔
 Schreib deine Antwort in die Kommentare, BEVOR du die Lösung hörst! 👇
 Du willst mitspielen und eine Hütte mit deinem Namen bekommen? Dann folg mir! 🏝️
 
-#rätsel #rätselzeit #denksport #logikrätsel #kannstdueslösen #shelly #tiefseekratzer #strand #muscheln #animation #fyp #foryou
+#rätsel #rätselzeit #denksport #logikrätsel #kannstdueslösen #shelly #sunkenpearl #tiefseekratzer #strand #muscheln #animation #fyp #foryou
 
 ## Credits
 
@@ -25,6 +25,5 @@ Stimme: Google Gemini TTS (Puck). Musik und Geräusche (Freesound, CC0):
 - „Footsteps on concrete“ von florianreichelt (freesound.org/s/459964, CC0)
 - „whoosh.wav“ von LloydEvans09 (freesound.org/s/332003, CC0)
 - „Success Fanfare Trumpets.mp3“ von FunWithSound (freesound.org/s/456966, CC0)
-- „Train-1_Arrival_Outside_Screech_Steam.wav“ von LamaMakesMusic (freesound.org/s/420655, CC0)
 - „Ocean Noise - Surf“ von amholma (freesound.org/s/372181, CC0)
 - „Swoosh“ von Shinplaster (freesound.org/s/264777, CC0)

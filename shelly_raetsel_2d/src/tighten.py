@@ -1,11 +1,11 @@
 """Stimme: Vorspann abschneiden, lange Pausen kürzen, Wortzeiten umrechnen."""
 import json, subprocess, numpy as np, wave, sys
 SR = 24000
-raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', 'audio/vo_puck3.wav', '-f', 's16le', '-ac', '1', '-ar', str(SR), '-'],
+raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', sys.argv[1] + '.wav', '-f', 's16le', '-ac', '1', '-ar', str(SR), '-'],
                      capture_output=True).stdout
 a = np.frombuffer(raw, np.int16).astype(np.float32) / 32768
-words = json.load(open('audio/vo_puck3_words.json'))
-start = 7.30
+words = json.load(open(sys.argv[1] + '_words.json'))
+start = next(w[1] for w in words if w[0].lower().startswith(('shel', 'schel'))) - 0.12
 words = [w for w in words if w[1] >= start - 0.1]
 # Pausen anhand Wortgrenzen: Lücke > MAXP wird auf MAXP gekürzt
 MAXP = 0.38

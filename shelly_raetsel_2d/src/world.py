@@ -3,7 +3,7 @@ import math
 import random
 import cairo
 from draw import *
-from chars import karla, paul
+from chars import karla, paul, person
 
 FH = 420.0          # Etagenhöhe
 SLAB = 30.0
@@ -354,6 +354,31 @@ def palm(ctx, x, y, h, t, lean=0.15, dark=0.0):
         circle(ctx, tx - 8 + i * 9, ty + 8, 8, mixc(hexc('#7A5230'), C['ink'], dark))
 
 
+def boat(ctx, x, y, t, dark=0.0):
+    """Kleines Passagierboot (x = Bug links, y = Wasserlinie)."""
+    bob = math.sin(t * 2.2) * 5
+    ctx.save()
+    ctx.translate(x, y + bob)
+    ctx.rotate(math.sin(t * 1.7) * 0.015)
+    hull = mixc(C['white'], C['ink'], dark * 0.4)
+    ctx.move_to(-20, -70)
+    ctx.line_to(560, -70)
+    ctx.curve_to(560, -20, 520, 10, 480, 15)
+    ctx.line_to(40, 15)
+    ctx.close_path()
+    src(ctx, hull)
+    ctx.fill()
+    rect(ctx, -10, -40, 560, 14, C['pink'])
+    rect(ctx, 10, -22, 520, 6, C['gold'])
+    fill_rrect(ctx, 120, -190, 330, 125, 24, mixc(C['pearl'], C['ink'], dark * 0.4))
+    for i in range(4):
+        fill_rrect(ctx, 140 + i * 76, -170, 58, 50, 12, mixc(hexc('#7FD0F0'), C['navy'], 0.15 + dark * 0.4))
+    rect(ctx, 380, -250, 26, 64, C['pink2'])
+    rect(ctx, 380, -250, 26, 12, C['ink'])
+    text(ctx, 'FÄHRE', 285, -95, 28, C['pink2'])
+    ctx.restore()
+
+
 def train(ctx, x, y, dark=0.0, door=0.0):
     """Strandbahn (2 Wagen), x = Nase links. Steht auf y."""
     body = mixc(C['white'], C['ink'], dark * 0.5)
@@ -411,8 +436,11 @@ def draw_beach(ctx, x0, y0, x1, y1, t, weather='day', train_x=1150, train_door=0
         xx = i * 120 + math.sin(t * 2 + i) * 15
         line(ctx, xx, -120 + (i % 3) * 35, xx + 50, -120 + (i % 3) * 35, 4, alpha(C['white'], 0.4))
     # Schiene + Bahn (hinter der Plattform)
-    rect(ctx, x0, -40, x1 - x0, 14, hexc('#8A7B6A'))
-    train(ctx, train_x, -40, dark, train_door)
+    boat(ctx, train_x, -95, t, dark)
+    # Steg
+    rect(ctx, train_x - 260, -60, 300, 22, hexc('#B98450'))
+    for i in range(5):
+        rect(ctx, train_x - 250 + i * 70, -40, 12, 50, hexc('#8E6238'))
     # Insel / Sand
     vgrad(ctx, x0, 0, x1 - x0, SEA_Y, [(0, mixc(C['sand'], C['ink'], dark * 0.5)), (0.25, mixc(C['sand2'], C['ink'], dark * 0.5)), (1, mixc(hexc('#B88E55'), C['ink'], dark * 0.5))])
     rr = random.Random(9)
@@ -463,7 +491,7 @@ def draw_beach(ctx, x0, y0, x1, y1, t, weather='day', train_x=1150, train_door=0
     for a in (200, 240, 270, 300, 340):
         line(ctx, cx, 0, cx + math.cos(math.radians(a)) * 225, math.sin(math.radians(a)) * 225 * 1.85, 4, alpha(C['gold'], 0.7))
     circle(ctx, cx, -418, 18, C['white'])
-    sticker(ctx, 'TIEFSEEKRATZER', cx, -500, 48, 'navy')
+    sticker(ctx, 'SUNKEN PEARL', cx, -500, 50, 'navy')
     # Schild
     plate(ctx, cx + 330, -60, 'STRAND · ETAGE 0', size=26)
     ctx.restore()

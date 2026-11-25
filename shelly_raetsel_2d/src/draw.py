@@ -259,7 +259,7 @@ def sticker(ctx, s, x, y, size, style='cream', rot=0.0, sc=1.0, pad=None, alpha_
     if icon == 'check':
         tick_mark(ctx, w / 2 - px - size * 0.4, 0, size * 0.62, fg)
     elif icon == 'rain':
-        rain_cloud_icon(ctx, w / 2 - px * 0.2 - size * 0.25, -size * 0.25, size * 0.62)
+        rain_cloud_icon(ctx, w / 2 - px * 0.6 - size * 0.5, -size * 0.14, size * 0.5)
     ctx.pop_group_to_source()
     ctx.paint_with_alpha(alpha_)
     ctx.restore()
