@@ -173,5 +173,54 @@
   "id": 118934,
   "license": "http://creativecommons.org/publicdomain/zero/1.0/",
   "dur": 4.15385
+ },
+ "chime": {
+  "name": "GLEAM-GLOW-SFX-CHIME.wav",
+  "user": "newagesoup",
+  "id": 351408,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 5.38133
+ },
+ "harp": {
+  "name": "Good answer harp glissando.wav",
+  "user": "oggraphics",
+  "id": 610703,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 6.66413
+ },
+ "paper": {
+  "name": "MONTECOT_M\u00e9lissa_2015_2016_candy_paper.wav",
+  "user": "iut_Paris8",
+  "id": 345035,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 4.41546
+ },
+ "clink": {
+  "name": "Glass Ding / Toast with champagne glasses",
+  "user": "Breviceps",
+  "id": 458408,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 3.31717
+ },
+ "shimmer": {
+  "name": "Magic Shimmer Swell",
+  "user": "Qvantor",
+  "id": 880769,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 5.7534
+ },
+ "heels": {
+  "name": "steps in high heels.wav",
+  "user": "anagar",
+  "id": 267933,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 11.232
+ },
+ "reveal": {
+  "name": "Treasure Chest Reveal",
+  "user": "Qvantor",
+  "id": 878615,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 3.70492
  }
 }

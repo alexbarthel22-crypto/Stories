@@ -5,19 +5,20 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 ROOT = '/home/user/Stories/sunken_pearl'
-FR = f'{ROOT}/frames'
-OUT = f'{ROOT}/frames/post'
+FR = f'{ROOT}/frames/v2'
+OUT = f'{ROOT}/frames/v2/post'
 FPS = 24
 W, H = 1080, 1920
-CUTS = [0.0, 2.55, 8.0, 11.4, 15.2, 18.4, 20.3, 21.65, 23.0, 24.2, 26.9, 28.65, 30.45, 32.25, 34.6, 36.55, 39.1,
-        42.85, 45.5, 48.15, 49.85, 53.9, 56.6, 60.8, 63.5, 65.4, 70.6]
-NAMES = ['surf', 'under', 'descent', 'winext', 'cozy', 'clock', 'startle', 'door', 'windark', 'peer', 'nixie', 'flicker',
-         'gauge', 'crack', 'run', 'capsule', 'liftup', 'display', 'face', 'doors', 'reveal', 'pearl', 'faceglow', 'reach',
-         'eye', 'final']
-UNDER = {'under', 'descent', 'winext', 'capsule', 'reveal', 'pearl', 'faceglow', 'reach', 'eye', 'final'}
+CUTS = [0.0, 2.5, 8.2, 10.8, 14.4, 15.3, 16.4, 17.4, 21.5, 24.1, 27.4, 32.9, 35.8, 38.0, 39.7, 42.2, 46.1, 47.8,
+        50.7, 55.1, 59.7, 61.3, 64.0, 69.6]
+NAMES = ['surf', 'under', 'descent', 'winext', 'marble', 'crystal', 'gold', 'reef', 'door', 'envelope', 'card', 'face',
+         'dress', 'capsule', 'liftup', 'display', 'doors', 'reveal', 'pearl', 'faceglow', 'reach', 'open', 'final']
+UNDER = {'under', 'descent', 'winext', 'capsule'}
+HALL = {'reveal', 'pearl', 'faceglow', 'reach', 'open', 'final', 'dress', 'crystal'}
+END = 69.6
 FONT = f'{ROOT}/src/fonts/anton.woff'
 YEL = (255, 204, 40)
-RED = (255, 70, 55)
+RED = (255, 120, 170)
 
 
 def font(sz):
@@ -39,12 +40,11 @@ def words():
     return [x for x in out if x[0] != '…']
 
 
-NUM = {'hundertsiebenundvierzig': '147', 'zweihunderteins': '201', 'zweihundert': '200', 'viertausend': '4.000',
-       'drei': '3', 'zwölf': '12'}
-KEY = {'sunken', 'pearl', 'wolkenkratzer', 'unten', '200', 'meer', '−147', 'still', '3:12', 'klopft', 'fenster',
-       'nichts', '4.000', 'licht', 'druckmesser', 'riss', 'aufzug', 'runter', 'darf', '−201', 'perle', 'haus',
-       'leuchtet', 'atmet', 'innen', 'öffnen', 'kommentare', 'tür', 'glas', 'wasser', 'nur'}
-REDW = {'−201', 'riss', 'innen', 'darf', 'klopft'}
+NUM = {'hundertsiebenundvierzig': '147', 'zweihunderteins': '201', 'zweihundert': '200', 'hundertneunundneunzig': '199'}
+KEY = {'sunken', 'pearl', 'luxuriösesten', 'wolkenkratzer', 'unten', '200', 'meer', '−147', 'marmor', 'kristall', 'gold',
+       'korallenriff', 'umschlag', 'schwarz', 'siegel', 'goldenem', '−201', 'mitternacht', 'kleid', 'perlmutt', 'perle',
+       'haus', 'leuchtet', 'summt', 'gewartet', 'berührt', 'öffnen', 'kommentare', 'tür', '−199', '−200', 'skyline'}
+REDW = {'−201', 'mitternacht', 'öffnen'}
 
 
 def tokens():
@@ -133,25 +133,26 @@ def captions(img, t):
 
 
 def floor_at(t):
-    if t < 2.6: return 0
-    if t < 11.4:
-        k = (t - 2.6) / 8.8
+    if t < 2.5: return 0
+    if t < 14.4:
+        k = (t - 2.5) / 11.9
         k = k * k * (3 - 2 * k)
         return -round(147 * k)
-    if t < 36.6: return -147
-    if t < 44.3:
-        k = (t - 36.6) / 7.7
-        return -147 - round(53 * min(1, k ** 0.8))
+    if t < 38.0: return -147
+    if t < 39.8:
+        k = (t - 38.0) / 1.8
+        return -147 - round(52 * k)
+    if t < 42.3: return -199
+    if t < 44.7: return -200
     return -201
 
 
 def badge(img, t):
-    if t > 65.3: return
+    if t > 63.9: return
     layer = Image.new('RGBA', img.size, (0, 0, 0, 0))
     dr = ImageDraw.Draw(layer)
     fl = floor_at(t)
-    red = fl == -201
-    blink = red and int(t * 4) % 2 == 0
+    secret = fl == -201
     f = font(50)
     a = 'SUNKEN PEARL · '
     b = f'ETAGE {"−" if fl < 0 else ""}{abs(fl)}'
@@ -160,49 +161,35 @@ def badge(img, t):
     app = min(1, t / 0.35)
     pad = 22
     box = (x0, y0, x0 + wa + wb + 2 * pad, y0 + 82)
-    col = RED if red else YEL
-    dr.rounded_rectangle(box, 10, fill=(10, 14, 20, int(200 * app)), outline=col + (int(255 * app),), width=5)
+    col = RED if secret else YEL
+    glow = 0.5 + 0.5 * math.sin(t * 5) if secret else 1.0
+    dr.rounded_rectangle(box, 10, fill=(14, 10, 20, int(200 * app)), outline=col + (int(255 * app),), width=5)
     dr.text((x0 + pad, y0 + 9), a, font=f, fill=(255, 255, 255, int(255 * app)))
-    dr.text((x0 + pad + wa, y0 + 9), b, font=f, fill=(col if not blink else (255, 255, 255)) + (int(255 * app),))
+    c2 = tuple(int(c * (0.75 + 0.25 * glow) + 255 * 0.25 * (1 - glow)) for c in col)
+    dr.text((x0 + pad + wa, y0 + 9), b, font=f, fill=c2 + (int(255 * app),))
     img.alpha_composite(layer)
 
 
 def cta(img, t):
-    t0 = 65.5
+    t0 = 66.4
     if t < t0: return
     layer = Image.new('RGBA', img.size, (0, 0, 0, 0))
     dr = ImageDraw.Draw(layer)
     k = min(1, (t - t0) / 0.3)
-    f = font(int(150 + 30 * (1 - k)))
-    txt = 'ÖFFNEN?'
+    f = font(int(120 + 24 * (1 - k)))
+    txt = 'TEIL 2 FOLGT …'
     w = dr.textlength(txt, font=f)
-    draw_outlined(dr, ((W - w) / 2, 250), txt, f, YEL + (int(255 * k),), 12)
-    if t > 66.4:
-        k2 = min(1, (t - 66.4) / 0.25)
-        fb = font(80)
-        for i, (lab, col) in enumerate((('JA', (46, 204, 113)), ('NEIN', (231, 76, 60)))):
-            cx = W / 2 + (i * 2 - 1) * 210
-            bw = 330
-            yy = 470 + 30 * (1 - k2)
-            dr.rounded_rectangle((cx - bw / 2, yy, cx + bw / 2, yy + 130), 65, fill=col + (int(235 * k2),), outline=(255, 255, 255, int(255 * k2)), width=6)
-            lw = dr.textlength(lab, font=fb)
-            dr.text((cx - lw / 2, yy + 14), lab, font=fb, fill=(255, 255, 255, int(255 * k2)), stroke_width=4, stroke_fill=(0, 0, 0, int(200 * k2)))
-    if t > 68.6:
-        k3 = min(1, (t - 68.6) / 0.3)
-        f3 = font(70)
-        s = 'TEIL 2 FOLGT …'
-        w3 = dr.textlength(s, font=f3)
-        draw_outlined(dr, ((W - w3) / 2, 1580), s, f3, (255, 255, 255, int(255 * k3)), 8)
+    draw_outlined(dr, ((W - w) / 2, 270), txt, f, YEL + (int(255 * k),), 12)
     img.alpha_composite(layer)
 
 
 # ------------------------------------------------------------ Bildeffekte
-def particles(arr, name, t, tl):
+def particles(arr, name, t, tl, col=(0.75, 0.9, 1.0), rise=1.0):
     """Meeresschnee: weiche Punkte mit Parallaxe."""
     rg = np.random.default_rng(abs(hash(name)) % 2 ** 32)
     n = 140
     xs = rg.uniform(0, W, n); ys = rg.uniform(0, H, n); z = rg.uniform(0.2, 1.0, n)
-    vx = rg.uniform(-6, 6, n); vy = rg.uniform(-18, -4, n)
+    vx = rg.uniform(-6, 6, n); vy = rg.uniform(-18, -4, n) * rise
     ph = rg.uniform(0, 6.28, n)
     layer = Image.new('L', (W, H), 0)
     dr = ImageDraw.Draw(layer)
@@ -214,7 +201,7 @@ def particles(arr, name, t, tl):
         dr.ellipse((x - r, y - r, x + r, y + r), fill=a)
     layer = layer.filter(ImageFilter.GaussianBlur(1.6))
     m = np.asarray(layer, np.float32)[..., None] / 255.0
-    col = np.array([0.75, 0.9, 1.0], np.float32)
+    col = np.array(col, np.float32)
     return arr + m * col * 0.55
 
 
@@ -265,15 +252,17 @@ def process(g):
     arr = np.asarray(im, np.float32) / 255
     if name in UNDER:
         arr = particles(arr, name, t, tl)
+    elif name in HALL:
+        arr = particles(arr, name, t, tl, (1.0, 0.85, 0.6), -0.3)
     arr = grade(arr, name, t)
     arr = arr * vignette()
     # Korn
     rng = np.random.default_rng(g)
     arr = arr + rng.normal(0, 0.012, (H // 2, W // 2, 1)).repeat(2, 0).repeat(2, 1).astype(np.float32)
     # Ein-/Ausblenden + Blitz beim Riss / Auge
-    fade = min(1, t / 0.4) * min(1, max(0, (70.6 - t) / 0.6))
+    fade = min(1, t / 0.4) * min(1, max(0, (END - t) / 0.6))
     arr = arr * fade
-    for tf, amt in ((32.3, 0.5), (63.55, 0.35), (44.33, 0.25)):
+    for tf, amt in ((62.2, 0.45), (44.6, 0.2), (46.5, 0.25)):
         if tf <= t < tf + 0.25:
             arr = arr + amt * (1 - (t - tf) / 0.25)
     img = Image.fromarray(np.clip(arr * 255, 0, 255).astype(np.uint8)).convert('RGBA')

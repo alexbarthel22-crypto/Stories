@@ -1,7 +1,7 @@
 """Tonmischung: Erzählstimme + selbst synthetisierte Filmmusik + Freesound-Geräusche (CC0)."""
 import numpy as np, subprocess, json, os
 SR = 48000
-DUR = 70.6
+DUR = 69.6
 BASE = '/home/user/Stories/sunken_pearl/audio'
 rng = np.random.default_rng(3)
 
@@ -47,49 +47,41 @@ def fs(k, af=None):
 
 # ---------------------------------------------------------------- Geräusche
 place(out, fs('waves', 'lowpass=f=3000'), 0.0, 0.3, 0.3, 0.5, length=2.9)
-place(out, fs('plunge'), 2.35, 0.9, 0.01, 0.6)
-place(out, fs('bubbles', 'lowpass=f=2500'), 2.8, 0.45, 0.05, 1.0)
+place(out, fs('plunge'), 2.3, 0.8, 0.01, 0.6)
+place(out, fs('bubbles', 'lowpass=f=2500'), 2.75, 0.4, 0.05, 1.0)
 amb = fs('deepamb', 'lowpass=f=700,volume=2')
-place(out, amb, 2.6, 0.14, 1.0, 1.5, length=45.6, loop=True)
-place(out, fs('whoosh', 'asetrate=48000*0.55,aresample=48000,lowpass=f=1200'), 7.85, 0.9, 0.02, 0.5)
-place(out, fs('sonar', 'aecho=0.8:0.7:400|900:0.4|0.25'), 9.6, 0.35, 0.01, 1.0)
-place(out, fs('sonar', 'aecho=0.8:0.7:400|900:0.4|0.25,lowpass=f=1500'), 12.4, 0.22, 0.01, 1.0)
-place(out, fs('clock'), 18.3, 0.75, 0.05, 0.3, length=3.3)
-kn = fs('knock', 'lowpass=f=2200,asetrate=48000*0.7,aresample=48000,aecho=0.8:0.6:120:0.3')
-for t in (20.5, 20.78, 21.06):
-    place(out, kn, t, 1.4, 0.002, 0.3, length=0.9)
-place(out, kn, 23.35, 1.6, 0.002, 0.5, length=1.0)
-gr = fs('groan', 'asetrate=48000*0.35,aresample=48000,lowpass=f=900,volume=2')
-place(out, gr, 24.4, 0.8, 0.3, 1.0)
-place(out, gr, 27.6, 0.6, 0.3, 1.0)
-place(out, fs('heart', 'lowpass=f=300'), 24.3, 0.3, 1.0, 1.0, length=10.0, loop=True)
-place(out, fs('flicker'), 28.6, 0.8, 0.01, 0.4, length=2.2)
-place(out, fs('hiss', 'highpass=f=300'), 30.45, 0.45, 0.2, 0.5, length=2.0)
-place(out, gr, 30.5, 0.7, 0.1, 0.8, length=2.0)
-cr = fs('crack')
-place(out, cr, 32.3, 1.2, 0.002, 0.3)
-place(out, fs('crack', 'asetrate=48000*0.8,aresample=48000'), 32.75, 1.0, 0.002, 0.3)
-place(out, fs('crack', 'asetrate=48000*0.65,aresample=48000'), 33.35, 0.8, 0.002, 0.3)
-place(out, fs('drip', 'aecho=0.8:0.6:200:0.3'), 33.6, 0.5, 0.05, 0.5, length=3.0)
-al = fs('alarm', 'lowpass=f=2500')
-place(out, al, 32.6, 0.12, 0.5, 0.2, length=2.0, loop=True)
-place(out, al, 34.6, 0.2, 0.05, 1.5, length=4.6, loop=True)
-place(out, fs('run'), 34.6, 0.9, 0.05, 0.2, length=1.95, loop=True)
-place(out, fs('elev', 'lowpass=f=1200'), 36.5, 0.16, 0.3, 0.6, length=11.7, loop=True)
-place(out, fs('ding', 'asetrate=48000*0.84,aresample=48000,aecho=0.8:0.7:60|130:0.5|0.3'), 44.25, 0.8, 0.002, 1.0)
-place(out, fs('doors'), 48.05, 0.9, 0.05, 1.0, length=2.5)
-place(out, fs('whoosh', 'asetrate=48000*0.45,aresample=48000,lowpass=f=900'), 49.0, 0.8, 0.05, 0.8)
-place(out, fs('cave'), 48.9, 0.2, 1.5, 2.5, length=21.7, loop=True)
-br = fs('breath', 'asetrate=48000*0.45,aresample=48000,lowpass=f=700,aecho=0.8:0.7:300:0.3,volume=2')
-place(out, br, 53.9, 0.7, 0.5, 1.5, length=6.5)
-bm = fs('boom', 'lowpass=f=500,aecho=0.8:0.7:250|600:0.5|0.3,volume=1.5')
-for t in (61.15, 61.55, 62.3):
-    place(out, bm, t - 0.05, 1.1, 0.002, 1.2, length=1.6)
-place(out, fs('growl', 'asetrate=48000*0.5,aresample=48000,lowpass=f=900,volume=1.5'), 63.6, 0.75, 0.2, 1.5)
-place(out, fs('riser', 'lowpass=f=6000'), 54.4, 0.35, 2.0, 0.2)
-place(out, fs('sting', 'lowpass=f=8000'), 64.45, 0.8, 0.002, 2.5)
+place(out, amb, 2.6, 0.12, 1.0, 1.0, length=11.9, loop=True)
+place(out, fs('whoosh', 'asetrate=48000*0.6,aresample=48000,lowpass=f=1500'), 7.9, 0.7, 0.02, 0.5)
+ch = fs('chime', 'aecho=0.8:0.6:180:0.3')
+place(out, ch, 14.4, 0.35, 0.005, 0.6, length=1.2)
+place(out, fs('clink'), 15.35, 0.5, 0.002, 0.5, length=1.2)
+place(out, fs('shimmer'), 16.3, 0.35, 0.05, 0.6, length=1.4)
+place(out, amb, 17.4, 0.08, 0.8, 0.8, length=4.1, loop=True)
+place(out, fs('bubbles', 'lowpass=f=1800'), 17.5, 0.25, 0.5, 1.0, length=3.5)
+pp = fs('paper', 'highpass=f=200')
+place(out, pp, 22.1, 0.55, 0.01, 0.4, length=1.4)
+place(out, pp, 24.2, 0.6, 0.01, 0.4, length=1.6)
+place(out, pp, 27.5, 0.55, 0.01, 0.4, length=1.6)
+place(out, ch, 31.8, 0.45, 0.005, 1.0, length=2.5)
+place(out, fs('whoosh', 'asetrate=48000*0.8,aresample=48000'), 35.9, 0.55, 0.02, 0.5)
+place(out, fs('shimmer'), 36.1, 0.5, 0.05, 0.8)
+place(out, fs('plunge', 'lowpass=f=2000'), 38.0, 0.5, 0.05, 0.6)
+place(out, fs('bubbles', 'lowpass=f=2000'), 38.1, 0.3, 0.05, 0.6, length=1.6)
+place(out, fs('elev', 'lowpass=f=1200'), 39.7, 0.14, 0.3, 0.4, length=6.4, loop=True)
+place(out, fs('ding', 'aecho=0.8:0.7:60|130:0.5|0.3'), 44.6, 0.7, 0.002, 1.0)
+place(out, fs('doors'), 46.2, 0.7, 0.05, 1.0, length=2.0)
+place(out, fs('reveal'), 47.6, 0.7, 0.02, 1.0)
+place(out, fs('shimmer'), 50.8, 0.35, 0.3, 1.0)
+place(out, fs('cave'), 47.8, 0.12, 1.5, 2.5, length=21.8, loop=True)
+place(out, ch, 55.2, 0.3, 0.005, 1.0, length=2.0)
+place(out, fs('riser', 'lowpass=f=6000'), 58.6, 0.3, 1.5, 0.2, length=2.8)
+place(out, fs('harp'), 59.75, 0.55, 0.005, 1.0, length=3.0)
+place(out, fs('reveal', 'asetrate=48000*0.85,aresample=48000'), 61.35, 0.8, 0.005, 1.5)
+place(out, fs('shimmer'), 62.0, 0.5, 0.2, 2.0)
+place(out, fs('boom', 'lowpass=f=300,volume=0.6'), 62.15, 0.5, 0.002, 1.5, length=2.0)
+place(out, fs('harp', 'asetrate=48000*1.12,aresample=48000'), 64.1, 0.35, 0.005, 1.5)
 
-# ---------------------------------------------------------------- Musik (synthetisch)
+# ---------------------------------------------------------------- Musik (synthetisch, magisch-elegant)
 T = np.arange(len(out)) / SR
 
 
@@ -98,81 +90,92 @@ def env_lin(pts):
     return np.interp(T, xs, ys).astype(np.float32)
 
 
-def lp(x, a):
-    """Einfacher 1-Pol-Tiefpass (a: 0..1, klein = dunkler)."""
-    from scipy.signal import lfilter
-    return lfilter([a], [1, a - 1], x).astype(np.float32)
-
-
 try:
     import scipy  # noqa
 except ImportError:
     subprocess.run(['pip', 'install', '-q', 'scipy'])
 
-# Drone D1/A1 mit Sägezahn, gefiltert, langsame Schwebung
-d = np.zeros(len(T), np.float32)
-for f, g in ((36.71, 0.5), (36.9, 0.4), (55.0, 0.35), (73.42, 0.2)):
-    ph = (f * T) % 1.0
-    d += g * (2 * ph - 1)
-d = lp(d, 0.02) * (0.8 + 0.2 * np.sin(2 * np.pi * 0.07 * T))
-drone_env = env_lin([(0, 0.0), (2.6, 0.0), (4.0, 0.5), (18.0, 0.55), (24, 0.8), (36, 1.0), (48.0, 1.1), (48.3, 0.0),
-                     (49.5, 0.0), (52, 0.5), (64.4, 0.8), (64.5, 1.3), (70.6, 0.0)])
-mus[:, 0] += d * drone_env * 0.5
-mus[:, 1] += d * drone_env * 0.5
 
-# Spieluhr-Arpeggio (D-Moll) 2.6 – 18.4: geheimnisvoll
-notes = [62, 65, 69, 74, 72, 69, 65, 64, 62, 65, 69, 76, 74, 69, 65, 61]
-t0, step = 2.9, 0.38
-k = 0
-t = t0
-while t < 18.2:
-    m = notes[k % len(notes)] + (12 if (k // 16) % 2 else 0)
-    f = 440 * 2 ** ((m - 69) / 12)
-    n = int(2.2 * SR)
-    tt = np.arange(n) / SR
-    tone = (np.sin(2 * np.pi * f * tt) + 0.35 * np.sin(2 * np.pi * f * 2.01 * tt) + 0.12 * np.sin(2 * np.pi * f * 4.2 * tt)) * np.exp(-tt * 3.2)
-    pan = 0.5 + 0.35 * np.sin(k * 1.3)
-    g = 0.11 * (1 - 0.6 * max(0, (t - 15.5) / 3))
-    st = np.stack([tone * (1 - pan), tone * pan], 1).astype(np.float32)
-    place(mus, st, t, g, 0.002, 0.3)
-    k += 1; t += step
-# Hall auf Spieluhr: einfache Echos
-# Puls (Herzschlag-Bass) beschleunigend 21 – 48
-t = 21.0
-while t < 48.0:
-    bpm = 62 + (t - 21) / 27 * 70
-    n = int(0.5 * SR); tt = np.arange(n) / SR
-    f0 = 55 * np.exp(-tt * 10) + 38
-    kick = np.sin(2 * np.pi * np.cumsum(f0) / SR) * np.exp(-tt * 7)
-    g = 0.35 + 0.35 * (t - 21) / 27
+def lp(x, a):
+    from scipy.signal import lfilter
+    return lfilter([a], [1, a - 1], x).astype(np.float32)
+
+
+def mf(m):
+    return 440 * 2 ** ((m - 69) / 12)
+
+
+def bell(f, dur=2.4, bright=1.0):
+    n = int(dur * SR); tt = np.arange(n) / SR
+    return ((np.sin(2 * np.pi * f * tt) + 0.4 * bright * np.sin(2 * np.pi * f * 2.0 * tt) * np.exp(-tt * 2)
+             + 0.15 * bright * np.sin(2 * np.pi * f * 3.01 * tt) * np.exp(-tt * 4)) * np.exp(-tt * 2.6)).astype(np.float32)
+
+
+def pad_chord(ms, t0, t1, g, buf=None):
+    buf = mus if buf is None else buf
+    s, e = int(t0 * SR), int(min(t1, DUR) * SR)
+    tt = T[s:e]
+    w = np.zeros((e - s, 2), np.float32)
+    for i, m in enumerate(ms):
+        f = mf(m)
+        for dt in (-0.0025, 0.0025):
+            ph = 2 * np.pi * f * (1 + dt) * tt
+            saw = 2 * ((f * (1 + dt) * tt) % 1.0) - 1
+            w[:, (i + (dt > 0)) % 2] += (0.6 * np.sin(ph) + 0.25 * saw).astype(np.float32)
+    w[:, 0] = lp(w[:, 0], 0.06); w[:, 1] = lp(w[:, 1], 0.06)
+    n = e - s; a = int(min(0.8, (t1 - t0) / 3) * SR)
+    env = np.ones(n, np.float32); env[:a] = np.linspace(0, 1, a); env[-a:] = np.linspace(1, 0, a)
+    buf[s:e] += w * env[:, None] * g
+
+
+def arp(seq, t0, t1, step, g, oct_=0, bright=1.0):
+    t, k = t0, 0
+    while t < t1:
+        m = seq[k % len(seq)] + oct_
+        b = bell(mf(m), 2.2, bright)
+        pan = 0.5 + 0.35 * np.sin(k * 1.3)
+        place(mus, np.stack([b * (1 - pan), b * pan], 1), t, g, 0.002, 0.3)
+        k += 1; t += step
+
+
+# Akte: D-Dur Luxus (2.5–21.5) | d-Moll Geheimnis (21.5–35.8) | Aufbruch (35.8–46.1) | Perlmutt-Saal (46.1–64) | Ende
+prog1 = [([50, 57, 62, 66, 69], 0), ([47, 54, 59, 62, 66], 1), ([43, 55, 59, 62, 67], 0), ([45, 57, 61, 64, 69], 1)]
+t = 2.5
+i = 0
+while t < 21.5:
+    ch_, _ = prog1[i % 4]
+    pad_chord(ch_, t, t + 4.6, 0.05)
+    t += 4.0; i += 1
+arp([74, 78, 81, 86, 81, 78, 76, 79, 83, 86, 83, 79], 2.6, 21.3, 0.3, 0.07)
+prog2 = [[50, 57, 62, 65, 69], [46, 53, 58, 62, 65], [48, 55, 60, 64, 67], [45, 52, 57, 61, 64]]
+t = 21.5; i = 0
+while t < 35.8:
+    pad_chord(prog2[i % 4], t, min(t + 3.9, 35.9), 0.055)
+    t += 3.6; i += 1
+arp([62, 65, 69, 74, 72, 69, 65, 64], 21.6, 32.6, 0.36, 0.06, 12)
+# Pizzicato-Puls ab Umschlag
+t = 24.1
+while t < 46.0:
+    bpm = 70 + max(0, t - 35.8) / 10 * 60
+    n = int(0.4 * SR); tt = np.arange(n) / SR
+    f0 = 60 * np.exp(-tt * 12) + 42
+    kick = np.sin(2 * np.pi * np.cumsum(f0) / SR) * np.exp(-tt * 9)
+    g = 0.18 + 0.3 * max(0, t - 35.8) / 10
     place(mus, np.stack([kick, kick], 1).astype(np.float32), t, g, 0.001, 0.1)
-    place(mus, np.stack([kick, kick], 1).astype(np.float32), t + 60 / bpm * 0.32, g * 0.55, 0.001, 0.1)
     t += 60 / bpm
-# Streicher-Dissonanz (Cluster) 28 – 48, steigend
-cl = np.zeros(len(T), np.float32)
-for f in (293.66, 311.13, 440.0, 466.16):
-    vib = 1 + 0.004 * np.sin(2 * np.pi * 5.2 * T + f)
-    ph = np.cumsum(f * vib) / SR
-    cl += ((2 * (ph % 1.0) - 1)).astype(np.float32)
-cl = lp(cl, 0.08)
-cl_env = env_lin([(0, 0), (28.5, 0), (34, 0.25), (42.8, 0.35), (44.3, 0.6), (48.0, 0.7), (48.25, 0.0), (70.6, 0)])
-mus[:, 0] += cl * cl_env * 0.08
-mus[:, 1] += np.roll(cl, 200) * cl_env * 0.08
-# Sphärisches Pad 49.9 – 70 (Perle): D-Dur-ish mit hohen Sinus-Schimmern
-pad = np.zeros((len(T), 2), np.float32)
-for i, f in enumerate((146.83, 220.0, 293.66, 369.99, 440.0, 587.33, 880.0, 1174.66)):
-    ph = 2 * np.pi * f * T + 0.3 * np.sin(2 * np.pi * (0.1 + i * 0.03) * T)
-    w = np.sin(ph) * (0.6 if f < 600 else 0.25)
-    pad[:, i % 2] += w.astype(np.float32)
-pad_env = env_lin([(0, 0), (49.6, 0), (52.5, 0.09), (60.5, 0.11), (63.4, 0.06), (64.4, 0.0), (70.6, 0)])
-mus += pad * pad_env[:, None]
-# Moll-Pad-Ende nach dem Auge
-endp = np.zeros((len(T), 2), np.float32)
-for i, f in enumerate((73.42, 87.31, 110.0, 155.56, 207.65)):
-    endp[:, i % 2] += np.sin(2 * np.pi * f * T).astype(np.float32)
-end_env = env_lin([(0, 0), (64.4, 0), (64.6, 0.12), (68.5, 0.09), (70.6, 0)])
-mus += endp * end_env[:, None]
-
+# Pause nach "zweihundert Etagen" (Spannung), dann Aufbruch in G-Dur/D
+pad_chord([55, 62, 67, 71, 74], 35.8, 40.0, 0.06)
+pad_chord([57, 64, 69, 73, 76], 40.0, 44.6, 0.065)
+arp([79, 83, 86, 91, 86, 83], 35.9, 44.5, 0.2, 0.05)
+pad_chord([50, 57, 62, 66, 69, 74], 44.6, 47.0, 0.08)
+# Saal: großes Fis-Moll->D-Dur Schimmern
+for (ms, a, b_) in [([50, 57, 62, 66, 69, 74], 46.1, 51.5), ([47, 54, 59, 62, 66, 71], 51.0, 55.5),
+                    ([43, 50, 55, 59, 62, 67], 55.0, 59.8), ([45, 52, 57, 61, 64, 69], 59.5, 61.6),
+                    ([50, 57, 62, 66, 69, 74, 78], 61.3, 64.2), ([43, 50, 55, 59, 62, 69], 64.0, 69.6)]:
+    pad_chord(ms, a, b_, 0.07)
+arp([86, 90, 93, 98, 93, 90], 47.9, 61.0, 0.24, 0.04)
+arp([74, 78, 81, 86, 90, 93, 98, 102], 61.35, 62.6, 0.08, 0.06)
+arp([86, 81, 79, 74], 64.2, 66.0, 0.45, 0.05)
 # ---------------------------------------------------------------- Stimme + Ducking
 vo = load(f'{BASE}/vo_otto.mp3', 'highpass=f=70,acompressor=threshold=-18dB:ratio=3:attack=5:release=80,volume=1.6')
 voice = np.zeros_like(out)
@@ -181,7 +184,7 @@ lvl = np.abs(voice).mean(1)
 win = int(0.25 * SR)
 sm = np.convolve(lvl, np.ones(win) / win, 'same')
 duck = 1 - 0.5 * np.clip(sm / (sm.max() * 0.25 + 1e-9), 0, 1)
-mix = voice + (out * 0.42 + mus * 0.13) * duck[:, None]
+mix = voice + (out * 0.5 + mus * 0.24) * duck[:, None]
 peak = np.abs(mix).max()
 mix = np.tanh(mix / peak * 1.3) * 0.89
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-i', '-',
@@ -189,7 +192,7 @@ subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'f32le', '-ac', '2', '-ar',
                input=mix.astype(np.float32).tobytes(), check=True)
 print('mix ok', mix.shape[0] / SR)
 if os.environ.get('DBG'):
-    bed = (out * 0.42 + mus * 0.13) * duck[:, None]
+    bed = (out * 0.5 + mus * 0.24) * duck[:, None]
     for i in range(0, int(DUR), 3):
         s, e = i * SR, (i + 3) * SR
         rv = 20 * np.log10(np.sqrt((voice[s:e] ** 2).mean()) + 1e-9); rb = 20 * np.log10(np.sqrt((bed[s:e] ** 2).mean()) + 1e-9)

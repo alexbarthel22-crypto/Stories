@@ -25,6 +25,14 @@ Q = {
  'riser': ('cinematic riser tension', '[2 TO 15]'),
  'bubbles': ('bubbles underwater', '[2 TO 20]'),
  'drip': ('water drip echo', '[1 TO 15]'),
+ 'chime': ('magic chime sparkle', '[1 TO 8]'),
+ 'harp': ('harp glissando', '[1 TO 8]'),
+ 'paper': ('envelope paper open', '[0.5 TO 6]'),
+ 'clink': ('champagne glass clink', '[0.5 TO 5]'),
+ 'swish': ('dress fabric swish', '[0.5 TO 5]'),
+ 'shimmer': ('magical shimmer ambience', '[5 TO 60]'),
+ 'heels': ('high heels footsteps', '[2 TO 20]'),
+ 'reveal': ('magic reveal choir', '[2 TO 15]'),
 }
 os.makedirs('audio/fs', exist_ok=True)
 credits = {}

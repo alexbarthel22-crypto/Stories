@@ -2,7 +2,8 @@ import sys, glob, os
 from PIL import Image, ImageDraw
 names = sys.argv[2:]
 out = sys.argv[1]
-d = '/home/user/Stories/sunken_pearl/frames/preview'
+import os
+d = os.environ.get('SP_OUT', '/home/user/Stories/sunken_pearl/frames') + '/preview'
 rows = []
 for n in names:
     fs = sorted(glob.glob(f'{d}/{n}_*.png'))
