@@ -65,7 +65,8 @@ def s_hook():
 
 
 def s_deep():
-    return S1.s_descent()
+    f = S1.s_descent()
+    return lambda t: f(max(t, 0.0))
 
 
 def s_small():
