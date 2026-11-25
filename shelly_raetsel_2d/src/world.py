@@ -13,7 +13,7 @@ X_AP0, X_AP1 = 660.0, 1480.0    # Wohnung
 X_L, X_R = -50.0, 1530.0        # Außenglas
 DOOR_X0, DOOR_X1 = 700.0, 840.0
 SEA_Y = 300.0                   # Unterkante Sandinsel / Beginn Meer im Querschnitt
-CAB_W, CAB_H = 214.0, 330.0
+CAB_W, CAB_H = 214.0, 300.0
 CAB_X = (X_SH0 + X_SH1) / 2
 
 
@@ -473,7 +473,7 @@ def draw_beach(ctx, x0, y0, x1, y1, t, weather='day', train_x=1150, train_door=0
     fill_rrect(ctx, X_ST0 + 20, -340, 270, 350, 40, C['pearl'])
     rect(ctx, X_ST0 + 20, -340, 270, 14, C['gold'])
     fill_rrect(ctx, X_ST0 + 85, -285, 140, 285, 20, hexc('#5B3A29') if not st_open else hexc('#2A1A12'))
-    sticker(ctx, 'TREPPE', X_ST0 + 155, -312, 26, 'cream')
+    sticker(ctx, 'TREPPE', X_ST0 + 155, -312, 26, 'cream', world=True)
     # Glaskuppel über dem Aufzug (Station "Etage 0")
     cx = (X_SH0 + X_SH1) / 2
     ctx.save()
@@ -491,7 +491,7 @@ def draw_beach(ctx, x0, y0, x1, y1, t, weather='day', train_x=1150, train_door=0
     for a in (200, 240, 270, 300, 340):
         line(ctx, cx, 0, cx + math.cos(math.radians(a)) * 225, math.sin(math.radians(a)) * 225 * 1.85, 4, alpha(C['gold'], 0.7))
     circle(ctx, cx, -418, 18, C['white'])
-    sticker(ctx, 'SUNKEN PEARL', cx, -500, 50, 'navy')
+    sticker(ctx, 'SUNKEN PEARL', cx, -500, 50, 'navy', world=True)
     # Schild
     plate(ctx, cx + 330, -60, 'STRAND · ETAGE 0', size=26)
     ctx.restore()
@@ -537,12 +537,12 @@ def draw_view(ctx, cam, t, st):
             sx = r.uniform(-1200, 2700)
             shell_deco(ctx, sx, yb + 70 + r.uniform(0, 80), r.uniform(1, 1.8), r.choice([C['pink3'], C['cream']]))
     # Aufzugkabine + Figuren
-    if 'cabin_y' in st:
-        draw_cabin(ctx, st['cabin_y'], st.get('cabin_open', 0.0), st.get('in_cabin'), st.get('cabin_glow', -1))
-    # Etagenschilder am Schacht immer sichtbar (über der Kabine)
+    # Etagenschilder am Schacht (oberhalb der Kabinenhöhe, nie verdeckt wenn sie hält)
     for n in range(n_lo, n_hi + 1):
         if n <= -1:
-            plate(ctx, (X_SH0 + X_SH1) / 2, fy(n) - FH + SLAB + 30, lab(n), size=26)
+            plate(ctx, (X_SH0 + X_SH1) / 2, fy(n) - FH + SLAB + 24, lab(n), size=26)
+    if 'cabin_y' in st:
+        draw_cabin(ctx, st['cabin_y'], st.get('cabin_open', 0.0), st.get('in_cabin'), st.get('cabin_glow', -1))
     for fn in st.get('actors', []):
         fn(ctx)
     if st.get('weather') == 'rain' and y0 < 0:

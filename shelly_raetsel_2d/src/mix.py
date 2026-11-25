@@ -56,7 +56,7 @@ def bed(name, t0, t1, gain_db, fade=0.4, off=0.0):
 
 
 # ---------------- Geräusche
-t_eve, t_ride, t_home, t_aber = TW('jeden'), TW('fährt') - 0.3, TW('geht') - 0.5, TW('aber')
+t_eve, t_ride, t_home, t_aber = TW('jeden'), TW('boot') + 0.2, TW('geht') + 0.1, TW('aber')
 t_ride2, t_dort, t_ihre, t_denn = TW('shelly', 1), TW('dort'), TW('nachbar') - 0.2, TW('denn')
 t_eines, t_rain2 = TW('eines'), TW('shelly', 3)
 t_top = TW('oben', 0) + 0.1
@@ -75,7 +75,7 @@ for t in POPS:
 for t in [t_eve, t_aber, t_dort, t_ihre, t_denn, t_eines, t_rain2, t_am, t_und, t_warum, g(54.77), g(70.64)]:
     put('swoosh', t - 0.12, -12)
 # Aufzug-Fahrten (Summen) + Ankunft
-for a, b in [(t_ride, t_home - 0.25), (t_ride2 + 0.3, TW('zehnte')), (t_rain2 + 1.5, t_top), (t_und + 0.2, t10b)]:
+for a, b in [(t_ride, t_home - 0.25), (t_ride2 + 0.3, TW('zehnte')), (t_rain2 + 0.95, t_top), (t_und + 0.2, t10b)]:
     bed('elev', a, b + 0.2, -20, 0.25)
 for t in [t_home - 0.25, TW('zehnte'), t_top, t10b]:
     put('ding', t, -10)

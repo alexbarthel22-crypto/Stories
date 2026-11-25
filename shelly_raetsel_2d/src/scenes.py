@@ -94,6 +94,17 @@ def cab_y_of(nf):
     return SEA_Y + (-nf) * FH
 
 
+def y_to_floor(y):
+    if y <= fy(-1):
+        return -clamp(y / fy(-1))
+    return -((y - SEA_Y) / FH)
+
+
+def ease_sine(t, a, b):
+    k = clamp((t - a) / (b - a)) if b > a else 1.0
+    return 0.5 - 0.5 * math.cos(math.pi * k)
+
+
 def flabel(nf, final=None):
     n = int(round(nf))
     return lab(n)
@@ -109,10 +120,10 @@ BL = [0.9, 3.7, 6.1, 9.3, 12.2, 15.4, 18.8, 23.1, 27.6, 31.9, 36.0, 40.2, 44.7, 
 def chips(ctx, T, clock=None, floor=None):
     if clock:
         hhmm, hour, kind, t0 = clock
-        clock_chip(ctx, 330, 175, hhmm, hour, kind, pop(T, t0))
+        clock_chip(ctx, 270, 335, hhmm, hour, kind, pop(T, t0))
     if floor:
         label, direction, t0, ok = floor
-        floor_chip(ctx, 230 + 0, 300, label, direction, pop(T, t0), ok)
+        floor_chip(ctx, 210, 455, label, direction, pop(T, t0), ok)
 
 
 def vignette(ctx, a=0.22):
@@ -246,7 +257,7 @@ def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None, hut=None, sign=1.0):
     fill_rrect(ctx, sx0 + 14, cy_ - 98, sx1 - sx0 - 28, 92, 8, C['gold'])
     rect(ctx, sx0 + 22, cy_ - 90, sx1 - sx0 - 44, 78, hexc('#FDF6EC'))
     # Name am Gebäude
-    sticker(ctx, 'SUNKEN PEARL', (tx0 + tx1) / 2, 130, 58, 'navy', sc=sign)
+    sticker(ctx, 'SUNKEN PEARL', (tx0 + tx1) / 2, 130, 58, 'navy', sc=sign, world=True)
     # Etagenschilder links
     for n_ in (-1, -10, -20):
         plate(ctx, tx0 - 75, ext_row_y(n_) - EXT_ROW_H / 2, lab(n_), size=32)
@@ -303,8 +314,8 @@ def sc_overview(ctx, T):
     t20 = TW('zwanzig')
     cam = exterior(ctx, 1200, z, T, 'day', hl=ease(T, t20, t20 + 0.2),
                    sign=max(1.0, 1 + 0.35 * math.sin(math.pi * clamp((T - TW('sunken')) / 0.5))))
-    sticker(ctx, 'HOCHHAUS UNTER WASSER', 540, 110, 62, 'cream', rot=-2, sc=pop(T, TW('unter')))
-    sticker(ctx, '20. UNTERGESCHOSS', 540, 1640, 70, 'yellow', rot=-3, sc=pop(T, t20))
+    sticker(ctx, 'HOCHHAUS UNTER WASSER', 510, 1270, 58, 'cream', rot=-2, sc=pop(T, TW('unter')))
+    sticker(ctx, '20. UNTERGESCHOSS', 510, 1400, 66, 'yellow', rot=-3, sc=pop(T, t20))
 
 
 def sc_home(ctx, T, t0):
@@ -316,7 +327,7 @@ def sc_home(ctx, T, t0):
     cam = Cam(lerp(700, 860, ease(T, t0 + 0.3, t0 + 1.4)), y - 300, 1.1)
 
     def draw_sh(cx):
-        shelly(cx, x, y - 2 if x > X_SH1 - 20 else y - 10, 1.0, face=dr * 0.8, walk=ph, mirror=dr < 0,
+        shelly(cx, x, y - 2 if x > X_SH1 - 20 else y - 10, 1.0, face=0.8 if dr else 0, walk=ph, mirror=dr < 0,
                blink=blink_at(T, BL))
 
     def act(cx):
@@ -364,7 +375,7 @@ def sc_morning(ctx, T, umb=False, label_t=None, clock=('07:00', 7.0, 'sun')):
 
     def draw_sh(cx):
         u = {'ang': math.radians(78), 'state': 'closed'} if umb else None
-        shelly(cx, x, y - 2 if x > X_SH1 - 20 else y - 10, 1.0, face=dr * 0.8, walk=ph, mirror=dr < 0,
+        shelly(cx, x, y - 2 if x > X_SH1 - 20 else y - 10, 1.0, face=0.8 if dr else 0, walk=ph, mirror=dr < 0,
                arms={'R': (24, -58)} if umb else None, umb=u, blink=blink_at(T, BL))
 
     def inside():
@@ -379,8 +390,9 @@ def sc_morning(ctx, T, umb=False, label_t=None, clock=('07:00', 7.0, 'sun')):
 def sc_ride(ctx, T, n0, n1, t0, t1, cam_x=620, z=0.9, umb=False, open_at=None, expr='smile', track=True,
             exit_left=None, label=None):
     """Kabine fährt von n0 nach n1, Kamera folgt."""
-    nf = ride(T, t0, t1, n0, n1)
-    cy = cab_y_of(nf)
+    k = ease_sine(T, t0, t1)
+    cy = lerp(cab_y_of(n0), cab_y_of(n1), k)
+    nf = y_to_floor(cy)
     cam = Cam(cam_x, cy - 200, z)
     k_open = ease(T, open_at, open_at + 0.3) if open_at else 0.0
     xs = CAB_X + 6
@@ -393,7 +405,7 @@ def sc_ride(ctx, T, n0, n1, t0, t1, cam_x=620, z=0.9, umb=False, open_at=None, e
     def draw_sh(cx):
         u = {'ang': math.radians(78), 'state': 'closed'} if umb else None
         shelly(cx, xs, cy - 10 if xs > X_SH0 - 10 else cy - 2, 1.0, walk=ph, mirror=mirror, expr=expr,
-               arms={'R': (24, -58)} if umb else None, umb=u, blink=blink_at(T, BL), face=-0.8 if mirror else 0)
+               arms={'R': (24, -58)} if umb else None, umb=u, blink=blink_at(T, BL), face=0.8 if mirror else 0)
 
     def inside():
         if xs > X_SH0 - 10:
@@ -434,7 +446,7 @@ def sc_climb(ctx, T, t0, t1, n_start, floors, cam_z=0.95, who=None, cam_fixed=No
         cam = Cam(420, y - 200, cam_z)
 
     def act(cx):
-        shelly(cx, x, y, 1.0, walk=T * 14, mirror=dr < 0, face=dr * 0.8, expr=expr, blink=blink_at(T, BL))
+        shelly(cx, x, y, 1.0, walk=T * 14, mirror=dr < 0, face=0.8, expr=expr, blink=blink_at(T, BL))
     st = {'actors': [act], 'who': who or {}}
     draw_view(ctx, cam, T, st)
     return cam, n_start + f
@@ -599,15 +611,15 @@ def solution_scene(ctx, T):
     if umb and umb['scale'] < 1:
         ctx.push_group()
         out = shelly(ctx, SOL_X, SOL_FEET, SOL_S, mirror=True, arms=arms, umb=umb, tiptoe=tiptoe, expr=expr,
-                     look=look, blink=blink_at(T, BL), face=-0.4, arm_len=ARM)
+                     look=look, blink=blink_at(T, BL), face=0.4, arm_len=ARM)
         ctx.pop_group_to_source()
         ctx.paint()
     else:
         shelly(ctx, SOL_X, SOL_FEET, SOL_S, mirror=True, arms=arms, umb=umb, tiptoe=tiptoe, expr=expr, look=look,
-               blink=blink_at(T, BL), face=-0.4, arm_len=ARM)
+               blink=blink_at(T, BL), face=0.4, arm_len=ARM)
     # Regen-Andeutung hinter dem Glas (nur Stimmung)
     # Sticker
-    top_y = 300
+    top_y = 340
     if tA <= T < t_klein:
         sticker(ctx, 'DIE LÖSUNG', 540, top_y, 70, 'cream', rot=-3, sc=pop(T, tA))
     elif t_klein <= T < t_down:
@@ -662,25 +674,25 @@ def question_scene(ctx, T):
     t0 = g(47.35)
     question_bg(ctx, T)
     k_dots = [pop(T, t0 + 0.9 + i * 0.25) for i in range(3)]
-    shelly(ctx, 540, 1540, 3.4, arms={'R': (8, -112)}, expr='think', look=(4, -6), blink=blink_at(T, BL))
+    shelly(ctx, 510, 1330, 3.0, arms={'R': (8, -112)}, expr='think', look=(4, -6), blink=blink_at(T, BL))
     for i, kd in enumerate(k_dots):
         if kd > 0:
-            circle(ctx, 680 + i * 60, 820 - i * 55, (14 + i * 7) * kd, alpha(C['white'], 0.9))
-    sticker(ctx, 'WARUM MACHT', 520, 330, 74, 'cream', rot=-3, sc=pop(T, t0))
-    sticker(ctx, 'SHELLY DAS?', 560, 450, 80, 'yellow', rot=2, sc=pop(T, g(48.05)))
-    sticker(ctx, 'TIPP: REGEN', 540, 580, 58, 'blue', rot=-2, sc=pop(T, g(49.52)), icon='rain')
+            circle(ctx, 640 + i * 55, 760 - i * 50, (14 + i * 7) * kd, alpha(C['white'], 0.9))
+    sticker(ctx, 'WARUM MACHT', 490, 350, 74, 'cream', rot=-3, sc=pop(T, t0))
+    sticker(ctx, 'SHELLY DAS?', 530, 470, 80, 'yellow', rot=2, sc=pop(T, g(48.05)))
+    sticker(ctx, 'TIPP: REGEN', 510, 595, 58, 'blue', rot=-2, sc=pop(T, g(49.52)), icon='rain')
     tc = g(51.93)
     k = pop(T, tc)
     if k > 0:
         ctx.save()
-        ctx.translate(820, 1640)
+        ctx.translate(800, 1300)
         ctx.scale(k, k)
         fill_rrect(ctx, -60, -40, 120, 80, 22, C['yellow'])
         poly(ctx, [(-20, 36), (10, 36), (-28, 64)], C['yellow'])
         for i in range(3):
             circle(ctx, -28 + i * 28, 0, 8, C['ink'])
         ctx.restore()
-    sticker(ctx, "SCHREIB'S IN DIE KOMMENTARE", 540, 1760, 40, 'white', sc=pop(T, tc + 0.15))
+    sticker(ctx, "SCHREIB'S IN DIE KOMMENTARE", 510, 1430, 40, 'white', sc=pop(T, tc + 0.15))
 
 
 # ---------------------------------------------------------------- Endkarte
@@ -721,31 +733,31 @@ def end_scene(ctx, T):
 
     def hut(c):
         beach_hut(c, 880, 10, khut)
-    cy = lerp(120, 200, ease(T, t0, END))
+    cy = lerp(40, 100, ease(T, t0, END))
     exterior(ctx, cy, 0.82, T, 'eve', sh=sh, hut=hut)
     vignette(ctx, 0.25)
     if T < t_du:
-        sticker(ctx, "HÄTTEST DU'S", 540, 260, 78, 'cream', rot=-3, sc=pop(T, t0))
-        sticker(ctx, 'GEWUSST?', 540, 380, 90, 'yellow', rot=2, sc=pop(T, g(71.10)))
-        sticker(ctx, "SCHREIB'S IN DIE KOMMENTARE", 540, 500, 40, 'white', sc=pop(T, g(71.60)))
+        sticker(ctx, "HÄTTEST DU'S", 510, 340, 78, 'cream', rot=-3, sc=pop(T, t0))
+        sticker(ctx, 'GEWUSST?', 510, 460, 90, 'yellow', rot=2, sc=pop(T, g(71.10)))
+        sticker(ctx, "SCHREIB'S IN DIE KOMMENTARE", 510, 575, 40, 'white', sc=pop(T, g(71.60)))
     else:
-        sticker(ctx, 'DU WILLST MITSPIELEN?', 540, 250, 66, 'cream', rot=-2, sc=pop(T, t_du))
-        sticker(ctx, 'DEINE EIGENE HÜTTE', 540, 365, 62, 'yellow', rot=2, sc=pop(T, t_du + 0.6))
-        sticker(ctx, 'MIT DEINEM NAMEN!', 540, 470, 56, 'yellow', rot=-1, sc=pop(T, t_du + 0.9))
+        sticker(ctx, 'DU WILLST MITSPIELEN?', 510, 335, 66, 'cream', rot=-2, sc=pop(T, t_du))
+        sticker(ctx, 'DEINE EIGENE HÜTTE', 510, 445, 62, 'yellow', rot=2, sc=pop(T, t_du + 0.6))
+        sticker(ctx, 'MIT DEINEM NAMEN!', 510, 545, 56, 'yellow', rot=-1, sc=pop(T, t_du + 0.9))
         tap = t_folg + 0.7
         if T >= t_folg:
             if T < tap:
-                sticker(ctx, '+ FOLGEN', 420, 610, 58, 'red', sc=pop(T, t_folg))
+                sticker(ctx, '+ FOLGEN', 400, 660, 58, 'red', sc=pop(T, t_folg))
             else:
-                sticker(ctx, 'GEFOLGT', 420, 610, 58, 'green', sc=lerp(0.9, 1.0, back_out(T, tap, tap + 0.3)), icon='check')
+                sticker(ctx, 'GEFOLGT', 400, 660, 58, 'green', sc=lerp(0.9, 1.0, back_out(T, tap, tap + 0.3)), icon='check')
             if tap - 0.25 < T < tap + 0.4:
                 k = clamp((T - tap + 0.25) / 0.65)
                 ctx.new_sub_path()
-                ctx.arc(480, 620, 30 + 60 * k, 0, 2 * math.pi)
+                ctx.arc(460, 670, 30 + 60 * k, 0, 2 * math.pi)
                 ctx.set_line_width(8)
                 src(ctx, alpha(C['white'], 0.8 * (1 - k)))
                 ctx.stroke()
-                circle(ctx, 480, 620, 26 * (1 - k * 0.5), alpha(C['white'], 0.6 * (1 - k)))
+                circle(ctx, 460, 670, 26 * (1 - k * 0.5), alpha(C['white'], 0.6 * (1 - k)))
 
 
 # ---------------------------------------------------------------- Hauptzeitleiste
@@ -756,22 +768,22 @@ def frame(ctx, T):
         return
     # 2 Abends: mit dem Boot zurück, Aufzug runter, in die Wohnung (ganz normal)
     t_eve = TW('jeden')
-    t_ride = TW('fährt') - 0.3
-    t_home = TW('geht') - 0.5
+    t_ride = TW('boot') + 0.2
+    t_home = TW('geht') + 0.1
     t_aber = TW('aber')
     if T < t_ride:
         t0 = t_eve
-        cam = Cam(740, -300, 0.86)
-        x, ph, dr = path_x(T, [(t0 + 0.3, 1120), (t_ride - 0.7, CAB_X + 6)])
+        cam = Cam(700, -300, 0.86)
+        x, ph, dr = path_x(T, [(t0 + 0.2, 930), (t_ride - 0.7, CAB_X + 6)])
         k_open = 1 - ease(T, t_ride - 0.6, t_ride - 0.3)
 
         def inside():
             if x < X_SH1 - 30:
-                shelly(ctx, x, -10, 1.0, walk=ph, mirror=dr < 0, face=-0.8 if ph else 0, blink=blink_at(T, BL))
+                shelly(ctx, x, -10, 1.0, walk=ph, mirror=dr < 0, face=0.8 if ph else 0, blink=blink_at(T, BL))
 
         def act(cx):
             if x >= X_SH1 - 30:
-                shelly(cx, x, 0, 1.0, walk=ph, mirror=dr < 0, face=-0.8 if ph else 0, blink=blink_at(T, BL))
+                shelly(cx, x, 0, 1.0, walk=ph, mirror=dr < 0, face=0.8 if ph else 0, blink=blink_at(T, BL))
         draw_view(ctx, cam, T, {'weather': 'eve', 'cabin_y': 0.0, 'cabin_open': k_open, 'in_cabin': inside,
                                 'actors': [act], 'train_x': 1000})
         chips(ctx, T, clock=('18:00', 18.0, 'moon', t0 + 0.05))
@@ -786,7 +798,7 @@ def frame(ctx, T):
     if T < t_aber:
         sc_home(ctx, T, t_home)
         chips(ctx, T, clock=('18:00', 18.0, 'moon', -1), floor=('−20', -1, -1, 1))
-        sticker(ctx, 'GANZ NORMAL', 540, 1500, 64, 'cream', rot=-2, sc=pop(T, TW('ganz')), icon='check')
+        sticker(ctx, 'GANZ NORMAL', 510, 1400, 64, 'cream', rot=-2, sc=pop(T, TW('ganz')), icon='check')
         return
     # 3 Morgens: etwas Seltsames
     t_ride2 = TW('shelly', 1)
@@ -812,8 +824,8 @@ def frame(ctx, T):
         else:
             cam, f = sc_climb(ctx, T, t0 + 1.0, t_ihre, -10, 4.0)
             chips(ctx, T, floor=(flabel(math.floor(f + 0.25)), 1, -1, 0))
-        sticker(ctx, 'AB −10 ZU FUSS', 540, 430, 50, 'cream', rot=-2, sc=pop(T, t0 + 0.4))
-        sticker(ctx, '10 STOCKWERKE', 540, 1500, 64, 'yellow', rot=3, sc=pop(T, TW('letzten')))
+        sticker(ctx, 'AB −10 ZU FUSS', 560, 580, 50, 'cream', rot=-2, sc=pop(T, t0 + 0.4))
+        sticker(ctx, '10 STOCKWERKE', 510, 1400, 64, 'yellow', rot=3, sc=pop(T, TW('letzten')))
         return
     t_denn = TW('denn')
     if T < t_denn:
@@ -847,9 +859,9 @@ def frame(ctx, T):
                    arms={'R': (30, -150 + wv), 'L': (-30, -150 - wv)} if cheer else None,
                    expr='open' if cheer else 'smile', blink=blink_at(T, BL))
         sc_beach(ctx, T, 'day', cam, actors=[act], st_open=True)
-        check_row(ctx, 110, 260, 'GESUND', 44, pop(T, TW('gesund')))
-        check_row(ctx, 110, 370, 'SPORTLICH', 44, pop(T, TW('sportlich')))
-        check_row(ctx, 110, 480, 'TREPPENSTEIGEN? KEIN PROBLEM', 40, pop(T, TW('probleme')))
+        check_row(ctx, 110, 330, 'GESUND', 44, pop(T, TW('gesund')))
+        check_row(ctx, 110, 440, 'SPORTLICH', 44, pop(T, TW('sportlich')))
+        check_row(ctx, 110, 550, 'TREPPENSTEIGEN? KEIN PROBLEM', 40, pop(T, TW('probleme')))
         return
     # 4 Regen
     t_rain2 = TW('shelly', 3)
@@ -859,21 +871,21 @@ def frame(ctx, T):
         sc_beach(ctx, T, 'rain', cam)
         vignette(ctx, 0.3)
         chips(ctx, T, clock=('07:00', 7.0, 'rain', t0 + 0.05))
-        sticker(ctx, 'REGEN!', 540, 560, 96, 'blue', rot=-4, sc=pop(T, TW('regnet')), icon='rain')
+        sticker(ctx, 'REGEN!', 510, 620, 96, 'blue', rot=-4, sc=pop(T, TW('regnet')), icon='rain')
         return
     t_am = TW('am', 0) if any(_norm(w[0]) == 'am' for w in NEW) else TW('nächsten') - 0.2
     t_top = TW('oben', 0) + 0.1
     if T < t_am:
         t0 = t_rain2
-        if T < t0 + 1.4:
-            sc_morning(ctx, T, umb=True, label_t=t0 - 1.2)
+        if T < t0 + 0.9:
+            sc_morning(ctx, T, umb=True, label_t=t0 - 1.7)
             chips(ctx, T, clock=('07:00', 7.0, 'rain', -1))
-            sticker(ctx, 'REGENSCHIRM', 540, 1450, 54, 'yellow', rot=3, sc=pop(T, t0 + 0.1))
+            sticker(ctx, 'REGENSCHIRM', 510, 1400, 54, 'yellow', rot=3, sc=pop(T, t0 + 0.1))
         elif T < t_top + 0.1:
-            cam, nf = sc_ride(ctx, T, -20, 0, t0 + 1.5, t_top, umb=True, z=0.9)
+            cam, nf = sc_ride(ctx, T, -20, 0, t0 + 0.95, t_top, umb=True, z=0.9)
             ok = ease(T, t_top, t_top + 0.2)
-            chips(ctx, T, clock=('07:00', 7.0, 'rain', -1), floor=(flabel(nf), 1, t0 + 1.4, ok))
-            sticker(ctx, 'DIREKT BIS GANZ OBEN', 540, 1500, 52, 'yellow', rot=-2, sc=pop(T, TW('direkt')), icon='check')
+            chips(ctx, T, clock=('07:00', 7.0, 'rain', -1), floor=(flabel(nf), 1, t0 + 0.9, ok))
+            sticker(ctx, 'DIREKT BIS GANZ OBEN', 510, 1400, 52, 'yellow', rot=-2, sc=pop(T, TW('direkt')), icon='check')
         else:
             tt = t_top + 0.1
             cam = Cam(620, -280, 0.86)
@@ -906,7 +918,7 @@ def frame(ctx, T):
         else:
             cam, nf = sc_ride(ctx, T, -10, -10, 0, 0.1, open_at=0.0, exit_left=t_ex, track=False)
             chips(ctx, T, clock=('07:00', 7.0, 'sun', -1), floor=('−10', 1, -1, 1))
-        sticker(ctx, 'WIEDER NUR BIS −10', 540, 1500, 56, 'yellow', rot=-2, sc=pop(T, t10))
+        sticker(ctx, 'WIEDER NUR BIS −10', 510, 1400, 56, 'yellow', rot=-2, sc=pop(T, t10))
         return
     # 15 Frage
     if T < g(54.77):

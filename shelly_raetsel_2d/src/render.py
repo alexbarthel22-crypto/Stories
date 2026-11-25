@@ -1,5 +1,7 @@
 """Rendern: python render.py preview t1 t2 ...  |  python render.py full [start end]"""
 import sys, os, cairo
+import numpy as np
+from PIL import Image
 from multiprocessing import Pool
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import scenes
@@ -9,12 +11,39 @@ FPS = 30
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'frames')
 
 
-def render(T, path):
+SUB = 5            # Zwischenbilder pro Frame (Bewegungsunschärfe der Szene)
+SHUTTER = 0.5      # Anteil der Framedauer
+import draw as _draw
+
+
+def _one(T, ui=True):
+    _draw.UI_ON[0] = ui
     s = cairo.ImageSurface(cairo.FORMAT_RGB24, W, H)
     c = cairo.Context(s)
     c.set_antialias(cairo.ANTIALIAS_BEST)
     scenes.frame(c, T)
-    s.write_to_png(path)
+    s.flush()
+    _draw.UI_ON[0] = True
+    return np.frombuffer(s.get_data(), np.uint8).reshape(H, s.get_stride() // 4, 4)[:, :W, :3].astype(np.float32)
+
+
+def render(T, path):
+    full = _one(T, ui=True)
+    mid = _one(T, ui=False)
+    probe = _one(T + SHUTTER / FPS, ui=False)
+    if np.abs(probe - mid).mean() < 1.5:
+        img = full
+    else:
+        n = 14
+        acc = np.zeros_like(mid)
+        for k in range(n):
+            dt = (k / (n - 1) - 0.5) * SHUTTER / FPS
+            acc += _one(max(0.0, T + dt), ui=False)
+        blur = acc / n
+        m = (np.abs(full - mid).max(axis=2, keepdims=True) / 24.0).clip(0, 1)
+        img = blur * (1 - m) + full * m
+    img = (img + 0.5).clip(0, 255).astype(np.uint8)[:, :, ::-1]
+    Image.fromarray(img).save(path, compress_level=1)
 
 
 def job(i):

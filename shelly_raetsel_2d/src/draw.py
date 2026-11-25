@@ -232,9 +232,13 @@ def pop(t, t0, dur=0.35):
     return max(0.0, back_out(t, t0, t0 + dur, 2.4))
 
 
-def sticker(ctx, s, x, y, size, style='cream', rot=0.0, sc=1.0, pad=None, alpha_=1.0, icon=None):
+UI_ON = [True]   # False: Text/Anzeigen weglassen (für Bewegungsunschärfe der Szene)
+SAFE = (80, 260, 940, 1480)   # TikTok-Sicherheitsbereich: Text nur innerhalb
+
+
+def sticker(ctx, s, x, y, size, style='cream', rot=0.0, sc=1.0, pad=None, alpha_=1.0, icon=None, world=False):
     """Aufkleber-Label (cream, yellow, white, blue, green, red, navy). (x, y) = Mitte."""
-    if sc <= 0.001 or alpha_ <= 0.001:
+    if sc <= 0.001 or alpha_ <= 0.001 or (not world and not UI_ON[0]):
         return
     bg, fg = {
         'cream': (C['cream'], C['ink']), 'yellow': (C['yellow'], C['ink']), 'white': (C['white'], C['ink']),
@@ -248,6 +252,14 @@ def sticker(ctx, s, x, y, size, style='cream', rot=0.0, sc=1.0, pad=None, alpha_
     if icon:
         iw = size * 1.15
     w, h = tw + px * 2 + iw, th + py * 2
+    if not world:
+        x0, y0, x1, y1 = SAFE
+        fit = min(1.0, (x1 - x0) / (w * 1.06))
+        size *= fit
+        if fit < 1.0:
+            return sticker(ctx, s, x, y, size, style, rot, sc, pad, alpha_, icon, world)
+        x = min(max(x, x0 + w / 2 * 1.04), x1 - w / 2 * 1.04)
+        y = min(max(y, y0 + h / 2 * 1.1), y1 - h / 2 * 1.1)
     ctx.save()
     ctx.translate(x, y)
     ctx.rotate(math.radians(rot))
@@ -268,6 +280,8 @@ def sticker(ctx, s, x, y, size, style='cream', rot=0.0, sc=1.0, pad=None, alpha_
 
 def chip(ctx, x, y, h, draw_fn, w, sc=1.0, alpha_=1.0, border=True):
     """Dunkle Pill mit Inhalt; draw_fn(ctx) zeichnet relativ zur Mitte."""
+    if not UI_ON[0]:
+        return
     if sc <= 0.001:
         return
     ctx.save()
@@ -298,6 +312,8 @@ def clock_chip(ctx, x, y, hhmm, hour, kind, sc=1.0):
 
 
 def floor_chip(ctx, x, y, label, direction, sc=1.0, ok=0.0):
+    if not UI_ON[0]:
+        return
     w = 120 + text_size(ctx, label, 56)[0]
 
     def d(c):
@@ -319,6 +335,8 @@ def floor_chip(ctx, x, y, label, direction, sc=1.0, ok=0.0):
 
 def check_row(ctx, x, y, s, size, sc):
     """Grüner Haken + Label (linksbündig an x)."""
+    if not UI_ON[0]:
+        return
     if sc <= 0.001:
         return
     ctx.save()
@@ -335,6 +353,8 @@ def check_row(ctx, x, y, s, size, sc):
 
 
 def qmark_bubble(ctx, x, y, r, sc=1.0, c=None):
+    if not UI_ON[0]:
+        return
     if sc <= 0.001:
         return
     ctx.save()
