@@ -16,7 +16,7 @@ def load(p):
 N = int(END * SR) + SR
 out = np.zeros((N, 2), np.float32)
 fs = {k: load(f'{ROOT}/audio/fs/{k}.mp3') for k in
-      ['bubbles', 'click', 'ding', 'doors', 'elev', 'gull', 'heels', 'music', 'pop', 'rain', 'steps', 'swoosh', 'tada',
+      ['bubbles', 'click', 'ding', 'doors', 'elev', 'gull', 'heels', 'music', 'pop', 'rain', 'steps', 'swoosh', 'tada', 'boom',
        'waves', 'whoosh']}
 
 
@@ -64,7 +64,8 @@ t_am = TW('nächsten') - 0.2
 t_und = gn(next(w[1] for w in NEW if _norm(w[0]) == 'und' and w[1] > nw('sonne')))
 t10b = TW('zehnten')
 t_warum = TW('warum')
-POPS = [TW('unter'), TW('zwanzig'), t_eve + 0.05, t_eve + 0.4, TW('ganz'), TW('morgen'), TW('seltsam'),
+put('boom', 0.0, -4, fade=0.01)
+POPS = [0.3, t_eve + 0.05, t_eve + 0.4, TW('ganz'), TW('morgen'), TW('seltsam'),
         t_dort + 0.4, TW('letzten'), TW('soph'), TW('laura'), TW('wundern'), TW('wundern') + 0.18,
         TW('gesund'), TW('sportlich'), TW('probleme'), t_eines + 0.05, TW('regnet'), t_rain2 + 0.1, TW('direkt'),
         t_am + 0.05, t10b, t_warum, g(48.05), g(49.52), g(51.93), g(54.77), g(55.89), g(56.91), g(61.71),

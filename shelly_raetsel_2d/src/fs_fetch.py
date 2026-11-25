@@ -1,5 +1,6 @@
 import json, sys, urllib.request, urllib.parse, os
 Q = {
+ 'boom': ('cinematic impact boom', '[0.5 TO 4]'),
  'horn': ('ship horn', '[1 TO 20]'),
  'pop': ('pop bubble ui', '[0.05 TO 1]'),
  'music': ('happy ukulele loop', '[20 TO 120]'),

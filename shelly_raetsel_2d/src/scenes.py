@@ -307,39 +307,95 @@ def sc_intro(ctx, T, t0=0.0):
     sticker(ctx, 'SHELLY', sx, sy, 52, 'cream', rot=-4, sc=pop(T, t0 + 0.2))
 
 
+INTRO_TXT = ['SHELLY', 'WOHNT', 'IM', '20.', 'UNTERGESCHOSS', 'EINES', 'HOCHHAUSES', 'UNTER', 'WASSER,', 'DEM',
+             'SUNKEN', 'PEARL.']
+
+
+def karaoke(ctx, T, toks, times, cx, cy, size, maxw, appear=0.0):
+    """Ganzer Satz sofort lesbar; das gerade gesprochene Wort leuchtet gelb auf."""
+    if not UI_ON[0]:
+        return
+    gap = size * 0.42
+    padx, pady = size * 0.22, size * 0.16
+    ws = [text_size(ctx, t, size)[0] for t in toks]
+    lines, cur, cw = [], [], 0
+    for i, w in enumerate(ws):
+        bw = w + 2 * padx
+        if cur and cw + gap + bw > maxw:
+            lines.append((cur, cw)); cur, cw = [], 0
+        cw = cw + (gap if cur else 0) + bw
+        cur.append(i)
+    lines.append((cur, cw))
+    lh = size * 0.72 + 2 * pady + size * 0.22
+    total_h = len(lines) * lh
+    k = 1.0
+    ctx.save()
+    ctx.translate(cx, cy)
+    ctx.scale(k, k)
+    pw = max(l[1] for l in lines) + size * 0.7
+    ph = total_h + size * 0.45
+    fill_rrect(ctx, -pw / 2 + 6, -ph / 2 + 10, pw, ph, size * 0.4, alpha(C['shadow'], 0.3))
+    fill_rrect(ctx, -pw / 2, -ph / 2, pw, ph, size * 0.4, alpha(C['navy'], 0.92))
+    y = -total_h / 2 + lh / 2
+    for idxs, lw in lines:
+        x = -lw / 2
+        for i in idxs:
+            bw = ws[i] + 2 * padx
+            t0 = times[i][0]
+            t1 = times[i + 1][0] if i + 1 < len(times) else times[i][1] + 0.4
+            on = clamp((T - t0) / 0.06) * (1 - clamp((T - t1) / 0.12))
+            done = T >= t1
+            sc_ = 1 + 0.08 * on
+            ctx.save()
+            ctx.translate(x + bw / 2, y)
+            ctx.scale(sc_, sc_)
+            if on > 0.01:
+                fill_rrect(ctx, -bw / 2, -(size * 0.72 + 2 * pady) / 2, bw, size * 0.72 + 2 * pady, size * 0.2,
+                           alpha(C['yellow'], on))
+            fg = mixc(C['white'], C['ink'], on)
+            if not done and on < 0.01 and T < t0:
+                fg = alpha(C['white'], 0.92)
+            text(ctx, toks[i], 0, 0, size, fg)
+            ctx.restore()
+            x += bw + gap
+        y += lh
+    ctx.restore()
+
+
 def sc_overview(ctx, T):
-    """Gesamtansicht: Hochhaus unter Wasser vom Strand bis zum Meeresboden."""
+    """Explosiver Einstieg: Blitz, Zoom-Punch, Wackeln, RÄTSEL-Stempel, ganzer Satz mit Wort-Highlight."""
     t_end = TW('jeden')
-    z = lerp(0.55, 0.58, ease(T, 0, t_end))
+    punch = back_out(T, 0.0, 0.55, 1.4)
+    z = lerp(1.6, 0.56, punch) + 0.02 * ease(T, 0.6, t_end)
+    shake = max(0.0, 1 - T / 0.45)
+    ox = math.sin(T * 90) * 18 * shake
+    oy = math.cos(T * 77) * 14 * shake
     t20 = TW('zwanzig')
-    cam = exterior(ctx, 1200, z, T, 'day', hl=ease(T, t20, t20 + 0.2),
-                   sign=max(1.0, 1 + 0.35 * math.sin(math.pi * clamp((T - TW('sunken')) / 0.5))))
-    sticker(ctx, 'HOCHHAUS UNTER WASSER', 510, 1270, 58, 'cream', rot=-2, sc=pop(T, TW('unter')))
-    sticker(ctx, '20. UNTERGESCHOSS', 510, 1400, 66, 'yellow', rot=-3, sc=pop(T, t20))
-
-
-def sc_home(ctx, T, t0):
-    """Abends: Kabine auf −20 -> Wohnungstür -> hinein."""
-    y = fy(-20)
-    x, ph, dr = path_x(T, [(t0 + 0.2, CAB_X + 6), (t0 + 1.0, 790), (t0 + 1.6, 1080)])
-    door = ease(T, t0 + 0.7, t0 + 1.0)
-    cab_open = 1 - ease(T, t0 + 1.2, t0 + 1.5)
-    cam = Cam(lerp(700, 860, ease(T, t0 + 0.3, t0 + 1.4)), y - 300, 1.1)
-
-    def draw_sh(cx):
-        shelly(cx, x, y - 2 if x > X_SH1 - 20 else y - 10, 1.0, face=0.8 if dr else 0, walk=ph, mirror=dr < 0,
-               blink=blink_at(T, BL))
-
-    def act(cx):
-        if x > X_SH1 - 20:
-            draw_sh(cx)
-
-    def inside():
-        if x <= X_SH1 - 20:
-            draw_sh(ctx)
-    draw_view(ctx, cam, T, {'actors': [act], 'cabin_y': y, 'cabin_open': cab_open, 'in_cabin': inside,
-                            'door_r': {-20: cab_open}, 'apt_door': {-20: door}})
-    return cam
+    ctx.save()
+    ctx.translate(ox, oy)
+    exterior(ctx, lerp(2300, 1200, punch), z, T, 'day', hl=ease(T, t20, t20 + 0.2),
+             sign=max(1.0, 1 + 0.35 * math.sin(math.pi * clamp((T - TW('sunken')) / 0.5))))
+    ctx.restore()
+    vignette(ctx, 0.3)
+    # Blitz (unter den Texten, damit der Satz sofort lesbar ist)
+    if T < 0.25:
+        rect(ctx, 0, 0, W, H, alpha(C['white'], 0.8 * (1 - T / 0.25)))
+    # Strahlen-Burst hinter dem Stempel
+    kb = clamp(T / 0.5)
+    if kb < 1:
+        ctx.save()
+        ctx.translate(510, 560)
+        for i in range(16):
+            a_ = i / 16 * 2 * math.pi + T
+            r0, r1 = 120 + 500 * kb, 220 + 900 * kb
+            line(ctx, math.cos(a_) * r0, math.sin(a_) * r0, math.cos(a_) * r1, math.sin(a_) * r1, 16 * (1 - kb),
+                 alpha(C['yellow'], 0.9 * (1 - kb)))
+        ctx.restore()
+    rot = -4 + 2 * math.sin(T * 3)
+    sticker(ctx, 'RÄTSEL', 510, 560, 120, 'yellow', rot=rot, sc=lerp(2.2, 1.0, back_out(T, 0.0, 0.4, 2.5)) if T < 0.4 else 1.0 + 0.04 * math.sin(T * 6))
+    times = [(w[1] + 0.0, w[2]) for w in NEW[:len(INTRO_TXT)]]
+    times = [(gn(a), gn(b)) for a, b in times]
+    karaoke(ctx, T, INTRO_TXT, times, 510, 1120, 60, 800, appear=0.0)
 
 
 def sc_exterior(ctx, T, t0):

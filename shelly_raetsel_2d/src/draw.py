@@ -258,8 +258,10 @@ def sticker(ctx, s, x, y, size, style='cream', rot=0.0, sc=1.0, pad=None, alpha_
         size *= fit
         if fit < 1.0:
             return sticker(ctx, s, x, y, size, style, rot, sc, pad, alpha_, icon, world)
-        x = min(max(x, x0 + w / 2 * 1.04), x1 - w / 2 * 1.04)
-        y = min(max(y, y0 + h / 2 * 1.1), y1 - h / 2 * 1.1)
+        sc = min(sc, (x1 - x0) / (w * 1.06))
+        we, he = w * sc, h * sc
+        x = min(max(x, x0 + we / 2 * 1.04), x1 - we / 2 * 1.04)
+        y = min(max(y, y0 + he / 2 * 1.1), y1 - he / 2 * 1.1)
     ctx.save()
     ctx.translate(x, y)
     ctx.rotate(math.radians(rot))
