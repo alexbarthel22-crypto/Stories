@@ -1,0 +1,107 @@
+{
+ "waves": {
+  "name": "Ocean Noise - Surf",
+  "user": "amholma",
+  "id": 372181,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 34.9932
+ },
+ "bubbles": {
+  "name": "SFX_UnderWater",
+  "user": "Perel",
+  "id": 173439,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 5.60433
+ },
+ "whoosh": {
+  "name": "Swoosh",
+  "user": "Shinplaster",
+  "id": 264777,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 5.31224
+ },
+ "elev": {
+  "name": "ship-interior-1.wav",
+  "user": "markkuyp",
+  "id": 344379,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 32.594
+ },
+ "ding": {
+  "name": "Elevator Ping 02",
+  "user": "LilMati",
+  "id": 514865,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 1.50957
+ },
+ "doors": {
+  "name": "elevator doors opening",
+  "user": "ccovi",
+  "id": 679014,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 7.95483
+ },
+ "clock": {
+  "name": "Foley_Object_Clock_Old_Tick_Sequence_Stereo",
+  "user": "Nox_Sound",
+  "id": 790019,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 16.4007
+ },
+ "heels": {
+  "name": "steps in high heels.wav",
+  "user": "anagar",
+  "id": 267933,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 11.232
+ },
+ "reveal": {
+  "name": "Treasure Chest Reveal",
+  "user": "Qvantor",
+  "id": 878615,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 3.70492
+ },
+ "chime": {
+  "name": "GLEAM-GLOW-SFX-CHIME.wav",
+  "user": "newagesoup",
+  "id": 351408,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 5.38133
+ },
+ "plunge": {
+  "name": "Dipping below water 2",
+  "user": "adviseme333",
+  "id": 679407,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 4.11573
+ },
+ "rain": {
+  "name": "Rain on roofs",
+  "user": "xkeril",
+  "id": 669487,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 54.4845
+ },
+ "train": {
+  "name": "Train-1_Arrival_Outside_Screech_Steam.wav",
+  "user": "LamaMakesMusic",
+  "id": 420655,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 14.8674
+ },
+ "click": {
+  "name": "hint.wav",
+  "user": "dland",
+  "id": 320181,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 0.265193
+ },
+ "tada": {
+  "name": "Success Fanfare Trumpets.mp3",
+  "user": "FunWithSound",
+  "id": 456966,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 4.43748
+ }
+}
