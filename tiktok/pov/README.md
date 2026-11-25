@@ -202,6 +202,9 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/mutprobe_1.json`: **„Die Mutprobe · Teil 1“** (ca. 90 s, Set `schule`, neue Serie für Jugendliche). Mia und Ben machen nachts einen Livestream in der Schule.
   Die Bewegungsmelder gehen von allein an, die Kamera folgt ihnen, Spind 47 mit Mias durchgestrichenem Foto öffnet sich. Um Mitternacht schrillt die Schulglocke, Ben verschwindet, der Lautsprecher flüstert.
   Im Bio-Raum schreibt sich die Kreide von selbst, das Skelett dreht den Kopf. Ben schreibt, er stehe draußen am Tor. Doch „Ben“ steht in der Tür, mit schwarzen Augen.
+- `stories/mutprobe_2.json`: **„Die Mutprobe · Teil 2“** (ca. 89 s, Set `turnhalle`). Mia flieht in die Turnhalle und telefoniert mit dem echten Ben.
+  Die Strahler gehen an, die Anzeigetafel zeigt „MIA IST DRAN“, ein Basketball springt heran. Auf der Tribüne nimmt „Ben“ die Maske ab: Es ist Noah,
+  den die Clique letztes Jahr bei einer Mutprobe im Geräteraum eingesperrt hat. Das Rolltor geht auf, der echte Ben stürmt herein. Am Ende steht auf der Tafel: „MONTAG 1. STUNDE: BEN“.
 
 ## Neu: Felder für mehr Spannung und Details
 
@@ -377,3 +380,20 @@ Automatisch zu sehen:
 
 Cast: `augen: "leer"` (komplett schwarze Augen). Neue Geräusche: `atmo_schule, bewegungsmelder, kamera_servo, spind_knarren, schulglocke, lautsprecher_knacken, kreide, knochen`
 (`python3 tools/sfx_synth.py mutprobe`). Musik: `gen/musik_16_schule.mp3`, `gen/musik_17_flucht.mp3`.
+
+## Set `turnhalle` (Die Mutprobe 2): Schulturnhalle bei Nacht
+
+Die Halle reicht von x −12 … 12 und z −18 … 18. Der Eingang liegt bei z = +18, die Tribüne links (Stufen y 0.6/1.2/1.8/2.4 bei x −8.45/−9.35/−10.25/−11.15).
+Rechts sind Sprossenwand, Geräteraum (Rolltor z −6 … −2) und Notausgang mit Kette, vorne Anzeigetafel und Korb.
+Blickpunkte: `halle, tribuene, anzeige, korb, geraeteraum, eingang, decke, boden, seile`.
+
+| Feld | Wirkung |
+|---|---|
+| `effekt: {strahler: {ab, tempo}}` | Hallenstrahler Reihe für Reihe an (`strahler.wav`) |
+| `effekt: {dunkel: s}`, `effekt: {blitz: s}` | alles aus / kurzes Flackern |
+| `effekt: {anzeige: {ab, text, rot}}` (auch Liste) | LED-Anzeigetafel, lange Texte laufen durch (`anzeige_piep.wav`) |
+| `effekt: {ball: s}` | Basketball springt aus dem Dunkeln heran (`basketball.wav`) |
+| `effekt: {rolltor: s}` | Rolltor des Geräteraums fährt hoch (`rolltor.wav`) |
+| `hoehe: {name: y}` (Beat) / `y` (Cast) | Figur steht erhöht, z. B. auf der Tribüne |
+
+Musik: `gen/musik_18_halle.mp3`, `gen/musik_19_reue.mp3`. Geräusche erzeugen: `python3 tools/sfx_synth.py mutprobe2`.

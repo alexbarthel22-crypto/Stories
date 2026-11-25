@@ -1,0 +1,615 @@
+{
+ "titel": "Die Mutprobe · Teil 2",
+ "set": "turnhalle",
+ "himmel": "nacht",
+ "fov": 140,
+ "blick": "halle",
+ "max_pause": 0.45,
+ "handy_fov": 96,
+ "seed": 71,
+ "hall": 0.5,
+ "ducking": 0.75,
+ "atmo_spuren": [
+  {
+   "datei": "atmo_schule.wav",
+   "lautstaerke": 0.22
+  },
+  {
+   "datei": "atmo_wind.wav",
+   "lautstaerke": 0.12
+  }
+ ],
+ "cast": {
+  "ich": {
+   "pos": [
+    0,
+    16.5
+   ],
+   "pose": "rennen",
+   "oberteil": "#c84a7a",
+   "hose": "#2a2e44",
+   "haut": "#f0d8c0",
+   "stimme": "gemini:Leda",
+   "regie": "Mädchen, 15 Jahre",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "ben": {
+   "pos": [
+    60,
+    60
+   ],
+   "pose": "idle",
+   "frisur": "kurz",
+   "haare": "#2a1a10",
+   "oberteil": "#2a6a4a",
+   "hose": "#2a3a5a",
+   "schuhe": "#f0f0f0",
+   "augen": "#6a8a5a",
+   "haut": "#ecd2b8",
+   "details": "none",
+   "stimme": "gemini:Puck",
+   "regie": "Junge, 15 Jahre, Jugendsprache",
+   "modell": "gemini-3.8-flash-tts",
+   "taschenlampe": true,
+   "licht": true
+  },
+  "ben2": {
+   "pos": [
+    61,
+    61
+   ],
+   "pose": "idle",
+   "frisur": "kurz",
+   "haare": "#2a1a10",
+   "oberteil": "#2a6a4a",
+   "hose": "#2a3a5a",
+   "schuhe": "#f0f0f0",
+   "augen": "leer",
+   "haut": "#ecd2b8",
+   "details": "none",
+   "stimme": "gemini:Puck",
+   "regie": "Junge, 15 Jahre, aber ruhig und unheimlich",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "noah": {
+   "pos": [
+    62,
+    62
+   ],
+   "pose": "idle",
+   "frisur": "kurz",
+   "haare": "#d0a860",
+   "haut": "#f0dcc4",
+   "oberteil": "#2a6a4a",
+   "hose": "#2a3a5a",
+   "schuhe": "#f0f0f0",
+   "augen": "leer",
+   "details": "none",
+   "stimme": "gemini:Achird",
+   "regie": "Junge, 16 Jahre, ruhig, verletzt, unheimlich gefasst",
+   "modell": "gemini-3.8-flash-tts"
+  }
+ },
+ "beats": [
+  {
+   "schwarz": true,
+   "text": "DIE MUTPROBE · TEIL 2",
+   "text_farbe": "#ffd400",
+   "dauer": 2.4,
+   "blick": "halle",
+   "schnitt": true,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.55,
+     "ab": 0
+    }
+   ]
+  },
+  {
+   "schwarz": true,
+   "text": "Ben stand draußen. Wer war dann bei Mia?",
+   "dauer": 2.8,
+   "musik": {
+    "datei": "gen/musik_18_halle.mp3",
+    "lautstaerke": 0.15,
+    "einblenden": 2
+   }
+  },
+  {
+   "ort": [
+    "TURNHALLE",
+    "Gesamtschule Nord · 00:03"
+   ],
+   "blick": "halle",
+   "schnitt": true,
+   "laufen": {
+    "ich": {
+     "nach": [
+      0,
+      9.5
+     ],
+     "zeit": 2.4
+    }
+   },
+   "pose": {
+    "ich": "rennen"
+   },
+   "sfx": [
+    {
+     "datei": "tuer_knall.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.0
+    },
+    {
+     "datei": "rennen_hall.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.0,
+     "dauer": 2.5
+    },
+    {
+     "datei": "atem_schwer.wav",
+     "lautstaerke": 0.5,
+     "ab": 1.8,
+     "dauer": 5
+    }
+   ],
+   "dauer": 3.0
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "anruf",
+    "name": "Ben",
+    "uhr": "00:03"
+   },
+   "sfx": [
+    {
+     "datei": "klingelton.wav",
+     "lautstaerke": 0.3,
+     "ab": 0.2,
+     "dauer": 1.4
+    }
+   ],
+   "wer": "ben",
+   "sagt": "Mia?! Wo bist du? Alle Türen sind abgeschlossen!",
+   "wie": "panisch, außer Atem, ins Telefon",
+   "telefon": true,
+   "pause_vor": 1.4,
+   "lautstaerke": 1.4
+  },
+  {
+   "wer": "ich",
+   "sagt": "In der Turnhalle. Ben, da ist jemand, der genauso aussieht wie du!",
+   "wie": "flüsternd, panisch, schnell"
+  },
+  {
+   "wer": "ben",
+   "sagt": "Was?! Bleib da. Ich komm über den Hintereingang!",
+   "wie": "geschockt, entschlossen, ins Telefon",
+   "telefon": true,
+   "pause": 0.2,
+   "lautstaerke": 1.4
+  },
+  {
+   "handy": {
+    "typ": "anruf",
+    "name": "Ben",
+    "status": "Verbindung unterbrochen",
+    "uhr": "00:04"
+   },
+   "sfx": [
+    {
+     "datei": "anruf_ende.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.0
+    }
+   ],
+   "dauer": 1.4
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": "halle",
+   "drehung": 0.5,
+   "effekt": {
+    "strahler": {
+     "ab": 0.5,
+     "tempo": 1.6
+    }
+   },
+   "sfx": [
+    {
+     "datei": "strahler.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.5
+    }
+   ],
+   "dauer": 3.4
+  },
+  {
+   "blick": "anzeige",
+   "drehung": 0.7,
+   "zoom": 70,
+   "zoom_dauer": 1.2,
+   "effekt": {
+    "anzeige": [
+     {
+      "ab": 0.4,
+      "text": "HEIM 0 : 1 GAST",
+      "rot": false
+     }
+    ]
+   },
+   "sfx": [
+    {
+     "datei": "anzeige_piep.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.4
+    }
+   ],
+   "dauer": 2.4
+  },
+  {
+   "effekt": {
+    "anzeige": {
+     "ab": 0.1,
+     "text": "MIA IST DRAN"
+    }
+   },
+   "sfx": [
+    {
+     "datei": "anzeige_piep.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.1
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.2
+    },
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.3,
+     "dauer": 14
+    }
+   ],
+   "dauer": 3.4
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "effekt": {
+    "ball": 0.3
+   },
+   "blick": [
+    0,
+    -12
+   ],
+   "drehung": 0.6,
+   "blick_verzoegerung": 2.6,
+   "sfx": [
+    {
+     "datei": "basketball.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.3
+    }
+   ],
+   "dauer": 4.0
+  },
+  {
+   "blick": "boden",
+   "drehung": 0.6,
+   "wer": "ich",
+   "sagt": "Hallo…? Wer ist da?",
+   "wie": "zitternd, leise",
+   "pause_vor": 1.4
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "live",
+    "name": "schulgeist",
+    "zuschauer": [
+     6204,
+     8900
+    ],
+    "zuschauer_dauer": 4,
+    "tempo": 0.9,
+    "szene": "gang",
+    "kommentare": [
+     [
+      "lena.k",
+      "sie ist in der Turnhalle"
+     ],
+     [
+      "jonas_07",
+      "lauf Mia!!"
+     ],
+     [
+      "mila",
+      "das ist kein Fake oder?"
+     ],
+     [
+      "ayla",
+      "DA OBEN!!! TRIBÜNE!!"
+     ]
+    ]
+   },
+   "dauer": 4.2,
+   "sfx": [
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.35,
+     "ab": 0.3
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.35,
+     "ab": 1.2
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.35,
+     "ab": 2.1
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.35,
+     "ab": 3.0
+    },
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 3.0
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "laufen": {
+    "ben2": {
+     "nach": [
+      -9.4,
+      -2.0
+     ],
+     "zeit": 0.01
+    }
+   },
+   "hoehe": {
+    "ben2": 1.2
+   },
+   "blick": "ben2",
+   "drehung": 0.7,
+   "zoom": 60,
+   "zoom_ab": 0.6,
+   "zoom_dauer": 1.2,
+   "wer": "ben2",
+   "sagt": "Weißt du noch, Mia? Die Mutprobe letztes Jahr?",
+   "wie": "ruhig, leise, hallend",
+   "hall": 1.2,
+   "pause_vor": 1.4,
+   "musik": null
+  },
+  {
+   "wer": "ich",
+   "sagt": "Wer bist du?!",
+   "wie": "schreit, ängstlich"
+  },
+  {
+   "effekt": {
+    "blitz": 0.3
+   },
+   "laufen": {
+    "ben2": {
+     "nach": [
+      61,
+      61
+     ],
+     "zeit": 0.01,
+     "ab": 0.45
+    },
+    "noah": {
+     "nach": [
+      -9.4,
+      -2.0
+     ],
+     "zeit": 0.01,
+     "ab": 0.45
+    }
+   },
+   "hoehe": {
+    "noah": 1.2
+   },
+   "sfx": [
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.8,
+     "ab": 0.3
+    },
+    {
+     "datei": "strahler.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.3
+    }
+   ],
+   "wer": "noah",
+   "sagt": "Erkennst du mich jetzt?",
+   "wie": "ruhig, kalt, leise",
+   "hall": 1.2,
+   "pause_vor": 1.2,
+   "musik": {
+    "datei": "gen/musik_19_reue.mp3",
+    "lautstaerke": 0.16,
+    "einblenden": 1.5
+   },
+   "blick": "noah",
+   "drehung": 0.0,
+   "blick_verzoegerung": 0.46,
+   "zoom": 32,
+   "zoom_dauer": 0.01
+  },
+  {
+   "wer": "ich",
+   "sagt": "Noah…?",
+   "wie": "fassungslos, flüsternd",
+   "pause": 0.5
+  },
+  {
+   "wer": "noah",
+   "sagt": "Ihr habt mich im Geräteraum eingeschlossen. Die ganze Nacht. Nur für ein Video.",
+   "wie": "verletzt, ruhig, bitter",
+   "hall": 1.0,
+   "zoom": 45,
+   "zoom_dauer": 2.0
+  },
+  {
+   "wer": "ich",
+   "sagt": "Es tut mir leid! Das war doch nur ein dummer Witz!",
+   "wie": "verzweifelt, den Tränen nah"
+  },
+  {
+   "wer": "noah",
+   "sagt": "Für euch war es ein Witz. Ich musste danach die Schule wechseln.",
+   "wie": "leise, gebrochen, dann hart",
+   "hall": 1.0,
+   "pause": 0.4
+  },
+  {
+   "effekt": {
+    "rolltor": 0.3
+   },
+   "blick": "geraeteraum",
+   "drehung": 0.8,
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "sfx": [
+    {
+     "datei": "rolltor.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.3
+    }
+   ],
+   "wer": "noah",
+   "sagt": "Rein da. Nur eine Nacht. Dann sind wir quitt.",
+   "wie": "ruhig, bestimmt, unheimlich",
+   "hall": 1.0,
+   "pause_vor": 1.6,
+   "musik": null,
+   "laufen": {
+    "ben": {
+     "nach": [
+      0.1,
+      18.4
+     ],
+     "zeit": 0.01
+    }
+   }
+  },
+  {
+   "laufen": {
+    "ben": {
+     "nach": [
+      0.2,
+      11.5
+     ],
+     "zeit": 2.0,
+     "ab": 0.3
+    }
+   },
+   "pose": {
+    "ben": "leuchten"
+   },
+   "blick": "eingang",
+   "drehung": 0.5,
+   "sfx": [
+    {
+     "datei": "tuer_knall.wav",
+     "lautstaerke": 0.9,
+     "ab": 0.2
+    },
+    {
+     "datei": "rennen_hall.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.4,
+     "dauer": 2
+    }
+   ],
+   "wer": "ben",
+   "sagt": "Mia! Weg von ihm!",
+   "wie": "schreit, außer Atem",
+   "pause_vor": 1.0
+  },
+  {
+   "effekt": {
+    "dunkel": 0.3,
+    "anzeige": {
+     "ab": 0.6,
+     "text": "MONTAG 1. STUNDE: BEN"
+    }
+   },
+   "laufen": {
+    "noah": {
+     "nach": [
+      62,
+      62
+     ],
+     "zeit": 0.01,
+     "ab": 0.35
+    }
+   },
+   "blick": "anzeige",
+   "drehung": 0.7,
+   "blick_verzoegerung": 0.4,
+   "sfx": [
+    {
+     "datei": "strahler.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.3
+    },
+    {
+     "datei": "anzeige_piep.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.6
+    },
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.8
+    }
+   ],
+   "wer": "noah",
+   "sagt": "Das war erst die erste Stunde.",
+   "wie": "flüsternd, hallend, aus dem Dunkeln",
+   "hall": 1.0,
+   "pause_vor": 1.6,
+   "pause": 1.2,
+   "zoom": 55,
+   "zoom_dauer": 1.5
+  },
+  {
+   "schwarz": true,
+   "ende": "FORTSETZUNG FOLGT",
+   "ende_unter": "DIE MUTPROBE · TEIL 3",
+   "ende_ab": 0.4,
+   "dauer": 3.8,
+   "ort": null,
+   "sfx": [
+    {
+     "datei": "schulglocke.wav",
+     "lautstaerke": 0.3,
+     "ab": 0.3,
+     "dauer": 1.5
+    }
+   ]
+  }
+ ]
+}

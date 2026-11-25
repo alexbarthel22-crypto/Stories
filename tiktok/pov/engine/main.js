@@ -54,8 +54,8 @@ const overlay = new Overlay(document.getElementById('ui'), ST);
 const beats = TL.beats, lines = TL.lines;
 const actors = ['ich', ...Object.keys(cast)];
 const startPos = (n) => { const p = n === 'ich' ? me.pos || set.info.start : ST.cast[n].pos || [0, -1.5]; return [p[0], p[1]]; };
-const tracks = { look: [], pose: {}, mood: {}, face: {}, walk: {}, phone: [], label: [{ t: -1, v: null }], notify: [], fade: [], cap: [], shake: [], black: [], blackout: null, fov: [{ t: -1, v: ST.fov || 140, dur: 0 }] };
-actors.forEach((a) => { tracks.pose[a] = [{ t: -1, v: a === 'ich' ? me.pose || 'runter' : ST.cast[a].pose || 'idle' }]; tracks.mood[a] = [{ t: -1, v: ST.cast[a]?.mood || null }]; tracks.face[a] = [{ t: -1, v: a === 'ich' ? null : ST.cast[a].face || 'ich' }]; tracks.walk[a] = []; });
+const tracks = { y: {}, look: [], pose: {}, mood: {}, face: {}, walk: {}, phone: [], label: [{ t: -1, v: null }], notify: [], fade: [], cap: [], shake: [], black: [], blackout: null, fov: [{ t: -1, v: ST.fov || 140, dur: 0 }] };
+actors.forEach((a) => { tracks.pose[a] = [{ t: -1, v: a === 'ich' ? me.pose || 'runter' : ST.cast[a].pose || 'idle' }]; tracks.mood[a] = [{ t: -1, v: ST.cast[a]?.mood || null }]; tracks.face[a] = [{ t: -1, v: a === 'ich' ? null : ST.cast[a].face || 'ich' }]; tracks.walk[a] = []; tracks.y[a] = [{ t: -1, v: a === 'ich' ? 0 : ST.cast[a].y || 0 }]; });
 const pos0 = Object.fromEntries(actors.map((a) => [a, startPos(a)]));
 const cur = Object.fromEntries(actors.map((a) => [a, startPos(a)]));
 tracks.look.push({ t: -1, v: ST.look || 'stadt', dur: 0, cut: true });
@@ -63,6 +63,7 @@ for (const b of beats) {
   if (b.look !== undefined) tracks.look.push({ t: b.t0 + (b.look_delay || 0), v: b.look, dur: b.turn ?? 0.75, cut: !!b.cut });
   for (const [a, v] of Object.entries(b.pose || {})) tracks.pose[a]?.push({ t: b.t0 + (b.pose_delay || 0), v });
   for (const [a, v] of Object.entries(b.mood || {})) tracks.mood[a]?.push({ t: b.t0, v });
+  for (const [a, v] of Object.entries(b.hoehe || {})) tracks.y[a]?.push({ t: b.t0 + (b.hoehe_ab || 0), v });
   for (const [a, v] of Object.entries(b.face || {})) tracks.face[a]?.push({ t: b.t0, v });
   for (const [a, w0] of Object.entries(b.walk || {})) {
     if (!tracks.walk[a]) continue;
@@ -108,7 +109,7 @@ function talkAt(a, t) {
 function lookTarget(v, t, eye) {
   if (Array.isArray(v)) return [v[0] * D2R, v[1] * D2R];
   if (cast[v]) {
-    const P = posAt(v, t).p, dx = P[0] - eye.x, dz = P[1] - eye.z, dy = (ST.cast[v].look_h ?? 1.28) - eye.y;
+    const P = posAt(v, t).p, dx = P[0] - eye.x, dz = P[1] - eye.z, dy = (ST.cast[v].look_h ?? 1.28) + at(tracks.y[v], t).v - eye.y;
     return [Math.atan2(-dx, -dz), Math.atan2(dy, Math.hypot(dx, dz)) - 4 * D2R];
   }
   const s = spots[v] || [0, -8]; return [s[0] * D2R, s[1] * D2R];
@@ -175,7 +176,7 @@ window.render = (f) => {
   // Andere Figuren
   for (const [n, c] of Object.entries(cast)) {
     const P = posAt(n, t);
-    c.root.position.set(P.p[0], 0, P.p[1]);
+    c.root.position.set(P.p[0], at(tracks.y[n], t).v, P.p[1]);
     const fv = at(tracks.face[n], t).v;
     let facing;
     if (P.dir !== null && P.speed > 0.05 && !c.spec.faehrt) facing = P.dir + (c.spec.gegenlauf ? Math.PI : 0);

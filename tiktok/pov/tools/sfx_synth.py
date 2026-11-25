@@ -944,11 +944,48 @@ MUTPROBE = {'atmo_schule.wav': (lambda: schule_nacht(), 0.55), 'bewegungsmelder.
             'schulglocke.wav': (schulglocke, 0.95), 'lautsprecher_knacken.wav': (lautsprecher_knacken, 0.8), 'kreide.wav': (kreide, 0.8), 'knochen.wav': (knochen, 0.85)}
 
 
+# ---------- Die Mutprobe 2: Turnhalle ----------
+def strahler(d=4.0):
+    # große Hallenstrahler: schwere Schütze klonken nacheinander, hallen, dann Summen
+    tt = t_(d); x = np.zeros(len(tt))
+    for k, st in enumerate((0.0, 0.62, 1.25, 1.85)):
+        n = int(0.8 * SR); i = int(st * SR); tk = t_(0.8)
+        x[i:i + n] += (np.sin(2 * np.pi * 48 * tk) * np.exp(-tk / 0.12) * 1.2 + bp(noise(0.8), 150, 1500, 2) * np.exp(-tk / 0.03) * 0.9 + hp(noise(0.8), 2500) * np.exp(-tk / 0.005) * 0.5)[:len(x) - i]
+    x += sum(np.sin(2 * np.pi * 100 * n * tt) / n for n in range(1, 6)) * 0.05 * np.clip((tt - 0.1) * 2, 0, 1)
+    return pan(reverb(x, 3.0, 0.55, 0.04), 0.0)
+
+def anzeige_piep(d=1.0):
+    x = np.zeros(int(d * SR))
+    for st in (0.0, 0.18):
+        n = int(0.14 * SR); i = int(st * SR); x[i:i + n] += signal.square(2 * np.pi * 1900 * t_(0.14)) * 0.25 * np.clip((0.14 - t_(0.14)) / 0.01, 0, 1)
+    return pan(reverb(lp(x, 5000), 2.4, 0.5), 0.0)
+
+def basketball(d=4.5):
+    # Ball prallt auf Parkett (immer kürzere Abstände), rollt dann aus – Hallenhall
+    x = np.zeros(int(d * SR)); s_ = 0.0; gap = 0.92; v = 1.0
+    while gap > 0.06 and s_ < d - 0.5:
+        n = int(0.25 * SR); tk = t_(0.25)
+        hit = (np.sin(2 * np.pi * 140 * tk) * np.exp(-tk / 0.03) + np.sin(2 * np.pi * 310 * tk) * np.exp(-tk / 0.02) * 0.5 + bp(noise(0.25), 400, 3000, 2) * np.exp(-tk / 0.006) * 0.7) * v
+        i = int(s_ * SR); x[i:i + n] += hit[:len(x) - i]; s_ += gap; gap *= 0.78; v *= 0.86
+    i = int(s_ * SR); L = len(x) - i; tt = t_(L / SR); x[i:] += bp(noise(L / SR), 150, 900, 2) * np.exp(-tt / 0.8) * 0.25
+    return pan(reverb(x, 2.8, 0.55, 0.05), np.linspace(-0.2, 0.1, len(x)))
+
+def rolltor(d=3.2):
+    # Rolltor fährt hoch: rasselnde Lamellen + Motor
+    tt = t_(d); env = np.clip(tt / 0.2, 0, 1) * np.clip((2.8 - tt) / 0.2, 0, 1)
+    rattle = grains(d, 180, 600, 3000, (0.003, 0.012), (0.2, 0.8)) * env
+    motor = (np.sin(2 * np.pi * 95 * tt) + 0.5 * np.sin(2 * np.pi * 190 * tt)) * 0.15 * env + bp(noise(d), 200, 1200, 2) * 0.25 * env
+    clunk = np.zeros(len(tt)); i = int(2.85 * SR); n = int(0.3 * SR); clunk[i:i + n] = np.sin(2 * np.pi * 70 * t_(0.3)) * np.exp(-t_(0.3) / 0.06)
+    return pan(reverb(rattle + motor + clunk, 2.2, 0.45), 0.6)
+
+MUTPROBE2 = {'strahler.wav': (strahler, 0.9), 'anzeige_piep.wav': (anzeige_piep, 0.6), 'basketball.wav': (basketball, 0.9), 'rolltor.wav': (rolltor, 0.85)}
+
+
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5, **TEIL6, **MUTPROBE}
-        for n_ in (MUTPROBE if sys.argv[1] == 'mutprobe' else TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else TEIL6 if sys.argv[1] == 'teil6' else {k: ALL[k] for k in sys.argv[1:]}):
+        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5, **TEIL6, **MUTPROBE, **MUTPROBE2}
+        for n_ in (MUTPROBE2 if sys.argv[1] == 'mutprobe2' else MUTPROBE if sys.argv[1] == 'mutprobe' else TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else TEIL6 if sys.argv[1] == 'teil6' else {k: ALL[k] for k in sys.argv[1:]}):
             f_, pk = ALL[n_]; save(n_, f_(), pk); print(' ', n_)
         sys.exit()
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)
