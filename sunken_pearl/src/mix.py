@@ -184,15 +184,15 @@ lvl = np.abs(voice).mean(1)
 win = int(0.25 * SR)
 sm = np.convolve(lvl, np.ones(win) / win, 'same')
 duck = 1 - 0.5 * np.clip(sm / (sm.max() * 0.25 + 1e-9), 0, 1)
-mix = voice + (out * 0.5 + mus * 0.24) * duck[:, None]
+mix = voice + (out * 0.3 + mus * 0.0) * duck[:, None]
 peak = np.abs(mix).max()
 mix = np.tanh(mix / peak * 1.3) * 0.89
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-i', '-',
-                '-af', 'loudnorm=I=-14:TP=-1.0:LRA=9', '-ar', '48000', f'{BASE}/final_mix.wav'],
+                '-af', 'loudnorm=I=-12:TP=-1.0:LRA=7', '-ar', '48000', f'{BASE}/final_mix.wav'],
                input=mix.astype(np.float32).tobytes(), check=True)
 print('mix ok', mix.shape[0] / SR)
 if os.environ.get('DBG'):
-    bed = (out * 0.5 + mus * 0.24) * duck[:, None]
+    bed = (out * 0.3 + mus * 0.0) * duck[:, None]
     for i in range(0, int(DUR), 3):
         s, e = i * SR, (i + 3) * SR
         rv = 20 * np.log10(np.sqrt((voice[s:e] ** 2).mean()) + 1e-9); rb = 20 * np.log10(np.sqrt((bed[s:e] ** 2).mean()) + 1e-9)

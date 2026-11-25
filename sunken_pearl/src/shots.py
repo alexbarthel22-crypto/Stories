@@ -105,12 +105,26 @@ def apt_base(outside=True, density=1.0, outfit='home'):
 def s_surf():
     world((0.05, 0.08, 0.15), 1.0, top=(0.0, 0.005, 0.03), bottom=(0.03, 0.05, 0.1))
     S = Surface()
+    sh = Shelly(outfit='home')
+    key = add_light('AREA', 'shkey', (2.4, -14.6, 2.8), 260, (1.0, 0.85, 0.8), 1.2)
+    look_at(key, (1.2, -11.8, 1.8))
+    rim = add_light('AREA', 'shrim', (0.2, -7.6, 3.2), 90, (1.0, 0.65, 0.4), 1.5)
+    look_at(rim, (1.2, -11.8, 1.8))
     cam = camera(lens=30)
 
     def up(t):
         S.update(4.0 + t)
-        cam_track(cam, t, [(0, (9, -46, 1.4), (0, 0, 4.2), 30), (2.5, (6, -33, 2.0), (0, 0, 4.6), 30)])
-        handheld(cam, t, 0.05)
+        sh.pose({'root_loc': (1.2, -11.8, 0.6), 'root_rot': (0, 0, -12), 'neck': (-4, 0, 6), 'head': (-4, 0, 4),
+                 'shoulderL': (-8, -14, 0), 'shoulderR': (-8, 14, 0), 'fingers': 0.35})
+        sh.set_face('smile', lids_wide=0.3, brow=0.3, look=(0, 6), blink=blink_at(t, [1.4]))
+        k = ease(t, 0.15, 2.5)
+        k = k * k * (3 - 2 * k)
+        p0, p1 = Vector((1.75, -14.4, 1.95)), Vector((7.0, -32.0, 2.6))
+        q0, q1 = Vector((1.2, -11.8, 1.85)), Vector((0.3, 0.0, 3.6))
+        cam.location = p0.lerp(p1, k)
+        look_at(cam, q0.lerp(q1, k))
+        cam.data.lens = lerp(40, 30, k)
+        handheld(cam, t, 0.006)
     return up
 
 
@@ -459,7 +473,7 @@ def s_doors():
     look_at(pl, (0, 0.5, 1.2))
     ray = godray('dray', (0, -3, 1.4), (0, 1.0, 1.0), 2.0, 0.8, (1.0, 0.9, 0.8), 0.35)
     sh = Shelly(outfit='gown')
-    cam = camera(lens=28)
+    cam = camera(lens=30)
 
     def up(t):
         k = ease(t, 0.15, 1.3)
