@@ -1,7 +1,7 @@
 """Tonmischung: Stimme (mit Pausen), leise Ukulele-Musik, Geräusche."""
 import subprocess, numpy as np, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from scenes import g, GAPS, END
+from scenes import g, gn, GAPS, END
 
 SR = 48000
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
@@ -56,13 +56,14 @@ def bed(name, t0, t1, gain_db, fade=0.4, off=0.0):
 
 
 # ---------------- Geräusche
-POPS = [0.25, g(3.88), g(4.98), g(6.36), g(8.86), g(12.57), g(14.85), g(19.93), g(21.26), g(24.02), g(25.11),
+POPS = [1.1, 2.6, 4.9, 8.42, 9.2, g(6.36), g(8.86), g(12.57), g(14.85), g(19.93), g(21.26), g(24.02), g(25.11),
         g(25.57), g(25.75), g(27.20), g(27.69), g(29.83), g(30.86), g(33.41), g(35.28), g(35.93), g(38.59), g(40.73),
         g(42.37), g(45.78), g(47.35), g(48.05), g(49.52), g(51.93), g(54.77), g(55.89), g(56.91), g(61.71),
-        g(65.10), g(66.97), g(69.79), g(70.64), g(71.10), g(71.60), g(72.99), g(73.78)]
+        g(65.10), g(66.97), g(69.79), g(70.64), g(71.10), g(71.60), g(72.99), g(72.99) + 0.6,
+        g(72.99) + 0.9, g(72.99) + 1.0, gn(81.2)]
 for t in POPS:
     put('pop', t, -9)
-for t in [g(2.08), g(6.26), g(10.95), g(13.86), g(30.81), g(35.23), g(42.32), g(47.35), g(54.77), g(70.64)]:
+for t in [6.94, 9.0, g(10.95), g(13.86), g(30.81), g(35.23), g(42.32), g(47.35), g(54.77), g(70.64)]:
     put('swoosh', t - 0.12, -12)
 # Aufzug-Fahrten (Summen) + Ankunft
 for a, b in [(g(6.26) + 3.2, g(10.95)), (g(16.57), g(18.7)), (g(30.81) + 2.0, g(34.2)), (g(37.87) + 2.1, g(41.66)),
@@ -86,14 +87,14 @@ bed('rain', g(37.87), g(41.75), -24, 0.3)
 bed('rain', g(41.75), g(42.32), -12, 0.15)
 bed('rain', g(65.10), g(70.64), -28, 0.6)
 # Unterwasser
-bed('bubbles', g(2.08), g(6.26), -18, 0.3)
+bed('bubbles', 0.0, 9.0, -20, 0.3)
 bed('bubbles', g(47.35), g(54.77), -24, 0.5)
 # Knopfdrücke
 for t in [g(60.31), g(64.23), g(68.97)]:
     put('click', t, -6)
 put('ding', g(68.97) + 0.15, -9)
 put('tada', g(69.79), -14, fade=0.1)
-put('click', g(72.99) + 0.75, -6)
+put('click', gn(81.2) + 0.7, -6)
 
 # ---------------- Musik (leise, Schleife)
 mus = np.zeros_like(out)
@@ -113,7 +114,7 @@ mus[end_i - fade_out:end_i] *= np.linspace(1, 0, fade_out)[:, None]
 mus[end_i:] = 0
 
 # ---------------- Stimme mit Pausen
-vo = load(f'{ROOT}/audio/vo.mp3')
+vo = load(f'{ROOT}/audio/vo.wav')
 voice = np.zeros_like(out)
 cuts = [0.0] + [a for a, d in GAPS] + [len(vo) / SR]
 shift = 0.0

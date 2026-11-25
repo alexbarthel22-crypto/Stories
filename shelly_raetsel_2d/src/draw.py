@@ -132,7 +132,7 @@ def text_size(ctx, s, size, font=FONT):
     ctx.select_font_face(font, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
     ctx.set_font_size(size)
     e = ctx.text_extents(s)
-    return e.x_advance, size * 0.72
+    return max(e.x_advance, e.x_bearing + e.width), size * 0.72
 
 
 def text(ctx, s, x, y, size, c, font=FONT, align='c'):

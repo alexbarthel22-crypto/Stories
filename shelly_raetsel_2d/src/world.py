@@ -1,4 +1,4 @@
-"""Welt: Sunken Pearl im Querschnitt (Treppenhaus | Aufzug | Wohnung), Meer, Strand mit Bahnhof."""
+"""Welt: Tiefseekratzer im Querschnitt (Treppenhaus | Aufzug | Wohnung), Meer, Strand mit Bahnhof."""
 import math
 import random
 import cairo
@@ -213,7 +213,6 @@ def draw_shaft(ctx, n, y, door_l=0.0, door_r=0.0):
         dh = 300 * (1 - k)
         rect(ctx, xw - 6, y - 300, 12, dh, C['gold'])
     # Leuchtanzeige über Schacht
-    plate(ctx, (X_SH0 + X_SH1) / 2, y - FH + SLAB + 34, lab(n), size=26)
 
 
 def draw_apartment(ctx, n, y, t, light=1.0, door=0.0, who=None, tod='day'):
@@ -464,7 +463,7 @@ def draw_beach(ctx, x0, y0, x1, y1, t, weather='day', train_x=1150, train_door=0
     for a in (200, 240, 270, 300, 340):
         line(ctx, cx, 0, cx + math.cos(math.radians(a)) * 225, math.sin(math.radians(a)) * 225 * 1.85, 4, alpha(C['gold'], 0.7))
     circle(ctx, cx, -418, 18, C['white'])
-    sticker(ctx, 'SUNKEN PEARL', cx, -500, 50, 'navy')
+    sticker(ctx, 'TIEFSEEKRATZER', cx, -500, 48, 'navy')
     # Schild
     plate(ctx, cx + 330, -60, 'STRAND · ETAGE 0', size=26)
     ctx.restore()
@@ -512,6 +511,10 @@ def draw_view(ctx, cam, t, st):
     # Aufzugkabine + Figuren
     if 'cabin_y' in st:
         draw_cabin(ctx, st['cabin_y'], st.get('cabin_open', 0.0), st.get('in_cabin'), st.get('cabin_glow', -1))
+    # Etagenschilder am Schacht immer sichtbar (über der Kabine)
+    for n in range(n_lo, n_hi + 1):
+        if n <= -1:
+            plate(ctx, (X_SH0 + X_SH1) / 2, fy(n) - FH + SLAB + 30, lab(n), size=26)
     for fn in st.get('actors', []):
         fn(ctx)
     if st.get('weather') == 'rain' and y0 < 0:

@@ -6,16 +6,33 @@ from draw import *
 from chars import shelly, karla, paul, umbrella, SH_Y
 from world import *
 
-# Pausen in der Sprachspur: (Originalzeit, Länge)
-GAPS = [(48.9, 0.9), (54.7, 0.5)]
-VO_END = 74.68
+# Zeitachse: Alte Skript-Zeiten (Ankerwörter) -> neue Gemini-Stimme, plus eingefügte Pausen
+ANCH = [(0.0, 0.16), (2.08, 6.94), (3.88, 8.42), (4.26, 8.64), (6.26, 10.32), (7.04, 11.0), (8.5, 12.14),
+        (9.28, 12.84), (11.11, 14.18), (12.57, 15.64), (13.86, 16.84), (15.12, 18.42), (16.17, 19.38),
+        (18.46, 21.84), (18.81, 22.12), (19.33, 22.92), (21.26, 25.22), (22.93, 26.72), (24.02, 28.0),
+        (25.11, 29.2), (25.57, 29.54), (26.47, 30.8), (27.2, 31.58), (27.69, 32.32), (29.83, 34.48),
+        (30.81, 35.1), (33.41, 37.96), (34.32, 38.7), (35.23, 39.32), (35.93, 39.98), (37.87, 41.76),
+        (38.59, 43.02), (40.73, 45.2), (41.66, 46.18), (42.32, 46.82), (43.77, 48.28), (44.43, 48.9),
+        (46.15, 50.54), (46.49, 50.76), (47.35, 51.84), (48.05, 52.38), (49.52, 53.6), (51.93, 56.02),
+        (54.77, 59.1), (55.89, 60.42), (56.91, 62.06), (60.31, 65.04), (61.71, 66.58), (62.75, 67.86),
+        (64.23, 69.22), (65.1, 70.14), (66.87, 72.26), (67.91, 73.36), (68.97, 74.54), (69.79, 75.38),
+        (70.64, 76.38), (71.1, 76.98), (71.6, 77.7), (72.99, 78.9), (73.78, 79.9), (74.68, 82.3)]
+GAPS = [(52.9, 0.9), (58.6, 0.5)]   # in neuer Stimmzeit
+VO_END = 82.3
+
+
+def gn(tn):
+    return tn + sum(d for at, d in GAPS if tn >= at)
 
 
 def g(t):
-    return t + sum(d for at, d in GAPS if t >= at)
+    for (a0, b0), (a1, b1) in zip(ANCH, ANCH[1:]):
+        if t <= a1:
+            return gn(b0 + (b1 - b0) * (t - a0) / (a1 - a0))
+    return gn(ANCH[-1][1] + t - ANCH[-1][0])
 
 
-END = g(VO_END) + 2.0
+END = gn(VO_END) + 2.0
 
 # ---------------------------------------------------------------- Hilfen
 FLOOR_CABX = CAB_X
@@ -96,7 +113,7 @@ def ext_row_y(n):
     return EXT_TOP + (-n - 1) * EXT_ROW_H + EXT_ROW_H
 
 
-def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None):
+def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None, hut=None):
     cam = Cam(540, cy, z)
     x0, y0, x1, y1 = cam.bounds()
     ctx.save()
@@ -161,23 +178,45 @@ def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None):
         sp = rr.uniform(30, 70) * (1 if i % 2 else -1)
         fx = (rr.uniform(0, 1400) + sp * T) % 1400 - 160
         fish(ctx, fx, 300 + i * 290 + math.sin(T + i) * 10, rr.uniform(1.4, 2.0), rr.choice(FISH_COLS), sp > 0)
-    # Turm
-    tx0, tx1 = 330, 750
-    rect(ctx, tx0 - 14, 40, tx1 - tx0 + 28, sea_bottom - 40, C['gold'])
-    rect(ctx, tx0, 40, tx1 - tx0, sea_bottom - 40, C['pearl'])
+    # Turm im Querschnitt: Treppenhaus | Aufzug | Wohnungen
+    tx0, tx1 = 170, 910
+    sx0, sx1 = 330, 470          # Aufzugschacht
+    rect(ctx, tx0 - 16, 30, tx1 - tx0 + 32, sea_bottom - 30, C['gold'])
+    rect(ctx, tx0, 30, tx1 - tx0, sea_bottom - 30, C['pearl'])
     for n_ in range(-1, -21, -1):
         yr = ext_row_y(n_)
-        rect(ctx, tx0, yr - 6, tx1 - tx0, 8, C['pearl3'])
-        lit = hexc('#FFE3A3')
-        for i in range(3):
-            fill_rrect(ctx, tx0 + 30 + i * 125, yr - EXT_ROW_H + 26, 105, EXT_ROW_H - 46, 14, lit)
+        ytop = yr - EXT_ROW_H + 10
+        # Treppenhaus
+        rect(ctx, tx0 + 8, ytop, sx0 - tx0 - 16, EXT_ROW_H - 10, hexc('#EDE7DD'))
+        if n_ % 2:
+            line(ctx, tx0 + 18, yr - 4, sx0 - 18, ytop + 6, 7, C['white'])
+        else:
+            line(ctx, sx0 - 18, yr - 4, tx0 + 18, ytop + 6, 7, C['white'])
+        # Schacht
+        rect(ctx, sx0, ytop - 10, sx1 - sx0, EXT_ROW_H, hexc('#C9D6E3'))
+        # Wohnung
+        rect(ctx, sx1 + 10, ytop, tx1 - sx1 - 18, EXT_ROW_H - 10, hexc('#F6DDBA'))
+        fill_rrect(ctx, sx1 + 30, yr - 82, 44, 76, 8, C['pink2'] if n_ == -20 else C['coral'])
+        for i in range(2):
+            wx = sx1 + 110 + i * 160
+            fill_rrect(ctx, wx - 6, ytop + 10, 146, EXT_ROW_H - 34, 16, C['gold'])
+            fill_rrect(ctx, wx, ytop + 16, 134, EXT_ROW_H - 46, 12, mixc(C['sea1'], C['sea3'], (-n_) / 20))
+        rect(ctx, tx0, yr - 4, tx1 - tx0, 10, C['pearl3'])
         if n_ == -20 and hl > 0:
-            rrect(ctx, tx0 - 30, yr - EXT_ROW_H + 6, tx1 - tx0 + 60, EXT_ROW_H - 4, 18)
-            ctx.set_line_width(10)
+            rrect(ctx, tx0 - 24, ytop - 14, tx1 - tx0 + 48, EXT_ROW_H + 10, 18)
+            ctx.set_line_width(12)
             src(ctx, alpha(C['yellow'], hl))
             ctx.stroke()
-        if n_ in (-1, -10, -20):
-            plate(ctx, tx0 - 80, yr - EXT_ROW_H / 2, lab(n_), size=30)
+    for x_ in (sx0 + 22, sx1 - 22):
+        line(ctx, x_, 20, x_, sea_bottom - 20, 4, hexc('#A9B8C9'), cap=cairo.LINE_CAP_BUTT)
+    # Kabine fährt auf und ab
+    cab_n = -1 - 19 * (0.5 - 0.5 * math.cos(T * 0.9))
+    cy_ = EXT_TOP + (-cab_n) * EXT_ROW_H
+    fill_rrect(ctx, sx0 + 14, cy_ - 98, sx1 - sx0 - 28, 92, 8, C['gold'])
+    rect(ctx, sx0 + 22, cy_ - 90, sx1 - sx0 - 44, 78, hexc('#FDF6EC'))
+    # Etagenschilder links
+    for n_ in (-1, -10, -20):
+        plate(ctx, tx0 - 75, ext_row_y(n_) - EXT_ROW_H / 2, lab(n_), size=32)
     # Insel mit Kuppel und Palmen
     ctx.move_to(60, 40)
     ctx.curve_to(200, -40, 880, -40, 1020, 40)
@@ -186,15 +225,22 @@ def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None):
     ctx.fill()
     palm(ctx, 170, 8, 320, T, -0.1, dark * 0.5)
     palm(ctx, 930, 8, 360, T, 0.1, dark * 0.5)
+    ctx.save()
+    ctx.translate(400, 10)
+    ctx.scale(1, 1.6)
     ctx.new_sub_path()
-    ctx.arc(540, -20, 150, math.pi, 2 * math.pi)
+    ctx.arc(0, 0, 130, math.pi, 2 * math.pi)
     ctx.close_path()
+    ctx.restore()
     src(ctx, alpha(hexc('#DFF4FF'), 0.7))
     ctx.fill_preserve()
     ctx.set_line_width(8)
     src(ctx, C['gold'])
     ctx.stroke()
-    circle(ctx, 540, -175, 12, C['white'])
+    circle(ctx, 400, -205, 12, C['white'])
+    plate(ctx, 400 - 220, -10, '0', size=32)
+    if hut:
+        hut(ctx)
     if sh:
         sh(ctx)
     ctx.restore()
@@ -202,10 +248,10 @@ def exterior(ctx, cy, z, T, weather='day', hl=0.0, sh=None):
 
 
 # ---------------------------------------------------------------- Szenen
-def sc_intro(ctx, T):
-    """0 – Ganz unten: Shelly in ihrer Wohnung auf −20."""
+def sc_intro(ctx, T, t0=0.0):
+    """Shelly in ihrer Wohnung auf −20."""
     y = fy(-20)
-    z = lerp(1.25, 1.36, ease(T, 0, 2.1))
+    z = lerp(1.25, 1.36, ease(T, t0, t0 + 2.1))
     cam = Cam(1060, y - 330, z)
     wave = math.sin(T * 9) * 14
 
@@ -214,16 +260,24 @@ def sc_intro(ctx, T):
                blink=blink_at(T, BL))
     draw_view(ctx, cam, T, {'actors': [act], 'cabin_y': fy(-20)})
     sx, sy = cam.scr(1160, y - 245)
-    sticker(ctx, 'SHELLY', sx, sy, 52, 'cream', rot=-4, sc=pop(T, 0.25))
+    sticker(ctx, 'SHELLY', sx, sy, 52, 'cream', rot=-4, sc=pop(T, t0 + 0.2))
+
+
+def sc_overview(ctx, T):
+    """Gesamtansicht: der Tiefseekratzer vom Strand bis zum Meeresboden."""
+    z = lerp(0.55, 0.575, ease(T, 0, 6.94))
+    cam = exterior(ctx, 1200, z, T, 'day')
+    sticker(ctx, 'TIEFSEEKRATZER', 540, 130, 80, 'yellow', rot=-3, sc=pop(T, 1.1))
+    sticker(ctx, 'EIN WOLKENKRATZER', 540, 1640, 52, 'cream', rot=2, sc=pop(T, 2.6))
+    sticker(ctx, 'TIEF INS MEER GEBAUT', 540, 1745, 52, 'cream', rot=-2, sc=pop(T, 4.9))
 
 
 def sc_exterior(ctx, T, t0):
-    k = ease(T, t0 + 0.1, t0 + 2.5)
-    cy = lerp(-250, ext_row_y(-20) - 520, k)
-    cam = exterior(ctx, cy, 1.0, T, 'day', hl=ease(T, g(3.88), g(4.1)))
-    sx, sy = cam.scr(540, ext_row_y(-20) - 260)
-    sticker(ctx, 'ETAGE −20', 540, 1220, 76, 'yellow', rot=-3, sc=pop(T, g(3.88)))
-    sticker(ctx, 'UNTER DEM MEER', 540, 1360, 56, 'cream', rot=2, sc=pop(T, g(4.98)))
+    k = ease(T, t0, t0 + 1.6)
+    z = lerp(0.575, 1.05, k)
+    cy = lerp(1200, ext_row_y(-20) - 360, k)
+    cam = exterior(ctx, cy, z, T, 'day', hl=ease(T, 8.42, 8.6))
+    sticker(ctx, 'ETAGE −20', 540, 1500, 84, 'yellow', rot=-3, sc=pop(T, 8.42))
 
 
 def walk_out_apartment(T, t_start, t_door, t_cab, t_in):
@@ -571,46 +625,83 @@ def question_scene(ctx, T):
 
 
 # ---------------------------------------------------------------- Endkarte
+def beach_hut(ctx, x, y, k):
+    """Strandhütte mit Namensschild (k = Einblend-Skalierung)."""
+    if k <= 0.001:
+        return
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(k, k)
+    ellipse(ctx, 0, 0, 120, 12, alpha(C['shadow'], 0.2))
+    rect(ctx, -95, -150, 190, 150, hexc('#E9B77A'))
+    for i in range(6):
+        line(ctx, -95, -128 + i * 24, 95, -128 + i * 24, 3, alpha(hexc('#B8864E'), 0.7))
+    poly(ctx, [(-125, -140), (0, -235), (125, -140)], C['pink2'])
+    poly(ctx, [(-105, -146), (0, -222), (105, -146)], C['pink'])
+    fill_rrect(ctx, -30, -100, 60, 100, 10, hexc('#7FC8C2'))
+    shell_deco(ctx, 0, -180, 1.4, C['white'])
+    fill_rrect(ctx, -90, -300, 180, 56, 10, C['cream'])
+    rrect(ctx, -90, -300, 180, 56, 10)
+    ctx.set_line_width(4)
+    src(ctx, C['gold2'])
+    ctx.stroke()
+    text(ctx, 'DEIN NAME', 0, -272, 30, C['ink'])
+    line(ctx, 0, -244, 0, -235, 6, C['gold2'])
+    ctx.restore()
+
+
 def end_scene(ctx, T):
     t0 = g(70.64)
+    t_du = g(72.99)
+    t_folg = gn(81.2)
     wave = math.sin(T * 9) * 14
+    khut = back_out(T, t_du + 0.9, t_du + 1.3) if T > t_du + 0.9 else 0.0
 
     def sh(c):
-        shelly(c, 380, -2, 1.5, arms={'R': (34 + wave * 0.3, -140 + wave)}, expr='open', blink=blink_at(T, BL))
-    cy = lerp(160, 300, ease(T, t0, END))
-    exterior(ctx, cy, 0.82, T, 'eve', sh=sh)
+        shelly(c, 560, -2, 1.5, arms={'R': (34 + wave * 0.3, -140 + wave)}, expr='open', blink=blink_at(T, BL))
+
+    def hut(c):
+        beach_hut(c, 880, 10, khut)
+    cy = lerp(120, 200, ease(T, t0, END))
+    exterior(ctx, cy, 0.82, T, 'eve', sh=sh, hut=hut)
     vignette(ctx, 0.25)
-    sticker(ctx, "HÄTTEST DU'S", 540, 300, 78, 'cream', rot=-3, sc=pop(T, t0))
-    sticker(ctx, 'GEWUSST?', 540, 420, 90, 'yellow', rot=2, sc=pop(T, g(71.10)))
-    sticker(ctx, "SCHREIB'S IN DIE KOMMENTARE", 540, 540, 38, 'white', sc=pop(T, g(71.60)))
-    tf = g(72.99)
-    tap = tf + 0.75
-    if T >= tf:
-        if T < tap:
-            sticker(ctx, '+ FOLGEN', 540, 650, 54, 'red', sc=pop(T, tf))
-        else:
-            sticker(ctx, 'GEFOLGT', 540, 650, 54, 'green', sc=lerp(0.9, 1.0, back_out(T, tap, tap + 0.3)), icon='check')
-        # Tipp-Kreis
-        if tap - 0.25 < T < tap + 0.4:
-            k = clamp((T - tap + 0.25) / 0.65)
-            ctx.new_sub_path()
-            ctx.arc(600, 660, 30 + 60 * k, 0, 2 * math.pi)
-            ctx.set_line_width(8)
-            src(ctx, alpha(C['white'], 0.8 * (1 - k)))
-            ctx.stroke()
-            circle(ctx, 600, 660, 26 * (1 - k * 0.5), alpha(C['white'], 0.6 * (1 - k)))
-    sticker(ctx, 'MORGEN: NEUES RÄTSEL', 540, 760, 40, 'cream', sc=pop(T, g(73.78)))
+    if T < t_du:
+        sticker(ctx, "HÄTTEST DU'S", 540, 260, 78, 'cream', rot=-3, sc=pop(T, t0))
+        sticker(ctx, 'GEWUSST?', 540, 380, 90, 'yellow', rot=2, sc=pop(T, g(71.10)))
+        sticker(ctx, "SCHREIB'S IN DIE KOMMENTARE", 540, 500, 40, 'white', sc=pop(T, g(71.60)))
+    else:
+        sticker(ctx, 'DU WILLST MITSPIELEN?', 540, 250, 66, 'cream', rot=-2, sc=pop(T, t_du))
+        sticker(ctx, 'DEINE EIGENE HÜTTE', 540, 365, 62, 'yellow', rot=2, sc=pop(T, t_du + 0.6))
+        sticker(ctx, 'MIT DEINEM NAMEN!', 540, 470, 56, 'yellow', rot=-1, sc=pop(T, t_du + 0.9))
+        tap = t_folg + 0.7
+        if T >= t_folg:
+            if T < tap:
+                sticker(ctx, '+ FOLGEN', 420, 610, 58, 'red', sc=pop(T, t_folg))
+            else:
+                sticker(ctx, 'GEFOLGT', 420, 610, 58, 'green', sc=lerp(0.9, 1.0, back_out(T, tap, tap + 0.3)), icon='check')
+            if tap - 0.25 < T < tap + 0.4:
+                k = clamp((T - tap + 0.25) / 0.65)
+                ctx.new_sub_path()
+                ctx.arc(480, 620, 30 + 60 * k, 0, 2 * math.pi)
+                ctx.set_line_width(8)
+                src(ctx, alpha(C['white'], 0.8 * (1 - k)))
+                ctx.stroke()
+                circle(ctx, 480, 620, 26 * (1 - k * 0.5), alpha(C['white'], 0.6 * (1 - k)))
 
 
 # ---------------------------------------------------------------- Hauptzeitleiste
 def frame(ctx, T):
-    # 1 Intro
-    if T < g(2.08):
-        sc_intro(ctx, T)
+    # 1 Gesamtansicht Tiefseekratzer
+    if T < 6.94:
+        sc_overview(ctx, T)
         return
-    # 2 Außenansicht
+    # 2 Zoom auf Etage −20
+    if T < 9.0:
+        sc_exterior(ctx, T, 6.94)
+        return
+    # 2b Shelly in ihrer Wohnung
     if T < g(6.26):
-        sc_exterior(ctx, T, g(2.08))
+        sc_intro(ctx, T, 9.0)
         return
     # 3 Morgen: Wohnung -> Aufzug (07:00)
     if T < g(10.95):
