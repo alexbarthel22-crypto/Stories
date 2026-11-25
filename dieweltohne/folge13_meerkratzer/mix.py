@@ -164,6 +164,20 @@ add('fsd_sub_motor', SUB - 0.1, 5.0, db=-17, fin=0.5, fout=1.0)
 add('fsd_notif', DELIVERED, 0.6, db=-11)
 add('fsd_sigh', 57.7, 1.5, db=-11, fout=0.5)
 add('fsd_soft_thud', BOX + 0.2, 0.4, db=-16)
+# Mehr Details: Aufzugsmechanik, Druckknarzen, Blasen, Sonar
+add('fsd_elevator', START - 0.35, 2.6, db=-15, fin=0.1, fout=0.6)
+for t, o in [(15.0, 2.0), (21.0, 3.5), (33.5, 1.0), (39.5, 4.5), (51.0, 2.8)]:
+    add('fsd_elevator', t - 0.1, 1.1, db=-23, off=o, fin=0.15, fout=0.4)
+add('fsd_bubbles', 9.3, 1.6, db=-23, off=3.0, fin=0.3, fout=0.6)
+add('fsd_bubbles', 34.0, 2.2, db=-24, off=8.0, fin=0.4, fout=0.7, speed=0.8)
+add('fsd_bubbles', ARRIVE + 0.15, 1.4, db=-20, off=12.0, fin=0.1, fout=0.6)
+add('fsd_bubbles', SUB + 0.2, 1.8, db=-19, off=16.0, fin=0.3, fout=0.7)
+for t, dbv, sp in [(22.0, -22, 0.9), (28.5, -20, 0.8), (36.0, -22, 0.85), (40.3, -15, 0.9), (44.5, -18, 0.8), (49.5, -20, 0.75), (52.6, -18, 0.8)]:
+    add('fsd_hull_creak', t, 1.4, db=dbv, off=(t * 0.37) % 9, speed=sp, fin=0.2, fout=0.5)
+add('fsd_strain_creak', 41.0, 0.9, db=-16, speed=0.7, peak_win=0.6, fin=0.05, fout=0.3)
+for t, dbv in [(28.0, -25), (48.0, -22), (51.3, -21)]:
+    add('fsd_radar_ping', t, 1.3, db=dbv, fout=0.6)
+
 # ---------------- Ausgabe ----------------
 peak = np.abs(mix).max()
 if peak > 0.98: mix *= 0.98 / peak

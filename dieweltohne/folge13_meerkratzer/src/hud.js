@@ -92,13 +92,13 @@ function crack(g, T) {
   g.restore();
 }
 
-export function drawHUD(g, T, shot) {
+export function drawHUD(g, T, shot, opt = {}) {
   g.clearRect(0, 0, W, H);
   const id = shot.id;
   // Eintauchen: weißer Schaum-Blitz
   { const d = T - 2.25; if (d > -0.05 && d < 0.45) { g.fillStyle = `rgba(225,245,255,${0.75 * (1 - clamp(d / 0.45))})`; g.fillRect(0, 0, W, H); } }
   const vg = g.createRadialGradient(W / 2, H * 0.46, H * 0.28, W / 2, H * 0.5, H * 0.78); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.5)'); g.fillStyle = vg; g.fillRect(0, 0, W, H);
-  if (id !== 'surface' && id !== 'panel') crack(g, T);
+  if (id !== 'surface' && id !== 'panel' && !opt.noCrack) crack(g, T);
 
   const d = shownDepth(T, shot);
   const ua = smooth(5.0, 5.5, T);

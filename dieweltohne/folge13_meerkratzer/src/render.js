@@ -24,7 +24,8 @@ function serve() {
 (async () => {
   const [, , out, from = 0, to = TOTAL, step = 1] = process.argv;
   const srv = await serve();
-  const url = `http://127.0.0.1:${srv.address().port}/folge13_meerkratzer/src/page.html${process.env.ONLY ? '?only=' + process.env.ONLY : ''}`;
+  const qs = [process.env.ONLY ? 'only=' + process.env.ONLY : '', process.env.BG ? 'bg=' + process.env.BG : ''].filter(Boolean).join('&');
+  const url = `http://127.0.0.1:${srv.address().port}/folge13_meerkratzer/src/page.html${qs ? '?' + qs : ''}`;
   const b = await chromium.launch({args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']});
   const p = await b.newPage({viewport: {width: 1080, height: 1920}});
   p.on('pageerror', e => { console.error('PAGEERR', e.message); process.exit(1); });
