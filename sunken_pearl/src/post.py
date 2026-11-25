@@ -253,7 +253,7 @@ def vignette():
 
 def process(g):
     t = g / FPS
-    si = max(i for i, c in enumerate(CUTS[:-1]) if c <= t + 1e-6)
+    si = max(i for i, c in enumerate(CUTS[:-1]) if round(c * FPS) <= g)
     si = min(si, len(NAMES) - 1)
     name = NAMES[si]
     tl = t - CUTS[si]
@@ -290,4 +290,5 @@ if __name__ == '__main__':
     for g in range(a, b):
         if os.path.exists(f'{OUT}/p{g:04d}.png') and '--force' not in sys.argv:
             continue
-        process(g)
+        if not process(g):
+            print('MISSING', g)
