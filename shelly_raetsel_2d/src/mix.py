@@ -1,7 +1,7 @@
 """Tonmischung: Stimme (mit Pausen), leise Ukulele-Musik, Geräusche."""
 import subprocess, numpy as np, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from scenes import g, gn, GAPS, END, T_TIEF, T_SUNK, T_MINUS, T_APT, T_ZOOM, T_DANN, T_SOPH, T_LAURA, T_WUND
+from scenes import g, gn, GAPS, END, T_DANN, TW, NEW, nw, _norm
 
 SR = 48000
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
@@ -16,7 +16,7 @@ def load(p):
 N = int(END * SR) + SR
 out = np.zeros((N, 2), np.float32)
 fs = {k: load(f'{ROOT}/audio/fs/{k}.mp3') for k in
-      ['bubbles', 'click', 'ding', 'doors', 'elev', 'gull', 'music', 'pop', 'rain', 'steps', 'swoosh', 'tada',
+      ['bubbles', 'click', 'ding', 'doors', 'elev', 'gull', 'heels', 'music', 'pop', 'rain', 'steps', 'swoosh', 'tada',
        'waves', 'whoosh']}
 
 
@@ -56,38 +56,47 @@ def bed(name, t0, t1, gain_db, fade=0.4, off=0.0):
 
 
 # ---------------- Geräusche
-POPS = [T_TIEF, T_SUNK, T_MINUS, T_APT + 0.2, g(6.36), g(8.86), g(12.57), g(14.85), g(19.93), g(21.26), T_SOPH, T_LAURA,
-        T_WUND, T_WUND + 0.18, g(27.20), g(27.69), g(29.83), g(30.86), g(33.41), g(35.28), g(35.93), g(38.59), g(40.73),
-        g(42.37), g(45.78), g(47.35), g(48.05), g(49.52), g(51.93), g(54.77), g(55.89), g(56.91), g(61.71),
-        g(65.10), g(66.97), g(69.79), g(70.64), g(71.10), g(71.60), g(72.99), g(72.99) + 0.6,
-        g(72.99) + 0.9, g(72.99) + 1.0, T_DANN]
+t_eve, t_ride, t_home, t_aber = TW('jeden'), TW('fährt') - 0.3, TW('geht') - 0.5, TW('aber')
+t_ride2, t_dort, t_ihre, t_denn = TW('shelly', 1), TW('dort'), TW('nachbar') - 0.2, TW('denn')
+t_eines, t_rain2 = TW('eines'), TW('shelly', 3)
+t_top = TW('oben', 0) + 0.1
+t_am = TW('nächsten') - 0.2
+t_und = gn(next(w[1] for w in NEW if _norm(w[0]) == 'und' and w[1] > nw('sonne')))
+t10b = TW('zehnten')
+t_warum = TW('warum')
+POPS = [TW('unter'), TW('zwanzig'), t_eve + 0.05, t_eve + 0.4, TW('ganz'), TW('morgen'), TW('seltsam'),
+        t_dort + 0.4, TW('letzten'), TW('soph'), TW('laura'), TW('wundern'), TW('wundern') + 0.18,
+        TW('gesund'), TW('sportlich'), TW('probleme'), t_eines + 0.05, TW('regnet'), t_rain2 + 0.1, TW('direkt'),
+        t_am + 0.05, t10b, t_warum, g(48.05), g(49.52), g(51.93), g(54.77), g(55.89), g(56.91), g(61.71),
+        g(65.10), g(66.97), g(69.79), g(70.64), g(71.10), g(71.60), TW('willst') - 0.15, TW('willst') + 0.45,
+        TW('willst') + 0.75, TW('willst') + 0.85, T_DANN]
 for t in POPS:
     put('pop', t, -9)
-for t in [T_ZOOM, T_APT, g(10.95), g(13.86), g(30.81), g(35.23), g(42.32), g(47.35), g(54.77), g(70.64)]:
+for t in [t_eve, t_aber, t_dort, t_ihre, t_denn, t_eines, t_rain2, t_am, t_und, t_warum, g(54.77), g(70.64)]:
     put('swoosh', t - 0.12, -12)
 # Aufzug-Fahrten (Summen) + Ankunft
-for a, b in [(g(6.26) + 3.2, g(10.95)), (g(16.57), g(18.7)), (g(30.81) + 2.0, g(34.2)), (g(37.87) + 2.1, g(41.66)),
-             (g(44.63), g(46.4))]:
+for a, b in [(t_ride, t_home - 0.25), (t_ride2 + 0.3, TW('zehnte')), (t_rain2 + 1.5, t_top), (t_und + 0.2, t10b)]:
     bed('elev', a, b + 0.2, -20, 0.25)
-for t in [g(18.72), g(34.2), g(41.66), g(46.4)]:
+for t in [t_home - 0.25, TW('zehnte'), t_top, t10b]:
     put('ding', t, -10)
-for t in [g(6.26) + 1.4, g(19.0), g(46.6), g(30.81) + 1.5, g(41.75) + 0.1]:
+for t in [t_ride - 0.6, t_home - 0.15, t_aber + 1.3, t_dort - 0.5, t10b + 0.15, t_top + 0.1]:
     put('doors', t, -16, dur=1.2)
-# Schritte (Treppe)
-bed('steps', g(19.33) + 0.2, g(26.47), -16, 0.3)
-bed('steps', g(26.47), g(26.47) + 1.2, -18, 0.2, off=3)
+# Schritte
+bed('steps', t_dort + 0.2, t_denn, -16, 0.3)
+bed('steps', t_denn, t_denn + 1.2, -18, 0.2, off=3)
+bed('heels', t_eve + 0.3, t_ride - 0.7, -18, 0.2)
 # Strand: Wellen + Möwen
-for a, b in [(g(10.95), g(13.86)), (g(26.47), g(30.81) + 1.9), (g(42.32), g(44.43)), (g(70.64), END)]:
+for a, b in [(t_eve, t_ride), (t_denn, t_eines), (t_am, t_und), (g(70.64), END)]:
     bed('waves', a, b, -20, 0.3)
     bed('gull', a, b, -24, 0.3, off=2)
 # Regen
-bed('rain', g(35.23), g(37.87), -12, 0.3)
-bed('rain', g(37.87), g(41.75), -24, 0.3)
-bed('rain', g(41.75), g(42.32), -12, 0.15)
+bed('rain', t_eines, t_rain2, -12, 0.3)
+bed('rain', t_rain2, t_top + 0.1, -24, 0.3)
+bed('rain', t_top + 0.1, t_am, -12, 0.15)
 bed('rain', g(65.10), g(70.64), -28, 0.6)
 # Unterwasser
-bed('bubbles', 0.0, T_APT, -20, 0.3)
-bed('bubbles', g(47.35), g(54.77), -24, 0.5)
+bed('bubbles', 0.0, t_eve, -20, 0.3)
+bed('bubbles', t_warum, g(54.77), -24, 0.5)
 # Knopfdrücke
 for t in [g(60.31), g(64.23), g(68.97)]:
     put('click', t, -6)
@@ -129,14 +138,14 @@ env = np.abs(voice).mean(1)
 win = int(0.25 * SR)
 env = np.convolve(env, np.ones(win) / win, 'same')
 duck = 1 - 0.45 * np.clip(env / (env.max() * 0.25 + 1e-9), 0, 1)
-mix = voice * db(2) + out + mus * db(-17) * duck[:, None]
+mix = voice * db(5) + out + mus * db(-9) * duck[:, None]
 mix = mix[:int(END * SR)]
 tmp = f'{ROOT}/audio/mix_raw.wav'
 import wave
 pcm = (np.clip(mix, -1, 1) * 32767).astype(np.int16)
 with wave.open(tmp, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes(pcm.tobytes())
-subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', tmp, '-af', 'loudnorm=I=-13:TP=-1.0:LRA=8', '-ar', str(SR),
+subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', tmp, '-af', 'acompressor=threshold=-20dB:ratio=3:attack=5:release=120:makeup=4,alimiter=limit=0.9:level=false,loudnorm=I=-9:TP=-0.8:LRA=6', '-ar', str(SR),
                 f'{ROOT}/audio/final_mix.wav'], check=True)
 os.remove(tmp)
 print('ok', END)

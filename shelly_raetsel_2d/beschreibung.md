@@ -3,7 +3,7 @@
 ## TikTok-Beschreibung
 
 Kannst du dieses Rätsel lösen? 🐚🧠
-Shelly wohnt ganz unten im Tiefseekratzer Sunken Pearl, auf Etage −20. Bei Regen fährt sie mit dem Aufzug bis ganz nach oben zum Strand, wo ihr Boot zur Arbeit fährt. Bei Sonne nur bis −10 – den Rest läuft sie. Warum? 🤔☔
+Shelly wohnt im 20. Untergeschoss eines Hochhauses unter Wasser – dem Sunken Pearl. Bei Regen fährt sie mit dem Aufzug bis ganz nach oben zum Strand, wo ihr Boot zur Arbeit fährt. Bei Sonne nur bis −10 – den Rest läuft sie. Warum? 🤔☔
 Schreib deine Antwort in die Kommentare, BEVOR du die Lösung hörst! 👇
 Du willst mitspielen und eine Hütte mit deinem Namen bekommen? Dann folg mir! 🏝️
 
