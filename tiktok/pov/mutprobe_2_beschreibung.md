@@ -24,4 +24,5 @@ Gruselig, aber mit Botschaft: Mobbing und Mutproben haben Folgen. Keine Gewalt, 
 
 ## Cover
 
-`mutprobe_2_thumbnail.jpg` (1080×1920), erzeugt mit `tools/thumbnail.js`.
+`mutprobe_2_thumbnail.jpg` (1080×1920). Erzeugt mit:
+`node tools/thumbnail.js mutprobe_2 --bei 53.21 --titel "Es war|nie Ben.|Es war *Noah*" --unter "TEIL 2" --oben "00:03"`
