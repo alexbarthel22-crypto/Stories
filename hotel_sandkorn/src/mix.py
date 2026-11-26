@@ -1,7 +1,7 @@
 """Ton: Stimme (mit Denkpause) + Geräusche, ohne Musik."""
 import subprocess, numpy as np, os, sys, wave
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import hotel as h
+import hotel2 as h
 SR = 48000
 ROOT = h.ROOT
 
@@ -44,20 +44,21 @@ def bed(name, a, b, g, fade=0.6):
 
 
 TW, nw = h.TW, h.nw
-put('boom', 0.0, -5)
+put('swoosh', 0.0, -6)
 for s_ in h.SC[1:]:
     put('swoosh', s_[1] - 0.1, -11)
-for t in [nw('ausgebucht'), nw('und', 0), nw('unendlich', 0), nw('shelly', 0) + 0.05, nw('viele', 1) - 0.1, nw('sandkörner'),
-          nw('unendlich', 1), nw('eins'), nw('zwei'), nw('drei'), nw('ende'), nw('belegt'), nw('fähre'), nw('unendlich', 2),
-          nw('eins', 1) - 0.1, nw('niemand') - 0.1, nw('nur', 0, after=nw('shelly', 1)), nw('welche') - 0.05, nw('schreibe'),
-          TW('hier'), TW('jeder') - 0.1, TW('geraden') - 0.2, TW('frei') - 0.3, TW('ausgebucht', 1) - 0.1, TW('hilbert') - 0.2,
-          TW('was', 0, after=nw('hilbert')) - 0.1, TW('wohnst'), TW('muscheltal'), TW('hütte') - 0.2, TW('folge')]:
+for t in [nw('shelly', 0), nw('sandkörner') - 0.1, nw('unendlich', 1) - 0.1, nw('eins'), nw('zwei'), nw('drei'), nw('ende') - 0.15,
+          nw('belegt') - 0.05, nw('unendlich', 2) - 0.1, nw('eins', 1) - 0.1, nw('welche') - 0.1, h.GAP_AT + 0.05,
+          TW('hier'), TW('jeder') - 0.1, TW('geraden') - 0.2, TW('frei') - 0.3, TW('jeden') - 0.3, TW('ausgebucht', 1) - 0.1,
+          TW('hilbert') - 0.2, TW('was', 0, after=nw('hilbert')) - 0.1, TW('wohnst') - 0.05, TW('folge') - 0.05, TW('hütte') - 0.2]:
     put('pop', t, -9)
+for i in range(6):
+    put('click', h.GAP_AT + 0.45 + i * 0.22, -14)
 for t in [TW('geht') - 0.4, TW('vier') - 0.5, TW('sechs') - 0.5]:
     put('swoosh', t, -14)
 put('tada', TW('frei') - 0.2, -12)
 bed('waves', 0, h.END, -24, 1.0)
-bed('gull', h.SC[5][1], h.SC[6][1], -26)
+bed('gull', h.SC[5][1], h.SC[7][1], -28)
 
 vo = load(f'{ROOT}/audio/vo.wav')
 voice = np.zeros_like(out)

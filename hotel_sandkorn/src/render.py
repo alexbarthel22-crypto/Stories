@@ -4,13 +4,15 @@ import numpy as np
 from PIL import Image
 from multiprocessing import Pool
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import hotel as scenes
+import hotel2 as scenes
 from draw import W, H
 
 FPS = 30
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'frames')
 
 
+_yy, _xx = np.mgrid[0:1920, 0:1080]
+VIG = (1 - 0.28 * (((_xx - 540) / 760.0) ** 2 + ((_yy - 960) / 1250.0) ** 2))[:, :, None].clip(0.6, 1)
 SUB = 5            # Zwischenbilder pro Frame (Bewegungsunschärfe der Szene)
 SHUTTER = 0.5      # Anteil der Framedauer
 import draw as _draw
@@ -42,6 +44,7 @@ def render(T, path):
         blur = acc / n
         m = (np.abs(full - mid).max(axis=2, keepdims=True) / 24.0).clip(0, 1)
         img = blur * (1 - m) + full * m
+    img = img * VIG + np.random.default_rng(int(T * 1000)).normal(0, 4.5, (H, W, 1))
     img = (img + 0.5).clip(0, 255).astype(np.uint8)[:, :, ::-1]
     Image.fromarray(img).save(path, compress_level=1)
 
