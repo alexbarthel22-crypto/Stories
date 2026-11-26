@@ -398,6 +398,30 @@ def sc_overview(ctx, T):
     karaoke(ctx, T, INTRO_TXT, times, 510, 1120, 60, 800, appear=0.0)
 
 
+def sc_home(ctx, T, t0):
+    """Abends: Kabine auf −20 -> Wohnungstür -> hinein."""
+    y = fy(-20)
+    x, ph, dr = path_x(T, [(t0 + 0.2, CAB_X + 6), (t0 + 1.0, 790), (t0 + 1.6, 1080)])
+    door = ease(T, t0 + 0.7, t0 + 1.0)
+    cab_open = 1 - ease(T, t0 + 1.2, t0 + 1.5)
+    cam = Cam(lerp(700, 860, ease(T, t0 + 0.3, t0 + 1.4)), y - 300, 1.1)
+
+    def draw_sh(cx):
+        shelly(cx, x, y - 2 if x > X_SH1 - 20 else y - 10, 1.0, face=0.8 if dr else 0, walk=ph, mirror=dr < 0,
+               blink=blink_at(T, BL))
+
+    def act(cx):
+        if x > X_SH1 - 20:
+            draw_sh(cx)
+
+    def inside():
+        if x <= X_SH1 - 20:
+            draw_sh(ctx)
+    draw_view(ctx, cam, T, {'actors': [act], 'cabin_y': y, 'cabin_open': cab_open, 'in_cabin': inside,
+                            'door_r': {-20: cab_open}, 'apt_door': {-20: door}})
+    return cam
+
+
 def sc_exterior(ctx, T, t0):
     k = ease(T, t0, T_MINUS)
     z = lerp(0.575, 1.05, k)
