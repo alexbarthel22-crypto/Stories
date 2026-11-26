@@ -214,6 +214,8 @@ def bubble(ctx, T, t0, s, x, y, size=34, style='white', maxw=600, tail=None):
     if not UI_ON[0] or T < t0:
         return
     k = back_out(T, t0, t0 + 0.28, 2.0)
+    if k <= 0.001:
+        return
     words = s.split()
     lines, cur = [], ''
     for w_ in words:
@@ -620,6 +622,8 @@ def sc_flags(ctx, T, ch):
         if T < ta:
             continue
         k = back_out(T, ta, ta + 0.3, 1.8)
+        if k <= 0.001:
+            continue
         y = 480 + i * 118
         ctx.save()
         ctx.translate(540, y)
@@ -645,7 +649,7 @@ def sc_outro(ctx, T, ch):
     sticker(ctx, 'MARKIER SIE!', 510, 720, 64, 'red', rot=-2, sc=pop(T, TW('markier') - 0.05))
     sticker(ctx, 'WAS SOLL SHELLY MORGEN SEIN?', 510, 860, 40, 'white', sc=pop(T, TW('was') - 0.05))
     if UI_ON[0] and T >= TW('was'):
-        kk = pop(T, TW('was') + 0.2)
+        kk = max(0.01, pop(T, TW('was') + 0.2))
         ctx.save()
         ctx.translate(820, 960)
         ctx.scale(kk, kk)
