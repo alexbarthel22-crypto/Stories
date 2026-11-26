@@ -284,7 +284,7 @@ def corridor_3d(ctx, T, cz, numbers, belegt_z=None, guests=()):
     k0 = int(cz // 2.4) - 1
     for k in range(k0, k0 + 16):
         zc = k * 2.4 + 1.2
-        if cz + 0.3 < zc < zmax:
+        if cz + 0.75 < zc < zmax:
             items.append((zc, 'diamond', k))
     k0 = int(cz // 3.0) - 1
     for k in range(k0, k0 + 13):
@@ -294,7 +294,7 @@ def corridor_3d(ctx, T, cz, numbers, belegt_z=None, guests=()):
     for k in range(int(cz // 1.6) - 1, int(cz // 1.6) + 24):
         side = -1 if k % 2 == 0 else 1
         zc = k * 1.6 + (0.0 if side < 0 else 0.8)
-        if cz + 0.4 < zc < zmax:
+        if cz + 0.6 < zc < zmax:
             items.append((zc, 'door', k))
     for g_ in guests:
         items.append(g_)
@@ -1029,7 +1029,9 @@ def sc_outro(ctx, T, t0):
         on = T >= tap
         fill_rrect(ctx, -170 + 6, -50 + 10, 340, 100, 14, alpha(C['shadow'], 0.35))
         fill_rrect(ctx, -170, -50, 340, 100, 14, C['green'] if on else P['red'])
-        text(ctx, 'GEFOLGT ✓' if on else 'FOLGEN', 0, 0, 48, C['white'], font=SLAB)
+        text(ctx, 'GEFOLGT' if on else 'FOLGEN', -24 if on else 0, 0, 48, C['white'], font=SLAB)
+        if on:
+            tick_mark(ctx, 120, 0, 34, C['white'])
         ctx.restore()
     hut_card(ctx, T, TW('hütte') - 0.2, 800, 1240)
 
