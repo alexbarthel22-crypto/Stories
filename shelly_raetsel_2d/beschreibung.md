@@ -2,12 +2,11 @@
 
 ## TikTok-Beschreibung
 
-Kannst du dieses Rätsel lösen? 🐚🧠
-Shelly wohnt im 20. Untergeschoss eines Hochhauses unter Wasser – dem Sunken Pearl. Abends fährt sie ganz normal mit dem Aufzug nach Hause. Aber morgens fährt sie nur bis ins 10. Untergeschoss und läuft den Rest zu Fuß. Nur wenn es regnet, fährt sie direkt bis ganz nach oben. Warum? 🤔☔
-Schreib deine Antwort in die Kommentare, BEVOR du die Lösung hörst! 👇
-Du willst mitspielen und eine Hütte mit deinem Namen bekommen? Dann folg mir! 🏝️
+Nur 1 % kommen drauf 🤯 Warum fährt Shelly nur bei Regen ganz nach oben? ☔🐚
+Schreib deine Lösung in die Kommentare – OHNE vorher zu spulen! 👇
+Wer's richtig hat, bekommt eine Hütte mit seinem Namen im nächsten Video 🏝️ Folgen nicht vergessen!
 
-#rätsel #denksport #kannstdueslösen #fürdich #fyp
+#rätsel #denksport #kannstdueslösen #fürdich
 
 ## Credits
 
