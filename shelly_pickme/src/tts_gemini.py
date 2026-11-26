@@ -2,7 +2,7 @@
 import json, base64, os, sys, urllib.request, subprocess
 text = open(sys.argv[1]).read().strip()
 voice = sys.argv[2]
-prompt = "Say in a lively, warm and emotional way, like a young, friendly German storyteller, at a brisk pace: " + text
+prompt = "Sprich auf Deutsch, lebendig, warm und emotional, wie ein junger freundlicher Erzähler, zügig: " + text
 body = {"contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {"responseModalities": ["AUDIO"],
                              "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}}}}

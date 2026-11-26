@@ -159,6 +159,7 @@ def shelly(ctx, x, y, s=1.0, face=0.0, walk=None, arms=None, expr='smile', blink
         fx_, fy_ = hx_ + math.sin(lg) * 22, hy_ + math.cos(lg) * 30
         line(ctx, hx_, hy_, fx_, fy_ - 2, 6.5, C['skin2'])
         ellipse(ctx, fx_ + face * 3 + side * 1.5, fy_ - 1.5, 8.5, 5, C['pink2'])
+        ellipse(ctx, fx_ + face * 3 + side * 1.5 - 2, fy_ - 3, 3, 1.4, alpha(C['white'], 0.5))
         if tiptoe > 0:
             pass
     # Kleid (A-Linie)
@@ -173,6 +174,18 @@ def shelly(ctx, x, y, s=1.0, face=0.0, walk=None, arms=None, expr='smile', blink
     ctx.close_path()
     src(ctx, C['pink'])
     ctx.fill()
+    # Schattierung + Falten
+    ctx.new_path()
+    ctx.move_to(4, -74)
+    ctx.curve_to(18, -58, 28, -44, 36, -33)
+    ctx.curve_to(26, -30, 16, -29, 8, -29)
+    ctx.curve_to(10, -45, 8, -60, 4, -74)
+    ctx.close_path()
+    src(ctx, alpha(C['pink2'], 0.45))
+    ctx.fill()
+    for fx_ in (-16, -4, 12):
+        line(ctx, fx_ * 0.6, -66, fx_, -36, 1.6, alpha(C['pink2'], 0.6))
+    line(ctx, -10, -92, -12, -80, 3, alpha(C['white'], 0.35))
     # Rocksaum-Welle und Gürtel
     ctx.move_to(-36, -33)
     for i in range(6):
@@ -282,6 +295,12 @@ def shelly(ctx, x, y, s=1.0, face=0.0, walk=None, arms=None, expr='smile', blink
         ctx.set_line_width(2.4)
         src(ctx, hexc('#B2405E'))
         ctx.stroke()
+    # Nase
+    ctx.move_to(ex0 - 1, ey0 + 5)
+    ctx.curve_to(ex0 + 2, ey0 + 7, ex0 + 2, ey0 + 8, ex0 - 1, ey0 + 8.5)
+    ctx.set_line_width(1.6)
+    src(ctx, alpha(C['skin2'], 0.9))
+    ctx.stroke()
     # Pony / Haare vorne
     ctx.new_path()
     ctx.arc(hx0, hy0, 29.5, math.radians(185), math.radians(355))
@@ -298,6 +317,12 @@ def shelly(ctx, x, y, s=1.0, face=0.0, walk=None, arms=None, expr='smile', blink
         ctx.close_path()
         src(ctx, C['hair'])
         ctx.fill()
+    # Glanz im Haar
+    ctx.new_sub_path()
+    ctx.arc(hx0 - 4, hy0 - 2, 25, math.radians(215), math.radians(250))
+    ctx.set_line_width(3.2)
+    src(ctx, alpha(C['white'], 0.3))
+    ctx.stroke()
     # Perle im Haar
     if shell:
         circle(ctx, hx0 + 18, hy0 - 22, 4.2, C['white'])

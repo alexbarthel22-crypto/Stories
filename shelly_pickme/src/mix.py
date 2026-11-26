@@ -41,19 +41,16 @@ def bed(name, a, b, g, fade=0.4):
 
 
 TW = pm.TW
-put('boom', pm.TW('ein', 0) - 0.12, -6)
+put('boom', 0.0, -5)
 for c in pm.CH[1:]:
     put('swoosh', c[1] - 0.1, -10)
     put('pop', c[1] + 0.12, -10)
-for t in [TW('ausgewählt'), TW('lieblings') + 0.5, TW('stunde') - 0.1, TW('hasse') - 0.2, TW('ich', 2), TW('muschel', 1),
-          TW('ich', 3) - 0.1, TW('gegessen'), TW('ich', 4) - 0.1, TW('mädchen', 2) - 0.1, TW('zuschauen'), TW('sagt', 1) - 0.1,
-          TW('kennst'), TW('markier'), TW('was')]:
+for t in [TW('ausgewählt'), TW('lieblings') + 0.5, TW('stunde') - 0.1, TW('lästert'), TW('sind') - 0.25, TW('ich', 1) - 0.05,
+          TW('ich', 2) - 0.1, TW('gegessen'), TW('ich', 3) - 0.1, TW('mädchen', 3) - 0.1, TW('zuschauen') - 0.2,
+          TW('sagt', 0) - 0.1, TW('kennst'), TW('markier'), TW('wohnst'), TW('muscheltal'), TW('hütte') - 0.2, TW('folge')]:
     put('pop', t, -9)
-for t in [TW('du', 0) - 0.15, TW('weiss') - 0.15, TW('ich', 6) - 0.15]:
+for t in [TW('du', 0) - 0.15, TW('weiss') - 0.15, TW('ich', 5) - 0.15, TW('namen') + 0.3]:
     put('click', t, -8)
-_n = TW('nervigsten')
-for t in [TW('sie', 0, after=_n), TW('sie', 1, after=_n), TW('sie', 2, after=_n), TW('braucht') - 0.3]:
-    put('ding', t - 0.05, -14)
 bed('waves', 0, pm.END, -26, 1.0)
 bed('gull', pm.CH[3][1], pm.CH[4][1], -24)
 bed('gull', pm.CH[6][1], pm.CH[7][1], -26)

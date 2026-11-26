@@ -32,7 +32,7 @@ def blink(T):
 # ---------------------------------------------------------------- Kapitel
 CH = [
     # key, start, Titel, Uhrzeit, Icon, Farbe1, Farbe2
-    ('intro', 0.0, None, None, None, '#F27BB0', '#F59BC4'),
+    ('intro', 0.0, None, None, None, '#E95C9C', '#F27BB0'),
     ('was', TW('ein', 1) - 0.1, 'WAS IST EIN PICK-ME-GIRL?', None, None, '#7B5CD6', '#8E72E0'),
     ('morgen', TW('sieben') - 0.1, 'GUTEN MORGEN', '07:00', 'sun', '#F2A23C', '#F6B65E'),
     ('strand', TW('am', 1) - 0.1, 'AM STRAND', '10:00', 'sun', '#2BB3C6', '#4CC4D4'),
@@ -41,7 +41,7 @@ CH = [
     ('party', TW('abends') - 0.1, 'DIE STRANDPARTY', '19:00', 'moon', '#E5675B', '#EC8378'),
     ('chat', TW('junge') - 0.35, 'DIE NACHRICHT', '21:00', 'moon', '#24345F', '#2F4274'),
     ('flags', TW('nervigsten') - 0.25, 'DIE 4 RED FLAGS', None, None, '#D9473F', '#E2615A'),
-    ('outro', TW('kennst') - 0.1, None, None, None, '#8E5CD6', '#A274E0'),
+    ('outro', TW('kennst') - 0.1, None, None, None, '#2BB3C6', '#4CC4D4'),
 ]
 
 
@@ -191,13 +191,14 @@ def header(ctx, T, ch):
 
 
 def card(ctx, T, t0, x0=170, y0=470, w=740, h=560, col=None):
-    """Weiße Info-Karte mit Pop-in. Gibt Skalierung zurück (für Inhalte)."""
+    """Weiße Info-Karte: Pop-in, danach schwebt und wackelt sie leicht."""
     k = back_out(T, t0, t0 + 0.32, 1.7) if T >= t0 else 0.0
     if k <= 0.001:
         return 0.0
     ctx.save()
     cx, cy = x0 + w / 2, y0 + h / 2
-    ctx.translate(cx, cy)
+    ctx.translate(cx, cy + math.sin(T * 1.7 + x0) * 7)
+    ctx.rotate(math.sin(T * 1.2 + y0) * 0.012 + (1 - min(1, (T - t0) / 0.4)) * 0.08)
     ctx.scale(k, k)
     ctx.translate(-cx, -cy)
     fill_rrect(ctx, x0 + 8, y0 + 14, w, h, 30, alpha(C['shadow'], 0.22))
@@ -209,8 +210,8 @@ def card_end(ctx):
     ctx.restore()
 
 
-def bubble(ctx, T, t0, s, x, y, size=34, style='white', maxw=600, tail=None):
-    """Sprechblase mit Umbruch. tail = (x, y) Spitze."""
+def bubble(ctx, T, t0, s, x, y, size=34, style='yellow', maxw=600, tail=None):
+    """Sprechblase (kräftige Farbe + dunkler Rand, hebt sich vom Hintergrund ab)."""
     if not UI_ON[0] or T < t0:
         return
     k = back_out(T, t0, t0 + 0.28, 2.0)
@@ -230,13 +231,18 @@ def bubble(ctx, T, t0, s, x, y, size=34, style='white', maxw=600, tail=None):
     bw, bh = tw + size * 1.2, len(lines) * lh + size * 0.7
     bg, fg = {'white': (C['white'], C['ink']), 'blue': (hexc('#2F80ED'), C['white']), 'grey': (hexc('#E9EBF0'), C['ink']),
               'yellow': (C['yellow'], C['ink']), 'red': (C['red'], C['white'])}[style]
+    border = style in ('yellow', 'red', 'white')
     ctx.save()
-    ctx.translate(x, y)
+    ctx.translate(x, y + math.sin(T * 3 + x) * 3)
     ctx.scale(k, k)
-    fill_rrect(ctx, -bw / 2 + 4, -bh / 2 + 7, bw, bh, size * 0.6, alpha(C['shadow'], 0.2))
+    fill_rrect(ctx, -bw / 2 + 5, -bh / 2 + 9, bw, bh, size * 0.6, alpha(C['shadow'], 0.25))
     if tail:
         tx, ty = tail[0] - x, tail[1] - y
+        if border:
+            poly(ctx, [(-24, bh / 2 - 8), (24, bh / 2 - 8), (tx, ty + 6)], C['ink'])
         poly(ctx, [(-18, bh / 2 - 6), (18, bh / 2 - 6), (tx, ty)], bg)
+    if border:
+        fill_rrect(ctx, -bw / 2 - 5, -bh / 2 - 5, bw + 10, bh + 10, size * 0.6 + 5, C['ink'])
     fill_rrect(ctx, -bw / 2, -bh / 2, bw, bh, size * 0.6, bg)
     for i, l in enumerate(lines):
         text(ctx, l, 0, -bh / 2 + size * 0.35 + lh * (i + 0.5), size, fg, font=FONT2)
@@ -263,28 +269,55 @@ def stamp(ctx, T, t0, s, x, y, size=44, rot=-12):
 
 
 # ---------------------------------------------------------------- Figuren-Extras
-def boy(ctx, x, y, s, hair, shirt, skin='#F2C6A0', mood=0.0):
-    """Junge als Brustbild (Kopf + Schultern), y = Unterkante."""
+def boy(ctx, x, y, s, hair, shirt, skin='#F2C6A0', mood=0.0, style=0, look=0.0):
+    """Junge als Brustbild mit Details (Haarschnitt, Ohren, Brauen, Kragen, Schattierung). y = Unterkante."""
     ctx.save()
     ctx.translate(x, y)
     ctx.scale(s, s)
-    fill_rrect(ctx, -34, -46, 68, 50, 22, hexc(shirt))
-    rect(ctx, -6, -58, 12, 14, hexc(skin))
-    circle(ctx, 0, -84, 28, hexc(skin))
+    sh = hexc(shirt)
+    fill_rrect(ctx, -36, -48, 72, 52, 24, sh)
+    fill_rrect(ctx, -36, -48, 30, 52, 24, mixc(sh, C['white'], 0.12))
+    poly(ctx, [(-12, -48), (0, -36), (12, -48)], mixc(sh, C['ink'], 0.25))
+    rect(ctx, -7, -60, 14, 14, mixc(hexc(skin), C['ink'], 0.1))
+    for ex in (-28, 28):
+        circle(ctx, ex, -84, 6.5, mixc(hexc(skin), C['ink'], 0.06))
+    circle(ctx, 0, -86, 28, hexc(skin))
+    hc = hexc(hair)
     ctx.new_path()
-    ctx.arc(0, -86, 29.5, math.radians(185), math.radians(355))
-    ctx.close_path()
-    src(ctx, hexc(hair))
-    ctx.fill()
-    for sx in (-10, 10):
-        circle(ctx, sx, -82, 3.6, C['ink'])
-    if mood > 0:
-        ctx.move_to(-7, -71)
-        ctx.curve_to(-3, -66, 3, -66, 7, -71)
+    if style == 0:
+        ctx.arc(0, -88, 30, math.radians(180), math.radians(360))
+        ctx.curve_to(26, -98, 10, -106, -4, -100)
+        ctx.curve_to(-14, -106, -26, -100, -30, -88)
+    elif style == 1:
+        for i in range(7):
+            a = math.radians(190 + i * 26)
+            ctx.line_to(math.cos(a) * 36, -90 + math.sin(a) * 30)
+            a2 = math.radians(203 + i * 26)
+            ctx.line_to(math.cos(a2) * 26, -90 + math.sin(a2) * 22)
     else:
-        ctx.move_to(-6, -70)
-        ctx.line_to(6, -70)
-    ctx.set_line_width(2.4)
+        ctx.arc(0, -90, 31, math.radians(170), math.radians(370))
+        ctx.curve_to(20, -96, -20, -96, -31, -86)
+    ctx.close_path()
+    src(ctx, hc)
+    ctx.fill()
+    line(ctx, -14, -114, 4, -112, 3, alpha(C['white'], 0.35))
+    for sx in (-10, 10):
+        line(ctx, sx - 5, -97, sx + 5, -98 - (1.5 if mood > 0 else 0), 2.4, mixc(hc, C['ink'], 0.3))
+        ellipse(ctx, sx + look * 3, -86, 3.6, 4.4, C['ink'])
+        circle(ctx, sx + look * 3 + 1.2, -87.5, 1.2, C['white'])
+    line(ctx, 0, -84, -2, -78, 2, alpha(C['ink'], 0.25))
+    ellipse(ctx, -16, -76, 5, 3, alpha(hexc('#F27B95'), 0.35))
+    ellipse(ctx, 16, -76, 5, 3, alpha(hexc('#F27B95'), 0.35))
+    if mood > 0:
+        ctx.move_to(-8, -71)
+        ctx.curve_to(-3, -64, 3, -64, 8, -71)
+    elif mood < 0:
+        ctx.move_to(-7, -66)
+        ctx.curve_to(-3, -71, 3, -71, 7, -66)
+    else:
+        ctx.move_to(-6, -69)
+        ctx.line_to(6, -69)
+    ctx.set_line_width(2.6)
     src(ctx, hexc('#8A3B3B'))
     ctx.stroke()
     ctx.restore()
@@ -333,42 +366,52 @@ def shelly_main(ctx, T, pose='idle', expr='smile', x=540, feet=1470, s=2.05, pho
 
 # ---------------------------------------------------------------- Kapitel-Inhalte
 def sc_intro(ctx, T):
-    flip = TW('ein', 0) - 0.08
-    pre = T < flip
-    if UI_ON[0]:
-        outlined(ctx, 'Heute ist Shelly', 540, 300, 40, C['white'], sw=8)
-        k = back_out(T, flip, flip + 0.3, 2.2) if not pre else 1.0
+    """Thema sofort: riesiges PICK-ME-GIRL mit Blitz, Strahlen, Glitzerregen, Herzen."""
+    # rotierende Lichtstrahlen + Glitzerregen
+    r = random.Random(3)
+    for i in range(40):
+        x = r.uniform(0, W)
+        y = (r.uniform(-200, H) + T * r.uniform(250, 450)) % (H + 200) - 100
+        rot = T * r.uniform(-4, 4)
+        kind = i % 4
         ctx.save()
-        ctx.translate(540, 390)
-        ctx.scale(max(0.01, k), max(0.01, k))
-        outlined(ctx, 'EINE MEERJUNGFRAU.' if pre else 'EIN PICK-ME-GIRL.', 0, 0, 70 if not pre else 60, C['white'] if pre else C['yellow'])
+        ctx.translate(x, y)
+        ctx.rotate(rot)
+        if kind == 0:
+            heart(ctx, 0, 0, r.uniform(1.0, 1.8), C['red'])
+        elif kind == 1:
+            sparkle(ctx, 0, 0, r.uniform(14, 26), C['yellow'])
+        elif kind == 2:
+            shell_icon(ctx, 0, 0, r.uniform(0.8, 1.2), C['pink3'])
+        else:
+            star_icon(ctx, 0, 0, r.uniform(12, 20), hexc('#FF8A5B'))
         ctx.restore()
-    # fliegende Deko nach dem Wechsel
-    if not pre:
-        r = random.Random(3)
-        for i in range(16):
-            a = r.uniform(0, 2 * math.pi)
-            sp = r.uniform(350, 700)
-            dt = T - flip
-            d = sp * (1 - math.exp(-dt * 2.2))
-            x = 540 + math.cos(a) * d
-            y = 1000 + math.sin(a) * d * 0.9 + 60 * dt
-            kind = i % 4
-            ctx.save()
-            ctx.translate(x, y)
-            ctx.rotate(dt * r.uniform(-3, 3))
-            if kind == 0:
-                heart(ctx, 0, 0, 1.6, C['red'])
-            elif kind == 1:
-                shell_icon(ctx, 0, 0, 1.2, C['pink3'])
-            elif kind == 2:
-                sparkle(ctx, 0, 0, 22, C['yellow'])
-            else:
-                star_icon(ctx, 0, 0, 20, hexc('#FF8A5B'))
-            ctx.restore()
-    shelly_main(ctx, T, 'wave' if pre else 'hair', 'smile' if pre else 'open', feet=1420, s=2.4)
-    if T < flip + 0.12 and T > flip - 0.02:
-        rect(ctx, 0, 0, W, H, alpha(C['white'], 0.9))
+    if T < 0.25:
+        rect(ctx, 0, 0, W, H, alpha(C['white'], 0.7 * (1 - T / 0.25)))
+    if UI_ON[0]:
+        outlined(ctx, 'Heute ist Shelly', 540, 330, 54, C['white'], sw=10)
+        # Riesiges Thema: Punch-in + Puls + Wackeln
+        k = lerp(1.35, 1.0, 1 - (1 - clamp(T / 0.3)) ** 3)
+        puls = 1 + 0.05 * math.sin(T * 7)
+        ang = math.sin(T * 5) * 0.05 * max(0.3, 1 - T / 2)
+        ctx.save()
+        ctx.translate(540, 500)
+        ctx.rotate(ang - 0.05)
+        ctx.scale(k * puls, k * puls)
+        tw = text_size(ctx, 'PICK-ME-GIRL', 118)[0]
+        fill_rrect(ctx, -tw / 2 - 40 + 8, -95 + 12, tw + 80, 190, 40, alpha(C['shadow'], 0.3))
+        fill_rrect(ctx, -tw / 2 - 40, -95, tw + 80, 190, 40, C['yellow'])
+        rrect(ctx, -tw / 2 - 40, -95, tw + 80, 190, 40)
+        ctx.set_line_width(8)
+        src(ctx, C['ink'])
+        ctx.stroke()
+        text(ctx, 'PICK-ME-GIRL', 0, 0, 118, C['ink'])
+        ctx.restore()
+        # Funkelsterne um den Titel
+        for i in range(6):
+            a = T * 2 + i * math.pi / 3
+            sparkle(ctx, 540 + math.cos(a) * 470, 500 + math.sin(a) * 140, 18 + 8 * math.sin(T * 6 + i), C['white'])
+    shelly_main(ctx, T, 'hair', 'open', feet=1440, s=2.4)
 
 
 def sc_was(ctx, T, ch):
@@ -384,7 +427,7 @@ def sc_was(ctx, T, ch):
                 heart(ctx, bx, 610 + math.sin(T * 5 + i) * 6, 0.9, C['red'])
         card_end(ctx)
     sticker(ctx, 'PICK ME!', 540, 960, 46, 'yellow', rot=-3, sc=pop(T, TW('ausgewählt')) if T < TW('lieblings') else 0)
-    bubble(ctx, T, TW('lieblings') + 0.5, 'Ich bin nicht wie die anderen Mädchen.', 540, 915, 34, 'white', 560, tail=(540, 980))
+    bubble(ctx, T, TW('lieblings') + 0.5, 'Ich bin nicht wie die anderen Mädchen.', 540, 975, 34, 'yellow', 640, tail=(540, 1040))
     pick = TW('jungs') - 0.1 <= T < TW('lieblings')
     shelly_main(ctx, T, 'pick' if pick else ('hair' if T >= TW('lieblings') else 'idle'),
                 'open' if pick else 'smile')
@@ -431,54 +474,114 @@ def shell_necklace(ctx, x, y, s):
 
 
 def sc_strand(ctx, T, ch):
+    """Sie lästert vor den Jungs über die anderen Mädchen."""
     t0 = ch[1]
-    k = card(ctx, T, t0 + 0.1, 190, 470, 700, 330)
+    k = card(ctx, T, t0 + 0.1, 170, 470, 740, 400, hexc('#BFE8FF'))
     if k:
-        shell_necklace(ctx, 380, 640, 1.6)
-        for i, (sx, sy) in enumerate([(640, 590), (700, 660), (610, 690), (760, 600), (680, 560)]):
-            sparkle(ctx, sx, sy, 22 - i * 2, C['yellow'])
-        text(ctx, 'MUSCHELKETTEN', 380, 760, 22, C['ink'])
-        text(ctx, 'GLITZER', 680, 760, 22, C['ink'])
-        if T > TW('hasse') + 0.2:
-            kk = clamp((T - TW('hasse') - 0.2) / 0.25)
-            for cx_ in (380, 680):
-                line(ctx, cx_ - 90 * kk, 560, cx_ + 90 * kk, 560 + 180 * kk, 14, C['red'])
-                line(ctx, cx_ + 90 * kk, 560, cx_ - 90 * kk, 560 + 180 * kk, 14, C['red'])
+        rect(ctx, 170, 700, 740, 170, hexc('#F3D9A4'))
+        rect(ctx, 170, 660, 740, 44, hexc('#3FB6D9'))
+        for i in range(8):
+            line(ctx, 190 + i * 90 + math.sin(T * 2 + i) * 8, 680, 230 + i * 90 + math.sin(T * 2 + i) * 8, 680, 4, alpha(C['white'], 0.6))
+        circle(ctx, 820, 540, 40, hexc('#FFF2B0'))
+        sad = T >= TW('oberflächlich') - 0.2
+        # andere Mädchen links
+        for i, who in enumerate(('sophia', 'laura')):
+            person(ctx, who, 250 + i * 95, 860 + math.sin(T * 3 + i) * 2, 0.95, 1.0 if sad else 0.0, T)
+        # Jungs rechts, lachen
+        for i, (hc, sc_) in enumerate(BOYS[:3]):
+            boy(ctx, 650 + i * 95, 870 + abs(math.sin(T * 4 + i)) * -6, 1.0, hc, sc_, mood=1, style=i % 3, look=-1)
+        # Shelly flüstert in der Mitte
+        shelly(ctx, 500, 865, 0.95, arms={'R': (14, -124)}, expr='smile', look=(4, 0), blink=blink(T))
+        if T >= TW('lästert'):
+            for j in range(3):
+                kk = ((T - TW('lästert')) * 1.5 + j / 3) % 1
+                ctx.save()
+                ctx.translate(560 + kk * 90, 690 - kk * 50)
+                text(ctx, 'bla', 0, 0, 22 + 8 * (1 - kk), alpha(C['ink'], 1 - kk))
+                ctx.restore()
+        if sad:
+            cloud_shape(ctx, 300, 590 + math.sin(T * 2) * 4, 40, hexc('#8A93A6'))
+            for j in range(4):
+                yy = 630 + ((T * 160 + j * 30) % 80)
+                line(ctx, 280 + j * 14, yy, 276 + j * 14, yy + 12, 3, hexc('#4FA3E8'))
         card_end(ctx)
-    if T < TW('ich', 2) - 0.05:
-        bubble(ctx, T, TW('hasse') - 0.2, 'Ich hasse Muschelketten und Glitzer.', 540, 840, 34, 'white', 600, tail=(540, 930))
-    elif T < TW('dabei') - 0.05:
-        bubble(ctx, T, TW('ich', 2), 'Ich bin eher so der Kumpel-Typ.', 540, 840, 34, 'white', 600, tail=(540, 930))
-    if T >= TW('muschel', 1) - 0.1 and UI_ON[0]:
-        # Pfeil auf die Muschel im Haar
-        ta = TW('muschel', 1) - 0.1
-        kk = ease(T, ta, ta + 0.3)
-        hx, hy = 540, 1470 - 165 * 2.05
-        line(ctx, 800, 900, lerp(800, hx + 110, kk), lerp(900, hy - 10, kk), 10, C['yellow'])
-        if kk > 0.95:
-            poly(ctx, [(hx + 96, hy - 30), (hx + 122, hy + 8), (hx + 84, hy + 6)], C['yellow'])
-        sticker(ctx, 'MUSCHEL IM HAAR', 760, 860, 40, 'yellow', rot=4, sc=pop(T, ta + 0.2))
-    shelly_main(ctx, T, 'hip' if T < TW('dabei') else 'shrug', 'smile' if T < TW('dabei') else 'think')
+    if TW('sind') - 0.25 <= T < TW('ich', 1) - 0.05:
+        bubble(ctx, T, TW('sind') - 0.25, 'Die sind doch alle so oberflächlich.', 540, 935, 34, 'yellow', 640, tail=(540, 1010))
+    elif T >= TW('ich', 1) - 0.05:
+        bubble(ctx, T, TW('ich', 1) - 0.05, 'Ich bin eher so der Kumpel-Typ.', 540, 935, 34, 'yellow', 640, tail=(540, 1010))
+    shelly_main(ctx, T, 'hip' if T < TW('ich', 1) else 'hair', 'smile')
 
 
-def burger(ctx, x, y, s):
+def burger(ctx, x, y, s, T=0.0):
+    """Detaillierter Fischburger: Sesambrötchen mit Glanz, Salat, Tomate, Käse, panierter Fisch, Soße, Dampf."""
     ctx.save()
     ctx.translate(x, y)
     ctx.scale(s, s)
-    ellipse(ctx, 0, 52, 120, 14, alpha(C['shadow'], 0.15))
-    ctx.new_sub_path()
-    ctx.arc(0, 30, 110, math.pi, 2 * math.pi)
+    ellipse(ctx, 0, 132, 150, 16, alpha(C['shadow'], 0.18))
+    # Teller
+    ellipse(ctx, 0, 124, 150, 22, hexc('#FFFFFF'))
+    ellipse(ctx, 0, 120, 130, 15, hexc('#EEF1F5'))
+    # Unterteil Brötchen
+    g = cairo.LinearGradient(0, 86, 0, 124)
+    g.add_color_stop_rgba(0, *hexc('#E6A04A')); g.add_color_stop_rgba(1, *hexc('#C47A2C'))
+    rrect(ctx, -112, 86, 224, 36, 18); ctx.set_source(g); ctx.fill()
+    # Soße (Tropfen)
+    rect(ctx, -108, 78, 216, 10, hexc('#FFF3D6'))
+    for dx in (-70, -10, 55):
+        ellipse(ctx, dx, 90, 7, 10, hexc('#FFF3D6'))
+    # panierter Fisch
+    g = cairo.LinearGradient(0, 44, 0, 82)
+    g.add_color_stop_rgba(0, *hexc('#F5C266')); g.add_color_stop_rgba(1, *hexc('#D9922F'))
+    rrect(ctx, -118, 44, 236, 38, 18); ctx.set_source(g); ctx.fill()
+    r = random.Random(2)
+    for i in range(40):
+        circle(ctx, r.uniform(-110, 110), r.uniform(48, 78), r.uniform(1.2, 2.6), alpha(hexc('#B5701E'), 0.6))
+    poly(ctx, [(118, 63), (152, 40), (146, 63), (152, 86)], hexc('#E7A54C'))
+    # Käse mit Tropfen
+    poly(ctx, [(-105, 38), (105, 38), (110, 48), (60, 48), (48, 66), (38, 48), (-30, 48), (-42, 62), (-52, 48), (-110, 48)], hexc('#FFCC33'))
+    # Tomaten
+    for dx in (-55, 15, 75):
+        ellipse(ctx, dx, 32, 38, 9, hexc('#E5484D'))
+        ellipse(ctx, dx, 30, 26, 5, hexc('#F07373'))
+    # Salat (wellig)
+    ctx.move_to(-122, 24)
+    for i in range(13):
+        xx = -122 + i * 20
+        ctx.curve_to(xx + 5, 12, xx + 15, 34, xx + 20, 22)
+    ctx.line_to(122, 16)
+    ctx.line_to(-122, 16)
     ctx.close_path()
-    src(ctx, hexc('#E7A54C'))
+    src(ctx, hexc('#6BC98E'))
     ctx.fill()
-    for i in range(7):
-        ellipse(ctx, -70 + i * 23, -30 - abs(3 - i) * 6, 4, 2.5, C['cream'])
-    rect(ctx, -115, 30, 230, 14, hexc('#6BC98E'))
-    # Fisch
-    fill_rrect(ctx, -112, 44, 224, 30, 14, hexc('#F2C46B'))
-    poly(ctx, [(112, 59), (150, 36), (150, 82)], hexc('#F2C46B'))
-    rect(ctx, -108, 74, 216, 10, hexc('#F7E07A'))
-    fill_rrect(ctx, -110, 84, 220, 36, 16, hexc('#E7A54C'))
+    # Oberteil Brötchen mit Glanz
+    g = cairo.LinearGradient(0, -70, 0, 20)
+    g.add_color_stop_rgba(0, *hexc('#F2B45C')); g.add_color_stop_rgba(1, *hexc('#D48632'))
+    ctx.new_sub_path()
+    ctx.move_to(-118, 18)
+    ctx.curve_to(-118, -62, 118, -62, 118, 18)
+    ctx.close_path()
+    ctx.set_source(g)
+    ctx.fill()
+    ctx.move_to(-70, -24)
+    ctx.curve_to(-50, -44, -10, -50, 20, -46)
+    ctx.set_line_width(10)
+    src(ctx, alpha(C['white'], 0.35))
+    ctx.stroke()
+    for i in range(16):
+        a = r.uniform(-2.7, -0.4)
+        rr = r.uniform(30, 95)
+        ellipse(ctx, math.cos(a) * rr, 10 + math.sin(a) * rr * 0.6, 4, 2.4, hexc('#FFF6DC'))
+    # Fähnchen-Spieß
+    line(ctx, 0, -90, 0, -40, 3, hexc('#B98450'))
+    poly(ctx, [(0, -90), (34, -82), (0, -74)], C['pink'])
+    # Dampf
+    for j in range(3):
+        kk = ((T * 0.6 + j / 3) % 1)
+        ctx.move_to(-40 + j * 40, -60 - kk * 60)
+        ctx.curve_to(-50 + j * 40, -75 - kk * 60, -30 + j * 40, -85 - kk * 60, -40 + j * 40, -100 - kk * 60)
+        ctx.set_line_width(5)
+        src(ctx, alpha(C['white'], 0.7 * (1 - kk)))
+        ctx.stroke()
     ctx.restore()
 
 
@@ -502,7 +605,7 @@ def sc_mittag(ctx, T, ch):
     k = card(ctx, T, t0 + 0.1, 190, 470, 700, 380)
     if k:
         rect(ctx, 210, 760, 660, 18, hexc('#C98B5A'))
-        burger(ctx, 470, 640, 1.25)
+        burger(ctx, 460, 610, 1.05, T)
         salad(ctx, 760, 720, 0.9)
         text(ctx, 'XXL FISCHBURGER', 470, 810, 22, C['ink'])
         text(ctx, 'SALAT', 760, 810, 22, C['ink'])
@@ -513,8 +616,8 @@ def sc_mittag(ctx, T, ch):
             fill_rrect(ctx, 420, 532, max(26, 360 * 0.06 * kk + 20), 26, 13, C['red'])
             text(ctx, '2 BISSEN', 830, 545, 22, C['red'])
         card_end(ctx)
-    if TW('ich', 3) - 0.1 <= T < TW('gegessen') + 0.6:
-        bubble(ctx, T, TW('ich', 3) - 0.1, 'Ich esse nicht nur Salat wie andere Mädchen.', 540, 880, 34, 'white', 620, tail=(540, 970))
+    if TW('ich', 2) - 0.1 <= T < TW('gegessen') + 0.6:
+        bubble(ctx, T, TW('ich', 2) - 0.1, 'Ich esse nicht nur Salat wie andere Mädchen.', 540, 945, 34, 'yellow', 640, tail=(540, 1030))
     shelly_main(ctx, T, 'hip', 'open' if T < TW('gegessen') else 'think')
 
 
@@ -533,7 +636,7 @@ def sc_social(ctx, T, ch):
             text(ctx, n, 450 + i * 150, 552, 28, C['ink'])
             text(ctx, l, 450 + i * 150, 586, 18, C['grey'], font=FONT2)
         text(ctx, '@shelly.nicht.wie.die.anderen', 230, 660, 24, C['ink'], font=FONT2, align='l')
-        lines = [(TW('ich', 4) - 0.1, 'nur beste Freunde, keine Freundinnen'), (TW('mädchen', 2) - 0.1, 'Mädchen = nur Drama')]
+        lines = [(TW('ich', 3) - 0.1, 'nur beste Freunde, keine Freundinnen'), (TW('mädchen', 3) - 0.1, 'Mädchen = nur Drama')]
         for i, (ta, l) in enumerate(lines):
             if T >= ta:
                 yy = 715 + i * 52
@@ -563,35 +666,44 @@ def volleyball(ctx, x, y, r):
 
 def sc_party(ctx, T, ch):
     t0 = ch[1]
-    k = card(ctx, T, t0 + 0.1, 190, 470, 700, 420, hexc('#FFE9C7'))
+    k = card(ctx, T, t0 + 0.1, 170, 470, 740, 440, hexc('#FFE9C7'))
     if k:
-        vgrad(ctx, 190, 470, 700, 200, [(0, hexc('#3B3A7A')), (1, hexc('#E87B6B'))])
-        rect(ctx, 190, 670, 700, 220, hexc('#F3D9A4'))
-        for i in range(6):
-            circle(ctx, 240 + i * 120, 500 + (i % 2) * 20, 9, [C['yellow'], C['pink'], hexc('#7FD0F0')][i % 3])
-        line(ctx, 210, 500, 870, 520, 2, alpha(C['white'], 0.6))
+        vgrad(ctx, 170, 470, 740, 190, [(0, hexc('#3B3A7A')), (1, hexc('#E87B6B'))])
+        rect(ctx, 170, 660, 740, 250, hexc('#F3D9A4'))
+        for i in range(7):
+            yy = 500 + (i % 2) * 18
+            circle(ctx, 210 + i * 110, yy, 9 + math.sin(T * 6 + i) * 1.5, [C['yellow'], C['pink'], hexc('#7FD0F0')][i % 3])
+        line(ctx, 190, 495, 890, 515, 2, alpha(C['white'], 0.6))
         # Netz
-        line(ctx, 540, 640, 540, 860, 6, C['ink'])
+        line(ctx, 540, 640, 540, 870, 6, C['ink'])
+        for j in range(6):
+            line(ctx, 540, 650 + j * 10, 540, 650 + j * 10, 1, C['ink'])
+        rect(ctx, 470, 640, 140, 70, alpha(C['white'], 0.0))
         for j in range(5):
-            line(ctx, 540, 650 + j * 14, 540, 650 + j * 14, 1, C['ink'])
-        fill_rrect(ctx, 535, 640, 10, 80, 3, C['white'])
-        boy(ctx, 690, 860, 1.3, '#4A3426', '#3FA7D6', mood=1)
-        boy(ctx, 800, 860, 1.3, '#E2B65A', '#E2574C', mood=1)
-        bx = 540 + math.sin(T * 2.4) * 160
-        by = 600 - abs(math.cos(T * 2.4)) * 60
+            line(ctx, 476, 650 + j * 14, 604, 650 + j * 14, 1.5, alpha(C['ink'], 0.5))
+        for j in range(9):
+            line(ctx, 476 + j * 16, 646, 476 + j * 16, 708, 1.5, alpha(C['ink'], 0.5))
+        line(ctx, 470, 646, 610, 646, 4, C['white'])
+        # Shelly links auf dem Feld (springt zum Ball)
+        jump = abs(math.sin(T * 2.4)) * 34
+        shelly(ctx, 330, 860 - jump, 1.0, arms={'R': (24, -160), 'L': (-24, -160)}, expr='open', blink=blink(T))
+        # Jungs rechts
+        boy(ctx, 700, 870, 1.25, '#4A3426', '#3FA7D6', mood=1, style=0)
+        boy(ctx, 810, 870, 1.25, '#E2B65A', '#E2574C', mood=1, style=1)
+        bx = 540 + math.sin(T * 2.4) * 190
+        by = 590 - abs(math.cos(T * 2.4)) * 50
         volleyball(ctx, bx, by, 22)
-        if T >= TW('zuschauen') - 0.1:
-            fill_rrect(ctx, 220, 490, 210, 50, 25, alpha(C['ink'], 0.8))
-            for e in (0, 1):
-                ellipse(ctx, 252 + e * 26, 515, 10, 7, C['white'])
-                circle(ctx, 254 + e * 26, 516, 4, C['ink'])
-            n = min(48, int((T - TW('zuschauen')) * 60) + 3)
-            text(ctx, f'{n} SCHAUEN ZU', 350, 515, 20, C['white'])
+        # Zuschauer unten (nur wenn alle zuschauen)
+        if T >= TW('zuschauen') - 0.2:
+            for i in range(6):
+                hx = 210 + i * 120
+                hy = 905 - abs(math.sin(T * 5 + i)) * 8
+                boy(ctx, hx, hy, 0.6, BOYS[i % 5][0], BOYS[(i + 2) % 5][1], mood=1, style=i % 3, look=0)
         if T >= TW('als') - 0.1:
-            person(ctx, 'laura', 300, 880, 1.15, 0.0, T)
+            person(ctx, 'laura', 215, 870, 1.05, 0.0, T, mirror=True)
         card_end(ctx)
-    if T >= TW('sagt', 1) - 0.1:
-        bubble(ctx, T, TW('sagt', 1) - 0.1, 'Das ist eher nichts für Mädchen.', 540, 900, 36, 'red', 620, tail=(540, 980))
+    if T >= TW('sagt', 0) - 0.1:
+        bubble(ctx, T, TW('sagt', 0) - 0.1, 'Das ist eher nichts für Mädchen.', 540, 975, 36, 'red', 620, tail=(540, 1040))
     shelly_main(ctx, T, 'cheer' if T < TW('als') else 'hip', 'open' if T < TW('als') else 'think')
 
 
@@ -607,7 +719,7 @@ def sc_chat(ctx, T, ch):
     if k:
         bubble(ctx, T, TW('du', 0) - 0.15, 'Du bist echt cool', 470, 610, 30, 'grey', 300)
         bubble(ctx, T, TW('weiss') - 0.15, 'Ich weiß.', 640, 720, 30, 'blue', 300)
-        bubble(ctx, T, TW('ich', 6) - 0.15, 'Ich bin halt nicht wie die anderen.', 560, 830, 30, 'blue', 340)
+        bubble(ctx, T, TW('ich', 5) - 0.15, 'Ich bin halt nicht wie die anderen.', 560, 830, 30, 'blue', 340)
     shelly_main(ctx, T, 'phone', 'smile', phone_on=True, x=720, feet=1480, s=1.9)
 
 
@@ -642,23 +754,59 @@ def sc_flags(ctx, T, ch):
         red_flag(ctx, 540 + math.cos(a) * 260, 1250 + math.sin(a) * 90, 1.1)
 
 
+def beach_hut(ctx, x, y, k):
+    if k <= 0.001:
+        return
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(k, k)
+    ellipse(ctx, 0, 0, 120, 12, alpha(C['shadow'], 0.2))
+    rect(ctx, -95, -150, 190, 150, hexc('#E9B77A'))
+    for i in range(6):
+        line(ctx, -95, -128 + i * 24, 95, -128 + i * 24, 3, alpha(hexc('#B8864E'), 0.7))
+    poly(ctx, [(-125, -140), (0, -235), (125, -140)], C['pink2'])
+    poly(ctx, [(-105, -146), (0, -222), (105, -146)], C['pink'])
+    fill_rrect(ctx, -30, -100, 60, 100, 10, hexc('#7FC8C2'))
+    shell_icon(ctx, 0, -185, 1.1, C['white'])
+    fill_rrect(ctx, -95, -305, 190, 58, 10, C['cream'])
+    rrect(ctx, -95, -305, 190, 58, 10)
+    ctx.set_line_width(4)
+    src(ctx, C['gold2'])
+    ctx.stroke()
+    text(ctx, 'DEIN NAME', 0, -276, 30, C['ink'])
+    line(ctx, 0, -247, 0, -236, 6, C['gold2'])
+    ctx.restore()
+
+
 def sc_outro(ctx, T, ch):
     t0 = ch[1]
-    sticker(ctx, 'KENNST DU EIN', 510, 470, 66, 'cream', rot=-3, sc=pop(T, t0 + 0.1))
-    sticker(ctx, 'PICK-ME-GIRL?', 510, 585, 76, 'yellow', rot=2, sc=pop(T, TW('pick', 0, after=TW('kennst')) - 0.1))
-    sticker(ctx, 'MARKIER SIE!', 510, 720, 64, 'red', rot=-2, sc=pop(T, TW('markier') - 0.05))
-    sticker(ctx, 'WAS SOLL SHELLY MORGEN SEIN?', 510, 860, 40, 'white', sc=pop(T, TW('was') - 0.05))
-    if UI_ON[0] and T >= TW('was'):
-        kk = max(0.01, pop(T, TW('was') + 0.2))
-        ctx.save()
-        ctx.translate(820, 960)
-        ctx.scale(kk, kk)
-        fill_rrect(ctx, -60, -40, 120, 80, 22, C['yellow'])
-        poly(ctx, [(-20, 36), (10, 36), (-28, 64)], C['yellow'])
-        for i in range(3):
-            circle(ctx, -28 + i * 28, 0, 8, C['ink'])
-        ctx.restore()
-    shelly_main(ctx, T, 'wave', 'open')
+    t_mus = TW('und', 0, after=TW('markier'))
+    if T < t_mus - 0.05:
+        sticker(ctx, 'KENNST DU EIN', 510, 470, 66, 'cream', rot=-3, sc=pop(T, t0 + 0.1))
+        sticker(ctx, 'PICK-ME-GIRL?', 510, 585, 76, 'yellow', rot=2, sc=pop(T, TW('ein', 0, after=TW('kennst')) - 0.05))
+        sticker(ctx, 'MARKIER SIE!', 510, 720, 64, 'red', rot=-2, sc=pop(T, TW('markier') - 0.05))
+        shelly_main(ctx, T, 'wave', 'open')
+        return
+    sticker(ctx, 'WOHNST DU SCHON IN', 510, 430, 56, 'cream', rot=-2, sc=pop(T, TW('wohnst') - 0.05))
+    sticker(ctx, 'MUSCHELTAL?', 510, 540, 84, 'yellow', rot=2, sc=pop(T, TW('muscheltal') - 0.05))
+    kh = back_out(T, TW('hütte') - 0.2, TW('hütte') + 0.15, 2.0) if T >= TW('hütte') - 0.2 else 0.0
+    beach_hut(ctx, 790, 1240, kh)
+    tf = TW('folge') - 0.05
+    tap = TW('namen') + 0.3
+    if T >= tf:
+        if T < tap:
+            sticker(ctx, '+ FOLGEN', 510, 680, 60, 'red', sc=pop(T, tf))
+        else:
+            sticker(ctx, 'GEFOLGT', 510, 680, 60, 'green', sc=lerp(0.9, 1.0, back_out(T, tap, tap + 0.3)), icon='check')
+        if tap - 0.25 < T < tap + 0.4 and UI_ON[0]:
+            kk = clamp((T - tap + 0.25) / 0.65)
+            ctx.new_sub_path()
+            ctx.arc(570, 690, 30 + 60 * kk, 0, 2 * math.pi)
+            ctx.set_line_width(8)
+            src(ctx, alpha(C['white'], 0.8 * (1 - kk)))
+            ctx.stroke()
+    sticker(ctx, 'HÜTTE MIT DEINEM NAMEN', 510, 820, 44, 'white', sc=pop(T, TW('hütte')))
+    shelly_main(ctx, T, 'wave', 'open', x=380)
 
 
 SCENES = {'intro': lambda c, T, ch: sc_intro(c, T), 'was': sc_was, 'morgen': sc_morgen, 'strand': sc_strand,
