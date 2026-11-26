@@ -39,8 +39,8 @@ CH = [
     ('mittag', TW('mittags') - 0.1, 'MITTAGSPAUSE', '12:00', 'sun', '#53B97A', '#6BC98E'),
     ('social', TW('in', 0) - 0.1, 'SOCIAL MEDIA', '15:00', 'sun', '#E86FA6', '#EE8DBA'),
     ('party', TW('abends') - 0.1, 'DIE STRANDPARTY', '19:00', 'moon', '#E5675B', '#EC8378'),
-    ('chat', TW('junge') - 0.35, 'DIE NACHRICHT', '21:00', 'moon', '#24345F', '#2F4274'),
-    ('flags', TW('nervigsten') - 0.25, 'DIE 4 RED FLAGS', None, None, '#D9473F', '#E2615A'),
+    ('chat', TW('jonas') - 0.35, 'DIE NACHRICHT', '21:00', 'moon', '#24345F', '#2F4274'),
+    ('flags', TW('diesen') - 0.45, 'DIE 4 RED FLAGS', None, None, '#D9473F', '#E2615A'),
     ('outro', TW('kennst') - 0.1, None, None, None, '#2BB3C6', '#4CC4D4'),
 ]
 
@@ -269,15 +269,16 @@ def stamp(ctx, T, t0, s, x, y, size=44, rot=-12):
 
 
 # ---------------------------------------------------------------- Figuren-Extras
-def boy(ctx, x, y, s, hair, shirt, skin='#F2C6A0', mood=0.0, style=0, look=0.0):
+def boy(ctx, x, y, s, hair, shirt, skin='#F2C6A0', mood=0.0, style=0, look=0.0, body=True):
     """Junge als Brustbild mit Details (Haarschnitt, Ohren, Brauen, Kragen, Schattierung). y = Unterkante."""
     ctx.save()
     ctx.translate(x, y)
     ctx.scale(s, s)
     sh = hexc(shirt)
-    fill_rrect(ctx, -36, -48, 72, 52, 24, sh)
-    fill_rrect(ctx, -36, -48, 30, 52, 24, mixc(sh, C['white'], 0.12))
-    poly(ctx, [(-12, -48), (0, -36), (12, -48)], mixc(sh, C['ink'], 0.25))
+    if body:
+        fill_rrect(ctx, -36, -48, 72, 52, 24, sh)
+        fill_rrect(ctx, -36, -48, 30, 52, 24, mixc(sh, C['white'], 0.12))
+        poly(ctx, [(-12, -48), (0, -36), (12, -48)], mixc(sh, C['ink'], 0.25))
     rect(ctx, -7, -60, 14, 14, mixc(hexc(skin), C['ink'], 0.1))
     for ex in (-28, 28):
         circle(ctx, ex, -84, 6.5, mixc(hexc(skin), C['ink'], 0.06))
@@ -320,6 +321,42 @@ def boy(ctx, x, y, s, hair, shirt, skin='#F2C6A0', mood=0.0, style=0, look=0.0):
     ctx.set_line_width(2.6)
     src(ctx, hexc('#8A3B3B'))
     ctx.stroke()
+    ctx.restore()
+
+
+def boy_full(ctx, x, y, s, hair, shirt, shorts='#2B3A66', style=0, arms_up=0.0, T=0.0):
+    """Junge als ganze Figur (Füße bei y)."""
+    skin = hexc('#F2C6A0')
+    sh = hexc(shirt)
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(s, s)
+    ellipse(ctx, 0, 1, 26, 5, alpha(C['shadow'], 0.18))
+    for side in (-1, 1):
+        line(ctx, side * 8, -40, side * 9, -6, 7, mixc(skin, C['ink'], 0.08))
+        ellipse(ctx, side * 10, -4, 9, 5, C['white'])
+        ellipse(ctx, side * 10, -2, 9, 3, hexc('#3A3F4F'))
+    fill_rrect(ctx, -18, -56, 36, 22, 6, hexc(shorts))
+    ctx.restore()
+    # Kopf ohne eigenen Oberkörper
+    boy(ctx, x, y - 54 * s, s * 0.95, hair, shirt, mood=1, style=style, body=False)
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(s, s)
+    fill_rrect(ctx, -19, -98, 38, 46, 12, sh)
+    fill_rrect(ctx, -19, -98, 15, 46, 12, mixc(sh, C['white'], 0.12))
+    poly(ctx, [(-8, -98), (0, -90), (8, -98)], mixc(sh, C['ink'], 0.25))
+    for side in (-1, 1):
+        sx, sy = side * 16, -92
+        if arms_up > 0:
+            tx, ty = side * 40, -150 + math.sin(T * 6 + side) * 4
+        else:
+            tx, ty = side * 23, -56
+        ex, ey = (sx + tx) / 2 + side * 5, (sy + ty) / 2
+        line(ctx, sx, sy, ex, ey, 6.5, skin)
+        line(ctx, ex, ey, tx, ty, 6, skin)
+        circle(ctx, sx, sy + 1, 7.5, sh)
+        circle(ctx, tx, ty, 4.8, skin)
     ctx.restore()
 
 
@@ -700,8 +737,9 @@ def sc_party(ctx, T, ch):
         jump = abs(math.sin(T * 2.4)) * 34
         shelly(ctx, 330, 860 - jump, 1.0, arms={'R': (24, -160), 'L': (-24, -160)}, expr='open', blink=blink(T))
         # Jungs rechts
-        boy(ctx, 700, 870, 1.25, '#4A3426', '#3FA7D6', mood=1, style=0)
-        boy(ctx, 810, 870, 1.25, '#E2B65A', '#E2574C', mood=1, style=1)
+        jb = abs(math.sin(T * 2.4 + 1.2)) * 22
+        boy_full(ctx, 700, 862 - jb, 1.0, '#4A3426', '#3FA7D6', '#2B3A66', 0, 1.0, T)
+        boy_full(ctx, 815, 866, 1.0, '#E2B65A', '#E2574C', '#3A6F4F', 1, 0.0, T)
         bx = 540 + math.sin(T * 2.4) * 190
         by = 590 - abs(math.cos(T * 2.4)) * 50
         volleyball(ctx, bx, by, 22)
@@ -719,20 +757,74 @@ def sc_party(ctx, T, ch):
     shelly_main(ctx, T, 'cheer' if T < TW('als') else 'hip', 'open' if T < TW('als') else 'think')
 
 
+def chat_msg(ctx, T, t0, msg, side, y, time_s, x0=336, x1=744, size=28, maxw=300):
+    """Handy-Chat-Nachricht: eingehend links (grau), ausgehend rechts (blau), bündig am Rand, mit Ecke + Uhrzeit."""
+    if T < t0:
+        return
+    k = back_out(T, t0, t0 + 0.22, 1.6)
+    if k <= 0.001:
+        return
+    words = msg.split()
+    lines, cur = [], ''
+    for w_ in words:
+        t = (cur + ' ' + w_).strip()
+        if text_size(ctx, t, size, FONT2)[0] > maxw and cur:
+            lines.append(cur); cur = w_
+        else:
+            cur = t
+    lines.append(cur)
+    tw = max(text_size(ctx, l, size, FONT2)[0] for l in lines)
+    lh = size * 1.25
+    bw, bh = tw + 34, len(lines) * lh + 34
+    out = side == 'r'
+    bg = hexc('#2F80ED') if out else hexc('#E9EBF0')
+    fg = C['white'] if out else C['ink']
+    bx = x1 - bw if out else x0
+    ctx.save()
+    ax = x1 if out else x0
+    ctx.translate(ax, y + bh)
+    ctx.scale(k, k)
+    ctx.translate(-ax, -(y + bh))
+    fill_rrect(ctx, bx, y, bw, bh, 20, bg)
+    # Ecke unten an der Absenderseite
+    if out:
+        poly(ctx, [(x1 - 22, y + bh - 2), (x1 + 6, y + bh + 4), (x1 - 2, y + bh - 18)], bg)
+    else:
+        poly(ctx, [(x0 + 22, y + bh - 2), (x0 - 6, y + bh + 4), (x0 + 2, y + bh - 18)], bg)
+    for i, l in enumerate(lines):
+        text(ctx, l, bx + 17, y + 17 + lh * (i + 0.5), size, fg, font=FONT2, align='l')
+    st = time_s + ('  ✓✓' if out else '')
+    text(ctx, st, (x1 - 4) if out else (x0 + 4), y + bh + 18, 15, C['grey'], font=FONT2, align='r' if out else 'l')
+    ctx.restore()
+
+
 def sc_chat(ctx, T, ch):
     t0 = ch[1]
     k = card(ctx, T, t0 + 0.1, 300, 440, 480, 650, C['ink'])
     if k:
-        fill_rrect(ctx, 316, 456, 448, 618, 22, C['white'])
-        rect(ctx, 316, 456, 448, 70, hexc('#F4F5F8'))
-        boy(ctx, 360, 520, 0.55, '#4A3426', '#3FA7D6', mood=1)
-        text(ctx, 'Jonas', 400, 492, 26, C['ink'], align='l')
+        fill_rrect(ctx, 316, 456, 448, 618, 22, hexc('#FFFFFF'))
+        rect(ctx, 316, 456, 448, 84, hexc('#F4F5F8'))
+        line(ctx, 316, 540, 764, 540, 1.5, hexc('#DADDE3'))
+        text(ctx, '‹', 336, 498, 40, hexc('#2F80ED'), font=FONT2, align='l')
+        circle(ctx, 392, 498, 24, hexc('#CFE9FF'))
+        ctx.save()
+        ctx.new_sub_path()
+        ctx.arc(392, 498, 23, 0, 2 * math.pi)
+        ctx.clip()
+        boy(ctx, 392, 532, 0.5, '#4A3426', '#3FA7D6', mood=1)
+        ctx.restore()
+        text(ctx, 'Jonas', 428, 488, 26, C['ink'], align='l')
+        text(ctx, 'online', 428, 514, 16, C['green'], font=FONT2, align='l')
+        # Eingabezeile
+        fill_rrect(ctx, 332, 1020, 360, 40, 20, hexc('#F1F2F5'))
+        text(ctx, 'Nachricht', 350, 1040, 18, C['grey'], font=FONT2, align='l')
+        circle(ctx, 724, 1040, 20, hexc('#2F80ED'))
+        poly(ctx, [(716, 1031), (734, 1040), (716, 1049)], C['white'])
+        chat_msg(ctx, T, TW('du', 0) - 0.15, 'Du bist echt cool', 'l', 570, '21:04')
+        chat_msg(ctx, T, TW('weiss') - 0.15, 'Ich weiß.', 'r', 680, '21:05')
+        chat_msg(ctx, T, TW('ich', 5) - 0.15, 'Ich bin halt nicht wie die anderen.', 'r', 770, '21:05')
         card_end(ctx)
-    if k:
-        bubble(ctx, T, TW('du', 0) - 0.15, 'Du bist echt cool', 470, 610, 30, 'grey', 300)
-        bubble(ctx, T, TW('weiss') - 0.15, 'Ich weiß.', 640, 720, 30, 'blue', 300)
-        bubble(ctx, T, TW('ich', 5) - 0.15, 'Ich bin halt nicht wie die anderen.', 560, 830, 30, 'blue', 340)
-    shelly_main(ctx, T, 'phone', 'smile', phone_on=True, x=720, feet=1480, s=1.9)
+    shelly_main(ctx, T, 'phone', 'smile', phone_on=True, x=720, feet=1480, s=1.9, name=False)
 
 
 FLAGS = ['Macht andere Mädchen schlecht', 'Spielt eine Rolle für Jungs', 'Hasst Drama – macht Drama',
@@ -740,7 +832,7 @@ FLAGS = ['Macht andere Mädchen schlecht', 'Spielt eine Rolle für Jungs', 'Hass
 
 
 def sc_flags(ctx, T, ch):
-    _n = TW('nervigsten')
+    _n = TW('punkten')
     times = [TW('sie', 0, after=_n) - 0.05, TW('sie', 1, after=_n) - 0.05, TW('sie', 2, after=_n) - 0.05, TW('braucht') - 0.3]
     for i, (ta, l) in enumerate(zip(times, FLAGS)):
         if T < ta:
