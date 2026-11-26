@@ -22,7 +22,11 @@ def db(x):
 
 def put(name, t, g=0.0, dur=None):
     s = fs[name]
-    s = s[:int(dur * SR)] if dur else s
+    s = (s[:int(dur * SR)] if dur else s).copy()
+    s *= 0.8 / max(1e-6, float(np.abs(s).max()))   # keine übersteuerten Effekte
+    f = int(0.004 * SR)
+    s[:f] *= np.linspace(0, 1, f)[:, None]
+    s[-f:] *= np.linspace(1, 0, f)[:, None]
     i = int(t * SR)
     n = min(len(s), N - i)
     if n > 0 and i >= 0:
@@ -44,10 +48,11 @@ TW = pm.TW
 put('boom', 0.0, -5)
 for c in pm.CH[1:]:
     put('swoosh', c[1] - 0.1, -10)
-    put('pop', c[1] + 0.12, -10)
+    if c[0] != 'outro':
+        put('pop', c[1] + 0.12, -10)
 for t in [TW('ausgewählt'), TW('lieblings') + 0.5, TW('stunde') - 0.1, TW('lästert'), TW('sind') - 0.25, TW('ich', 1) - 0.05,
           TW('ich', 2) - 0.1, TW('gegessen'), TW('ich', 3) - 0.1, TW('mädchen', 3) - 0.1, TW('zuschauen') - 0.2,
-          TW('sagt', 0) - 0.1, TW('kennst'), TW('markier'), TW('wohnst'), TW('muscheltal'), TW('hütte') - 0.2, TW('folge')]:
+          TW('sagt', 0) - 0.1]:
     put('pop', t, -9)
 for t in [TW('du', 0) - 0.15, TW('weiss') - 0.15, TW('ich', 5) - 0.15]:
     put('click', t, -8)
