@@ -674,16 +674,28 @@ def sc_party(ctx, T, ch):
             yy = 500 + (i % 2) * 18
             circle(ctx, 210 + i * 110, yy, 9 + math.sin(T * 6 + i) * 1.5, [C['yellow'], C['pink'], hexc('#7FD0F0')][i % 3])
         line(ctx, 190, 495, 890, 515, 2, alpha(C['white'], 0.6))
-        # Netz
-        line(ctx, 540, 640, 540, 870, 6, C['ink'])
-        for j in range(6):
-            line(ctx, 540, 650 + j * 10, 540, 650 + j * 10, 1, C['ink'])
-        rect(ctx, 470, 640, 140, 70, alpha(C['white'], 0.0))
-        for j in range(5):
-            line(ctx, 476, 650 + j * 14, 604, 650 + j * 14, 1.5, alpha(C['ink'], 0.5))
-        for j in range(9):
-            line(ctx, 476 + j * 16, 646, 476 + j * 16, 708, 1.5, alpha(C['ink'], 0.5))
-        line(ctx, 470, 646, 610, 646, 4, C['white'])
+        # Spielfeld in Perspektive (vorne breit, hinten schmal)
+        poly(ctx, [(230, 880), (850, 880), (760, 720), (320, 720)], alpha(C['white'], 0.0))
+        for (p, q) in [((230, 880), (320, 720)), ((850, 880), (760, 720)), ((320, 720), (760, 720)), ((230, 880), (850, 880))]:
+            line(ctx, p[0], p[1], q[0], q[1], 3, alpha(C['white'], 0.85))
+        # Netz quer zum Feld: vorderer Pfosten groß/unten, hinterer klein/oben
+        fx, fb, ft = 528, 878, 640      # vorne: x, Fuß, Spitze
+        bx_, bb, bt = 568, 722, 600     # hinten
+        n_top_f, n_bot_f = ft + 8, ft + 78
+        n_top_b, n_bot_b = bt + 6, bt + 54
+        poly(ctx, [(fx, n_top_f), (bx_, n_top_b), (bx_, n_bot_b), (fx, n_bot_f)], alpha(C['white'], 0.25))
+        for j in range(1, 8):
+            u = j / 8
+            line(ctx, lerp(fx, bx_, u), lerp(n_top_f, n_top_b, u), lerp(fx, bx_, u), lerp(n_bot_f, n_bot_b, u), 1.4, alpha(C['ink'], 0.55))
+        for j in range(1, 6):
+            v = j / 6
+            line(ctx, fx, lerp(n_top_f, n_bot_f, v), bx_, lerp(n_top_b, n_bot_b, v), 1.4, alpha(C['ink'], 0.55))
+        line(ctx, fx, n_top_f, bx_, n_top_b, 5, C['white'])
+        line(ctx, fx, n_bot_f, bx_, n_bot_b, 2.5, C['white'])
+        line(ctx, bx_, bb, bx_, bt, 5, C['ink'])
+        line(ctx, fx, fb, fx, ft, 8, C['ink'])
+        ellipse(ctx, fx, fb, 12, 4, alpha(C['shadow'], 0.3))
+        ellipse(ctx, bx_, bb, 7, 2.5, alpha(C['shadow'], 0.3))
         # Shelly links auf dem Feld (springt zum Ball)
         jump = abs(math.sin(T * 2.4)) * 34
         shelly(ctx, 330, 860 - jump, 1.0, arms={'R': (24, -160), 'L': (-24, -160)}, expr='open', blink=blink(T))
