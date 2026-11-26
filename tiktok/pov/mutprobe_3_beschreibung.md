@@ -24,4 +24,5 @@ Mia übernimmt Verantwortung und entschuldigt sich vor der ganzen Klasse. Gut f�
 
 ## Cover
 
-`mutprobe_3_thumbnail.jpg` (1080×1920), erzeugt mit `tools/thumbnail.js`.
+`mutprobe_3_thumbnail.jpg` (1080×1920). Erzeugt mit:
+`node tools/thumbnail.js mutprobe_3 --bei 39.92 --titel "Ich hab es|*vor allen*|gestanden" --unter "TEIL 3" --oben "08:01"`
