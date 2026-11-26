@@ -1,0 +1,709 @@
+{
+ "titel": "Die Mutprobe · Teil 3",
+ "set": "klassenzimmer",
+ "himmel": "tag",
+ "fov": 140,
+ "blick": "ben",
+ "max_pause": 0.45,
+ "handy_fov": 96,
+ "seed": 81,
+ "hall": 0.25,
+ "ducking": 0.75,
+ "atmo_spuren": [
+  {
+   "datei": "atmo_klasse.wav",
+   "lautstaerke": 0.3
+  },
+  {
+   "datei": "voegel.wav",
+   "lautstaerke": 0.08
+  }
+ ],
+ "cast": {
+  "ich": {
+   "pos": [
+    2.35,
+    2.3
+   ],
+   "pose": "runter",
+   "oberteil": "#c84a7a",
+   "hose": "#2a2e44",
+   "haut": "#f0d8c0",
+   "stimme": "gemini:Leda",
+   "regie": "Mädchen, 15 Jahre",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "ben": {
+   "pos": [
+    1.65,
+    1.95
+   ],
+   "pose": "sitzen",
+   "frisur": "kurz",
+   "haare": "#2a1a10",
+   "oberteil": "#2a6a4a",
+   "hose": "#2a3a5a",
+   "schuhe": "#f0f0f0",
+   "augen": "#6a8a5a",
+   "haut": "#ecd2b8",
+   "details": "none",
+   "stimme": "gemini:Puck",
+   "regie": "Junge, 15 Jahre, Jugendsprache",
+   "modell": "gemini-3.8-flash-tts",
+   "schaut": [
+    0,
+    0
+   ],
+   "blickhoehe": 0.95
+  },
+  "noah": {
+   "pos": [
+    6.5,
+    -4.5
+   ],
+   "pose": "idle",
+   "frisur": "kurz",
+   "haare": "#d0a860",
+   "haut": "#f0dcc4",
+   "oberteil": "#8a8e94",
+   "hose": "#2a3a5a",
+   "schuhe": "#f0f0f0",
+   "augen": "#5a8ab0",
+   "details": "none",
+   "stimme": "gemini:Achird",
+   "regie": "Junge, 16 Jahre, ruhig, verletzt, unheimlich gefasst",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "lehrerin": {
+   "pos": [
+    -1.7,
+    -4.9
+   ],
+   "pose": "idle",
+   "frisur": "bob",
+   "haare": "#7a4a2a",
+   "oberteil": "#3a6a8a",
+   "hose": "#2a2a3a",
+   "brille": true,
+   "details": "none",
+   "haut": "#ecd2b8",
+   "stimme": "gemini:Kore",
+   "regie": "Lehrerin, Mitte 40, freundlich, bestimmt",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "lena": {
+   "pos": [
+    -3.35,
+    -1.65
+   ],
+   "pose": "sitzen",
+   "schaut": [
+    0,
+    0
+   ],
+   "frisur": "lang",
+   "haare": "#c87a3a",
+   "oberteil": "#e84a7a",
+   "hose": "#2a3a5a",
+   "details": "none",
+   "blickhoehe": 0.95,
+   "haut": "#f0d8c0",
+   "stimme": "gemini:Leda",
+   "regie": "Mädchen, 15",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "jonas": {
+   "pos": [
+    -2.65,
+    -1.65
+   ],
+   "pose": "sitzen",
+   "schaut": [
+    0,
+    0
+   ],
+   "frisur": "kurz",
+   "haare": "#2a1a10",
+   "oberteil": "#2a2a2a",
+   "hose": "#2a3a5a",
+   "details": "none",
+   "blickhoehe": 0.95,
+   "haut": "#d8a880",
+   "stimme": "gemini:Fenrir",
+   "regie": "Junge, 15",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "ayla": {
+   "pos": [
+    -0.85,
+    0.15
+   ],
+   "pose": "sitzen",
+   "schaut": [
+    0,
+    0
+   ],
+   "frisur": "lang",
+   "haare": "#1a1010",
+   "oberteil": "#e8c020",
+   "hose": "#2a3a5a",
+   "details": "none",
+   "blickhoehe": 0.95,
+   "haut": "#f0d8c0",
+   "stimme": "gemini:Aoede",
+   "regie": "Mädchen, 15",
+   "modell": "gemini-3.8-flash-tts"
+  },
+  "tim": {
+   "pos": [
+    -0.15,
+    0.15
+   ],
+   "pose": "sitzen",
+   "schaut": [
+    0,
+    0
+   ],
+   "frisur": "kurz",
+   "haare": "#8a5a2a",
+   "oberteil": "#3a8ad0",
+   "hose": "#2a3a5a",
+   "details": "none",
+   "blickhoehe": 0.95,
+   "haut": "#c8906a"
+  },
+  "sara": {
+   "pos": [
+    -2.65,
+    3.75
+   ],
+   "pose": "sitzen",
+   "schaut": [
+    0,
+    0
+   ],
+   "frisur": "bob",
+   "haare": "#d8b060",
+   "oberteil": "#8a4ab0",
+   "hose": "#2a3a5a",
+   "details": "none",
+   "blickhoehe": 0.95,
+   "haut": "#f0d8c0"
+  },
+  "kemal": {
+   "pos": [
+    -3.35,
+    1.95
+   ],
+   "pose": "sitzen",
+   "schaut": [
+    0,
+    0
+   ],
+   "frisur": "kurz",
+   "haare": "#1a1a1a",
+   "oberteil": "#c83a2a",
+   "hose": "#2a3a5a",
+   "details": "none",
+   "blickhoehe": 0.95,
+   "haut": "#d8a880"
+  },
+  "mila": {
+   "pos": [
+    -0.85,
+    3.75
+   ],
+   "pose": "sitzen",
+   "schaut": [
+    0,
+    0
+   ],
+   "frisur": "zopf",
+   "haare": "#a0522d",
+   "oberteil": "#4ac06a",
+   "hose": "#2a3a5a",
+   "details": "none",
+   "blickhoehe": 0.95,
+   "haut": "#f0d8c0",
+   "stimme": "gemini:Despina",
+   "regie": "Mädchen, 14",
+   "modell": "gemini-3.8-flash-tts"
+  }
+ },
+ "beats": [
+  {
+   "schwarz": true,
+   "text": "DIE MUTPROBE · TEIL 3",
+   "text_farbe": "#ffd400",
+   "dauer": 2.4,
+   "blick": "ben",
+   "schnitt": true,
+   "sfx": [
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    }
+   ]
+  },
+  {
+   "ort": [
+    "KLASSE 10b",
+    "Montag · 07:58"
+   ],
+   "blick": "ben",
+   "schnitt": true,
+   "musik": {
+    "datei": "gen/musik_20_klasse.mp3",
+    "lautstaerke": 0.13,
+    "einblenden": 2
+   },
+   "wer": "ben",
+   "sagt": "Ich konnte das ganze Wochenende nicht schlafen.",
+   "wie": "flüsternd, nervös",
+   "pause_vor": 0.8,
+   "schaut": {
+    "ben": "ich"
+   }
+  },
+  {
+   "wer": "ich",
+   "sagt": "Wenn er die Wahrheit sagt… dann haben wir das verdient.",
+   "wie": "leise, ernst, nachdenklich"
+  },
+  {
+   "effekt": {
+    "klingel": 0.1
+   },
+   "sfx": [
+    {
+     "datei": "schulgong.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.1
+    }
+   ],
+   "blick": "lehrerin",
+   "drehung": 0.8,
+   "schaut": {
+    "ben": [
+     0,
+     0
+    ]
+   },
+   "wer": "lehrerin",
+   "sagt": "Guten Morgen, zehn b! Handys weg, bitte. Wir haben heute einen neuen Mitschüler.",
+   "wie": "freundlich, munter",
+   "pause_vor": 1.6
+  },
+  {
+   "laufen": {
+    "noah": {
+     "nach": [
+      0.3,
+      -4.7
+     ],
+     "zeit": 3.0,
+     "ab": 0.4
+    }
+   },
+   "blick": "noah",
+   "drehung": 0.8,
+   "sfx": [
+    {
+     "datei": "tuer_auf.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.2
+    },
+    {
+     "datei": "murmeln.wav",
+     "lautstaerke": 0.25,
+     "ab": 0.8
+    }
+   ],
+   "dauer": 3.6,
+   "hintergrund": [
+    {
+     "wer": "lena",
+     "sagt": "Wer ist das?",
+     "wie": "flüsternd, neugierig",
+     "ab": 1.0,
+     "lautstaerke": 0.5
+    },
+    {
+     "wer": "jonas",
+     "sagt": "Ist das nicht der von letztem Jahr?",
+     "wie": "flüsternd",
+     "ab": 2.0,
+     "lautstaerke": 0.5
+    }
+   ]
+  },
+  {
+   "zoom": 60,
+   "zoom_dauer": 1.2,
+   "wer": "noah",
+   "sagt": "Hallo. Ich bin Noah. Manche von euch kennen mich schon.",
+   "wie": "ruhig, freundlich, mit Unterton",
+   "schaut": {
+    "noah": "ich"
+   }
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "effekt": {
+    "tafel": {
+     "ab": 0.3,
+     "modus": "video"
+    }
+   },
+   "blick": "tafel",
+   "drehung": 0.6,
+   "sfx": [
+    {
+     "datei": "smartboard_an.wav",
+     "lautstaerke": 0.7,
+     "ab": 0.3
+    }
+   ],
+   "wer": "lehrerin",
+   "sagt": "Nanu? Wer hat denn das Video gestartet?",
+   "wie": "irritiert",
+   "pause_vor": 1.2,
+   "schaut": {
+    "lehrerin": [
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "effekt": {
+    "handys": 0.1,
+    "tafel": {
+     "ab": 2.6,
+     "modus": "countdown",
+     "von": 10,
+     "text": "Video startet für alle in …"
+    }
+   },
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.1
+    },
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.25
+    },
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.4,
+     "ab": 0.4
+    },
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.45,
+     "ab": 0.6
+    },
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.35,
+     "ab": 0.8
+    },
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.4,
+     "ab": 1.0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.3,
+     "ab": 0.3
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.3,
+     "ab": 0.7
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.3,
+     "ab": 1.1
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.3,
+     "ab": 1.5
+    }
+   ],
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "schulgeist",
+    "uhr": "08:01",
+    "text": [
+     "Zehn Sekunden, Mia.",
+     "Sag es selbst. Oder alle sehen es."
+    ],
+    "nach_und_nach": 1.2
+   },
+   "dauer": 3.8,
+   "hintergrund": [
+    {
+     "wer": "ayla",
+     "sagt": "Hast du das auch bekommen?",
+     "wie": "flüsternd, aufgeregt",
+     "ab": 0.6,
+     "lautstaerke": 0.45
+    },
+    {
+     "wer": "mila",
+     "sagt": "Was ist das für ein Video?",
+     "wie": "flüsternd",
+     "ab": 1.8,
+     "lautstaerke": 0.45
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter"
+   },
+   "blick": "tafel",
+   "drehung": 0.4,
+   "zoom": 55,
+   "zoom_dauer": 1.0,
+   "sfx": [
+    {
+     "datei": "herzschlag.wav",
+     "lautstaerke": 0.5,
+     "ab": 0,
+     "dauer": 6
+    },
+    {
+     "datei": "ticken.wav",
+     "lautstaerke": 0.4,
+     "ab": 0,
+     "dauer": 4
+    },
+    {
+     "datei": "anzeige_piep.wav",
+     "lautstaerke": 0.35,
+     "ab": -0.2
+    },
+    {
+     "datei": "anzeige_piep.wav",
+     "lautstaerke": 0.35,
+     "ab": 0.8
+    },
+    {
+     "datei": "anzeige_piep.wav",
+     "lautstaerke": 0.35,
+     "ab": 1.8
+    },
+    {
+     "datei": "anzeige_piep.wav",
+     "lautstaerke": 0.35,
+     "ab": 2.8
+    }
+   ],
+   "wer": "ben",
+   "sagt": "Mia… tu was!",
+   "wie": "panisch flüsternd",
+   "pause_vor": 0.6,
+   "pause": 0.4
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.3,
+   "effekt": {
+    "tafel": {
+     "ab": 0.25,
+     "modus": "pause",
+     "text": "Video pausiert"
+    }
+   },
+   "schaut": {
+    "lena": "ich",
+    "jonas": "ich",
+    "ayla": "ich",
+    "tim": "ich",
+    "sara": "ich",
+    "kemal": "ich",
+    "mila": "ich",
+    "ben": "ich",
+    "noah": "ich",
+    "lehrerin": "ich"
+   },
+   "blick": "klasse",
+   "drehung": 0.6,
+   "blick_verzoegerung": 0.4,
+   "wer": "ich",
+   "sagt": "STOPP!",
+   "wie": "laut, entschlossen, ruft",
+   "musik": null,
+   "sfx": [
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.5,
+     "ab": 0.2
+    }
+   ],
+   "pause": 0.8
+  },
+  {
+   "blick": "noah",
+   "drehung": 0.8,
+   "wer": "ich",
+   "sagt": "Letztes Jahr haben wir Noah eine ganze Nacht im Geräteraum eingesperrt. Für ein Video.",
+   "wie": "zitternd, aber klar, laut genug für alle",
+   "musik": {
+    "datei": "gen/musik_21_wahrheit.mp3",
+    "lautstaerke": 0.13,
+    "einblenden": 2
+   }
+  },
+  {
+   "wer": "ich",
+   "sagt": "Wir fanden das lustig. Es war nicht lustig. Es war gemein.",
+   "wie": "ehrlich, Stimme bricht kurz"
+  },
+  {
+   "zoom": 60,
+   "zoom_dauer": 1.5,
+   "wer": "ich",
+   "sagt": "Es tut mir leid, Noah. Wirklich.",
+   "wie": "leise, ehrlich, den Tränen nah",
+   "pause": 0.6
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "pose": {
+    "ben": "idle"
+   },
+   "blick": "ben",
+   "drehung": 0.6,
+   "wer": "ben",
+   "sagt": "Mir auch. Die Idee war von mir.",
+   "wie": "beschämt, leise, steht auf",
+   "pause_vor": 0.5
+  },
+  {
+   "blick": "noah",
+   "drehung": 0.7,
+   "zoom": 55,
+   "zoom_dauer": 1.2,
+   "effekt": {
+    "tafel": {
+     "ab": 1.6,
+     "modus": "geloescht",
+     "text": "Danke."
+    }
+   },
+   "sfx": [
+    {
+     "datei": "smartboard_an.wav",
+     "lautstaerke": 0.4,
+     "ab": 1.6
+    }
+   ],
+   "wer": "noah",
+   "sagt": "Mehr wollte ich nie hören.",
+   "wie": "leise, bewegt, erleichtert",
+   "pause_vor": 0.8,
+   "pause": 0.8
+  },
+  {
+   "zoom": 0,
+   "zoom_dauer": 0.5,
+   "blick": "lehrerin",
+   "drehung": 0.7,
+   "wer": "lehrerin",
+   "sagt": "Ich glaube, wir reden heute über etwas anderes als Englisch. Alle zusammen.",
+   "wie": "ruhig, warm, ernst",
+   "pause_vor": 1.2
+  },
+  {
+   "pose": {
+    "ich": "handy"
+   },
+   "handy": {
+    "typ": "nachricht",
+    "name": "schulgeist",
+    "uhr": "08:04",
+    "text": [
+     "Gut gemacht, Mia.",
+     "Aber Noah war nie der Schulgeist."
+    ],
+    "nach_und_nach": 1.3
+   },
+   "dauer": 3.6,
+   "musik": null,
+   "sfx": [
+    {
+     "datei": "vibration.wav",
+     "lautstaerke": 0.5,
+     "ab": 0
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.55,
+     "ab": 0.25
+    },
+    {
+     "datei": "ping.wav",
+     "lautstaerke": 0.55,
+     "ab": 1.55
+    },
+    {
+     "datei": "braam.wav",
+     "lautstaerke": 0.65,
+     "ab": 1.6
+    }
+   ]
+  },
+  {
+   "pose": {
+    "ich": "runter",
+    "noah": "handy"
+   },
+   "blick": "noah",
+   "drehung": 0.5,
+   "zoom": 55,
+   "zoom_dauer": 1.0,
+   "wer": "noah",
+   "sagt": "Das… das schreibe ich nicht.",
+   "wie": "erschrocken, leise",
+   "pause_vor": 1.0,
+   "pause": 0.8,
+   "sfx": [
+    {
+     "datei": "stich.wav",
+     "lautstaerke": 0.6,
+     "ab": 0.6
+    }
+   ]
+  },
+  {
+   "schwarz": true,
+   "ende": "FORTSETZUNG FOLGT",
+   "ende_unter": "DIE MUTPROBE · TEIL 4",
+   "ende_ab": 0.4,
+   "dauer": 3.8,
+   "ort": null,
+   "sfx": [
+    {
+     "datei": "schulgong.wav",
+     "lautstaerke": 0.3,
+     "ab": 0.3
+    }
+   ]
+  }
+ ]
+}

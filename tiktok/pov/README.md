@@ -205,6 +205,9 @@ Tipp: Uhrzeiten als „achtzehn Uhr dreißig“ schreiben. Bei „halb sieben“
 - `stories/mutprobe_2.json`: **„Die Mutprobe · Teil 2“** (ca. 89 s, Set `turnhalle`). Mia flieht in die Turnhalle und telefoniert mit dem echten Ben.
   Die Strahler gehen an, die Anzeigetafel zeigt „MIA IST DRAN“, ein Basketball springt heran. Auf der Tribüne nimmt „Ben“ die Maske ab: Es ist Noah,
   den die Clique letztes Jahr bei einer Mutprobe im Geräteraum eingesperrt hat. Das Rolltor geht auf, der echte Ben stürmt herein. Am Ende steht auf der Tafel: „MONTAG 1. STUNDE: BEN“.
+- `stories/mutprobe_3.json`: **„Die Mutprobe · Teil 3“** (ca. 77 s, Set `klassenzimmer`, Tageslicht). Montag, 1. Stunde: Noah kommt als neuer Mitschüler.
+  Das Smartboard startet das Video von damals, alle Handys vibrieren, ein Countdown läuft. Mia ruft „STOPP!“ und gesteht vor der Klasse. Ben gibt zu, dass die Idee von ihm war.
+  Noah: „Mehr wollte ich nie hören.“ Dann schreibt der Schulgeist: „Aber Noah war nie der Schulgeist.“
 
 ## Neu: Felder für mehr Spannung und Details
 
@@ -397,3 +400,17 @@ Blickpunkte: `halle, tribuene, anzeige, korb, geraeteraum, eingang, decke, boden
 | `hoehe: {name: y}` (Beat) / `y` (Cast) | Figur steht erhöht, z. B. auf der Tribüne |
 
 Musik: `gen/musik_18_halle.mp3`, `gen/musik_19_reue.mp3`. Geräusche erzeugen: `python3 tools/sfx_synth.py mutprobe2`.
+
+## Set `klassenzimmer` (Die Mutprobe 3): Klasse 10b am Morgen
+
+Der Raum reicht von x −5 … 5 und z −6 … 6. Vorne stehen Smartboard und Lehrerpult, links ist die Fensterfront mit Sonne, rechts die Tür (z −4.5).
+Tische stehen in den Spalten x −3/−0.5/2 und Reihen z −2.2/−0.4/1.4/3.2, die Stühle bei (x ± 0.35, z + 0.55). Sitzende Figuren: Pose `sitzen`, `schaut: [0, 0]`, `blickhoehe: 0.95`.
+Blickpunkte: `tafel, tuer, fenster, klasse, decke, boden, pult, hinten`.
+
+| Feld | Wirkung |
+|---|---|
+| `effekt: {tafel: {ab, modus, von, text}}` | Smartboard: `aus`, `video` (Nachtsicht-Video), `countdown` (von), `pause`, `geloescht`, `text` |
+| `effekt: {handys: s}` | alle Handys auf den Tischen leuchten und vibrieren |
+| `effekt: {klingel: s}` | Lautsprecher wackelt (Ton: `schulgong.wav`) |
+
+Neue Geräusche: `schulgong, tuer_auf, murmeln, smartboard_an, handys_vibrieren, atmo_klasse` (`python3 tools/sfx_synth.py mutprobe3`). Musik: `gen/musik_20_klasse.mp3`, `gen/musik_21_wahrheit.mp3`.

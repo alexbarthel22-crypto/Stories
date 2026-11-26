@@ -981,11 +981,81 @@ def rolltor(d=3.2):
 MUTPROBE2 = {'strahler.wav': (strahler, 0.9), 'anzeige_piep.wav': (anzeige_piep, 0.6), 'basketball.wav': (basketball, 0.9), 'rolltor.wav': (rolltor, 0.85)}
 
 
+# ---------- Die Mutprobe 3: Klassenzimmer ----------
+def schulgong(d=3.6):
+    # Dreiklang-Gong (Lautsprecher)
+    x = np.zeros(int(d * SR))
+    for st, f in ((0.0, 659), (0.55, 523), (1.1, 392)):
+        n = int(2.2 * SR); tk = t_(2.2); g = (np.sin(2 * np.pi * f * tk) + 0.35 * np.sin(2 * np.pi * f * 2 * tk) + 0.15 * np.sin(2 * np.pi * f * 3.01 * tk)) * np.exp(-tk / 0.7) * 0.5
+        i = int(st * SR); x[i:i + n] += g[:len(x) - i]
+    return pan(reverb(bp(x, 200, 4000, 2), 1.2, 0.35), 0.0)
+
+def tuer_auf(d=1.6):
+    # Klinke klickt, Tür schwingt auf (Luftzug), leises Anschlagen
+    tt = t_(d); x = np.zeros(len(tt))
+    for st, f in ((0.0, 2600), (0.06, 1900)):
+        n = int(0.05 * SR); i = int(st * SR); x[i:i + n] += (np.sin(2 * np.pi * f * t_(0.05)) * 0.5 + noise(0.05) * 0.5) * np.exp(-t_(0.05) / 0.005)
+    swoosh = bp(noise(d), 150, 900, 2) * np.sin(np.pi * np.clip((tt - 0.15) / 0.9, 0, 1)) * 0.35
+    n = int(0.3 * SR); i = int(1.15 * SR); x[i:i + n] += np.sin(2 * np.pi * 110 * t_(0.3)) * np.exp(-t_(0.3) / 0.04) * 0.4 + bp(noise(0.3), 200, 1500, 2) * np.exp(-t_(0.3) / 0.02) * 0.3
+    return pan(reverb(x + swoosh, 0.7, 0.25), -0.6)
+
+def murmeln(d=4.0):
+    # Getuschel einer Klasse: viele leise, gefilterte Silbenströme
+    tt = t_(d); x = np.zeros(len(tt))
+    for k in range(9):
+        rate = R.uniform(3.5, 5.5); env = (0.5 + 0.5 * np.sin(2 * np.pi * rate * tt + R.uniform(0, 6))) ** 2 * (0.5 + 0.5 * smooth_rand(d, 0.8, 0, 1))
+        src = noise(d); f1 = R.uniform(400, 800); f2 = R.uniform(1100, 2200)
+        v = bp(src, f1 * 0.8, f1 * 1.2, 2) + bp(src, f2 * 0.85, f2 * 1.15, 2) * 0.6
+        x += v * env * R.uniform(0.4, 1.0)
+    x *= np.clip(tt / 0.5, 0, 1) * np.clip((d - tt) / 0.8, 0, 1)
+    return pan(reverb(lp(x, 3000), 0.6, 0.25), 0.0)
+
+def smartboard_an(d=2.0):
+    tt = t_(d); x = np.zeros(len(tt)); n = int(0.15 * SR)
+    x[:n] += np.sin(2 * np.pi * 1320 * t_(0.15)) * 0.3 * np.exp(-t_(0.15) / 0.06)
+    i = int(0.18 * SR); x[i:i + n] += np.sin(2 * np.pi * 1760 * t_(0.15)) * 0.3 * np.exp(-t_(0.15) / 0.06)
+    x += bp(noise(d), 300, 2000, 2) * 0.05 * np.clip((tt - 0.2) * 3, 0, 1) + np.sin(2 * np.pi * 15000 * tt) * 0.01
+    return pan(reverb(x, 0.6, 0.2), 0.0)
+
+def handys_vibrieren(d=4.0):
+    # viele Handys vibrieren auf Holztischen (Brrr-brrr) + ein paar Benachrichtigungstöne
+    tt = t_(d); x = np.zeros(len(tt))
+    for k in range(10):
+        st = R.uniform(0, 0.9); L = int(2.4 * SR); tk = t_(2.4); f = R.uniform(150, 190)
+        gate = ((tk % 0.65) < 0.4).astype(float); motor = np.sin(2 * np.pi * f * tk) ** 3
+        rattle = bp(noise(2.4) * (np.abs(motor) > 0.6), 300, 3000, 2) * 0.5
+        buzz = (motor * 0.25 + rattle) * gate * R.uniform(0.3, 0.8) * (1.0 - tk / 3.0)
+        i = int(st * SR); x[i:i + L] += buzz[:len(x) - i]
+    for k in range(6):
+        st = R.uniform(0.1, 1.6); f = R.choice([988, 1175, 1319, 1568]); n = int(0.35 * SR); tk = t_(0.35)
+        p = (np.sin(2 * np.pi * f * tk) * np.exp(-tk / 0.07) + np.sin(2 * np.pi * f * 1.26 * tk) * np.exp(-np.maximum(0, tk - 0.12) / 0.07) * (tk > 0.12)) * 0.18
+        i = int(st * SR); x[i:i + n] += p[:len(x) - i]
+    return pan(reverb(lp(x, 6000), 0.6, 0.2), 0.0)
+
+def klasse_atmo(d=60):
+    # Klassenraum: leises Raumrauschen, Stuhlrücken, Kugelschreiber, Flur in der Ferne, Vögel draußen
+    tt = t_(d); ch = []
+    for k in range(2):
+        room = bp(pink(d), 100, 2000, 2) * 0.12
+        ev = np.zeros(len(tt))
+        for st in R.uniform(0, d - 1, 14):
+            n = int(0.4 * SR); i = int(st * SR); kind = R.random()
+            if kind < 0.4: e = bp(noise(0.4), 200, 1500, 2) * np.exp(-t_(0.4) / 0.15) * 0.4   # Stuhl
+            elif kind < 0.7: e = hp(noise(0.4), 3000) * np.exp(-t_(0.4) / 0.01) * 0.3     # Stift
+            else: e = bp(noise(0.4), 300, 1200, 2) * np.sin(np.pi * t_(0.4) / 0.4) * 0.2     # Rascheln
+            ev[i:i + n] += e[:len(ev) - i]
+        ch.append(room + reverb(ev, 0.5, 0.2))
+    return loopable(stereo(*ch))
+
+MUTPROBE3 = {'schulgong.wav': (schulgong, 0.8), 'tuer_auf.wav': (tuer_auf, 0.7), 'murmeln.wav': (murmeln, 0.7), 'smartboard_an.wav': (smartboard_an, 0.6),
+             'handys_vibrieren.wav': (handys_vibrieren, 0.85), 'atmo_klasse.wav': (lambda: klasse_atmo(), 0.5)}
+
+
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5, **TEIL6, **MUTPROBE, **MUTPROBE2}
-        for n_ in (MUTPROBE2 if sys.argv[1] == 'mutprobe2' else MUTPROBE if sys.argv[1] == 'mutprobe' else TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else TEIL6 if sys.argv[1] == 'teil6' else {k: ALL[k] for k in sys.argv[1:]}):
+        ALL = {**TEIL2, **TEIL3, **TEIL4, **TEIL5, **TEIL6, **MUTPROBE, **MUTPROBE2, **MUTPROBE3}
+        for n_ in (MUTPROBE3 if sys.argv[1] == 'mutprobe3' else MUTPROBE2 if sys.argv[1] == 'mutprobe2' else MUTPROBE if sys.argv[1] == 'mutprobe' else TEIL2 if sys.argv[1] == 'teil2' else TEIL3 if sys.argv[1] == 'teil3' else TEIL4 if sys.argv[1] == 'teil4' else TEIL5 if sys.argv[1] == 'teil5' else TEIL6 if sys.argv[1] == 'teil6' else {k: ALL[k] for k in sys.argv[1:]}):
             f_, pk = ALL[n_]; save(n_, f_(), pk); print(' ', n_)
         sys.exit()
     os.makedirs(OUT, exist_ok=True); print('Erzeuge Geräusche in', OUT)

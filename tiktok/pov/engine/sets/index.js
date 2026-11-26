@@ -7,3 +7,4 @@ export * as umspannwerk from './umspannwerk.js';
 export * as leitwarte from './leitwarte.js';
 export * as schule from './schule.js';
 export * as turnhalle from './turnhalle.js';
+export * as klassenzimmer from './klassenzimmer.js';
