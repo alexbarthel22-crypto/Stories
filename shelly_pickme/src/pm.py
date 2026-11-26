@@ -391,7 +391,7 @@ def sc_intro(ctx, T):
     if UI_ON[0]:
         outlined(ctx, 'Heute ist Shelly', 540, 330, 54, C['white'], sw=10)
         # Riesiges Thema: Punch-in + Puls + Wackeln
-        k = lerp(1.35, 1.0, 1 - (1 - clamp(T / 0.3)) ** 3)
+        k = lerp(1.12, 1.0, 1 - (1 - clamp(T / 0.3)) ** 3)
         puls = 1 + 0.05 * math.sin(T * 7)
         ang = math.sin(T * 5) * 0.05 * max(0.3, 1 - T / 2)
         ctx.save()
