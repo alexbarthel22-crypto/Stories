@@ -7,7 +7,7 @@ Shelly wohnt im 20. Untergeschoss eines Hochhauses unter Wasser – dem Sunken P
 Schreib deine Antwort in die Kommentare, BEVOR du die Lösung hörst! 👇
 Du willst mitspielen und eine Hütte mit deinem Namen bekommen? Dann folg mir! 🏝️
 
-#rätsel #rätselzeit #denksport #logikrätsel #kannstdueslösen #shelly #sunkenpearl #unterwasser #strand #muscheln #animation #fyp #foryou
+#rätsel #denksport #kannstdueslösen #fürdich #fyp
 
 ## Credits
 
