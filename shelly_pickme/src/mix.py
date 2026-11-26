@@ -49,7 +49,7 @@ for t in [TW('ausgewählt'), TW('lieblings') + 0.5, TW('stunde') - 0.1, TW('läs
           TW('ich', 2) - 0.1, TW('gegessen'), TW('ich', 3) - 0.1, TW('mädchen', 3) - 0.1, TW('zuschauen') - 0.2,
           TW('sagt', 0) - 0.1, TW('kennst'), TW('markier'), TW('wohnst'), TW('muscheltal'), TW('hütte') - 0.2, TW('folge')]:
     put('pop', t, -9)
-for t in [TW('du', 0) - 0.15, TW('weiss') - 0.15, TW('ich', 5) - 0.15, TW('namen') + 0.3]:
+for t in [TW('du', 0) - 0.15, TW('weiss') - 0.15, TW('ich', 5) - 0.15]:
     put('click', t, -8)
 bed('waves', 0, pm.END, -26, 1.0)
 bed('gull', pm.CH[3][1], pm.CH[4][1], -24)
@@ -59,12 +59,14 @@ vo = load(f'{ROOT}/audio/vo.wav')
 voice = np.zeros_like(out)
 voice[:len(vo)] = vo[:N]
 mix = (voice * db(5) + out)[:int(pm.END * SR)]
+fo = int(0.8 * SR)
+mix[-fo:] *= np.linspace(1, 0, fo)[:, None] ** 2
 tmp = f'{ROOT}/audio/mix_raw.wav'
 with wave.open(tmp, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((np.clip(mix, -1, 1) * 32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', tmp, '-af',
-                'acompressor=threshold=-20dB:ratio=3:attack=5:release=120:makeup=4,alimiter=limit=0.9:level=false,loudnorm=I=-9:TP=-0.8:LRA=6',
+                'acompressor=threshold=-20dB:ratio=3:attack=5:release=120:makeup=4,alimiter=limit=0.9:level=false,loudnorm=I=-9:TP=-0.8:LRA=6,afade=t=out:st=%.2f:d=0.6' % (pm.END - 0.6),
                 '-ar', str(SR), f'{ROOT}/audio/final_mix.wav'], check=True)
 os.remove(tmp)
 print('ok', pm.END)
