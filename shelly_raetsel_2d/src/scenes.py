@@ -311,53 +311,62 @@ INTRO_TXT = ['SHELLY', 'WOHNT', 'IM', '20.', 'UNTERGESCHOSS', 'EINES', 'HOCHHAUS
              'SUNKEN', 'PEARL.']
 
 
-def karaoke(ctx, T, toks, times, cx, cy, size, maxw, appear=0.0):
-    """Ganzer Satz sofort lesbar; das gerade gesprochene Wort leuchtet gelb auf."""
+INTRO_CHUNKS = [[0, 1, 2], [3, 4], [5, 6], [7, 8], [9, 10, 11]]
+
+
+def outlined(ctx, s, x, y, size, fill, stroke=None, sw=None):
+    """Fetter Text mit dunkler Kontur (Untertitel-Stil), x = Mitte."""
+    ctx.select_font_face(FONT, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+    ctx.set_font_size(size)
+    e = ctx.text_extents(s)
+    ctx.move_to(x - e.x_advance / 2, y + size * 0.36)
+    ctx.text_path(s)
+    ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+    ctx.set_line_width(sw or size * 0.2)
+    src(ctx, stroke or C['ink'])
+    ctx.stroke_preserve()
+    src(ctx, fill)
+    ctx.fill()
+
+
+def karaoke(ctx, T, toks, times, chunks, cx, cy, size, maxw):
+    """Immer nur eine kurze Wortgruppe groß im Bild; das gesprochene Wort leuchtet gelb."""
     if not UI_ON[0]:
         return
-    gap = size * 0.42
-    padx, pady = size * 0.22, size * 0.16
-    ws = [text_size(ctx, t, size)[0] for t in toks]
+    starts = [times[c[0]][0] for c in chunks]
+    ci = 0
+    for i, st in enumerate(starts):
+        if T >= st - 0.08:
+            ci = i
+    chunk = chunks[ci]
+    t_in = max(0.0, starts[ci] - 0.08) if ci else 0.0
+    k = max(0.05, back_out(T, t_in, t_in + 0.22, 2.0)) if (ci and T >= t_in) else 1.0
+    gap = size * 0.5
+    ws = [text_size(ctx, toks[i], size)[0] for i in chunk]
     lines, cur, cw = [], [], 0
-    for i, w in enumerate(ws):
-        bw = w + 2 * padx
-        if cur and cw + gap + bw > maxw:
+    for i, w in zip(chunk, ws):
+        if cur and cw + gap + w > maxw:
             lines.append((cur, cw)); cur, cw = [], 0
-        cw = cw + (gap if cur else 0) + bw
-        cur.append(i)
+        cw = cw + (gap if cur else 0) + w
+        cur.append((i, w))
     lines.append((cur, cw))
-    lh = size * 0.72 + 2 * pady + size * 0.22
-    total_h = len(lines) * lh
-    k = 1.0
+    lh = size * 1.12
     ctx.save()
     ctx.translate(cx, cy)
     ctx.scale(k, k)
-    pw = max(l[1] for l in lines) + size * 0.7
-    ph = total_h + size * 0.45
-    fill_rrect(ctx, -pw / 2 + 6, -ph / 2 + 10, pw, ph, size * 0.4, alpha(C['shadow'], 0.3))
-    fill_rrect(ctx, -pw / 2, -ph / 2, pw, ph, size * 0.4, alpha(C['navy'], 0.92))
-    y = -total_h / 2 + lh / 2
-    for idxs, lw in lines:
+    y = -(len(lines) - 1) * lh / 2
+    for items, lw in lines:
         x = -lw / 2
-        for i in idxs:
-            bw = ws[i] + 2 * padx
+        for i, w in items:
             t0 = times[i][0]
-            t1 = times[i + 1][0] if i + 1 < len(times) else times[i][1] + 0.4
-            on = clamp((T - t0) / 0.06) * (1 - clamp((T - t1) / 0.12))
-            done = T >= t1
-            sc_ = 1 + 0.08 * on
+            on = 1.0 if T >= t0 - 0.02 and (i + 1 >= len(times) or T < times[i + 1][0] - 0.02) else 0.0
+            sc_ = 1 + 0.05 * on
             ctx.save()
-            ctx.translate(x + bw / 2, y)
+            ctx.translate(x + w / 2, y)
             ctx.scale(sc_, sc_)
-            if on > 0.01:
-                fill_rrect(ctx, -bw / 2, -(size * 0.72 + 2 * pady) / 2, bw, size * 0.72 + 2 * pady, size * 0.2,
-                           alpha(C['yellow'], on))
-            fg = mixc(C['white'], C['ink'], on)
-            if not done and on < 0.01 and T < t0:
-                fg = alpha(C['white'], 0.92)
-            text(ctx, toks[i], 0, 0, size, fg)
+            outlined(ctx, toks[i], 0, 0, size, C['yellow'] if on else C['white'])
             ctx.restore()
-            x += bw + gap
+            x += w + gap
         y += lh
     ctx.restore()
 
@@ -395,7 +404,7 @@ def sc_overview(ctx, T):
     sticker(ctx, 'RÄTSEL', 510, 560, 120, 'yellow', rot=rot, sc=lerp(2.2, 1.0, back_out(T, 0.0, 0.4, 2.5)) if T < 0.4 else 1.0 + 0.04 * math.sin(T * 6))
     times = [(w[1] + 0.0, w[2]) for w in NEW[:len(INTRO_TXT)]]
     times = [(gn(a), gn(b)) for a, b in times]
-    karaoke(ctx, T, INTRO_TXT, times, 510, 1120, 60, 800, appear=0.0)
+    karaoke(ctx, T, INTRO_TXT, times, INTRO_CHUNKS, 510, 1130, 104, 800)
 
 
 def sc_home(ctx, T, t0):
