@@ -1,17 +1,18 @@
-# Shelly-Rätsel: Der Aufzug im Tiefseekratzer Sunken Pearl
+# Shelly-Rätsel: Der Aufzug im Sunken Pearl
 
 ## TikTok-Beschreibung
 
 Kannst du dieses Rätsel lösen? 🐚🧠
-Shelly wohnt im 20. Untergeschoss eines Hochhauses unter Wasser – dem Sunken Pearl. Bei Regen fährt sie mit dem Aufzug bis ganz nach oben zum Strand, wo ihr Boot zur Arbeit fährt. Bei Sonne nur bis −10 – den Rest läuft sie. Warum? 🤔☔
+Shelly wohnt im 20. Untergeschoss eines Hochhauses unter Wasser – dem Sunken Pearl. Abends fährt sie ganz normal mit dem Aufzug nach Hause. Aber morgens fährt sie nur bis ins 10. Untergeschoss und läuft den Rest zu Fuß. Nur wenn es regnet, fährt sie direkt bis ganz nach oben. Warum? 🤔☔
 Schreib deine Antwort in die Kommentare, BEVOR du die Lösung hörst! 👇
 Du willst mitspielen und eine Hütte mit deinem Namen bekommen? Dann folg mir! 🏝️
 
-#rätsel #rätselzeit #denksport #logikrätsel #kannstdueslösen #shelly #sunkenpearl #tiefseekratzer #strand #muscheln #animation #fyp #foryou
+#rätsel #rätselzeit #denksport #logikrätsel #kannstdueslösen #shelly #sunkenpearl #unterwasser #strand #muscheln #animation #fyp #foryou
 
 ## Credits
 
 Stimme: Google Gemini TTS (Puck). Musik und Geräusche (Freesound, CC0):
+- „Cinematic Woosh SFX-010.wav“ von AudioPapkin (freesound.org/s/648729, CC0)
 - „SFX_UnderWater“ von Perel (freesound.org/s/173439, CC0)
 - „hint.wav“ von dland (freesound.org/s/320181, CC0)
 - „Elevator Ping 02“ von LilMati (freesound.org/s/514865, CC0)
