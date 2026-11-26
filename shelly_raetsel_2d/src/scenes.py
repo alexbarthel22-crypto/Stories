@@ -371,6 +371,66 @@ def karaoke(ctx, T, toks, times, chunks, cx, cy, size, maxw):
     ctx.restore()
 
 
+def slam_words(ctx, T, toks, times, chunks, cx, cy, size, maxw):
+    """Einstieg: jedes Wort knallt einzeln rein (groß -> normal, Dreh-Wackler, Farbblitz)."""
+    if not UI_ON[0]:
+        return
+    starts = [times[c[0]][0] for c in chunks]
+    ci = 0
+    for i, st in enumerate(starts):
+        if T >= st - 0.05:
+            ci = i
+    chunk = chunks[ci]
+    gap = size * 0.45
+    ws = [text_size(ctx, toks[i], size)[0] for i in chunk]
+    lines, cur, cw = [], [], 0
+    for i, w in zip(chunk, ws):
+        if cur and cw + gap + w > maxw:
+            lines.append((cur, cw)); cur, cw = [], 0
+        cw = cw + (gap if cur else 0) + w
+        cur.append((i, w))
+    lines.append((cur, cw))
+    lh = size * 1.15
+    y = cy - (len(lines) - 1) * lh / 2
+    for items, lw in lines:
+        x = cx - lw / 2
+        for i, w in items:
+            t0 = times[i][0] - 0.04
+            if ci == 0 and i == chunk[0]:
+                t0 = min(t0, 0.0)
+            if T >= t0:
+                k = clamp((T - t0) / 0.16)
+                sc_ = lerp(2.4, 1.0, 1 - (1 - k) ** 3)
+                rot = (1 - k) * (-0.35 if i % 2 else 0.35) + math.sin((T - t0) * 18) * 0.04 * max(0, 1 - (T - t0) / 0.5)
+                spoken = i + 1 < len(times) and T >= times[i + 1][0] - 0.02 or (i + 1 >= len(times) and T > times[i][1])
+                col = C['white'] if spoken else C['yellow']
+                if k < 1:
+                    col = mixc(C['white'], col, k)
+                ctx.save()
+                ctx.translate(x + w / 2, y)
+                ctx.rotate(rot)
+                ctx.scale(sc_, sc_)
+                if k < 1:
+                    ctx.push_group()
+                    outlined(ctx, toks[i], 0, 0, size, col)
+                    ctx.pop_group_to_source()
+                    ctx.paint_with_alpha(k)
+                else:
+                    outlined(ctx, toks[i], 0, 0, size, col)
+                ctx.restore()
+                # Funken beim Einschlag
+                if 0 < T - t0 < 0.3:
+                    kk = (T - t0) / 0.3
+                    for j in range(8):
+                        a_ = j / 8 * 2 * math.pi + i
+                        r0 = w * 0.35 + 40 * kk
+                        line(ctx, x + w / 2 + math.cos(a_) * r0, y + math.sin(a_) * r0 * 0.6,
+                             x + w / 2 + math.cos(a_) * (r0 + 40), y + math.sin(a_) * (r0 + 40) * 0.6,
+                             7 * (1 - kk), alpha(C['yellow'], 1 - kk))
+            x += w + gap
+        y += lh
+
+
 def sc_overview(ctx, T):
     """Explosiver Einstieg: Blitz, Zoom-Punch, Wackeln, RÄTSEL-Stempel, ganzer Satz mit Wort-Highlight."""
     t_end = TW('jeden')
@@ -404,7 +464,7 @@ def sc_overview(ctx, T):
     sticker(ctx, 'RÄTSEL', 510, 560, 120, 'yellow', rot=rot, sc=lerp(2.2, 1.0, back_out(T, 0.0, 0.4, 2.5)) if T < 0.4 else 1.0 + 0.04 * math.sin(T * 6))
     times = [(w[1] + 0.0, w[2]) for w in NEW[:len(INTRO_TXT)]]
     times = [(gn(a), gn(b)) for a, b in times]
-    karaoke(ctx, T, INTRO_TXT, times, INTRO_CHUNKS, 510, 1130, 104, 800)
+    slam_words(ctx, T, INTRO_TXT, times, INTRO_CHUNKS, 510, 1130, 104, 800)
 
 
 def sc_home(ctx, T, t0):
@@ -728,7 +788,7 @@ def solution_scene(ctx, T):
         ctx.scale(k, k)
         check_icon(ctx, 0, 0, 30)
         ctx.restore()
-        sticker(ctx, 'ETAGE 0 · STRAND', 600, 430, 52, 'green', rot=-2, sc=pop(T, t_strand), icon='check')
+        sticker(ctx, 'ETAGE 0 · STRAND', 640, 1290, 52, 'green', rot=-2, sc=pop(T, t_strand), icon='check')
 
 
 # ---------------------------------------------------------------- Fragekarte
@@ -774,14 +834,15 @@ def question_scene(ctx, T):
     k = pop(T, tc)
     if k > 0:
         ctx.save()
-        ctx.translate(800, 1300)
+        ctx.translate(860, 610)
+        ctx.scale(0.7, 0.7)
         ctx.scale(k, k)
         fill_rrect(ctx, -60, -40, 120, 80, 22, C['yellow'])
         poly(ctx, [(-20, 36), (10, 36), (-28, 64)], C['yellow'])
         for i in range(3):
             circle(ctx, -28 + i * 28, 0, 8, C['ink'])
         ctx.restore()
-    sticker(ctx, "SCHREIB'S IN DIE KOMMENTARE", 510, 1430, 40, 'white', sc=pop(T, tc + 0.15))
+    sticker(ctx, "SCHREIB'S IN DIE KOMMENTARE", 510, 700, 40, 'white', sc=pop(T, tc + 0.15))
 
 
 # ---------------------------------------------------------------- Endkarte
@@ -850,7 +911,7 @@ def end_scene(ctx, T):
 
 
 # ---------------------------------------------------------------- Hauptzeitleiste
-def frame(ctx, T):
+def _frame(ctx, T):
     # 1 Gesamtansicht
     if T < TW('jeden'):
         sc_overview(ctx, T)
@@ -887,7 +948,7 @@ def frame(ctx, T):
     if T < t_aber:
         sc_home(ctx, T, t_home)
         chips(ctx, T, clock=('18:00', 18.0, 'moon', -1), floor=('−20', -1, -1, 1))
-        sticker(ctx, 'GANZ NORMAL', 510, 1400, 64, 'cream', rot=-2, sc=pop(T, TW('ganz')), icon='check')
+        sticker(ctx, 'GANZ NORMAL', 510, 640, 64, 'cream', rot=-2, sc=pop(T, TW('ganz')), icon='check')
         return
     # 3 Morgens: etwas Seltsames
     t_ride2 = TW('shelly', 1)
@@ -913,8 +974,8 @@ def frame(ctx, T):
         else:
             cam, f = sc_climb(ctx, T, t0 + 1.0, t_ihre, -10, 4.0)
             chips(ctx, T, floor=(flabel(math.floor(f + 0.25)), 1, -1, 0))
-        sticker(ctx, 'AB −10 ZU FUSS', 560, 580, 50, 'cream', rot=-2, sc=pop(T, t0 + 0.4))
-        sticker(ctx, '10 STOCKWERKE', 510, 1400, 64, 'yellow', rot=3, sc=pop(T, TW('letzten')))
+        sticker(ctx, 'AB −10 ZU FUSS', 560, 575, 50, 'cream', rot=-2, sc=pop(T, t0 + 0.4))
+        sticker(ctx, '10 STOCKWERKE', 510, 690, 64, 'yellow', rot=3, sc=pop(T, TW('letzten')))
         return
     t_denn = TW('denn')
     if T < t_denn:
@@ -969,12 +1030,12 @@ def frame(ctx, T):
         if T < t0 + 0.9:
             sc_morning(ctx, T, umb=True, label_t=t0 - 1.7)
             chips(ctx, T, clock=('07:00', 7.0, 'rain', -1))
-            sticker(ctx, 'REGENSCHIRM', 510, 1400, 54, 'yellow', rot=3, sc=pop(T, t0 + 0.1))
+            sticker(ctx, 'REGENSCHIRM', 510, 640, 54, 'yellow', rot=3, sc=pop(T, t0 + 0.1))
         elif T < t_top + 0.1:
             cam, nf = sc_ride(ctx, T, -20, 0, t0 + 0.95, t_top, umb=True, z=0.9)
             ok = ease(T, t_top, t_top + 0.2)
             chips(ctx, T, clock=('07:00', 7.0, 'rain', -1), floor=(flabel(nf), 1, t0 + 0.9, ok))
-            sticker(ctx, 'DIREKT BIS GANZ OBEN', 510, 1400, 52, 'yellow', rot=-2, sc=pop(T, TW('direkt')), icon='check')
+            sticker(ctx, 'DIREKT BIS GANZ OBEN', 510, 640, 52, 'yellow', rot=-2, sc=pop(T, TW('direkt')), icon='check')
         else:
             tt = t_top + 0.1
             cam = Cam(620, -280, 0.86)
@@ -1007,7 +1068,7 @@ def frame(ctx, T):
         else:
             cam, nf = sc_ride(ctx, T, -10, -10, 0, 0.1, open_at=0.0, exit_left=t_ex, track=False)
             chips(ctx, T, clock=('07:00', 7.0, 'sun', -1), floor=('−10', 1, -1, 1))
-        sticker(ctx, 'WIEDER NUR BIS −10', 510, 1400, 56, 'yellow', rot=-2, sc=pop(T, t10))
+        sticker(ctx, 'WIEDER NUR BIS −10', 510, 640, 56, 'yellow', rot=-2, sc=pop(T, t10))
         return
     # 15 Frage
     if T < g(54.77):
@@ -1019,3 +1080,93 @@ def frame(ctx, T):
         return
     # 17 Ende
     end_scene(ctx, T)
+
+# ---------------------------------------------------------------- Untertitel (ganzes Video)
+def _build_caps():
+    txt = open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'script.txt')).read().split()
+    sn = [_norm(t) for t in txt]
+    wn = [_norm(w[0]) for w in NEW]
+    tm = [None] * len(txt)
+    for blk in _dl.SequenceMatcher(None, sn, wn, autojunk=False).get_matching_blocks():
+        for k in range(blk.size):
+            tm[blk.a + k] = (NEW[blk.b + k][1], NEW[blk.b + k][2])
+    # Lücken (abweichende Wörter) gleichmäßig auffüllen
+    i = 0
+    while i < len(tm):
+        if tm[i] is None:
+            j = i
+            while j < len(tm) and tm[j] is None:
+                j += 1
+            a = tm[i - 1][1] if i else 0.0
+            b = tm[j][0] if j < len(tm) else VO_END
+            n = j - i
+            for k in range(n):
+                tm[i + k] = (a + (b - a) * k / n, a + (b - a) * (k + 1) / n)
+            i = j
+        i += 1
+    disp = {'zwanzigsten': '20.', 'zehnte': '10.', 'zehnten': '10.', 'achtzehn': '18', 'sieben': '7', 'zehn': '10'}
+
+    def d(t):
+        core = _re.sub(r'[^\wäöüß]', '', t.lower())
+        return t.lower().replace(core, disp[core]) if core in disp else t
+    caps = [(d(t).upper(), gn(a), gn(b)) for t, (a, b) in zip(txt, tm)]
+    chunks, cur = [], []
+    for idx, (t, a, b) in enumerate(caps):
+        cur.append(idx)
+        if len(cur) >= 3 or t[-1] in '.,?!:' or (idx + 1 < len(caps) and caps[idx + 1][1] - b > 0.45):
+            chunks.append(cur); cur = []
+    if cur:
+        chunks.append(cur)
+    return caps, chunks
+
+
+CAPS, CAP_CHUNKS = _build_caps()
+SUB_Y = 1410
+
+
+def subtitles(ctx, T, size=70):
+    if not UI_ON[0] or T < TW('jeden') - 0.05:
+        return
+    sol = g(54.77) <= T < g(70.64)
+    if sol:
+        size = 56
+    cur = None
+    for ch in CAP_CHUNKS:
+        a, b = CAPS[ch[0]][1], CAPS[ch[-1]][2]
+        if a - 0.06 <= T <= b + 0.35:
+            cur = ch
+    if cur is None:
+        return
+    a = CAPS[cur[0]][1]
+    k = max(0.05, back_out(T, a - 0.06, a + 0.14, 1.6))
+    toks = [CAPS[i][0] for i in cur]
+    gap = size * 0.32
+    ws = [text_size(ctx, t, size)[0] for t in toks]
+    maxw = 820
+    lines, line_, cw = [], [], 0
+    for i, w in zip(cur, ws):
+        if line_ and cw + gap + w > maxw:
+            lines.append((line_, cw)); line_, cw = [], 0
+        cw = cw + (gap if line_ else 0) + w
+        line_.append((i, w))
+    lines.append((line_, cw))
+    lh = size * 1.12
+    ctx.save()
+    ctx.translate(510, 470 if sol else SUB_Y)
+    ctx.scale(k, k)
+    y = -(len(lines) - 1) * lh / 2
+    for items, lw in lines:
+        x = -lw / 2
+        for i, w in items:
+            on = CAPS[i][1] - 0.03 <= T < (CAPS[i + 1][1] - 0.03 if i + 1 < len(CAPS) else CAPS[i][2] + 0.3)
+            outlined(ctx, CAPS[i][0], x + w / 2, y, size, C['yellow'] if on else C['white'])
+            x += w + gap
+        y += lh
+    ctx.restore()
+
+
+def frame(ctx, T):
+    _frame(ctx, T)
+    subtitles(ctx, T)
+
+

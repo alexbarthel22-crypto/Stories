@@ -139,7 +139,7 @@ env = np.abs(voice).mean(1)
 win = int(0.25 * SR)
 env = np.convolve(env, np.ones(win) / win, 'same')
 duck = 1 - 0.45 * np.clip(env / (env.max() * 0.25 + 1e-9), 0, 1)
-mix = voice * db(5) + out + mus * db(-9) * duck[:, None]
+mix = voice * db(5) + out   # ohne Musik
 mix = mix[:int(END * SR)]
 tmp = f'{ROOT}/audio/mix_raw.wav'
 import wave
