@@ -622,7 +622,7 @@ SC = [
 ]
 
 
-def frame(ctx, T):
+def frame_main(ctx, T):
     cur = SC[0]
     for s_ in SC:
         if T >= s_[1]:
@@ -631,3 +631,92 @@ def frame(ctx, T):
     for s_ in SC[1:]:
         if 0 <= T - s_[1] < 0.08:
             rect(ctx, 0, 0, W, H, alpha(C['white'], 0.3 * (1 - (T - s_[1]) / 0.08)))
+
+
+# ---------------------------------------------------------------- Countdown-Intro (3, 2, 1, FALSCH!, zurück auf Anfang)
+D = 4.7
+CD = {'3': 0.10, '2': 0.98, '1': 1.96, 'falsch': 2.82, 'zurueck': 3.60, 'anfang': 3.98}
+END_MAIN = END
+END = END_MAIN + D
+
+
+def big_num(ctx, s, x, y, size, col, k):
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(k, k)
+    ctx.select_font_face(SLAB, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+    ctx.set_font_size(size)
+    e = ctx.text_extents(s)
+    ctx.move_to(-e.x_advance / 2, size * 0.36)
+    ctx.text_path(s)
+    ctx.set_line_width(size * 0.12)
+    ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+    src(ctx, P['ink'])
+    ctx.stroke_preserve()
+    src(ctx, col)
+    ctx.fill()
+    ctx.restore()
+
+
+def intro(ctx, T):
+    t_f, t_z = CD['falsch'], CD['zurueck']
+    if T < t_z:
+        z = lerp(1.05, 1.18, ease(T, 0, t_f))
+        shake = max(0.0, 1 - (T - t_f) / 0.4) if T >= t_f else 0.0
+        ctx.save()
+        ctx.translate(math.sin(T * 80) * 16 * shake, math.cos(T * 70) * 12 * shake)
+        hall(ctx, T, z, 1100, 'point' if T >= t_f else 'idle', 'o' if T >= t_f else 'smile', pris_expr=1)
+        ctx.restore()
+        speech(ctx, T, 0.0, [('„ … “', P['ink'])], 800, 1200, (660, 1420))
+        # Sanduhr-Leiste
+        if UI_ON[0] and T < t_f:
+            k = clamp(T / t_f)
+            fill_rrect(ctx, 140, 260, 800, 30, 15, alpha(C['ink'], 0.5))
+            fill_rrect(ctx, 140, 260, 800 * (1 - k), 30, 15, mixc(C['green'], P['red'], k))
+        cur = None
+        for lab_, key, col in (('3', '3', C['white']), ('2', '2', P['red']), ('1', '1', P['red'])):
+            if T >= CD[key]:
+                cur = (lab_, key, col)
+        if cur and T < t_f and UI_ON[0]:
+            lab_, key, col = cur
+            k = lerp(1.8, 1.0, 1 - (1 - clamp((T - CD[key]) / 0.2)) ** 3)
+            big_num(ctx, lab_, 820, 500, 260, col, k)
+        if T >= t_f:
+            kk = clamp((T - t_f) / 0.15)
+            rect(ctx, 0, 0, W, H, alpha(hexc('#C8222A'), 0.35 * (1 - 0.5 * clamp((T - t_f - 0.3) / 0.4))))
+            if UI_ON[0]:
+                ctx.save()
+                ctx.translate(540, 560)
+                ctx.rotate(math.radians(-6))
+                sc = lerp(2.4, 1.0, 1 - (1 - kk) ** 3)
+                ctx.scale(sc, sc)
+                tw = text_size(ctx, 'FALSCH!', 120, SLAB)[0]
+                fill_rrect(ctx, -tw / 2 - 40 + 8, -95 + 14, tw + 80, 190, 24, alpha(C['shadow'], 0.4))
+                fill_rrect(ctx, -tw / 2 - 40, -95, tw + 80, 190, 24, P['red'])
+                text(ctx, 'FALSCH!', 0, 0, 120, C['white'], font=SLAB)
+                ctx.restore()
+        return
+    # Zurückspulen: Szene läuft rückwärts, Streifen, Entsättigung
+    k = clamp((T - t_z) / (D - t_z))
+    Tb = lerp(t_f, 0.0, k)
+    hall(ctx, Tb, lerp(1.18, 1.0, k), 1100, 'idle', 'smile', pris_expr=1)
+    rect(ctx, 0, 0, W, H, alpha(hexc('#0E1430'), 0.35))
+    r = random.Random(int(T * 30))
+    for i in range(14):
+        y = r.uniform(0, H)
+        rect(ctx, 0, y, W, r.uniform(3, 10), alpha(C['white'], r.uniform(0.15, 0.4)))
+    if UI_ON[0]:
+        for j in range(2):
+            poly(ctx, [(150 + j * 60, 330), (210 + j * 60, 290), (210 + j * 60, 370)], C['white'])
+        text(ctx, 'ZURÜCK', 290, 330, 54, C['white'], font=SLAB, align='l')
+        if T >= CD['anfang'] - 0.05:
+            card(ctx, T, CD['anfang'] - 0.05, [('ZURÜCK AUF', 40, SLAB, P['ink']), ('ANFANG', 80, SLAB, P['red'])], 540, 800, -3)
+    if T > D - 0.12:
+        rect(ctx, 0, 0, W, H, alpha(C['white'], (T - (D - 0.12)) / 0.12 * 0.6))
+
+
+def frame(ctx, T):
+    if T < D:
+        intro(ctx, T)
+    else:
+        frame_main(ctx, T - D)
