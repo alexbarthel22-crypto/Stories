@@ -1,0 +1,114 @@
+{
+ "rain": {
+  "name": "Rain on roofs",
+  "user": "xkeril",
+  "id": 669487,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 54.4845
+ },
+ "click": {
+  "name": "hint.wav",
+  "user": "dland",
+  "id": 320181,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 0.265193
+ },
+ "tada": {
+  "name": "Success Fanfare Trumpets.mp3",
+  "user": "FunWithSound",
+  "id": 456966,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 4.43748
+ },
+ "ding": {
+  "name": "Elevator Ping 02",
+  "user": "LilMati",
+  "id": 514865,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 1.50957
+ },
+ "doors": {
+  "name": "elevator doors opening",
+  "user": "ccovi",
+  "id": 679014,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 7.95483
+ },
+ "elev": {
+  "name": "ship-interior-1.wav",
+  "user": "markkuyp",
+  "id": 344379,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 32.594
+ },
+ "heels": {
+  "name": "steps in high heels.wav",
+  "user": "anagar",
+  "id": 267933,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 11.232
+ },
+ "waves": {
+  "name": "Ocean Noise - Surf",
+  "user": "amholma",
+  "id": 372181,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 34.9932
+ },
+ "bubbles": {
+  "name": "SFX_UnderWater",
+  "user": "Perel",
+  "id": 173439,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 5.60433
+ },
+ "whoosh": {
+  "name": "Swoosh",
+  "user": "Shinplaster",
+  "id": 264777,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 5.31224
+ },
+ "pop": {
+  "name": "Plop!",
+  "user": "Breviceps",
+  "id": 447910,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 0.24254
+ },
+ "music": {
+  "name": "A Ukulele Tune",
+  "user": "shaunhillyard",
+  "id": 830500,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 22.4982
+ },
+ "steps": {
+  "name": "Footsteps on concrete",
+  "user": "florianreichelt",
+  "id": 459964,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 19.8411
+ },
+ "swoosh": {
+  "name": "whoosh.wav",
+  "user": "LloydEvans09",
+  "id": 332003,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 0.728503
+ },
+ "gull": {
+  "name": "Seagull on beach",
+  "user": "squashy555",
+  "id": 353416,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 33.5621
+ },
+ "boom": {
+  "name": "Cinematic Woosh SFX-010.wav",
+  "user": "AudioPapkin",
+  "id": 648729,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "dur": 1.752
+ }
+}
