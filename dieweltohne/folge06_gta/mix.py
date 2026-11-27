@@ -219,13 +219,13 @@ tmp = os.path.join(HERE, 'mix_roh.wav')
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', tmp], input=mix.tobytes(), check=True)
 out = os.path.join(HERE, 'mix.wav')
 # TikTok-Lautheit: ca. -14 LUFS, Spitzen begrenzt
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'acompressor=threshold=-30dB:ratio=3:attack=15:release=400:makeup=6,loudnorm=I=-13.5:TP=-1.5:LRA=11,alimiter=limit=0.8:attack=1:release=60:level=false', '-ar', str(SR), '-c:a', 'pcm_s16le', out], check=True)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-af', 'acompressor=threshold=-30dB:ratio=3:attack=15:release=400:makeup=6,loudnorm=I=-13.5:TP=-1.5:LRA=11,alimiter=limit=0.74:attack=1:release=60:level=false', '-ar', str(SR), '-c:a', 'pcm_s16le', out], check=True)
 os.remove(tmp)
 print('mix.wav fertig, Ticks:', len(ticks))
 
 if '--mux' in sys.argv:
     vid = os.path.join(HERE, 'video_stumm.mp4'); fin = os.path.join(HERE, 'folge06_gta.mp4')
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', vid, '-i', out, '-map', '0:v', '-map', '1:a', '-c:v', 'libx264', '-preset', 'slow', '-crf', '22', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-t', '90', '-movflags', '+faststart', fin], check=True)
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', vid, '-i', out, '-map', '0:v', '-map', '1:a', '-c:v', 'libx264', '-preset', 'slow', '-b:v', '6800k', '-maxrate', '9500k', '-bufsize', '14000k', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-t', '90', '-movflags', '+faststart', fin], check=True)
     print('fertig:', fin)
 
 # Quellenangaben für die Videobeschreibung
