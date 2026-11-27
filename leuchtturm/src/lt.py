@@ -185,6 +185,8 @@ def tower(ctx, T, tod, window_bricked=0.0, beam=True):
     if beam and tod == 'night':
         a = T * 0.8
         for sgn in (1, -1):
+            if abs(math.cos(a)) < 0.06:
+                continue
             ctx.save()
             ctx.translate(540, TOP - 130)
             ctx.scale(sgn * abs(math.cos(a)) + 0.0001, 1)
