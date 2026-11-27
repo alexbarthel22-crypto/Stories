@@ -284,6 +284,7 @@ def safe(ctx, x, y, s=1.0, open_k=0.0, state='locked', inside=()):
     ctx.save()
     ctx.rectangle(-w / 2 + 16, -h + 16, w - 32, h - 32)
     ctx.clip()
+    ctx.translate(0, -h / 2 - 30)
     for fn in inside:
         fn(ctx)
     ctx.restore()
