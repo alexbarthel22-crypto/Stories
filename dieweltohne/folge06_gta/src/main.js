@@ -16,6 +16,7 @@ const hud = document.getElementById('hud').getContext('2d');
 const files = {room: './room.js', living: './living.js', street: './street.js', control: './control.js', city: './city.js', earth: './earth.js', test: './test.js'};
 export const SET_OF = {intro: 'room', play: 'room', vanish: 'room', papa: 'living', street: 'street', control: 'control', city: 'city', europe: 'earth', dark: 'room', back: 'city', blast: 'room', mom: 'room', test: 'test'};
 const only = new URLSearchParams(location.search).get('only');
+if (!only || !only.includes('test')) delete files.test;
 if (only) for (const k of Object.keys(files)) if (!only.split(',').includes(k)) delete files[k];
 const sets = {};
 for (const [k, file] of Object.entries(files)) {

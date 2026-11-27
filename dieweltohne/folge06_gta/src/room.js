@@ -7,7 +7,7 @@ import {makeHuman} from './mh.js';
 import {sit, stand, mouth, hipY} from './poses.js';
 import {makeGame} from './game.js';
 import {controller, phone, can, pizzaBox, headset, console_} from './props.js';
-import {VANISH, FLASH_ON, POWER_BACK, TV_ON, DOOR, CEIL} from './timeline.js';
+import {VANISH, FLASH_ON, POWER_BACK, TV_ON, DOOR, CEIL, TV_OFF} from './timeline.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 function box(w, h, d, m, x, y, z, p, r = 0.01) { const o = new THREE.Mesh(r ? new RoundedBoxGeometry(w, h, d, 2, r) : new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); o.castShadow = o.receiveShadow = true; p.add(o); return o; }
@@ -147,7 +147,7 @@ export async function build(renderer) {
     if (id === 'dark' || (id === 'blast' && T < TV_ON)) { mode = 'off'; }
     if (id === 'vanish') { const k = smooth(VANISH, VANISH + 0.35, T); tvI = k < 1 && T < VANISH + 0.35 ? 0.15 : 1; mode = T < VANISH ? 'game' : 'home'; if (T > VANISH && T < VANISH + 0.25) mode = 'off'; }
     if (id === 'blast' && T >= TV_ON) { mode = 'game'; tvI = 1.0 + 0.6 * Math.exp(-(T - TV_ON) * 2); }
-    if (id === 'mom') { mode = T < DOOR + 3.2 ? 'game' : 'game'; }
+    if (id === 'mom') { mode = T < TV_OFF ? 'game' : 'off'; }
     game.render(T, mode === 'off' ? 'black' : mode);
     const on = mode !== 'off';
     screenM.emissiveIntensity = mode === 'game' ? 1.6 * tvI : 0; uiM.opacity = mode === 'home' ? 1 : mode === 'game' ? 1 : 0;
@@ -160,7 +160,7 @@ export async function build(renderer) {
     // Mama: Tür auf, Flurlicht, dann Deckenlicht
     const doorOpen = id === 'mom' ? easeOut(clamp((T - DOOR) / 0.9)) : 0;
     doorPiv.rotation.y = -doorOpen * 1.45; hallLight.intensity = id === 'mom' ? 14 : 0; gap.material.opacity = id === 'mom' && T < DOOR ? 0.9 : 0; hall.visible = id === 'mom';
-    const ce = id === 'mom' ? smooth(CEIL, CEIL + 0.12, T) : 0; ceilLamp.intensity = ce * 9; lampShade.material.emissiveIntensity = ce * 1.2; amb.intensity = 0.04 + ce * 0.25;
+    const ce = id === 'mom' ? smooth(CEIL, CEIL + 0.12, T) : 0; ceilLamp.intensity = ce * 4; lampShade.material.emissiveIntensity = ce * 1.2; amb.intensity = 0.04 + ce * 0.25;
     mom.root.visible = id === 'mom' && T > DOOR + 0.2;
     // ---------- Er: Pose ----------
     teen.root.position.set(SEAT.x, SEAT.y - hipY(teen), SEAT.z); teen.root.rotation.set(0, Math.PI, 0);
@@ -189,8 +189,8 @@ export async function build(renderer) {
     if (id === 'dark') { teen.B('wrist.R').getWorldPosition(hr); ph.position.copy(hr).add(V(0.0, 0.06, -0.05)); ph.rotation.set(-0.3, 0, 0.15); const fon = smooth(FLASH_ON - 0.05, FLASH_ON + 0.05, T); ph.userData.flash.material.emissiveIntensity = fon * 6; ph.userData.scr.material.emissive.set('#a0b8ff'); ph.userData.scr.material.emissiveIntensity = 0.6; }
     if (!R.userData.flashL) { const fl = new THREE.SpotLight('#eef3ff', 0, 8, 0.7, 0.6, 1.4); fl.castShadow = true; fl.shadow.mapSize.set(1024, 1024); R.add(fl); R.add(fl.target); R.userData.flashL = fl; }
     if (!R.userData.glow) { const gl = new THREE.PointLight('#9fb4ff', 0, 1.2, 2); R.add(gl); R.userData.glow = gl; }
-    const glow = R.userData.glow; glow.intensity = id === 'dark' ? 0.25 : 0; if (id === 'dark') glow.position.copy(ph.position).add(V(0, 0, 0.12));
-    const flashL = R.userData.flashL; flashL.intensity = id === 'dark' ? smooth(FLASH_ON - 0.05, FLASH_ON + 0.05, T) * 9 : 0;
+    const glow = R.userData.glow; glow.intensity = id === 'dark' ? 0.12 : 0; if (id === 'dark') glow.position.copy(ph.position).add(V(0, 0, 0.12));
+    const flashL = R.userData.flashL; flashL.intensity = id === 'dark' ? smooth(FLASH_ON - 0.05, FLASH_ON + 0.05, T) * 5 : 0;
     if (id === 'dark') { flashL.position.copy(ph.position).add(V(0, 0.05, -0.02)); flashL.target.position.set(Math.sin(T * 0.6) * 0.6, 0.9, -2.0); }
     // ---------- Mama ----------
     if (mom.root.visible) {
@@ -211,12 +211,12 @@ export async function build(renderer) {
     } else if (id === 'vanish') { // von vorne, Höhe Fernseher, langsam ran
       pos = V(0.05, 1.12, -1.05 + t * 0.05).add(hand(0.8, 0.008)); look = head.clone().add(V(0, -0.08, 0)); fov = 34; dof = {focus: pos.distanceTo(head), aperture: 0.0014, maxblur: 0.007}; exposure = 1.35;
     } else if (id === 'dark') {
-      pos = V(-0.7, 1.15, -0.45).add(hand(0.5, 0.008)); look = head.clone().add(V(0.1, -0.22, -0.1)); fov = 42; dof = {focus: pos.distanceTo(head), aperture: 0.0012, maxblur: 0.006}; exposure = 2.4;
-    } else if (id === 'blast') { // weit aus der Ecke: Fernseher und er im Bild
+      pos = V(-0.7, 1.15, -0.45).add(hand(0.5, 0.008)); look = head.clone().add(V(0.1, -0.22, -0.1)); fov = 42; dof = {focus: pos.distanceTo(head), aperture: 0.0012, maxblur: 0.006}; exposure = 1.5;
+    } else if (id === 'blast') { // von vorne: dunkel, dann knallt das Fernsehlicht ins Gesicht
       const shake = T > TV_ON ? Math.exp(-(T - TV_ON) * 3) * 0.02 : 0;
-      pos = V(1.25, 1.55, 1.3).add(hand(0.5, 0.006)).add(V(Math.sin(T * 40) * shake, Math.cos(T * 37) * shake, 0)); look = V(-0.15, 0.85, -1.0); fov = 50; exposure = T < TV_ON ? 1.8 : 1.15;
+      pos = V(0.3, 1.12, -0.95).add(hand(0.5, 0.006)).add(V(Math.sin(T * 40) * shake, Math.cos(T * 37) * shake, 0)); look = head.clone().add(V(-0.05, -0.18, 0)); fov = 44; dof = {focus: pos.distanceTo(head), aperture: 0.0012, maxblur: 0.006}; exposure = T < TV_ON ? 1.5 : 1.1;
     } else if (id === 'mom') { // vom Fernseher aus: er vorne, Tür und Mama dahinter
-      pos = V(-0.15, 1.18, -1.4).add(hand(0.5, 0.006)); look = V(0.45, 1.15, 1.6); fov = 42; dof = {focus: 2.6, aperture: 0.0008, maxblur: 0.005}; exposure = T > CEIL ? 0.95 : 1.15;
+      pos = V(-0.15, 1.18, -1.4).add(hand(0.5, 0.006)); look = V(0.45, 1.15, 1.6); fov = 42; dof = {focus: 2.6, aperture: 0.0008, maxblur: 0.005}; exposure = T > CEIL ? 0.85 : 1.15;
     }
     camera.position.copy(pos); camera.lookAt(look); camera.fov = fov; camera.updateProjectionMatrix();
     return {dof, exposure, bloom: [0.45, 0.55, 0.8], grain: 0.055, vig: 0.38, ao};

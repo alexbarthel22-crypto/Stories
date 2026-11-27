@@ -27,7 +27,7 @@ export function worldLeft(T) {
 }
 // Wichtige Momente
 export const PAPA_UP = 18.6, BRAKE = 26.6, STOP = 28.2, FREQ0 = 32.0, CITY_OUT = 40.5, EU_OUT = 48.4, LIGHT_OFF = 39.2,
-  FLASH_ON = 58.6, POWER_BACK = 66.0, TV_ON = 73.6, DOOR = 81.0, CEIL = 82.4;
+  FLASH_ON = 58.6, POWER_BACK = 66.0, TV_ON = 73.6, DOOR = 81.0, CEIL = 82.4, TV_OFF = 84.6;
 
 export const STAGES = ['HARMLOS', 'PEINLICH', 'GEFÄHRLICH', 'KRITISCH', 'KATASTROPHE', 'UNAUFHALTSAM', 'WELTUNTERGANG'];
 export const STAGE_OF = {vanish: 1, papa: 2, street: 3, control: 4, city: 5, europe: 6, dark: 7, back: 7, blast: 7, mom: 7};
