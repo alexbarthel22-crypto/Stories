@@ -2,6 +2,7 @@
 import subprocess, numpy as np, os, sys, wave
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import lt as h
+import lt2 as h2
 SR = 48000
 ROOT = h.ROOT
 
@@ -46,8 +47,8 @@ def put(name, t, g=0.0, rev=False):
 
 
 nw, TW = h.nw, h.TW
-for s_ in h.SC[1:]:
-    put('swoosh', s_[1] - 0.1, -12)
+for s_ in h2.SC[1:]:
+    put('swoosh', s_[0] - 0.1, -12)
 for t in [nw('hundertzwanzig') - 0.2, nw('neunzig') - 0.2, nw('niemand') - 0.2, nw('trotzdem') - 0.1, nw('meerhexe') - 0.1,
           nw('tür') - 0.2, nw('heute') - 0.15, nw('morgen') - 0.1, nw('schau') - 0.05, nw('eisenring') - 0.2, nw('eisenring', 1) - 0.2,
           nw('seil', 1) - 0.2, nw('schere') - 0.2, nw('erste') - 0.05, nw('aber', 1) - 0.1, nw('zweite') - 0.05, nw('fehlen') - 0.2,
@@ -63,12 +64,12 @@ for i in range(6):
     put('click', h.GAP_AT + 0.3 + i * 0.3, -16)
 vo = load(f'{ROOT}/audio/vo.wav')
 voice = np.zeros_like(out)
-ga = int(h.GAP_AT * SR)
+ga = int(h2.GAP_AT * SR)
 voice[:ga] = vo[:ga]
-gi = int(h.gn(h.GAP_AT) * SR)
+gi = int(h2.G(h2.GAP_AT) * SR)
 rest = vo[ga:]
 voice[gi:gi + len(rest)] = rest[:N - gi]
-mix = (voice * db(5) + out)[:int(h.END * SR)]
+mix = (voice * db(5) + out)[:int(h2.END * SR)]
 tmp = f'{ROOT}/audio/mix_raw.wav'
 with wave.open(tmp, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)

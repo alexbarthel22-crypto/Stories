@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 from multiprocessing import Pool
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import hats as scenes
+import hats2 as scenes
 from draw import W, H
 
 FPS = 30
