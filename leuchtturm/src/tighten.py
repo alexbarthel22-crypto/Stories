@@ -8,7 +8,7 @@ words = json.load(open(sys.argv[1] + '_words.json'))
 start = next(w[1] for w in words if w[0].lower().startswith(('shel', 'schel'))) - 0.12
 words = [w for w in words if w[1] >= start - 0.1]
 # Pausen anhand Wortgrenzen: Lücke > MAXP wird auf MAXP gekürzt
-MAXP = 0.38
+MAXP = 0.32
 segs = []      # (src_a, src_b) Abschnitte, die behalten werden
 cur = start
 for w0, w1 in zip(words, words[1:]):

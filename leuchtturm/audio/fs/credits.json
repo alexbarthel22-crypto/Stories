@@ -110,5 +110,29 @@
   "id": 648729,
   "license": "http://creativecommons.org/publicdomain/zero/1.0/",
   "dur": 1.752
+ },
+ "thunder": {
+  "name": "Thunder Clap And Rumble #5",
+  "user": "Kinoton",
+  "id": 760212,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "cackle": {
+  "name": "Witch Laugh",
+  "user": "mvVoiceActing",
+  "id": 223851,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "cackle2": {
+  "name": "Cackle.wav",
+  "user": "morganpurkis",
+  "id": 371284,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "wind": {
+  "name": "Wind_Arctic_Storm_Breeze-015.wav",
+  "user": "EricsSoundschmiede",
+  "id": 407026,
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/"
  }
 }
